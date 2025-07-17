@@ -17,6 +17,8 @@ public partial class ticket_history
 
     [StringLength(255)]
     public string ticket_id { get; set; }
+    [ForeignKey("ticket_id")]
+    public virtual support_ticket Support_Ticket { get; set; }      
 
     [StringLength(255)]
     public string changed_by { get; set; }

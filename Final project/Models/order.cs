@@ -11,15 +11,11 @@ namespace Final_project.Models;
 public partial class order
 {
     [Key]
-    [StringLength(255)]
     public string id { get; set; }
-
-
     public string buyer_id { get; set; }
 
     [ForeignKey("buyer_id")]
     public virtual ApplicationUser Buyer { get; set; }
-
     public string seller_id { get; set; }
 
     [ForeignKey("seller_id")]

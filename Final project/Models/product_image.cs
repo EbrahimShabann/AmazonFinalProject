@@ -16,6 +16,8 @@ public partial class product_image
 
     [StringLength(255)]
     public string product_id { get; set; }
+    [ForeignKey("product_id")]
+    public virtual product product { get; set; }
 
     [StringLength(255)]
     public string image_url { get; set; }

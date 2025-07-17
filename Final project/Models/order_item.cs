@@ -11,14 +11,14 @@ namespace Final_project.Models;
 public partial class order_item
 {
     [Key]
-    [StringLength(255)]
     public string id { get; set; }
-
-    [StringLength(255)]
     public string order_id { get; set; }
+    [ForeignKey("order_id")]
+    public virtual order order { get; set; }
 
-    [StringLength(255)]
     public string product_id { get; set; }
+    [ForeignKey("product_id")]
+    public virtual product product { get; set; }
 
     public int? quantity { get; set; }
 

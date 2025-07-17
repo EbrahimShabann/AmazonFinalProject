@@ -12,11 +12,10 @@ namespace Final_project.Models;
 public partial class order_history
 {
     [Key]
-    [StringLength(255)]
     public string id { get; set; }
-
-    [StringLength(255)]
     public string order_id { get; set; }
+    [ForeignKey("order_id")]
+    public virtual order order { get; set; }
 
     [StringLength(255)]
     public string status { get; set; }

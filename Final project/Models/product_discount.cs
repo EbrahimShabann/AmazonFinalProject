@@ -16,7 +16,11 @@ public partial class product_discount
 
     [StringLength(255)]
     public string product_id { get; set; }
+    [ForeignKey("product_id")]
+    public virtual product product { get; set; }
 
     [StringLength(255)]
     public string discount_id { get; set; }
+    [ForeignKey("discount_id")]
+    public virtual discount Discount { get; set; }
 }
