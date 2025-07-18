@@ -120,8 +120,8 @@ namespace Final_project.Controllers.Seller
                             }
                             if (img.Length > 0)
                             {
-                                var imgName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);                      
-                                var fullPath = Path.Combine(productFolder,imgName);
+                                var imgName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);   
+                                var fullPath= Path.Combine(productFolder, imgName);
                                 using (var stream = new FileStream(fullPath, FileMode.Create))
                                 {
                                     img.CopyTo(stream);
@@ -138,7 +138,7 @@ namespace Final_project.Controllers.Seller
                                 }
 
                                 productImage.id = Guid.NewGuid().ToString();
-                                productImage.image_url = fullPath;
+                                productImage.image_url = $"products/product-{product.id}/{imgName}";
                                 productImage.product_id = product.id;
                                 productImage.uploaded_at = DateTime.Now;
 

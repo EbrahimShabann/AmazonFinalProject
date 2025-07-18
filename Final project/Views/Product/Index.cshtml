@@ -4,106 +4,441 @@
 
     @{
         ViewData["Title"] = "Products";
+    var currentPage = (int)Model.PageNumber;
+    var totalPages = (int)Model.TotalPages;
+    var pageSize = (int)Model.PageSize;
+    var sizeOptions = new[] { 2, 5, 10, 20, 50 };
 }
 
 
-<partial name="SellerPartialViews/_UpSertModalPartial" />
+<style>
+
+   /* Pagination style */
+    .amazon-pagination {
+        --active-bg: #EDFDFF;
+        --active-border: #007185;
+        --active-color: #007185;
+        --hover-bg: #F5F6F6;
+        --disabled-color: #D5D9D9;
+    }
+
+    .amazon-pagination .page-item {
+        margin: 0 2px;
+    }
+
+    .amazon-pagination .page-link {
+        color: #0F1111;
+        border: 1px solid #D5D9D9;
+        border-radius: 6px !important;
+        padding: 6px 12px;
+        font-size: 13px;
+        min-width: 36px;
+        text-align: center;
+    }
+
+    .amazon-pagination .page-item.active .page-link {
+        background-color: var(--active-bg);
+        border-color: var(--active-border);
+        color: var(--active-color);
+        font-weight: 600;
+    }
+
+    .amazon-pagination .page-item.disabled .page-link {
+        color: var(--disabled-color);
+    }
+
+    .amazon-pagination .page-link:hover {
+        background-color: var(--hover-bg);
+        text-decoration: none;
+    }
+
+    .amazon-pagination .page-link[aria-label] {
+        padding: 6px 10px;
+    }
+
+    .amazon-page-size-form {
+        position: absolute;
+        top: 110px;
+        right: 155px;
+    }
+
+    .amazon-page-select {
+        width: 70px;
+        border-radius: 6px;
+        border: 1px solid #D5D9D9;
+        padding: 4px 8px;
+        font-size: 13px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-position: right 8px center;
+        background-size: 12px;
+        background-repeat: no-repeat;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+        .amazon-page-select:focus {
+            border-color: #007185;
+            box-shadow: 0 0 0 3px #c8f3fa;
+            outline: none;
+        }
+
+    /* Amazon Style Components */
+    .amazon-search {
+        border-radius: 8px;
+        border: 1px solid #D5D9D9;
+        padding-right: 40px;
+    }
+
+        .amazon-search:focus {
+            border-color: #007185;
+            box-shadow: 0 0 0 3px #c8f3fa;
+        }
+
+    .amazon-search-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 40px;
+        background: none;
+        border: none;
+        color: #555;
+    }
+
+    .amazon-add-btn {
+        background: #FFD814;
+        border-color: #FCD200;
+        color: #0F1111;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+        .amazon-add-btn:hover {
+            background: #F7CA00;
+            border-color: #F2C200;
+        }
+
+    .amazon-table-header {
+        background-color: #F2F3F3;
+        border-bottom: 1px solid #D5D9D9;
+    }
+
+        .amazon-table-header th {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0F1111;
+            padding: 12px 16px;
+        }
+
+    .amazon-product-row td {
+        vertical-align: middle;
+        padding: 16px;
+        border-bottom: 1px solid #EAEDED;
+    }
+
+    .amazon-product-image {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border: 1px solid #EAEDED;
+        border-radius: 4px;
+    }
+
+    .amazon-product-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #0066c0;
+        margin-bottom: 4px;
+    }
+
+        .amazon-product-title:hover {
+            color: #c45500;
+            text-decoration: underline;
+        }
+
+    .amazon-product-id, .amazon-product-brand {
+        font-size: 12px;
+        color: #565959;
+    }
+
+    .amazon-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: #E3E6E6;
+        border-radius: 3px;
+        font-size: 12px;
+        color: #0F1111;
+    }
+
+    .amazon-price {
+        font-weight: 600;
+        color: #0F1111;
+    }
+
+    .amazon-stock {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .in-stock {
+        color: #007600;
+    }
+
+    .low-stock {
+        color: #B12704;
+    }
+
+    .out-of-stock {
+        color: #565959;
+    }
+
+    .amazon-status {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 4px 8px;
+        border-radius: 3px;
+    }
+
+    .active {
+        background-color: #D5E8D4;
+        color: #007600;
+    }
+
+    .inactive {
+        background-color: #F5F6F6;
+        color: #565959;
+    }
+
+    .amazon-action-btn {
+        color: #555;
+        background: #F0F2F2;
+        border: 1px solid #D5D9D9;
+        border-radius: 4px;
+        padding: 6px 8px;
+    }
+
+        .amazon-action-btn:hover {
+            background: #E3E6E6;
+            color: #0F1111;
+        }
+
+    .amazon-pagination .page-item {
+        margin: 0 2px;
+    }
+
+    .amazon-pagination .page-link {
+        color: #0F1111;
+        border: 1px solid #D5D9D9;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+
+    .amazon-pagination .page-item.active .page-link {
+        background-color: #EDFDFF;
+        border-color: #007185;
+        color: #007185;
+        font-weight: 600;
+    }
+
+    .amazon-pagination .page-link:hover {
+        background-color: #F5F6F6;
+    }
+</style>
+
+
+
+
+
 
         
-
-
-    <a class="btn btn-outline-dark UpSert-btn" href="/Product/UpSert" data-id="">
-
-        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="ni ni-key-25 text-dark text-sm opacity-10"></i>
+<div class="container-fluid p-0">
+    <!-- Header with Actions -->
+    <h2 class="mb-0">Manage Products</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+     
+        <div class="d-flex gap-3">
+            <div class="position-relative" style="width: 300px;">
+                <input type="text" class="form-control amazon-search" placeholder="Search products...">
+                <button class="btn amazon-search-btn" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <a class="btn btn-warning amazon-add-btn UpSert-btn" href="/Product/UpSert" data-id="">
+                <i class="fas fa-plus me-2"></i>
+                Add Product
+            </a>
         </div>
-        <span class="nav-link-text ms-1">Add Product</span>
-    </a>
- 
+        <div class="d-flex ">
 
-     @* products table *@
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-header pb-0">
-                <h6>Products</h6>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Brand</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stock_Quantity</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CreatedAt</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ApprovedBy</th>
-                                <th class="text-secondary opacity-7"></th>
-                                <th class="text-secondary opacity-7"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td>
-                                        <div class="d-flex px-2 py-1">
-                                            <div>
-                                                <img src="/@item.image_url " class=" rounded-5 w-50 me-3" alt="product">
-                                            </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">@item.name</h6>
-                                                <p class="text-xs text-secondary mb-0">ID: @item.id</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs font-weight-bold mb-0">@item.Category.name</p>
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                        <span class="text-secondary text-xs font-weight-bold">@item.price &pound;</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">@item.Brand</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">@item.stock_quantity</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">@item.created_at</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">@item.approved_by?</span>
-                                    </td>
-                                    <td class="align-middle btn btn-primary">
-                                        <a class="text-secondary font-weight-bold text-xs page-link" href="/instructor/details/@item.id">Details</a>
-                                    </td>
-                                    <td class="align-middle btn btn-dark ms-1">
-                                        <a class="UpSert-Btn text-secondary font-weight-bold text-xs page-link" href="#" data-id="@item.id">Edit</a>
-                                    </td>
-                                    <td class="align-middle btn btn-danger ms-1">
-                                        <button class="delete-btn text-secondary font-weight-bold text-sm page-link" data-id="@item.id">Delete</button>
-                                    </td>
-                                </tr>
-
-                            } 
-                        </tbody>
-                    </table>
+            <form method="get" id="paginationForm" class="amazon-page-size-form">
+                <div class="d-flex align-items-center gap-2">
+                    <label for="size" class="mb-0 small text-muted">Items per page:</label>
+                    <select name="size" id="size" class="form-select amazon-page-select" onchange="this.form.submit()">
+                        @foreach (var sizeOption in sizeOptions)
+                        {
+                            <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
+                        }
+                    </select>
                 </div>
+                <input type="hidden" name="page" value="@currentPage" />
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 amazon-product-table">
+                    <thead class="amazon-table-header">
+                        <tr>
+                            <th width="30%">Product</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="amazon-product-row">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <img src="/images/@item.image_url" class="amazon-product-image" alt="product">
+                                        </div>
+                                        <div>
+                                            <div class="amazon-product-title">@item.name</div>
+                                            <div class="amazon-product-id">ASIN: @item.id</div>
+                                            <div class="amazon-product-brand">Brand: @item.Brand</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="amazon-badge">@item.Category.name</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="amazon-price">@item.price &pound;</span>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.stock_quantity > 10)
+                                    {
+                                        <span class="amazon-stock in-stock">In Stock</span>
+                                    }
+                                    else if (item.stock_quantity > 0)
+                                    {
+                                        <span class="amazon-stock low-stock">Only @item.stock_quantity left</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="amazon-stock out-of-stock">Out of Stock</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.approved_by != null)
+                                    {
+                                        <span class="amazon-status active">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="amazon-status inactive">Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-sm amazon-action-btn details-btn" data-id="@item.id" title="View">
+                                            <i class="far fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm amazon-action-btn UpSert-Btn" data-id="@item.id" title="Edit">
+                                            <i class="far fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm amazon-action-btn delete-btn" data-id="@item.id" title="Delete">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
+
+            <!-- Pagination -->
+            <nav class="d-flex justify-content-between align-items-center my-4">
+            <div class="text-muted small">
+                Showing page @currentPage of @totalPages
+            </div>
+
+            <ul class="pagination amazon-pagination mb-0">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?page=@(currentPage - 1)&size=@pageSize" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                @if (totalPages == 0)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">0</a>
+                    </li>
+                }
+                else
+                {
+                    <!-- Always show first page -->
+                    <li class="page-item @(1 == currentPage ? "active" : "")">
+                        <a class="page-link" href="?page=1&size=@pageSize">1</a>
+                    </li>
+
+                    @if (currentPage > 3)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    @for (int i = Math.Max(2, currentPage - 1); i <= Math.Min(totalPages - 1, currentPage + 1); i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@i&size=@pageSize">@i</a>
+                        </li>
+                    }
+
+                    @if (currentPage < totalPages - 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    @if (totalPages > 1)
+                    {
+                        <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@totalPages&size=@pageSize">@totalPages</a>
+                        </li>
+                    }
+                }
+
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?page=@(currentPage + 1)&size=@pageSize" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+            </nav>
+
+
         </div>
     </div>
 </div>
 
-
-
-
-
-
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
     <script>
@@ -138,6 +473,18 @@
 
 
     });//end of load
+
+
+     // Add search functionality
+    document.querySelector('.amazon-search').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('.amazon-product-row');
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
 
     //ajax
 
@@ -178,5 +525,4 @@
 
     </script>
 
-<partial name="SellerPartialViews/_PaginationControls" />
 
