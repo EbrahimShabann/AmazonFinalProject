@@ -43,7 +43,9 @@ namespace Final_project
             //======================SQLInjection=========================
 
             builder.Services.AddDbContext<AmazonDBContext>(
-                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options => options
+                .UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //====================UserManagerInjection===================
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -56,7 +58,7 @@ namespace Final_project
             //======================EndInjection=========================
 
             //======================Automapper===========================
-            builder.Services.AddAutoMapper(typeof(mapperConfig));
+            //builder.Services.AddAutoMapper(typeof(mapperConfig));
             //=================Google Authentication=====================
 
             builder.Services.AddAuthentication(option =>

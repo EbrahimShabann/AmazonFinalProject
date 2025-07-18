@@ -45,4 +45,6 @@ public partial class order
     public DateOnly? estimated_delivery_date { get; set; }
 
     public DateTime? delivered_at { get; set; }
+
+    public bool is_deleted { get; set; } = false;
 }

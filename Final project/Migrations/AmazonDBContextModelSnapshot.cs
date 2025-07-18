@@ -18,6 +18,9 @@ namespace Final_project.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -336,6 +339,9 @@ namespace Final_project.Migrations
                     b.Property<bool?>("is_active")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("max_uses")
                         .HasColumnType("int");
 
@@ -374,6 +380,9 @@ namespace Final_project.Migrations
 
                     b.Property<DateOnly?>("estimated_delivery_date")
                         .HasColumnType("date");
+
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("order_date")
                         .HasColumnType("datetime2");
@@ -482,13 +491,11 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Colors")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.PrimitiveCollection<string>("SelectedColors")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sizes")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.PrimitiveCollection<string>("SelectedSizes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("approved_at")
                         .HasColumnType("datetime2");
@@ -498,8 +505,8 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("category_id")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
@@ -540,6 +547,8 @@ namespace Final_project.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("category_id");
 
                     b.HasIndex("seller_id");
 
@@ -1025,9 +1034,15 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
+                    b.HasOne("Final_project.Models.category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("category_id");
+
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany("Products")
                         .HasForeignKey("seller_id");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Seller");
                 });
@@ -1175,6 +1190,11 @@ namespace Final_project.Migrations
                     b.Navigation("SupportTickets");
 
                     b.Navigation("TicketMessages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.category", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>

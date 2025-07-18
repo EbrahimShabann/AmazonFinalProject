@@ -1,70 +1,72 @@
 ﻿using Final_project.Models;
 using Final_project.Repository.Product;
+using Final_project.ViewModel.Seller;
 
 namespace Final_project.Repository.ProductRepositoryFile
 {
     public class ProductRepository : IProductRepository
     {
-        //private readonly dbContext db;
+        private readonly AmazonDBContext db;
 
-        //public ProductRepository(dbContext db)
-        //{
-        //    this.db = db;
-        //}
-        //public void add(product entity)
-        //{
-        //    db.Products.Add(entity);
-        //}
-        ////SoftDelete
-        //public void delete(product entity)
-        //{
-        //    var data = getById(entity.ProductId);
-        //    if (data != null)
-        //    {
-        //        data.IsDeleted = true;
-        //        Update(data);
-        //    }
-        //}
-        ////get all exipt the deleted ones
-        //public List<product> getAll()
-        //{
-        //   return db.Set<product>().Where(e=>e.IsDeleted!=true).ToList();
-        //}
-        ////get product adn it's not deleted
-        //public product getById(int id)
-        //{
-        //    return db.Set<product>()
-        //          .Where(e => e.IsDeleted != true)
-        //          .FirstOrDefault(e=>e.ProductId==id);
-        //}
-
-        //public void Update(product entity)
-        //{
-        //    db.Entry(entity).State=Microsoft.EntityFrameworkCore.EntityState.Modified;
-        //}
+        public ProductRepository(AmazonDBContext db)
+        {
+            this.db = db;
+        }
         public void add(product entity)
         {
-            throw new NotImplementedException();
+            db.products.Add(entity);
         }
-
+        //SoftDelete
         public void delete(product entity)
         {
-            throw new NotImplementedException();
+            var product = getById(entity.id);
+            if (product != null)
+            {
+                product.is_deleted = true;
+                Update(product);
+            }
         }
-
+        //get all exipt the deleted ones
         public List<product> getAll()
         {
-            throw new NotImplementedException();
+            return db.Set<product>().Where(e => e.is_deleted != true).ToList();
+        }
+        //get product and it's not deleted
+        public product getById(string id)
+        {
+            return db.Set<product>()
+                  .Where(e => e.is_deleted != true)
+                  .FirstOrDefault(e => e.id == id);
         }
 
-        public product getById(int id)
+        public List<ProductsVM> getProductsWithImages()
         {
-            throw new NotImplementedException();
+            var products = (from p in db.products
+                           where p.is_deleted != true
+                           join img in db.product_images on p.id equals img.product_id
+                            where img.is_primary == true
+                            select new ProductsVM
+                           {
+                               id = p.id,
+                               name = p.name,
+                               price = p.price,
+                               Brand = p.Brand,
+                               approved_by = p.approved_by,
+                               created_at = p.created_at,
+                               category_id = p.category_id,
+                               Category = p.Category,
+                               seller_id = p.seller_id,
+                               Seller = p.Seller,
+                               stock_quantity = p.stock_quantity,
+                               image_url = img.image_url
+                           });
+            return products.ToList();
         }
 
         public void Update(product entity)
         {
-            throw new NotImplementedException();
+            db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }
+        
     }
 }

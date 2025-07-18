@@ -25,11 +25,41 @@ public partial class product
     [StringLength(255)]
     public string Brand { get; set; }
 
-    [StringLength(255)]
-    public string Colors { get; set; }
+    [NotMapped]
+    public  List<string> AvailableSizes = new List<string>
+{
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "XXXL",
+    "XXXXL"
+};
+    public List<string> SelectedSizes { get; set; } = new List<string>();
+    [NotMapped]
 
-    [StringLength(255)]
-    public string Sizes { get; set; }
+    public  List<string> AvailableColors = new List<string>
+{
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow",
+    "Orange",
+    "Purple",
+    "Pink",
+    "Brown",
+    "Black",
+    "White",
+    "Gray",
+    "Silver",
+    "Gold",
+    "Beige",
+    "Turquoise"
+};
+    public List<string> SelectedColors { get; set; } = new List<string>();
+
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? discount_price { get; set; }
@@ -39,9 +69,10 @@ public partial class product
     [StringLength(255)]
     public string sku { get; set; }
 
-    [StringLength(255)]
+    [StringLength(450)]
     public string category_id { get; set; }
-
+    [ForeignKey("category_id")]
+    public virtual category Category { get; set; }
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
@@ -62,3 +93,4 @@ public partial class product
     public bool is_deleted { get; set; } = false;
     
 }
+

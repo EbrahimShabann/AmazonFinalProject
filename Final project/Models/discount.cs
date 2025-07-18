@@ -40,4 +40,6 @@ public partial class discount
     public virtual ApplicationUser Seller { get; set; }
 
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
+
+    public bool is_deleted { get; set; } = false;
 }

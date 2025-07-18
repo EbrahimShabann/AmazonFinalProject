@@ -46,4 +46,5 @@ public partial class category
     public string deleted_by { get; set; }
     [ForeignKey("deleted_by")]
     public virtual ApplicationUser DeletedByUser { get; set; }
+    public virtual List<product> Products { get; set; }
 }
