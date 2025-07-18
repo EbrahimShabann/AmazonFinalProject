@@ -1,0 +1,62 @@
+﻿@model dynamic
+
+@{
+    var currentPage = (int)Model.PageNumber;
+    var totalPages = (int)Model.TotalPages;
+    var pageSize = (int)Model.PageSize;
+    var sizeOptions = new[] {2, 5, 10, 20, 50 };
+}
+
+<form method="get" id="paginationForm" class="mb-3 d-flex justify-content-between align-items-center " style="position:absolute;top:110px;right:155px">
+
+    <div>
+        <label for="size">Page Size:</label>
+        <select name="size" id="size" class="form-select d-inline-block " style="width:70px" onchange="document.getElementById('paginationForm').submit();">
+            @foreach (var sizeOption in sizeOptions)
+            {
+                <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
+               
+            }
+        </select>
+    </div>
+
+    
+
+    <input type="hidden" name="page" value="@currentPage" />
+</form>
+
+<nav class="d-flex justify-content-between">
+    <ul class="pagination" >
+        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+            <a class="page-link" href="?page=@(currentPage - 1)&size=@pageSize"><</a>
+        </li>
+
+        @if (totalPages == 0)
+        {
+
+            <li class="page-item rounded-4">
+                <a class="page-link">0</a>
+            </li>
+        }
+        else
+        {
+   
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" href="?page=@i&size=@pageSize">@i</a>
+                </li>
+            }
+        }
+        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+            <a class="page-link" href="?page=@(currentPage + 1)&size=@pageSize">></a>
+        </li>
+    </ul>
+
+    <div >
+        <span>Page @currentPage of @totalPages</span>
+    </div>
+</nav>
+
+
+        

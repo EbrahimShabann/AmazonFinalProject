@@ -1,39 +1,41 @@
-﻿namespace Final_project.Repository.OrderRepositoryFile
+﻿using Final_project.Models;
+
+namespace Final_project.Repository.OrderRepositoryFile
 {
     public class OrderRepo : IOrderRepo
     {
-        private readonly dbContext db;
+        private readonly AmazonDBContext db;
 
-        public OrderRepo(dbContext db)
+        public OrderRepo(AmazonDBContext db)
         {
             this.db = db;
         }
-        public void add(Order entity)
+        public void add(order entity)
         {
-            db.Orders.Add(entity);
+            db.orders.Add(entity);
         }
 
-        public void delete(Order entity)
+        public void delete(order entity)
         {
-            var order= getById(entity.OrderId);
-            order.IsDeleted = true; // Soft delete
+            var order= getById(entity.id);
+            order.is_deleted = true; // Soft delete
             Update(order);
         }
 
-        public List<Order> getAll()
+        public List<order> getAll()
         {
-           return db.Orders.Where(e => e.IsDeleted != true).ToList();
+           return db.orders.Where(e => e.is_deleted != true).ToList();
         }
 
-        public Order getById(int id)
+        public order getById(string id)
         {
-            db.Orders
-                .Where(e => e.IsDeleted != true && e.OrderId == id);
+            return db.orders
+                .Where(e => e.is_deleted != true ).FirstOrDefault(o=>o.id==id);
         }
 
-        public void Update(Order entity)
+        public void Update(order entity)
         {
-            db.entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }
     }
 }

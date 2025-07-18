@@ -1,41 +1,43 @@
-﻿namespace Final_project.Repository.DiscountRepositoryFile
+﻿using Final_project.Models;
+
+namespace Final_project.Repository.DiscountRepositoryFile
 {
     public class DiscountRepo : IDiscountRepo
     {
-        private readonly dbContext db;
+        private readonly AmazonDBContext db;
 
-        public DiscountRepo(dbContext db)
+        public DiscountRepo(AmazonDBContext db)
         {
             this.db = db;
         }
-        public void add(Discount entity)
+        public void add(discount entity)
         {
-            db.Discounts.Add(entity);
+            db.discounts.Add(entity);
         }
 
-        public void delete(Discount entity)
+        public void delete(discount entity)
         {
-            var discount = getById(entity.DiscountId);
+            var discount = getById(entity.id);
             if (discount != null)
             {
-                discount.IsDeleted = true; // Soft delete
+                discount.is_deleted = true; // Soft delete
                 Update(discount);
             }
         }
 
-        public List<Discount> getAll()
+        public List<discount> getAll()
         {
-           return db.Discounts.Where(e => e.IsDeleted != true).ToList();
+           return db.discounts.Where(e => e.is_deleted != true).ToList();
         }
 
-        public Discount getById(int id)
+        public discount getById(string id)
         {
-            return db.Discounts
-                .Where(e => e.IsDeleted != true && e.DiscountId == id);
+            return db.discounts
+                .Where(e => e.is_deleted != true).FirstOrDefault(d=>d.id==id);
                 
         }
 
-        public void Update(Discount entity)
+        public void Update(discount entity)
         {
             db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }

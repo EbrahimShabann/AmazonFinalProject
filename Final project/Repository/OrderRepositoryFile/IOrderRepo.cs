@@ -2,8 +2,8 @@
 
 namespace Final_project.Repository.OrderRepositoryFile
 {
-    public interface IOrderRepo:IRepository<Order>
+    public interface IOrderRepo:IRepository<order>
     {
-        public void delete(Order entity);
+        public void delete(order entity);
     }
 }

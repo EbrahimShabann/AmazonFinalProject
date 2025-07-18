@@ -1,6 +1,8 @@
-﻿using Final_project.Repository.DiscountRepositoryFile;
+﻿using Final_project.Models;
+using Final_project.Repository.DiscountRepositoryFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
+using Final_project.Repository.ProductImagesRepositoryFile;
 using Final_project.Repository.ProductRepositoryFile;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +10,12 @@ namespace Final_project.Repository
 {
     public class UnitOfWork
     {
-        private readonly DbContext db;
+        private readonly AmazonDBContext db;
         private IProductRepository _productRepository;
         private IOrderRepo _orderRepo;
         private IDiscountRepo _discountRepo;
-
-        public UnitOfWork(DbContext db)
+        private IProductImageRepo _productImageRepo;
+        public UnitOfWork(AmazonDBContext db)
         {
             this.db = db;
         }
@@ -49,6 +51,16 @@ namespace Final_project.Repository
             }
         }
 
+
+        public IProductImageRepo ProductImageRepo 
+        { 
+            get
+            {
+                if (_productImageRepo == null)
+                    _productImageRepo = new ProductImageRepo(db);
+                return _productImageRepo;
+            } 
+        }
         public void save()
         {
             db.SaveChanges();

@@ -1,7 +1,9 @@
-﻿namespace Final_project.Repository.DiscountRepositoryFile
+﻿using Final_project.Models;
+
+namespace Final_project.Repository.DiscountRepositoryFile
 {
-    public interface IDiscountRepo:IRepository<Discount>
+    public interface IDiscountRepo:IRepository<discount>
     {
-        public void delete(Discount entity);
+        public void delete(discount entity);
     }
 }

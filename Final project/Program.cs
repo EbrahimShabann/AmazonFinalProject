@@ -13,6 +13,8 @@ namespace Final_project
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //==================SignalR Services=========================
+            builder.Services.AddSignalR();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
             builder.Services.AddControllersWithViews();
@@ -40,21 +42,23 @@ namespace Final_project
             builder.Services.AddScoped<UnitOfWork>();
             //======================SQLInjection=========================
 
-            //builder.Services.AddDbContext<dbContext>(
-            //    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<AmazonDBContext>(
+                options => options
+                .UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //====================UserManagerInjection===================
-            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
-            //{
-            //    option.Password.RequireNonAlphanumeric = false;
-            //    option.Password.RequiredLength = 4;
-            //    option.Password.RequireUppercase = false;
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequiredLength = 4;
+                option.Password.RequireUppercase = false;
 
-            //}).AddEntityFrameworkStores<dbContext>();
+            }).AddEntityFrameworkStores<AmazonDBContext>();
             //======================EndInjection=========================
 
             //======================Automapper===========================
-            builder.Services.AddAutoMapper(typeof(mapperConfig));
+            //builder.Services.AddAutoMapper(typeof(mapperConfig));
             //=================Google Authentication=====================
 
             builder.Services.AddAuthentication(option =>
@@ -83,6 +87,7 @@ namespace Final_project
             app.UseSession();
             app.UseAuthorization();
             app.MapStaticAssets();
+            //app.MapHub<>("");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

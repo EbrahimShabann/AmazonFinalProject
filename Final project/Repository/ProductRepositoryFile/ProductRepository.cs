@@ -1,41 +1,66 @@
 ﻿using Final_project.Models;
 using Final_project.Repository.Product;
+using Final_project.ViewModel.Seller;
 
 namespace Final_project.Repository.ProductRepositoryFile
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly dbContext db;
+        private readonly AmazonDBContext db;
 
-        public ProductRepository(dbContext db)
+        public ProductRepository(AmazonDBContext db)
         {
             this.db = db;
         }
         public void add(product entity)
         {
-            db.Products.Add(entity);
+            db.products.Add(entity);
         }
         //SoftDelete
         public void delete(product entity)
         {
-            var data = getById(entity.ProductId);
-            if (data != null)
+            var product = getById(entity.id);
+            if (product != null)
             {
-                data.IsDeleted = true;
-                Update(data);
+                product.is_deleted = true;
+                Update(product);
             }
         }
         //get all exipt the deleted ones
         public List<product> getAll()
         {
-            return db.Set<product>().Where(e => e.IsDeleted != true).ToList();
+            return db.Set<product>().Where(e => e.is_deleted != true).ToList();
         }
         //get product and it's not deleted
-        public product getById(int id)
+        public product getById(string id)
         {
             return db.Set<product>()
-                  .Where(e => e.IsDeleted != true)
-                  .FirstOrDefault(e => e.ProductId == id);
+                  .Where(e => e.is_deleted != true)
+                  .FirstOrDefault(e => e.id == id);
+        }
+
+        public List<ProductsVM> getProductsWithImages()
+        {
+            var products = (from p in db.products
+                           where p.is_deleted != true
+                           join img in db.product_images on p.id equals img.product_id
+                            where img.is_primary == true
+                            select new ProductsVM
+                           {
+                               id = p.id,
+                               name = p.name,
+                               price = p.price,
+                               Brand = p.Brand,
+                               approved_by = p.approved_by,
+                               created_at = p.created_at,
+                               category_id = p.category_id,
+                               Category = p.Category,
+                               seller_id = p.seller_id,
+                               Seller = p.Seller,
+                               stock_quantity = p.stock_quantity,
+                               image_url = img.image_url
+                           });
+            return products.ToList();
         }
 
         public void Update(product entity)

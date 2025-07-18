@@ -1,0 +1,180 @@
+﻿@model Final_project.ViewModel.Seller.CreateProductVM
+
+
+@functions {
+    string GetColorHex(string colorName)
+    {
+        // Map color names to hex codes
+        var colorMap = new Dictionary<string, string>
+        {
+            { "Red", "#FF0000" },
+            { "Green", "#00FF00" },
+            { "Blue", "#0000FF" },
+            { "Yellow", "#FFFF00" },
+            { "Orange", "#FFA500" },
+            { "Purple", "#800080" },
+            { "Pink", "#FFC0CB" },
+            { "Brown", "#A52A2A" },
+            { "Black", "#000000" },
+            { "White", "#FFFFFF" },
+            { "Gray", "#808080" },
+            { "Silver", "#C0C0C0" },
+            { "Gold", "#FFD700" },
+            { "Beige", "#F5F5DC" },
+            { "Turquoise", "#40E0D0" }
+        };
+        return colorMap.ContainsKey(colorName) ? colorMap[colorName] : "#CCCCCC";
+    }
+}
+<div class="card shadow ">
+    <div class="card-header text-white bg-dark d-flex justify-content-between">
+        <h2 class="text-white ">@(Model.id == "0" || Model.id == null ? "Add ": "Edit " ) Product </h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa-solid fa-xmark bg-dark text-light"></i>
+        </button>
+
+    </div>
+    <div class="card-body ">
+    <form id="upsertForm"
+        enctype="multipart/form-data"
+          asp-controller="Product"
+          asp-action="UpSert"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-mode="replace"
+          data-ajax-update="#modalBody">
+            <div asp-validation-summary="All" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+        <div class="form-group">
+            <label  class="control-label">Category</label>
+            <select asp-for="category_id" class="form-control" asp-items="@(new SelectList(ViewBag.categories,"id","name"))">
+                <option value="">Select Category</option>
+            </select>
+            <span asp-validation-for="category_id" class="text-danger"></span>
+        </div>
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="stock_quantity" class="control-label"></label>
+                <input asp-for="stock_quantity" class="form-control" />
+                <span asp-validation-for="stock_quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Brand" class="control-label"></label>
+                <input asp-for="Brand" class="form-control" />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label>Available Sizes</label>
+                @foreach (var size in Model.AvailableSizes)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                               name="SelectedSizes" value="@size" id="size-@size">
+                        <label class="form-check-label" for="size-@size">@size</label>
+                    </div>
+                }
+            </div>
+
+            <!-- Colors -->
+            <div class="form-group">
+                <label>Available Colors</label>
+                @foreach (var color in Model.AvailableColors)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                               name="SelectedColors" value="@color" id="color-@color">
+                        <label class="form-check-label" for="color-@color" 
+                               style="background-color: @(GetColorHex(color)); display: inline-block; width: 20px; height: 20px;"></label>
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <label>Product Images</label>
+                <input type="file" name="images" multiple class="form-control" />
+            </div>
+            <div id="image-upload-container" class="form-group">
+                <label>Product Images</label>
+            </div>
+            <div id="image-previews" class="mt-5">
+                @* @foreach (var img in Model.ExistingImages)
+                {
+                    <img src="@Url.Content(img.image_url)" style="max-height: 100px; margin: 5px;" />
+                } *@
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+</div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        //allowed types and size
+        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize= 5 * 1024 * 1024; // 5 MB
+
+        const container= document.getElementById("image-upload-container");
+        const previews= document.getElementById("image-previews");
+  
+        //initial input
+        addImageInput()
+        function addImageInput() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.name = "images";
+            input.accept = "image/*";
+            input.className = "form-control mt-2";
+            input.multiple = true;
+
+            input.addEventListener("change", function(){
+                if(input.files && input.files[0]){
+                    const file= input.files[0];
+                    if(!allowedTypes.includes(file.type)) {
+                        alert("Invalid file type. Please upload an image.");
+                        return;
+                    }
+                    if(file.size > maxFileSize) {
+                        alert("File size exceeds the limit of 5 MB.");
+                        return;
+                    }
+            
+                    const reader = new FileReader();
+                    reader.onload= function(e){
+                        const img= document.createElement('img');
+                        img.src= e.target.result;
+                        img .style.maxHeight = "100px";
+                        img.style.margin = "5px";
+                        previews.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+
+                    // Add another input field after selecting a file
+                    addImageInput(); 
+                }
+                });
+                container.appendChild(input);
+            };
+      
+    
+    
+    </script>
+   
+}
