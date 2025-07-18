@@ -191,14 +191,17 @@
                 <!-- Right Column -->
                 <div class="col-lg-4">
                     <div class="bg-white p-4 rounded border">
-                        <h5 class="mb-3">Product Images</h5>
+                        <div class="mb-3">
+                            <h5 >Product Images</h5>
+
+                        </div>
                         
                         <div  class="mb-4">
                             <div id="image-upload-container" class="border-dashed p-3 text-center rounded">
                                 <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
                                 <p class="mb-2">Drag & drop images here</p>
                                 <p class="small text-muted mb-0">or</p>
-                                <input type="file" class="d-none" id="fileInput" multiple accept="image/*">
+                                @* <input type="file" class="d-none" id="fileInput" multiple accept="image/*"> *@
                                 <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="getLastInputFile()">
                                     Browse Files
                                 </button>
