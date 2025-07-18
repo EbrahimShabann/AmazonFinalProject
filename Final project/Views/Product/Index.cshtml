@@ -354,9 +354,10 @@
                                         <button class="btn btn-sm amazon-action-btn details-btn" data-id="@item.id" title="View">
                                             <i class="far fa-eye"></i>
                                         </button>
-                                        <button class="btn btn-sm amazon-action-btn UpSert-Btn" data-id="@item.id" title="Edit">
+                                        <a href="/Product/UpSert/@item.id" class="btn btn-sm amazon-action-btn UpSert-Btn" title="Edit">
                                             <i class="far fa-edit"></i>
-                                        </button>
+                                        </a>
+                                       
                                         <button class="btn btn-sm amazon-action-btn delete-btn" data-id="@item.id" title="Delete">
                                             <i class="far fa-trash-alt"></i>
                                         </button>
@@ -448,7 +449,7 @@
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', () => {
 
-                const Id= btn.getAttribute("data-id");
+                const id= btn.getAttribute("data-id");
 
                     Swal.fire({
                       title: "Are you sure?",
@@ -460,7 +461,7 @@
                       confirmButtonText: "Yes, delete it!"
                     }).then((result) => {
                       if (result.isConfirmed) {
-                           window.location.href = `/User/Delete/${Id}`;
+                           window.location.href = `/Product/Delete/${id}`;
                         Swal.fire({
                           title: "Deleted!",
                           text: "User has been deleted.",

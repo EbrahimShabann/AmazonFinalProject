@@ -55,7 +55,11 @@ namespace Final_project.Controllers.Seller
                     stock_quantity = product.stock_quantity,
                     Brand = product.Brand,
                     category_id = product.category_id,
-                    //images = product.images.Select(i => i.image).ToList()
+                    discount_price = product.discount_price,
+                    SelectedColors = product.SelectedColors,
+                    SelectedSizes = product.SelectedSizes,
+                    description = product.description,
+                    ExistingImages = uof.ProductImageRepo.getImagesOfProduct(product.id),
                 };
                 return View(vm);
             }
@@ -152,10 +156,46 @@ namespace Final_project.Controllers.Seller
                     }
                 }
 
+                else
+                {
+                    //update existed product 
+
+                }
             }
             return View(vm);
         }
-   
-    
+        
+
+        public IActionResult Delete(string id)
+        {
+            var product = uof.ProductRepository.getById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            uof.ProductRepository.delete(product);
+            uof.save();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DeleteImage(string id)
+        {
+            var image = uof.ProductImageRepo.getById(id);
+            if (image == null)
+            {
+                return NotFound();
+            }
+            // Delete the image file from the server
+            var imagePath = Path.Combine("wwwroot","images", image.image_url);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+            // Remove the image from the database
+            uof.ProductImageRepo.delete(image);
+            uof.save();
+            return RedirectToAction("UpSert", new { id = image.product_id });
+        }
+
     }
 }

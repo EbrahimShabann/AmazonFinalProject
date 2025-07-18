@@ -52,7 +52,7 @@ namespace Final_project.ViewModel.Seller
         [ForeignKey("category_id")]
         public virtual category Category { get; set; }
 
-        //public List<product_image> ExistingImages { get; set; }
+        public List<product_image> ExistingImages { get; set; }
 
         public List<IFormFile> images { get; set; }=new List<IFormFile>();
     }
