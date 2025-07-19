@@ -13,8 +13,17 @@ namespace Final_project.ViewModel.NewFolder
         public decimal? DiscountPrice { get; set; }
         public int TotalSold { get; set; }
         public decimal TotalRevenue { get; set; }
-        public decimal? DiscountPercentage =>
-            Price > 0 ? (Price - DiscountPrice) / Price * 100 : 0;
+        public decimal? DiscountPercentage
+        {
+            get
+            {
+                if (Price == null || Price <= 0 || DiscountPrice == null)
+                    return null;
+
+                decimal discount = (Price.Value - DiscountPrice.Value) / Price.Value * 100;
+                return Math.Round(discount, 1);
+            }
+        }
         public int ratting { get; set; }
         public int rattingStarMinuse { get; set; }
         public int ratingCount { get; set; }

@@ -24,13 +24,22 @@
                 <div class="product-card">
                     <div class="discount-badge">-@item.DiscountPercentage%</div>
                     <div class="product-image">
-                        <i class="fas fa-headphones product-placeholder"></i>
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
                     </div>
                     <div class="product-title">
                         @item.ProductName
                     </div>
                     <div class="product-rating">
-                        <div class="stars">★★★★☆</div>
+                        <div class="stars">
+                            @for (var i = 1; i <= item.ratting; i++)
+                            {
+                                <span>★</span>
+                            }
+                            @for (var i = 1; i <= item.rattingStarMinuse; i++)
+                            {
+                                <span>☆</span>
+                            }
+                        </div>
                         <span class="rating-count">@item.ratting</span>
                     </div>
                     <div class="product-price">
@@ -74,7 +83,8 @@
             {
                 <div class="product-card">
                     <div class="product-image">
-                        <i class="fas fa-laptop product-placeholder"></i>
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -95,9 +105,8 @@
                     <div class="product-price">
                         <span class="price-symbol">$</span>
                         <span class="price-whole">@item.Price</span>
-                        <span class="price-fraction">00</span>
                     </div>
-                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("d")</div>
+                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
                     <div class="product-prime">
                         <span class="prime-logo">prime</span>
                         <span>FREE delivery</span>
@@ -134,7 +143,8 @@
             {
                 <div class="product-card">
                     <div class="product-image">
-                        <i class="fas fa-mobile-alt product-placeholder"></i>
+                        <img src="@item.ImageUrl" alt="@item.ProductName" style="width:100%; height:100%" />
+
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -155,9 +165,8 @@
                     <div class="product-price">
                         <span class="price-symbol">$</span>
                         <span class="price-whole">@item.Price</span>
-                        <span class="price-fraction">00</span>
                     </div>
-                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("f")</div>
+                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
                     <div class="product-prime">
                         <span class="prime-logo">prime</span>
                         <span>FREE delivery</span>

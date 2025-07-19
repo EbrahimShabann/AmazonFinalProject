@@ -131,9 +131,9 @@ namespace Final_project.Repository.NewFolder
                 {
                     discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
                 }
-                else if (item.Discount.discount_type == "FixedAmount" && item.Discount.value.HasValue)
+                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
                 {
-                    discountedPrice = item.Product.price - item.Discount.value.Value;
+                    discountedPrice =item.Product.price - item.Discount.value.Value;
                 }
 
                 var data =new LandingPageProductDiscount
@@ -141,7 +141,7 @@ namespace Final_project.Repository.NewFolder
                     ProductId = item.Product.id,
                     ProductName = item.Product.name,
                     ImageUrl = GetProductImageUrl(item.Product.id),
-                    Price = item.Product.price,
+                    Price = Math.Round((decimal)item.Product.price,2),
                     DiscountPrice = discountedPrice,
                     TotalSold = (int)item.TotalSold,
                     ratting = GetProductRating(item.Product.id),
