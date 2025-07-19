@@ -5,12 +5,20 @@
       "PackagePath": "staticwebassets\\Final project.ha0l2qay2m.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\LandingPageCSS.css",
+      "PackagePath": "staticwebassets\\css\\LandingPageCSS.css"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\LandingPageJS.js",
+      "PackagePath": "staticwebassets\\js\\LandingPageJS.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\site.js",

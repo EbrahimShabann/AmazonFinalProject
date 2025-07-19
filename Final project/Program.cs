@@ -88,7 +88,7 @@ namespace Final_project
             //app.MapHub<>("");
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Landing}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();

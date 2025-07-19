@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon - @ViewData["Title"]</title>
+	<link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/LandingPageCSS.css" asp-append-version="true" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fab fa-amazon"></i> Amazon</a>
+            <div class="search-container">
+                <input type="text"
+                       class="search-input"
+                       placeholder="Search for products..." />
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="navbar-actions">
+                <!-- Cart with Counter -->
+                <div class="cart-container">
+                    <i class="fas fa-shopping-cart text-white fs-4"></i>
+                    <span class="cart-counter" id="cartCounter">3</span>
+                </div>
+
+                <!-- User Dropdown -->
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fas fa-user text-white fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Your Account</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-box me-2"></i>Your Orders</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Your Wish List</a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <nav class="secondary-navbar">
+        <div class="container">
+            <!-- Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+                <span>All</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="#" class="nav-link mobile-visible">Today's Deals</a>
+                <a href="#" class="nav-link">Category</a>
+                <a href="#" class="nav-link">Electronics</a>
+                <a href="#" class="nav-link">Fashion</a>
+                <a href="#" class="nav-link">Video Games</a>
+
+                <!-- Prime Dropdown -->
+                <div class="prime-dropdown dropdown">
+                    <button class="dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Prime
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Prime Video</a></li>
+                        <li><a class="dropdown-item" href="#">Prime Music</a></li>
+                        <li><a class="dropdown-item" href="#">Prime Reading</a></li>
+                        <li><a class="dropdown-item" href="#">Prime Gaming</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#">Join Prime</a></li>
+                    </ul>
+                </div>
+
+                <a href="#" class="nav-link">Appliances</a>
+                <a href="#" class="nav-link mobile-visible">Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-user me-2"></i>Hello, Sign in</h3>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h4>Digital Content & Devices</h4>
+                <ul>
+                    <li><a href="#" class="sidebar-main-link">Amazon Music</a></li>
+                    <li><a href="#">Unlimited Music Streaming</a></li>
+                    <li><a href="#" class="sidebar-main-link">Prime Video</a></li>
+                    <li><a href="#">Movies & TV Shows</a></li>
+                    <li><a href="#" class="sidebar-main-link">Amazon Gaming</a></li>
+                    <li><a href="#">Download Games</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h4>Shop by Category</h4>
+                <ul>
+                    <li><a href="#" class="sidebar-main-link">Electronics</a></li>
+                    <li><a href="#">Mobiles & Accessories</a></li>
+                    <li><a href="#">Computers & Accessories</a></li>
+                    <li><a href="#" class="sidebar-main-link">Fashion</a></li>
+                    <li><a href="#">Men's Fashion</a></li>
+                    <li><a href="#">Women's Fashion</a></li>
+                    <li><a href="#" class="sidebar-main-link">Home & Garden</a></li>
+                    <li><a href="#">Kitchen & Dining</a></li>
+                    <li><a href="#">Home Decor</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h4>Programs & Features</h4>
+                <ul>
+                    <li><a href="#" class="sidebar-main-link">Today's Deals</a></li>
+                    <li><a href="#" class="sidebar-main-link">Amazon Pay</a></li>
+                    <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
+                    <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
+                    <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1>Welcome to Amazon</h1>
+                    <p>
+                        Discover millions of products with fast delivery and amazing deals
+                    </p>
+                    <button class="cta-button">Start Shopping Now</button>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center position-relative" style="height: 400px">
+                        <!-- Animated Box -->
+                        <div class="box-container">
+                            <i class="fas fa-box-open box-icon" id="mainBox"></i>
+
+                            <!-- Add these new elements -->
+                            <i class="fas fa-truck delivery-car" id="deliveryCar"></i>
+
+                            <!-- Flying Products -->
+                            <div class="flying-products">
+                                <i class="fas fa-headphones product-item"
+                                   style="--delay: 0.5s; --start-x: -200px; --start-y: -100px"></i>
+                                <i class="fas fa-laptop product-item"
+                                   style="--delay: 1s; --start-x: 200px; --start-y: -150px"></i>
+                                <i class="fas fa-mobile-alt product-item"
+                                   style="--delay: 1.5s; --start-x: -150px; --start-y: 100px"></i>
+                                <i class="fas fa-book product-item"
+                                   style="--delay: 2s; --start-x: 180px; --start-y: 120px"></i>
+                                <i class="fas fa-gamepad product-item"
+                                   style="--delay: 2.5s; --start-x: -250px; --start-y: 50px"></i>
+                                <i class="fas fa-camera product-item"
+                                   style="--delay: 3s; --start-x: 220px; --start-y: -80px"></i>
+                                <i class="fas fa-watch product-item"
+                                   style="--delay: 3.5s; --start-x: -180px; --start-y: -120px"></i>
+                                <i class="fas fa-tv product-item"
+                                   style="--delay: 4s; --start-x: 160px; --start-y: 90px"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   @RenderBody()
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- Footer -->
+    <footer class="footer d-flrex flex-column">
+        <div class="container justify-content-center">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Get to Know Us</h3>
+                    <ul>
+                        <li><a href="#">About Amazon</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press Releases</a></li>
+                        <li><a href="#">Amazon Cares</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Make Money with Us</h3>
+                    <ul>
+                        <li><a href="#">Sell products on Amazon</a></li>
+                        <li><a href="#">Sell on Amazon Business</a></li>
+                        <li><a href="#">Sell apps on Amazon</a></li>
+                        <li><a href="#">Become an Affiliate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Amazon Payment Products</h3>
+                    <ul>
+                        <li><a href="#">Amazon Business Card</a></li>
+                        <li><a href="#">Shop with Points</a></li>
+                        <li><a href="#">Reload Your Balance</a></li>
+                        <li><a href="#">Amazon Currency Converter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Let Us Help You</h3>
+                    <ul>
+                        <li><a href="#">Amazon and COVID-19</a></li>
+                        <li><a href="#">Your Account</a></li>
+                        <li><a href="#">Your Orders</a></li>
+                        <li><a href="#">Shipping Rates & Policies</a></li>
+                        <li><a href="#">Returns & Replacements</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>&copy; 2024 Amazon Clone. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/LandingPageJS.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
