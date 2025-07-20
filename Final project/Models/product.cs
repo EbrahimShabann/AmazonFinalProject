@@ -25,39 +25,9 @@ public partial class product
     [StringLength(255)]
     public string Brand { get; set; }
 
-    [NotMapped]
-    public  List<string> AvailableSizes = new List<string>
-{
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
-    "XXL",
-    "XXXL",
-    "XXXXL"
-};
+    
     public List<string> SelectedSizes { get; set; } = new List<string>();
-    [NotMapped]
-
-    public  List<string> AvailableColors = new List<string>
-{
-    "Red",
-    "Green",
-    "Blue",
-    "Yellow",
-    "Orange",
-    "Purple",
-    "Pink",
-    "Brown",
-    "Black",
-    "White",
-    "Gray",
-    "Silver",
-    "Gold",
-    "Beige",
-    "Turquoise"
-};
+   
     public List<string> SelectedColors { get; set; } = new List<string>();
 
 

@@ -4508,6 +4508,9 @@ wwwroot\lib\signalr\src\third-party-notices.txt
 wwwroot\lib\signalr\src\Utils.ts
 wwwroot\lib\signalr\src\WebSocketTransport.ts
 wwwroot\lib\signalr\src\XhrHttpClient.ts
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\029bf8a9-95d5-4740-a9db-9247664777c6.jpg
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\300fce22-8ece-46d0-8d1f-09549e095a59.jpg
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\b0ed72ca-f7d3-457a-b3a0-fac6be8dd745.jpg
 I:\AmazonFinalProject\Final project\wwwroot\css\site.css
 I:\AmazonFinalProject\Final project\wwwroot\favicon.ico
 I:\AmazonFinalProject\Final project\wwwroot\js\site.js
