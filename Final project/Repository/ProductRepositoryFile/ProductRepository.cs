@@ -1,6 +1,6 @@
 ﻿using Final_project.Models;
 using Final_project.Repository.Product;
-using Final_project.ViewModel.Seller;
+using Final_project.ViewModel.Customer;
 
 namespace Final_project.Repository.ProductRepositoryFile
 {
@@ -39,17 +39,19 @@ namespace Final_project.Repository.ProductRepositoryFile
                   .FirstOrDefault(e => e.id == id);
         }
 
-        public List<ProductsVM> getProductsWithImages()
+        public List<ProductsVM> getProductsWithImagesAndRating()
         {
-            var products = (from p in db.products
+            var products = from p in db.products
                            where p.is_deleted != true
                            join img in db.product_images on p.id equals img.product_id
+                           join r in db.product_reviews on p.id equals r.product_id
                             where img.is_primary == true
                             select new ProductsVM
                            {
                                id = p.id,
                                name = p.name,
                                price = p.price,
+                               discount_price=p.discount_price,
                                Brand = p.Brand,
                                approved_by = p.approved_by,
                                created_at = p.created_at,
@@ -58,8 +60,9 @@ namespace Final_project.Repository.ProductRepositoryFile
                                seller_id = p.seller_id,
                                Seller = p.Seller,
                                stock_quantity = p.stock_quantity,
-                               image_url = img.image_url
-                           });
+                               image_url = img.image_url,
+                               rating = r.rating
+                            };
             return products.ToList();
         }
 

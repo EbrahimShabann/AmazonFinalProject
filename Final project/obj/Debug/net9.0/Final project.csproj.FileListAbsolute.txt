@@ -272,6 +272,7 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-wm6afhb2yo.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-b9sayid5wm.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\rnp52oshlg-xtxxf3hu2r.gz
