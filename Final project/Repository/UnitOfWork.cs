@@ -1,4 +1,9 @@
 ﻿using Final_project.Models;
+using Final_project.Repository.CustomerServiceRepoFile.ChatMessage;
+using Final_project.Repository.CustomerServiceRepoFile.ChatSession;
+using Final_project.Repository.CustomerServiceRepoFile.SupportTicket;
+using Final_project.Repository.CustomerServiceRepoFile.TicketHistory;
+using Final_project.Repository.CustomerServiceRepoFile.TicketMessage;
 using Final_project.Repository.DiscountRepositoryFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
@@ -15,6 +20,13 @@ namespace Final_project.Repository
         private IOrderRepo _orderRepo;
         private IDiscountRepo _discountRepo;
         private IProductImageRepo _productImageRepo;
+
+        // Customer Service repositories
+        private ISupportTicketRepo _supportTicketRepo;
+        private ITicketMessageRepo _ticketMessageRepo;
+        private ITicketHistoryRepo _ticketHistoryRepo;
+        private IChatSessionRepo _chatSessionRepo;
+        private IChatMessageRepo _chatMessageRepo;
         public UnitOfWork(AmazonDBContext db)
         {
             this.db = db;
@@ -60,6 +72,57 @@ namespace Final_project.Repository
                     _productImageRepo = new ProductImageRepo(db);
                 return _productImageRepo;
             } 
+        }
+
+        // Customer Service repositories
+        public ISupportTicketRepo SupportTicketRepo
+        {
+            get
+            {
+                if (_supportTicketRepo == null)
+                    _supportTicketRepo = new SupportTicketRepo(db);
+                return _supportTicketRepo;
+            }
+        }
+
+        public ITicketMessageRepo TicketMessageRepo
+        {
+            get
+            {
+                if (_ticketMessageRepo == null)
+                    _ticketMessageRepo = new TicketMessageRepo(db);
+                return _ticketMessageRepo;
+            }
+        }
+
+        public ITicketHistoryRepo TicketHistoryRepo
+        {
+            get
+            {
+                if (_ticketHistoryRepo == null)
+                    _ticketHistoryRepo = new TicketHistoryRepo(db);
+                return _ticketHistoryRepo;
+            }
+        }
+
+        public IChatSessionRepo ChatSessionRepo
+        {
+            get
+            {
+                if (_chatSessionRepo == null)
+                    _chatSessionRepo = new ChatSessionRepo(db);
+                return _chatSessionRepo;
+            }
+        }
+
+        public IChatMessageRepo ChatMessageRepo
+        {
+            get
+            {
+                if (_chatMessageRepo == null)
+                    _chatMessageRepo = new ChatMessageRepo(db);
+                return _chatMessageRepo;
+            }
         }
         public void save()
         {
