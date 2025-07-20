@@ -5,9 +5,9 @@ namespace Final_project.Repository.NewFolder
 {
     public interface ILandingPageRepository
     {
-        public List<LandingPageProductDiscount> GetNewDiscounts(int Number=10);
-        public List<LandingPageProducts> GetBestSellers(int Number = 10);
-        public List<LandingPageProducts> GetNewArrivals(int Number = 10);
+        public List<LandingPageProductDiscount> GetNewDiscounts(int take = 10, int skip = 0);
+        public List<LandingPageProducts> GetBestSellers(int take = 10, int skip = 0);
+        public List<LandingPageProducts> GetNewArrivals(int take = 10, int skip = 0);
         public List<ProductSearchViewModel> ProductSearch(string searchTerm, int pageNumber = 1, int pageSize = 10);
         public string GetProductImageUrl(string productId);
         public int GetProductRating(string productId);
@@ -15,7 +15,8 @@ namespace Final_project.Repository.NewFolder
 
 
         //Category
-
+        public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams);
+        public int GetFilteredProductsCount(ProductFilterParameters filterParams);
 
 
     }

@@ -179,13 +179,18 @@
                 }
             });
         });
+        // *******************************************************************
+        function redirectToProduct(productId) {
+            window.location.href = `/Landing/Index/${productId}`;
+            // changeit once the productselectProduct ditails is done
+        }
 
         // Updated helper functions
         function displaySearchResults(results) {
             if (results && results.length > 0) {
                 let html = '<ul class="search-results">';
                 results.forEach(function(product) {
-                    html += `<li class="search-result-item" onclick="selectProduct('${product.productName}')">
+                    html += `<li class="search-result-item" onclick="redirectToProduct('${product.productId}')">
                         <img src="${product.imageUrl}" alt="${product.productName}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNiAxNkgyNFYyNEgxNlYxNloiIGZpbGw9IiNDQ0NDQ0MiLz4KPC9zdmc+Cg=='" />
                         <span>${product.productName}</span>
                     </li>`;

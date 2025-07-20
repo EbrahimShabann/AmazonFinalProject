@@ -84,39 +84,44 @@
             @foreach (var item in Model.BestSellers)
             {
                 <div class="product-card">
-                    <div class="product-image">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                    <a asp-action="Index" asp-controller="Landing">
+                        <div class="product-image">
+                            <img src="@item.ImageUrl" alt="@item.ProductName" />
 
-                    </div>
-                    <div class="product-title">
-                        @item.ProductName
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            @for (var i = 1; i <= item.ratting;i++)
-                            {
-                                <span>★</span>
-                            }
-                            @for (var i = 1; i <= item.rattingStarMinuse; i++)
-                            {
-                                <span>☆</span>
-                            }
                         </div>
-                        <span class="rating-count">@item.ratingCount</span>
-                    </div>
-                    <div class="product-price">
-                        <span class="price-symbol">$</span>
-                        <span class="price-whole">@item.Price</span>
-                    </div>
-                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
-                    <div class="product-prime">
-                        <span class="prime-logo">prime</span>
-                        <span>FREE delivery</span>
-                    </div>
+                        <div class="product-title">
+                            @item.ProductName
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">
+                                @for (var i = 1; i <= item.ratting; i++)
+                                {
+                                    <span>★</span>
+                                }
+                                @for (var i = 1; i <= item.rattingStarMinuse; i++)
+                                {
+                                    <span>☆</span>
+                                }
+                            </div>
+                            <span class="rating-count">@item.ratingCount</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price-symbol">$</span>
+                            <span class="price-whole">@item.Price</span>
+                        </div>
+                        <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
+                        <div class="product-prime">
+                            <span class="prime-logo">prime</span>
+                            <span>FREE delivery</span>
+                        </div>
+                    </a>
+
                     <button class="add-to-cart">Add to Cart</button>
                 </div>
 
             }
+   
+        
         </div>
         <button class="scroll-btn scroll-right"
         onclick="scrollProducts('bestsellers', 1)">

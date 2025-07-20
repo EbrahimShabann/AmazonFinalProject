@@ -55,5 +55,16 @@ namespace Final_project.Repository.CategoryFile
 
             return result;
         }
+
+        public int totalProduct()
+        {
+            return db.order_items
+                    .Include(oi => oi.product)
+                    .Where(oi => oi.quantity.HasValue && oi.product != null)
+                    .GroupBy(oi => oi.product_id)
+                    .Count();
+        }
+ 
+
     }
 }

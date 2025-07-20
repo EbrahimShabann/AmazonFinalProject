@@ -90,9 +90,8 @@
 
 
 <script>
-       // Enhanced JavaScript with simplified categories (parents only)
     $(document).ready(function() {
-        // This will work for both initial load and AJAX-loaded content
+        // Handle hamburger menu click - load categories and show sidebar
         $(document).on('click', '.hamburger-menu', function() {
             $.ajax({
                 url: "/Category/GetCategorys",
@@ -118,7 +117,6 @@
                     // Show the sidebar
                     $('#sidebar').addClass('active');
                     $('#sidebarOverlay').addClass('active');
-
                 },
                 error: function (xhr, status, error) {
                     console.log("Error details:", xhr.responseText, status, error);
@@ -134,7 +132,7 @@
             categories.forEach(function(parentCategory) {
                 // Only parent category (no children)
                 html += `<li class="category-item">
-                    <a href="#" class="sidebar-main-link" data-category-id="${parentCategory.id}">${parentCategory.name}</a>
+                    <a href="/Category/Index?categoryId=${parentCategory.id}" class="sidebar-main-link" data-category-id="${parentCategory.id}">${parentCategory.name}</a>
                 </li>`;
             });
 
@@ -142,13 +140,18 @@
             return html;
         }
 
-        // Handle parent category clicks
+        // Handle parent category clicks - navigate to Category/Index with categoryId
         $(document).on('click', '.sidebar-main-link', function(e) {
             e.preventDefault();
             const categoryId = $(this).data('category-id');
             const categoryName = $(this).text();
+
             console.log('Selected category:', categoryName, 'ID:', categoryId);
-            // Add your navigation logic here
+
+            // Navigate to Category/Index with categoryId as query parameter
+            window.location.href = `/Category/Index?categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}`;
+
+            return false;
         });
 
         // Handle sidebar close functionality

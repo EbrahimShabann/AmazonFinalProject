@@ -102,20 +102,21 @@ body {
 
 .search-results-container {
     position: absolute;
-    top: calc(100% - 2px); /* Overlap slightly with input border */
-    left: 20px; /* Match the padding of search-container */
-    right: 20px; /* Match the padding of search-container */
+    top: 100%; /* Changed from calc(100% - 2px) to 100% */
+    left: 20px;
+    right: 20px;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95); /* Match input background */
-    border: 2px solid var(--amazon-orange); /* Match input border */
-    border-top: none; /* Remove top border to connect with input */
-    border-radius: 0 0 25px 25px; /* Match input border-radius on bottom */
-    box-shadow: 0 4px 20px rgba(255, 153, 0, 0.3); /* Match input focus shadow */
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid var(--amazon-orange);
+    border-top: 1px solid var(--amazon-orange); /* Changed from border-top: none */
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 4px 20px rgba(255, 153, 0, 0.3);
     max-height: 400px;
     overflow-y: auto;
     display: none;
-    transition: all 0.3s ease; /* Match input transition */
-    backdrop-filter: blur(10px); /* Add modern glass effect */
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    margin-top: 2px; /* Added small margin to create gap */
 }
 
     .search-results-container.show {
