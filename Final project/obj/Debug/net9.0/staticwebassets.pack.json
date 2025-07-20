@@ -17,8 +17,16 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\CategoryJS.js",
+      "PackagePath": "staticwebassets\\js\\CategoryJS.js"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\LandingPageJS.js",
       "PackagePath": "staticwebassets\\js\\LandingPageJS.js"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\LandingPageLayoutJS.js",
+      "PackagePath": "staticwebassets\\js\\LandingPageLayoutJS.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\site.js",

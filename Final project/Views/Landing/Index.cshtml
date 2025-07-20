@@ -1,9 +1,11 @@
 ﻿@model LandingPageViewModel
 @{
-    ViewData["Title"] = "";
+    ViewData["Title"] = "Shop Online";
     Layout = "_LandingAmazonPage";
 }
 
+<partial name="~/Views/Shared/_SideBarMenu.cshtml" />
+<partial name="_HeroSection" />
 
 <!-- Recent Discounts Section -->
 <section class="amazon-section">
@@ -182,3 +184,8 @@
         </button>
     </div>
 </section>
+
+
+@section Scripts{
+    <script src="./js/LandingPageJS.js"></script>
+}

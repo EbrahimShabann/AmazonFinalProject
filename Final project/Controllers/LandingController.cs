@@ -14,6 +14,7 @@ namespace Final_project.Controllers
         }
         public IActionResult Index()
         {
+            unitOfWork.CategoryRepository.GetCategoryWithItsChildern();
             var DataForPage = new LandingPageViewModel()
             {
                 BestSellers = unitOfWork.LandingPageReposotory.GetBestSellers(),
@@ -23,5 +24,11 @@ namespace Final_project.Controllers
 
             return View(DataForPage);
         }
+    
+        public IActionResult Search(string query)
+        {
+            return Json(unitOfWork.LandingPageReposotory.ProductSearch(query));
+        }
+    
     }
 }

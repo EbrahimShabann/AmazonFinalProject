@@ -1,0 +1,308 @@
+﻿@model LandingPageViewModel
+@{
+    ViewData["Title"] = "Category";
+    Layout = "_LandingAmazonPage";
+}
+<partial name="~/Views/Shared/_SideBarMenu.cshtml" />
+
+<!-- Category Page -->
+<div class="category-page" id="categoryPage">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <!-- Left Sidebar - Category Filters -->
+            <div class="col-md-3 col-lg-2 p-0">
+                <div class="category-sidebar">
+                    <div class="category-header">
+                        <h4>Electronics</h4>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="filter-section">
+                        <h5>Department</h5>
+                        <ul class="filter-list">
+                            <li>
+                                <a href="#" class="filter-item active">Electronics</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Cell Phones & Accessories</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Cases & Covers</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Screen Protectors</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Chargers & Cables</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Wireless Chargers</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Computers & Tablets</a>
+                                <ul class="filter-subcategory">
+                                    <li><a href="#" class="filter-item">Laptops</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Desktop Computers</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Tablets</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Computer Accessories</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">TV & Home Theater</a>
+                                <ul class="filter-subcategory">
+                                    <li><a href="#" class="filter-item">Televisions</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Streaming Devices</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Sound Bars</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Home Theater Systems</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Camera & Photo</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Digital Cameras</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Camera Lenses</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Tripods & Monopods</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Memory Cards</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Headphones</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Over-Ear Headphones</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">In-Ear Headphones</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Wireless Earbuds</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Gaming Headsets</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Video Games</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">PlayStation Games</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Xbox Games</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Nintendo Games</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">PC Games</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Price Filter -->
+                    <div class="filter-section">
+                        <h5>Price</h5>
+                        <ul class="filter-list">
+                            <li><a href="#" class="filter-item">Under $25</a></li>
+                            <li><a href="#" class="filter-item">$25 to $50</a></li>
+                            <li><a href="#" class="filter-item">$50 to $100</a></li>
+                            <li><a href="#" class="filter-item">$100 to $200</a></li>
+                            <li><a href="#" class="filter-item">$200 & Above</a></li>
+                        </ul>
+                    </div>
+
+    
+                    <!-- Rating Filter -->
+                    <div class="filter-section">
+                        <h5>Customer Review</h5>
+                        <ul class="filter-list">
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★★★ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★★☆ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★☆☆ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★☆☆☆ & Up</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10">
+                <div class="category-content">
+                    <!-- Sort Bar -->
+                    <div class="sort-bar">
+                        <div class="sort-info">
+                            <span>
+                                1-16 of over 2,000 results for
+                                <strong>"Electronics"</strong>
+                            </span>
+                        </div>
+                        <div class="sort-options">
+                            <label for="sortSelect">Sort by:</label>
+                            <select id="sortSelect" class="sort-select">
+                                <option value="relevance">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Avg. Customer Review</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Single Product Card -->
+
+                    <div class="row justify-content-center">
+                        <div class="product-card m-1 col-3">
+                            <div class="discount-badge">-43%</div>
+                            <div class="choice-badge">Choice</div>
+                            <div class="product-sponsored">Sponsored</div>
+                            <div class="product-image">
+                                <i class="fas fa-headphones product-placeholder"></i>
+                            </div>
+                            <div class="product-title">
+                                Sony WH-1000XM4 Wireless Premium Noise Canceling Overhead
+                                Headphones with Mic
+                            </div>
+                            <div class="product-rating">
+                                <div class="stars">★★★★☆</div>
+                                <span class="rating-count">23,456</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-symbol">$</span>
+                                <span class="price-whole">199</span>
+                                <span class="price-fraction">99</span>
+                                <span class="price-original">$349.99</span>
+                            </div>
+                            <div class="product-delivery">FREE delivery Thu, Jul 18</div>
+                            <div class="product-prime">
+                                <span class="prime-logo">prime</span>
+                                <span>FREE One-Day</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <nav aria-label="Product pagination">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                                <li class="page-item active">
+                                    <span class="page-link">1</span>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <span class="page-link">...</span>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">15</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        // Modified JavaScript section - replace the existing script
+        $(document).ready(function(){
+            setupDepartmentLinks()
+            $.ajax({
+                url: "/Category/GetCategorys",
+                type: "GET",
+                success: function (result) {
+                    console.log("Success:", result);
+                    renderCategories(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error details:", xhr.responseText, status, error);
+                    alert("Error: " + xhr.status + " - " + xhr.responseText);
+                }
+            });
+        });
+
+        function renderCategories(categories) {
+            // Find the filter list container
+            const filterList = $('.filter-section .filter-list').first();
+
+            // Clear existing content (keep only the first active item or clear all)
+            filterList.empty();
+
+            // Add "All Categories" option
+            filterList.append(`
+                <li>
+                    <a href="#" class="filter-item active">All Categories</a>
+                </li>
+            `);
+
+            // Render each parent category with its children
+            categories.forEach(category => {
+                let categoryHtml = `
+                    <li>
+                        <a href="#" class="filter-item" data-category-id="${category.id}">${category.name}</a>
+                `;
+
+                // Add children if they exist
+                if (category.childCategories && category.childCategories.length > 0) {
+                    categoryHtml += `<ul class="filter-subcategory">`;
+
+                    category.childCategories.forEach(child => {
+                        categoryHtml += `
+                            <li>
+                                <a href="#" class="filter-item" data-category-id="${child.id}">${child.name}</a>
+                            </li>
+                        `;
+                    });
+
+                    categoryHtml += `</ul>`;
+                }
+
+                categoryHtml += `</li>`;
+                filterList.append(categoryHtml);
+            });
+
+            // Update the category header dynamically (optional)
+        }
+
+
+     
+        }
+        </script>
+        <script src="./js/CategoryJS.js"></script>
+}
+                           

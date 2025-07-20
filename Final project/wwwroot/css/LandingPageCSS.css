@@ -100,6 +100,139 @@ body {
         transform: scale(0.95);
     }
 
+.search-results-container {
+    position: absolute;
+    top: calc(100% - 2px); /* Overlap slightly with input border */
+    left: 20px; /* Match the padding of search-container */
+    right: 20px; /* Match the padding of search-container */
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95); /* Match input background */
+    border: 2px solid var(--amazon-orange); /* Match input border */
+    border-top: none; /* Remove top border to connect with input */
+    border-radius: 0 0 25px 25px; /* Match input border-radius on bottom */
+    box-shadow: 0 4px 20px rgba(255, 153, 0, 0.3); /* Match input focus shadow */
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    transition: all 0.3s ease; /* Match input transition */
+    backdrop-filter: blur(10px); /* Add modern glass effect */
+}
+
+    .search-results-container.show {
+        display: block;
+        transform: scale(1.02); /* Match input focus transform */
+    }
+
+.search-results {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0; /* Add some padding inside */
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px; /* Match input padding */
+    margin: 0 8px; /* Add side margins */
+    border-radius: 15px; /* Rounded items */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Match input transition */
+    background: transparent;
+}
+
+    .search-result-item:hover {
+        background: rgba(255, 153, 0, 0.1); /* Orange tint on hover */
+        transform: translateX(5px); /* Subtle slide effect */
+        border-radius: 20px; /* More rounded on hover */
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .search-result-item img {
+        width: 45px; /* Slightly larger */
+        height: 45px;
+        object-fit: cover;
+        border-radius: 12px; /* More rounded */
+        margin-right: 15px;
+        border: 2px solid rgba(255, 153, 0, 0.2); /* Subtle orange border */
+        transition: all 0.3s ease;
+    }
+
+    .search-result-item:hover img {
+        border-color: var(--amazon-orange); /* Orange border on hover */
+        transform: scale(1.05); /* Slight zoom on hover */
+    }
+
+    .search-result-item span {
+        color: #333;
+        font-size: 16px; /* Match input font-size */
+        flex-grow: 1;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .search-result-item:hover span {
+        color: #e68900; /* Orange text on hover */
+    }
+
+.search-loading, .search-error {
+    padding: 20px; /* Match input padding */
+    text-align: center;
+    color: #666;
+    font-size: 16px; /* Match input font-size */
+    border-radius: 15px;
+    margin: 8px;
+}
+
+.search-loading {
+    background: rgba(255, 153, 0, 0.05);
+    color: var(--amazon-orange);
+}
+
+.search-error {
+    color: #d32f2f;
+    background: rgba(211, 47, 47, 0.05);
+}
+
+/* Custom scrollbar for the dropdown */
+.search-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.search-results-container::-webkit-scrollbar-thumb {
+    background: var(--amazon-orange);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+    .search-results-container::-webkit-scrollbar-thumb:hover {
+        background: #e68900;
+    }
+
+/* Animation for dropdown appearance */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1.02);
+    }
+}
+
+.search-results-container.show {
+    animation: slideDown 0.3s ease forwards;
+}
+
 .navbar-actions {
     display: flex;
     align-items: center;
@@ -449,6 +582,204 @@ body {
         .sidebar-section .sidebar-main-link:hover {
             color: var(--amazon-orange);
         }
+
+
+
+
+/* Enhanced Category Dropdown Styles - Add this to your existing CSS */
+
+/* Category list styling */
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-item {
+    border-bottom: 1px solid #eee;
+}
+
+    .category-item:last-child {
+        border-bottom: none;
+    }
+
+/* Parent category styling */
+.category-parent {
+    position: relative;
+}
+
+.category-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    color: #0066c0 !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+}
+
+    .category-toggle:hover {
+        background-color: #f8f9fa;
+        color: var(--amazon-orange) !important;
+    }
+
+/* Dropdown arrow styling */
+.dropdown-arrow {
+    font-size: 12px;
+    color: #666;
+    transition: transform 0.3s ease;
+    margin-left: auto;
+}
+
+    .dropdown-arrow.rotated {
+        transform: rotate(180deg);
+    }
+
+/* Child categories container */
+.category-children {
+    display: none;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .category-children.expanded {
+        display: block;
+    }
+
+/* Child category links */
+.category-child-link {
+    display: block;
+    color: #333 !important;
+    text-decoration: none;
+    padding: 10px 20px 10px 40px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+}
+
+    .category-child-link:before {
+        content: "∟";
+        position: absolute;
+        left: 25px;
+        color: #ccc;
+        font-weight: bold;
+    }
+
+    .category-child-link:hover {
+        background-color: #e9ecef;
+        color: var(--amazon-orange) !important;
+        padding-left: 45px;
+    }
+
+    .category-child-link:last-child {
+        border-bottom: none;
+    }
+
+/* Sidebar active states */
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+/* Enhanced sidebar section for categories */
+.sidebar-section .category-list .category-item .sidebar-main-link:not(.category-toggle) {
+    display: block;
+    color: #0066c0;
+    text-decoration: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+    .sidebar-section .category-list .category-item .sidebar-main-link:not(.category-toggle):hover {
+        background-color: #f8f9fa;
+        color: var(--amazon-orange);
+    }
+
+/* Animation for smooth dropdown */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        max-height: 500px;
+    }
+
+    to {
+        opacity: 0;
+        max-height: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .category-toggle {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .category-child-link {
+        padding: 8px 15px 8px 35px;
+        font-size: 13px;
+    }
+
+        .category-child-link:before {
+            left: 20px;
+        }
+
+        .category-child-link:hover {
+            padding-left: 40px;
+        }
+}
+
+/* Loading state styling (optional) */
+.sidebar-loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+    .sidebar-loading i {
+        font-size: 24px;
+        margin-bottom: 10px;
+        animation: spin 1s linear infinite;
+    }
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
 /* Hero Section */
 .hero {
     background: linear-gradient( 135deg, var(--amazon-blue), var(--amazon-light-blue) );
@@ -1131,6 +1462,246 @@ body {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.8);
     }
+}
+/* **************************************************************************************************************************************************************** */
+/* Category Page Styles */
+.category-page {
+    background: #fff;
+    padding: 20px 0;
+    min-height: calc(100vh - 190px);
+}
+
+.category-sidebar {
+    background: #fff;
+    padding: 20px;
+    height: 100%;
+    border-right: 1px solid #ddd;
+}
+
+.category-header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+    .category-header h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--amazon-dark);
+    }
+
+.results-count {
+    font-size: 12px;
+    color: #555;
+    display: block;
+    margin-top: 5px;
+}
+
+.filter-section {
+    margin-bottom: 25px;
+}
+
+    .filter-section h5 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--amazon-dark);
+    }
+
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: visible !important;
+    max-height: none !important;
+    opacity: 1 !important;
+}
+
+.filter-item {
+    display: block;
+    color: #555;
+    text-decoration: none;
+    padding: 5px 0;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+    .filter-item:hover {
+        color: var(--amazon-orange);
+    }
+
+    .filter-item.active {
+        color: var(--amazon-orange);
+        font-weight: 600;
+    }
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    .filter-checkbox input {
+        margin-right: 8px;
+    }
+
+.rating-filter {
+    color: var(--amazon-orange);
+}
+
+.category-content {
+    padding: 0 20px;
+}
+
+/* Dropdown arrow for filter sections */
+.filter-section h5 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--amazon-dark);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+    .filter-section h5:hover {
+        color: var(--amazon-orange);
+    }
+
+    .filter-section h5::after {
+        font-family: "Font Awesome 6 Free", sans-serif; /* fallback font */
+        font-weight: 900;
+        font-size: 14px;
+        transition: transform 0.3s ease;
+        color: #666;
+    }
+
+.filter-section.collapsed h5::after {
+    transform: rotate(-90deg);
+}
+
+/* Filter list animation */
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-height: 300px;
+    opacity: 1;
+}
+
+.filter-section.collapsed .filter-list {
+    max-height: none !important;
+    opacity: 1 !important;
+    margin-top: 0 !important;
+}
+
+/* Department subcategories styling */
+.filter-subcategory {
+    margin-left: 15px;
+    border-left: 2px solid #eee;
+    padding-left: 10px;
+}
+
+    .filter-subcategory .filter-item {
+        color: #666;
+        font-size: 13px;
+        padding: 3px 0;
+    }
+
+        .filter-subcategory .filter-item:hover {
+            color: var(--amazon-orange);
+        }
+
+.sort-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.sort-info {
+    font-size: 14px;
+    color: #555;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+}
+
+    .sort-options label {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+.sort-select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: #f8f9fa;
+}
+
+.choice-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ff9900;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.pagination-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    gap: 5px;
+}
+
+.page-item {
+    display: flex;
+}
+
+.page-link {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    color: #0f1111;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.page-item.active .page-link {
+    background: #f0f2f2;
+    border-color: #d5d9d9;
+    color: #0f1111;
+}
+
+.page-item:not(.active):not(.disabled) .page-link:hover {
+    background: #f7f7f7;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
 }
 
 /* Hero Section Responsive Centering */

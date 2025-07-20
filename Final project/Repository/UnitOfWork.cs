@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using Final_project.Repository.CategoryFile;
 using Final_project.Repository.NewFolder;
 using Final_project.Repository.ProductRepositoryFile;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Final_project.Repository
         private readonly AmazonDBContext db;
         //private IProductRepository _productRepository;
         private ILandingPageRepository _landingPageReposotory;
+        private ICategoryRepository _categoryRepository;
         public UnitOfWork(AmazonDBContext db)
         {
             this.db = db;
@@ -24,7 +26,15 @@ namespace Final_project.Repository
                 return _landingPageReposotory;
             }
         }
-
+        public ICategoryRepository CategoryRepository
+        {
+            get
+            {
+                if (_categoryRepository == null)
+                    _categoryRepository = new CategoryRepository(db);
+                return _categoryRepository;
+            }
+        }
         public void save()
         {
             db.SaveChanges();

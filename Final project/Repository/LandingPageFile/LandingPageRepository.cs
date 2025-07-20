@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.Arm;
 using System.Threading.Tasks;
 using Final_project.Models;
+using Final_project.ViewModel.LandingPageViewModels;
 using Final_project.ViewModel.NewFolder;
 using Microsoft.EntityFrameworkCore;
 
@@ -156,7 +157,7 @@ namespace Final_project.Repository.NewFolder
             return result;
         }
 
-        private string GetProductImageUrl(string productId)
+        public string GetProductImageUrl(string productId)
         {
             try
             {
@@ -167,11 +168,11 @@ namespace Final_project.Repository.NewFolder
             }
             catch
             {
-                return "default-image-url.jpg";
+                return "https://imageplaceholder.net/600x400/eeeeee/131313?text=Not+Found";
             }
         }
 
-        private int GetProductRating(string productId)
+        public int GetProductRating(string productId)
         {
             try
             {
@@ -187,7 +188,7 @@ namespace Final_project.Repository.NewFolder
             }
         }
 
-        private int GetProductRatingCount(string productId)
+        public int GetProductRatingCount(string productId)
         {
             try
             {
@@ -198,6 +199,63 @@ namespace Final_project.Repository.NewFolder
                 return 0;
             }
         }
+
+        public List<ProductSearchViewModel> ProductSearch(string searchTerm, int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                // Add null/empty checks for searchTerm
+                if (string.IsNullOrEmpty(searchTerm))
+                {
+                    return new List<ProductSearchViewModel>();
+                }
+
+                // Ensure db and db.products are not null
+                if (db?.products == null)
+                {
+                    return new List<ProductSearchViewModel>();
+                }
+
+                // First, get the products from database without calling GetProductImageUrl
+                var products = db.products
+                    .Where(p => p.is_active == true &&
+                               p.is_approved == true &&
+                               p.is_deleted == false &&
+                               (p.name.Contains(searchTerm) || p.description.Contains(searchTerm)))
+                    .OrderBy(p => p.name)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(p => new {
+                        Id = p.id,
+                        Name = p.name
+                    })
+                    .ToList(); // Execute the query here
+
+                // Check if products is null before calling Select
+                if (products == null)
+                {
+                    return new List<ProductSearchViewModel>();
+                }
+
+                // Then, create the view model with the method call
+                return products.Select(p => new ProductSearchViewModel
+                {
+                    ProductId = p.Id,
+                    ProductName = p.Name,
+                    ImageUrl = GetProductImageUrl(p.Id) // Now this runs in memory, not in SQL
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (replace with your logging mechanism)
+                // Logger.LogError(ex, "Error in ProductSearch method");
+
+                // Return empty list instead of throwing
+                return new List<ProductSearchViewModel>();
+            }
+        }
+
+
 
     }
 }
