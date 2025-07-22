@@ -1,4 +1,4 @@
-﻿namespace Final_project.Services.SellerPagination
+﻿namespace Final_project.Services.Customer
 {
     public static class IEnumerableExtensions
     {

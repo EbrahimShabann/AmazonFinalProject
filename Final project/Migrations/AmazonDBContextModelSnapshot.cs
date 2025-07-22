@@ -395,9 +395,6 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("seller_id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("shipping_address")
                         .HasColumnType("nvarchar(max)");
 
@@ -415,8 +412,6 @@ namespace Final_project.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("buyer_id");
-
-                    b.HasIndex("seller_id");
 
                     b.ToTable("orders");
                 });
@@ -463,11 +458,20 @@ namespace Final_project.Migrations
                     b.Property<string>("order_id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("productColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("productSize")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("product_id")
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("seller_id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("unit_price")
                         .HasColumnType("decimal(18, 2)");
@@ -477,6 +481,8 @@ namespace Final_project.Migrations
                     b.HasIndex("order_id");
 
                     b.HasIndex("product_id");
+
+                    b.HasIndex("seller_id");
 
                     b.ToTable("order_items");
                 });
@@ -999,13 +1005,7 @@ namespace Final_project.Migrations
                         .WithMany("OrdersAsBuyer")
                         .HasForeignKey("buyer_id");
 
-                    b.HasOne("Final_project.Models.ApplicationUser", "Seller")
-                        .WithMany("OrdersAsSeller")
-                        .HasForeignKey("seller_id");
-
                     b.Navigation("Buyer");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Final_project.Models.order_history", b =>
@@ -1026,6 +1026,12 @@ namespace Final_project.Migrations
                     b.HasOne("Final_project.Models.product", "product")
                         .WithMany()
                         .HasForeignKey("product_id");
+
+                    b.HasOne("Final_project.Models.ApplicationUser", "Seller")
+                        .WithMany("OrdersAsSeller")
+                        .HasForeignKey("seller_id");
+
+                    b.Navigation("Seller");
 
                     b.Navigation("order");
 

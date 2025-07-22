@@ -1,8 +1,14 @@
+wwwroot\css\CustomerCheckOut.css
+wwwroot\css\customerProductDetails.css
+wwwroot\css\CustomerProductsIndex.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\f.png
 wwwroot\images\m.png
 wwwroot\images\products\product-0e651131-6e18-40fc-b997-62c628a3128b\55bdaa6a-3976-4d43-9dad-93cc82ecbe51.jpg
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\029bf8a9-95d5-4740-a9db-9247664777c6.jpg
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\300fce22-8ece-46d0-8d1f-09549e095a59.jpg
+wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\b0ed72ca-f7d3-457a-b3a0-fac6be8dd745.jpg
 wwwroot\images\products\product-c59ac9f9-63ef-445a-bbd6-cb96394c16b8\540546a4-05c8-4dd1-b9b7-7cbc66ce0459.jpg
 wwwroot\images\products\product-c59ac9f9-63ef-445a-bbd6-cb96394c16b8\7f853f06-a038-4391-aba3-5adba9e58ee5.jpg
 wwwroot\js\site.js
@@ -4508,9 +4514,8 @@ wwwroot\lib\signalr\src\third-party-notices.txt
 wwwroot\lib\signalr\src\Utils.ts
 wwwroot\lib\signalr\src\WebSocketTransport.ts
 wwwroot\lib\signalr\src\XhrHttpClient.ts
-wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\029bf8a9-95d5-4740-a9db-9247664777c6.jpg
-wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\300fce22-8ece-46d0-8d1f-09549e095a59.jpg
-wwwroot\images\products\product-2793f2e0-dba2-4412-9fcd-939fbb1c4f09\b0ed72ca-f7d3-457a-b3a0-fac6be8dd745.jpg
+I:\AmazonFinalProject\Final project\wwwroot\css\CustomerCheckOut.css
+I:\AmazonFinalProject\Final project\wwwroot\css\customerProductDetails.css
 I:\AmazonFinalProject\Final project\wwwroot\css\site.css
 I:\AmazonFinalProject\Final project\wwwroot\favicon.ico
 I:\AmazonFinalProject\Final project\wwwroot\js\site.js
@@ -8895,5 +8900,6 @@ I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.j
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.min.js
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.min.js.map
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\package.json
-I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\README.md
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\src\third-party-notices.txt
+I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\README.md
+I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProductsIndex.css

@@ -1,0 +1,480 @@
+﻿@using Final_project.ViewModel.Customer
+@model ProductsVM
+<title>@Model.name - Amazon Style</title>
+<link href="/css/customerProductDetails.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-5">
+            <div class="card mb-4">
+                <img src="/images/@Model.image_url" alt="@Model.name" class="card-img-top img-fluid" id="mainImage">
+                
+                <div class="card-body">
+                    <div class="d-flex flex-wrap">
+                        @foreach (var image in Model.ExistingImages)
+                        {
+                            <img src="/images/@image.image_url" alt="@Model.name" class="img-thumbnail m-1" style="width: 80px; height: 80px; cursor: pointer;" onclick="changeMainImage(this)">
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-7">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">@Model.name</h1>
+                    <input type="hidden" name="id" id="productId" value="@Model.id">
+                    
+                    <div class="mb-2">
+                        <span class="text-muted">Brand:</span>
+                        <span class="text-dark fw-bold">@Model.Brand</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        @{
+                            int fullStars = (int)Model.rating;
+                            bool hasHalfStar = Model.rating - fullStars >= 0.5;
+                        }
+                        <div class="d-flex align-items-center">
+                            <div class="text-warning">
+                                @for (int i = 0; i < fullStars; i++)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                @if (hasHalfStar)
+                                {
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                @for (int i = 0; i < 5 - fullStars - (hasHalfStar ? 1 : 0); i++)
+                                {
+                                    <i class="far fa-star"></i>
+                                }
+                            </div>
+                            <a href="#reviews" class="ml-2">@Model.ReviewsCount ratings</a>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        @if (Model.discount_price.HasValue && Model.discount_price < Model.price)
+                        {
+                            <span class="text-danger fw-bold">$@Model.discount_price?.ToString("0.00")</span>
+                            <span class="text-muted text-decoration-line-through ms-2">$@Model.price?.ToString("0.00")</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger fw-bold">$@Model.price?.ToString("0.00")</span>
+                        }
+                    </div>
+                    
+                    @if (Model.stock_quantity >= 1)
+                    {
+                        <div class="text-success mb-3">
+                            <i class="fas fa-check-circle"></i> In Stock
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-danger mb-3">
+                            <i class="fas fa-times-circle"></i> Out of Stock
+                        </div>
+                    }
+                    
+                    <!-- Size Selection -->
+                    @if (Model.SelectedSizes != null && Model.SelectedSizes.Any())
+                    {
+                        <div class="mb-3">
+                            <h6>Size</h6>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                @foreach (var size in Model.SelectedSizes)
+                                {
+                                    <label class="btn btn-outline-secondary">
+                                        <input type="radio" name="size" autocomplete="off" data-size="@size"> @size
+                                    </label>
+                                }
+                            </div>
+                            <input type="hidden" id="selectedSize" name="size">
+                        </div>
+                    }
+                    
+                    <!-- Color Selection -->
+                    @if (Model.SelectedColors != null && Model.SelectedColors.Any())
+                    {
+                        <div class="mb-3">
+                            <h6>Color</h6>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                @foreach (var color in Model.SelectedColors)
+                                {
+                                    <label class="btn btn-outline-secondary" style="background-color: @color" title="@color">
+                                        <input type="radio" name="color" autocomplete="off" data-color="@color">
+                                    </label>
+                                }
+                            </div>
+                            <input type="hidden" id="selectedColor" name="color">
+                        </div>
+                    }
+                    
+                    <div class="mb-3">
+                        <label for="quantity">Quantity:</label>
+                        <select id="quantity" class="form-control w-auto">
+                            @for (int i = 1; i <= Model.stock_quantity; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-warning flex-grow-1" id="buyProduct">
+                            <i class="fas fa-bolt"></i> Buy Now
+                        </button>
+                        <button class="btn btn-outline-secondary flex-grow-1 product-btn-cart">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-outline-danger">
+                        <i class="far fa-heart"></i> Add to Wishlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Description -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Product Description</h2>
+            <p class="card-text">@Model.description</p>
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="card mb-4" id="reviews">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Customer Reviews</h2>
+            
+            <!-- Reviews Summary -->
+            <div class="row mb-4">
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <div class="display-4">@Model.rating?.ToString("0.0")</div>
+                    <div class="text-warning mb-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Model.rating)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            else if (i - 0.5 <= Model.rating)
+                            {
+                                <i class="fas fa-star-half-alt"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star"></i>
+                            }
+                        }
+                    </div>
+                    <div>@Model.ReviewsCount customer reviews</div>
+                </div>
+                
+                <div class="col-md-8">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        var percentage = Model.ReviewsCount > 0 ?
+                        (Model.reviews.Count(r => r.rating == i) * 100 / Model.ReviewsCount) : 0;
+                        
+                        <div class="row align-items-center mb-2">
+                            <div class="col-2 text-end">
+                                <span>@i star</span>
+                            </div>
+                            <div class="col-8">
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @percentage%"></div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <span>@percentage%</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <!-- Reviews List -->
+            <div class="mb-4">
+                @foreach (var review in Model.reviews)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h5 class="card-title mb-0">@review.User?.UserName</h5>
+                                <small class="text-muted">@review.created_at?.ToString("MMMM dd, yyyy")</small>
+                            </div>
+                            <div class="text-warning mb-2">
+                                @for (int i = 1; i <= review.rating; i++)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                            </div>
+                            <h6>@review.title</h6>
+                            <p class="card-text">@review.comment</p>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <!-- Add Review Form -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Write a Review</h3>
+                    <form id="reviewForm" method="post" action="/Customer/Product/addReview">
+                        <input type="hidden" name="product_id" value="@Model.id">
+                        
+                        <div class="form-group mb-3">
+                            <label>Rating</label>
+                            <div class="rating-input">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="far fa-star text-warning" data-rating="@i" style="cursor: pointer; font-size: 1.5rem;"></i>
+                                }
+                                <input type="hidden" name="rating" id="ratingValue" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="reviewTitle">Review Title</label>
+                            <input type="text" class="form-control" id="reviewTitle" name="title" placeholder="Summarize your review" required>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="reviewText">Your Review</label>
+                            <textarea class="form-control" id="reviewText" name="comment" rows="5" placeholder="Share your experience with this product" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recommended Products -->
+    @if (Model.RecommendedProducts != null && Model.RecommendedProducts.Any())
+    {
+        <div class="mb-5">
+            <h2 class="mb-4">Recommended For You</h2>
+            <div id="recommendedCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @{
+                        var chunkSize = 4;
+                        var chunks = Model.RecommendedProducts.Select((x, i) => new { Index = i, Value = x })
+                            .GroupBy(x => x.Index / chunkSize)
+                            .Select(x => x.Select(v => v.Value).ToList())
+                            .ToList();
+                    }
+                    
+                    @for (int i = 0; i < chunks.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <div class="row">
+                                @foreach (var product in chunks[i])
+                                {
+                                    <div class="col-md-3 mb-4">
+                                        <div class="card h-100 position-relative">
+                                            <!-- Sale Badge - Only shows if there's a discount -->
+                                            @if (product.discount_price.HasValue && product.discount_price < product.price)
+                                            {
+                                                <span class=" start-0 translate-middle-y bg-warning text-white px-2 py-1 rounded-end"
+                                                      style="z-index: 1; font-size: 0.8rem; position:absolute;top:21px">
+                                                    SALE
+                                                    @{
+                                                        var discountPercent = (int)(100 - (product.discount_price / product.price) * 100);
+                                                    }
+                                                    @discountPercent% OFF
+                                                </span>
+                                            }
+
+                                            <a href="/Customer/Product/Details/@product.id" class="text-decoration-none text-dark">
+                                                <img src="/images/@product.image_url" class="card-img-top" alt="@product.name" style="height: 200px; object-fit: contain;">
+                                                <div class="card-body">
+                                                    <h5 class="card-title" style="height: 50px; overflow: hidden;">@product.name</h5>
+                                                    <div class="text-warning mb-2">
+                                                        @for (int j = 1; j <= 5; j++)
+                                                        {
+                                                            if (j <= product.rating)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                            }
+                                                            else if (j - 0.5 <= product.rating)
+                                                            {
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div>
+                                                        @if (product.discount_price.HasValue && product.discount_price < product.price)
+                                                        {
+                                                            <span class="text-danger fw-bold">$@product.discount_price?.ToString("0.00")</span>
+                                                            <span class="text-muted text-decoration-line-through ms-2">$@product.price?.ToString("0.00")</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-danger fw-bold">$@product.price?.ToString("0.00")</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#recommendedCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#recommendedCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-3" style="width: 50px; height: 50px; display: none;">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<partial name="Tostar" />
+
+<script>
+    function changeMainImage(thumbnail) { 
+        const mainImage = document.getElementById('mainImage');
+        if (mainImage && thumbnail && thumbnail.src) {
+            mainImage.src = thumbnail.src;
+        } else {
+            toastr.error('Image elements not found');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            timeOut: 3000
+        };
+
+        // Size selection
+        document.querySelectorAll('input[name="size"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('selectedSize').value = this.getAttribute('data-size');
+            });
+        });
+
+        // Color selection
+        document.querySelectorAll('input[name="color"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('selectedColor').value = this.getAttribute('data-color');
+            });
+        });
+
+        // Add to cart button
+        document.querySelector('.product-btn-cart').addEventListener('click', function() {
+            const quantity = document.getElementById('quantity').value;
+            const size = document.getElementById('selectedSize')?.value;
+            const color = document.getElementById('selectedColor')?.value;
+            
+            toastr.success(`Added ${quantity} item(s) to cart${size ? ', Size: ' + size : ''}${color ? ', Color: ' + color : ''}`);
+        });
+
+        // Buy now button 
+        document.getElementById('buyProduct').addEventListener('click', function() {
+            const quantity = document.getElementById('quantity').value;
+            const productId = document.getElementById('productId').value;
+            const size = document.getElementById('selectedSize')?.value;
+            const color = document.getElementById('selectedColor')?.value;
+            
+            if (quantity && productId) {
+                let url = `/Customer/Product/CheckOut?productId=${productId}&quantity=${quantity}`;
+                if (size) url += `&size=${encodeURIComponent(size)}`;
+                if (color) url += `&color=${encodeURIComponent(color)}`;
+                window.location.href = url;
+            } else {
+                toastr.error('Product information missing', { timeOut: 1500 });
+            }
+        });
+
+        // Rating stars selection
+        document.querySelectorAll('.rating-input i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                document.getElementById('ratingValue').value = rating;
+
+                // Update star display
+                const stars = document.querySelectorAll('.rating-input i');
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+
+        // Review form submission
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            if (!document.getElementById('ratingValue').value) {
+                e.preventDefault();
+                toastr.error('Please select a rating', { timeOut: 1500 });
+            }
+        });
+
+        // Back to top button
+         const backToTopButton = document.getElementById('backToTop');
+            window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = 'block';
+        }
+        else {
+            backToTopButton.style.display = 'none';
+        }
+    });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Initialize Bootstrap carousel
+        if (document.getElementById('recommendedCarousel')) {
+            const carousel = new bootstrap.Carousel('#recommendedCarousel', {
+                interval: 5000,
+                wrap: true
+            });
+        }
+    });
+</script>
