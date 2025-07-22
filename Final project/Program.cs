@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Final_project
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             //==================SignalR Services=========================
@@ -40,6 +41,16 @@ namespace Final_project
 
             //======================Injection============================
             builder.Services.AddScoped<UnitOfWork>();
+
+
+
+
+
+
+
+
+
+
             //======================SQLInjection=========================
 
             builder.Services.AddDbContext<AmazonDBContext>(

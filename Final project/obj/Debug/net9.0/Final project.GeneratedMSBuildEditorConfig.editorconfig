@@ -17,41 +17,61 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Final_project
 build_property.RootNamespace = Final_project
-build_property.ProjectDir = C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\
+build_property.ProjectDir = D:\New folder\esmael\ITI\FinalProject\Final project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project
+build_property.MSBuildProjectDirectory = D:\New folder\esmael\ITI\FinalProject\Final project
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Home/Index.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/AdminDashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/AdminProducts/AllProducts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9kdWN0c1xBbGxQcm9kdWN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/AdminProducts/pendingProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9kdWN0c1xwZW5kaW5nUHJvZHVjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/AdminUsers/GetUsersByRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2Vyc1xHZXRVc2Vyc0J5Um9sZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Home/Privacy.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/Error.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Shared/AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEFkbWluTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/_ViewImports.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/_ViewStart.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_Layout.cshtml]
+[D:/New folder/esmael/ITI/FinalProject/Final project/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-z5e1tk2uw4

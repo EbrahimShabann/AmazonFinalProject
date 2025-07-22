@@ -1,0 +1,322 @@
+﻿@model List<product>
+@{
+    ViewData["Title"] = "AllProducts";
+    Layout = "AdminLayout";
+    
+}
+
+
+<style>
+    .filter-section {
+        background: var(--amazon-card);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .filter-group {
+        margin-bottom: 10px;
+    }
+
+    .filter-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: var(--amazon-dark);
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-size: 0.9rem;
+    }
+
+    .filter-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Product Table */
+    .products-table-container {
+        background: var(--amazon-card);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+    }
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+    }
+
+        .products-table th {
+            background: var(--amazon-dark);
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 500;
+        }
+
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .products-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .products-table tr:hover {
+            background: #f0f7ff;
+        }
+
+    .product-image-cell {
+        width: 60px;
+    }
+
+    .product-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ccc;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: rgba(243, 156, 18, 0.15);
+        color: var(--amazon-warning);
+    }
+
+    .status-approved {
+        background: rgba(0, 166, 90, 0.15);
+        color: var(--amazon-success);
+    }
+
+    .status-rejected {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--amazon-danger);
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        gap: 5px;
+    }
+
+    .pagination-btn {
+        padding: 8px 14px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .pagination-btn:hover {
+            background: var(--amazon-orange);
+            color: white;
+            border-color: var(--amazon-orange);
+        }
+
+        .pagination-btn.active {
+            background: var(--amazon-orange);
+            color: white;
+            border-color: var(--amazon-orange);
+        }
+
+    /* Action Buttons */
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+    }
+
+    .btn-approve {
+        background: var(--amazon-success);
+        color: white;
+    }
+
+    .btn-reject {
+        background: var(--amazon-danger);
+        color: white;
+    }
+
+    .btn-details {
+        background: var(--amazon-info);
+        color: white;
+    }
+
+    .btn-delete {
+        background: var(--amazon-danger);
+        color: white;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+</style>
+<!-- Main Content -->
+<main class="main-content">
+    <h1 class="dashboard-title">Product Management</h1>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="filter-grid">
+            <div class="filter-group">
+
+                <input type="text" class="filter-input" id="filter-name" placeholder="Product/Ctegory Name...">
+            </div>
+
+            <div class="filter-group">
+                <input type="text" class="filter-input" id="filter-name" placeholder="Seller Name...">
+
+            </div>
+
+
+
+            <div class="filter-group">
+                <label class="filter-label">Price Range</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" class="filter-input" id="filter-min-price" placeholder="Min" min="0">
+                    <input type="number" class="filter-input" id="filter-max-price" placeholder="Max" min="0">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Status</label>
+                <select class="filter-select" id="filter-status">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-actions">
+            <button class="action-btn btn-details" id="reset-filters">
+                <i class="fas fa-sync-alt"></i> Reset Filters
+            </button>
+            <button class="action-btn btn-approve" id="apply-filters">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="products-table-container">
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Seller</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(product p in Model)
+                {
+                    <tr>
+                        <td>@p.id</td>
+                        <td>@p.name</td>
+                        <td>@p.price</td>
+                        <td>@p.Seller.UserName</td>
+                        <td>@p.category.name</td>
+                        <td>
+                            @if ((bool)p.is_active & (bool)p.is_approved)
+                            {
+                                <span class="status-badge status-approved">Approved</span>
+                            }else if((bool)p.is_active & (bool)!p.is_approved)
+                            {
+                                <span class="status-badge status-pending">Pending</span>
+                            }
+
+                        </td>
+                        <td>
+                            @if ((bool)p.is_active & (bool)!p.is_approved)
+                            {
+                                <button class="action-btn btn-approve">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="action-btn btn-reject">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="action-btn btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            }
+                            <button class="action-btn btn-details">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="pagination-btn" id="prev-page"><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">4</button>
+            <button class="pagination-btn">5</button>
+            <button class="pagination-btn" id="next-page"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+</main>

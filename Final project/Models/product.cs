@@ -41,11 +41,13 @@ public partial class product
 
     [StringLength(255)]
     public string category_id { get; set; }
+    [ForeignKey("category_id")]
+    public virtual category category { get; set; }
 
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
-
+    public virtual List<product_image> Product_Images { get; set; }
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
     public DateTime? last_modified_at { get; set; }

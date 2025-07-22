@@ -1,0 +1,62 @@
+﻿@model List<ApplicationUser>
+@{
+    ViewData["Title"] = $"{ViewBag.Role} Users";
+    Layout = "AdminLayout";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name or email" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <input type="date" name="fromDate" value="@ViewBag.FromDate" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <input type="date" name="toDate" value="@ViewBag.ToDate" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Created At</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.created_at.ToString("yyyy-MM-dd")</td>
+                <td><span class="badge @(user.is_active ? "bg-success" : "bg-danger")">@(user.is_active ? "Active" : "Inactive")</span></td>
+                <td>
+                    <a href="@Url.Action("Details", "Users", new { id = user.Id })" class="btn btn-info btn-sm">Details</a>
+                    <button class="btn btn-warning btn-sm toggle-status" data-id="@user.Id">Toggle</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+<script>
+    $(document).on('click', '.toggle-status', function () {
+        var userId = $(this).data('id');
+        $.post(`/admin/users/ToggleActive/${userId}`, function () {
+            location.reload();
+        });
+    });
+</script>
+}
+
+
