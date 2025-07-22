@@ -1,6 +1,7 @@
 wwwroot\css\CustomerCheckOut.css
 wwwroot\css\customerProductDetails.css
 wwwroot\css\CustomerProductsIndex.css
+wwwroot\css\CustomerProfile.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\f.png
@@ -8903,3 +8904,4 @@ I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\package.json
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\src\third-party-notices.txt
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\README.md
 I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProductsIndex.css
+I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProfile.css

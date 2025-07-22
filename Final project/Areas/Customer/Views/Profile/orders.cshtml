@@ -1,0 +1,185 @@
+﻿@using Final_project.Services.Customer
+@model PagedResult<order>
+@{
+    ViewData["Title"] = "Orders";
+    var currentPage = (int)Model.PageNumber;
+    var totalPages = (int)Model.TotalPages;
+    var pageSize = (int)Model.PageSize;
+    var sizeOptions = new[] { 2, 5, 10, 20, 50 };
+}
+<link href="/css/CustomerProfile.css" rel="stylesheet"/>
+
+    <!-- Header (simplified) -->
+<partial name="_Header" />
+
+    <div class="container my-4">
+        <div class="row">
+            <!-- Left Sidebar Navigation -->
+           <partial name="_SideBar"/>
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <div class="orders-container p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4><i class="fas fa-box-open amazon-orange me-2"></i> Your Orders</h4>
+                        <div class="d-flex">
+                            <input type="text" id="searchInput" class="form-control me-2" placeholder="Search all orders" style="width: 250px;">
+                            <button onclick="search()" class="btn btn-amazon">Search Orders</button>
+                        </div>
+                    </div>
+
+                    <!-- Order Filter -->
+                    <div class="order-filter mb-4">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <label class="form-label">Orders placed in</label>
+                                <select class="form-select" id="orderDate">
+                                    <option value="30">Last 30 days</option>
+                                    <option value="90">Last 3 months</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label class="form-label">Order status</label>
+                                <select class="form-select" id="orderStatus">
+                                    <option value="all">All orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <!-- Order List -->
+                    <div class="order-list">
+                        <!-- Order  -->
+                        @foreach(var order in Model.Items)
+                        {
+                        <div class="order-card">
+                            <div class="order-header d-flex justify-content-between">
+                                <div>
+                                    <span class="fw-bold">ORDER PLACED</span><br>
+                                    <span>@order.order_date?.ToString("dd,MMMM,yyyy")</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">TOTAL</span><br>
+                                    <span>@order.total_amount?.ToString("C")</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">SHIP TO</span><br>
+                                    <span>@order.Buyer.UserName</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">ORDER # @order.id</span><br>
+                                    <a href="/Customer/Profile/orderDetails?id=@order.id" class="text-primary">Order Details</a>
+                                </div>
+                            </div>
+
+                         
+                        </div>
+
+                        }        
+                       
+                    
+                    </div>
+
+                <!-- Pagination -->
+                <nav class="d-flex justify-content-between align-items-center my-4">
+                    <div class="text-muted small">
+                        Showing page @currentPage of @totalPages
+                    </div>
+
+                    <ul class="pagination amazon-pagination mb-0">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(currentPage - 1)&size=@pageSize" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        @if (totalPages == 0)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">0</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Always show first page -->
+                            <li class="page-item @(1 == currentPage ? "active" : "")">
+                                <a class="page-link" href="?page=1&size=@pageSize">1</a>
+                            </li>
+
+                            @if (currentPage > 3)
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(2, currentPage - 1); i <= Math.Min(totalPages - 1, currentPage + 1); i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="?page=@i&size=@pageSize">@i</a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPages - 2)
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            }
+
+                            @if (totalPages > 1)
+                            {
+                                <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                                    <a class="page-link" href="?page=@totalPages&size=@pageSize">@totalPages</a>
+                                </li>
+                            }
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(currentPage + 1)&size=@pageSize" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           
+      
+       //filter orders based on delivery date
+       document.getElementById('orderDate').addEventListener('change', function() {
+           const selectedValue = this.value;
+           this.setAttribute('data-selected', selectedValue);
+           // Implement filtering logic based on selected value
+          window.location.href = `/Customer/Profile/Orders?dateFilter=${selectedValue}`;
+    });
+       //filter orders based on delivery date
+       document.getElementById('orderStatus').addEventListener('change', function() {
+           const selectedValue = this.value;
+             this.setAttribute('data-selected', selectedValue);
+           // Implement filtering logic based on selected value
+          window.location.href = `/Customer/Profile/Orders?statusFilter=${selectedValue}`;
+    });
+
+
+     });//end of load
+
+     function search() {
+         const searchInput = document.getElementById('searchInput').value;
+         if (searchInput.trim() !== '') {
+             window.location.href = `/Customer/Profile/Orders?search=${encodeURIComponent(searchInput)}`;
+         }
+     }
+   </script>

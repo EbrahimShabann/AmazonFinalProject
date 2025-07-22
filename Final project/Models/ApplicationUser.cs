@@ -21,7 +21,8 @@ namespace Final_project.Models
         public virtual ICollection<chat_message> ChatMessages { get; set; }
         public virtual ICollection<discount> Discounts { get; set; }
         public virtual ICollection<order> OrdersAsBuyer { get; set; }
-        public virtual ICollection<order_item> OrdersAsSeller { get; set; }
+        public virtual ICollection<order> OrdersAsSeller { get; set; }
+        public virtual ICollection<order_item> OrderItemsAsSeller { get; set; }
         public virtual ICollection<product> Products { get; set; }
         public virtual ICollection<product_review> ProductReviews { get; set; }
         public virtual ICollection<shopping_cart> ShoppingCarts { get; set; }

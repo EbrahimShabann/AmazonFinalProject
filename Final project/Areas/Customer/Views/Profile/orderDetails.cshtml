@@ -1,0 +1,151 @@
+﻿@using Final_project.ViewModel.Customer
+@model OrderDetailsVM
+<link href="/css/CustomerProfile.css" rel="stylesheet"/>
+    <!-- Header (simplified) -->
+<partial name="_Header" />
+
+    <div class="container my-4">
+        <div class="row">
+            <!-- Left Sidebar Navigation -->
+        <partial name="_SideBar" />
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <div class="order-details-container p-4">
+                    <!-- Order Header -->
+                    <div class="order-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4><i class="fas fa-box-open amazon-orange me-2"></i> Order Details</h4>
+                        
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Order #:</strong> @Model.Order.id</p>
+                                <p class="mb-1"><strong>Order placed:</strong> @Model.Order.order_date?.ToString("dd MMMM yyyy")</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Total:</strong> @Model.Order.total_amount?.ToString("C")</p>
+                                <p class="mb-1"><strong>Payment method:</strong> @Model.Order.payment_method</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="shipping-address-box">
+                                    <p class="mb-1"><strong>Shipping address:</strong></p>
+                                    <p class="mb-0">@Model.Order.shipping_address</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Status -->
+                    <div class="order-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">Delivered @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</h5>
+                                @if(Model.Order.status == "Delivered")
+                                {
+                                    <p class="text-success mb-0"><i class="fas fa-check-circle me-1"></i> Your package was delivered</p>
+                                }
+                                else
+                                {
+                                    <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is on the way</p>
+                                }
+
+                               
+                            </div>
+                    
+                        </div>
+
+                        <div class="tracking-progress mb-3">
+                            <div class="tracking-progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="row text-center">
+                            <!-- Ordered (Always done) -->
+                            <div class="col">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <p class="mb-0">Ordered</p>
+                                <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
+                            </div>
+
+                            <!-- Shipped -->
+                            <div class="col">
+                                @if (Model.OrderHistory.status?.ToLower() == "shipped")
+                                {
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <p class="mb-0">Shipped</p>
+                                    <p class="text-muted small">@Model.OrderHistory.changed_at?.ToShortDateString()</p>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-clock text-muted"></i>
+                                    <p class="mb-0">Shipped</p>
+                                    <p class="text-muted small">Pending</p>
+                                }
+                            </div>
+
+                            <!-- Delivered -->
+                            <div class="col">
+                                @if (Model.Order.delivered_at != null)
+                                {
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <p class="mb-0">Delivered</p>
+                                    <p class="text-muted small">@Model.Order.delivered_at?.ToShortDateString()</p>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-clock text-muted"></i>
+                                    <p class="mb-0">Delivered</p>
+                                    <p class="text-muted small">Pending</p>
+                                }
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                    <!-- Order Items -->
+                    <div class="order-section">
+                        <h5 class="mb-3">Order Summary</h5>
+                    @foreach(var item in Model.OrderItems)
+                    {
+                          <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    @* <div class="col-md-2">
+                                        <img src="/images/@item.product" class="order-productDetails-img">
+                                    </div> *@
+                                    <div class="col-md-6">
+                                        <h6>@item.product.name</h6>
+                                        <p class="text-muted mb-2">Sold by: Amazon.com</p>
+                                        <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+                                        <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
+                                        <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <a href="/Customer/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
+                                        @* <button class="btn btn-outline-secondary mb-2">Return or replace items</button> *@
+                                        <a href="/Customer/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
+                                        <div>
+                                          
+                                            <a href="/Customer/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+                   
+                    <!-- Order Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
+                        @* <div>
+                            <button class="btn btn-outline-secondary me-2">Invoice</button>
+                            <button class="btn btn-outline-secondary">Archive order</button>
+                        </div> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

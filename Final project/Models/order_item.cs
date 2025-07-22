@@ -15,7 +15,10 @@ public partial class order_item
     public string order_id { get; set; }
     [ForeignKey("order_id")]
     public virtual order order { get; set; }
+    public string seller_id { get; set; }
 
+    [ForeignKey("seller_id")]
+    public virtual ApplicationUser Seller { get; set; }
     public string product_id { get; set; }
     [ForeignKey("product_id")]
     public virtual product product { get; set; }
@@ -28,8 +31,5 @@ public partial class order_item
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? discount_applied { get; set; }
-    public string seller_id { get; set; }
-
-    [ForeignKey("seller_id")]
-    public virtual ApplicationUser Seller { get; set; }
+   
 }

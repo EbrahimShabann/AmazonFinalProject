@@ -210,6 +210,7 @@ namespace Final_project.Areas.Customer.Controllers
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
                 order_date = DateTime.Now,
+                delivered_at=DateTime.Now+ TimeSpan.FromDays(7), //assuming delivery in 7 days
                 status = "Pending",
             };
             uof.OrderRepo.add(order);
