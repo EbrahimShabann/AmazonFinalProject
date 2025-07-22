@@ -12,7 +12,7 @@ namespace Final_project.Models
         public DateTime? date_of_birth { get; set; }
         public DateTime created_at { get; set; } = DateTime.UtcNow;
         public DateTime last_login { get; set; } = DateTime.UtcNow;
-        public bool is_active { get; set; } = false;
+        public bool is_active { get; set; } = true;
         public bool is_deleted { get; set; } =false;
         public DateTime? deleted_at { get; set; }
 

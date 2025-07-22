@@ -295,7 +295,6 @@ namespace Final_project.Repository.NewFolder
 
 
 
-        // Add these methods to your LandingPageRepository class
 
         public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams)
         {
@@ -359,16 +358,47 @@ namespace Final_project.Repository.NewFolder
                     .Take(filterParams.PageSize)
                     .ToList();
 
+                // Get current date for discount validation
+                var currentDate = DateTime.UtcNow;
+
                 // Convert to LandingPageProducts
                 var landingPageProducts = new List<LandingPageProducts>();
 
                 foreach (var product in products)
                 {
+                    // Check if product has active discount
+                    var activeDiscount = db.product_discounts
+                        .Include(pd => pd.Discount)
+                        .Where(pd => pd.product_id == product.id &&
+                                    pd.Discount.is_active == true &&
+                                    pd.Discount.start_date <= currentDate &&
+                                    (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+                        .FirstOrDefault();
+
+                    // Calculate discounted price if discount exists
+                    decimal? discountedPrice = null;
+                    if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
+                    {
+                        if (activeDiscount.Discount.discount_type == "Percentage")
+                        {
+                            discountedPrice = product.price * (1 - activeDiscount.Discount.value.Value / 100);
+                        }
+                        else if (activeDiscount.Discount.discount_type == "Fixed")
+                        {
+                            discountedPrice = product.price - activeDiscount.Discount.value.Value;
+                        }
+
+                        // Ensure discounted price is not negative
+                        if (discountedPrice < 0)
+                            discountedPrice = 0;
+                    }
+
                     var data = new LandingPageProducts
                     {
                         ProductId = product.id,
                         ProductName = product.name,
                         Price = product.price,
+                        DiscountPrice = discountedPrice,
                         ImageUrl = GetProductImageUrl(product.id),
                         ratting = GetProductRating(product.id),
                         ratingCount = GetProductRatingCount(product.id),
@@ -389,7 +419,6 @@ namespace Final_project.Repository.NewFolder
                 return new List<LandingPageProducts>();
             }
         }
-
         public int GetFilteredProductsCount(ProductFilterParameters filterParams)
         {
             try

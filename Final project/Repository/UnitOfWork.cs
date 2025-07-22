@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CategoryFile;
 using Final_project.Repository.NewFolder;
 using Final_project.Repository.ProductRepositoryFile;
@@ -12,6 +13,7 @@ namespace Final_project.Repository
         //private IProductRepository _productRepository;
         private ILandingPageRepository _landingPageReposotory;
         private ICategoryRepository _categoryRepository;
+        private IAccountRepository _accountRepository;
         public UnitOfWork(AmazonDBContext db)
         {
             this.db = db;
@@ -35,6 +37,17 @@ namespace Final_project.Repository
                 return _categoryRepository;
             }
         }
+        public IAccountRepository AccountRepository
+        {
+            get
+            {
+                if (_accountRepository == null)
+                    _accountRepository = new AccountRepository(db);
+                return _accountRepository;
+            }
+        }
+
+
         public void save()
         {
             db.SaveChanges();

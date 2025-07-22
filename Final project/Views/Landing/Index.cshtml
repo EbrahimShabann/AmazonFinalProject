@@ -11,19 +11,19 @@
 <section class="amazon-section">
     <div class="section-header">
         <h2 class="section-title">Deals and Promotions</h2>
-        <a href="#" class="see-more">See all deals</a>
+        <a href="/Category/Index?filter=discounts" class="see-more">See all deals</a>
     </div>
     <div class="products-container">
         <button class="scroll-btn scroll-left"
-        onclick="scrollProducts('discounts', -1)">
+                onclick="scrollProducts('discounts', -1)">
             <i class="fas fa-chevron-left"></i>
         </button>
         <div class="product-scroll" id="discounts">
             <!-- products is here -->
             <!-- Single Example Product -->
-            @foreach(var item in Model.DiscountProducts)
+            @foreach (var item in Model.DiscountProducts)
             {
-                <div class="product-card">
+                <div class="product-card" data-product-id="@item.ProductId">
                     <div class="discount-badge">-@item.DiscountPercentage%</div>
                     <div class="product-image">
                         <img src="@item.ImageUrl" alt="@item.ProductName" />
@@ -54,13 +54,13 @@
                         <span class="prime-logo">prime</span>
                         <span>FREE One-Day</span>
                     </div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
                 </div>
 
             }
         </div>
         <button class="scroll-btn scroll-right"
-        onclick="scrollProducts('discounts', 1)">
+                onclick="scrollProducts('discounts', 1)">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -70,11 +70,11 @@
 <section class="amazon-section">
     <div class="section-header">
         <h2 class="section-title">Best Sellers</h2>
-        <a href="#" class="see-more">See all best sellers</a>
+        <a href="/Category/Index?filter=bestsellers" class="see-more">See all best sellers</a>
     </div>
     <div class="products-container">
         <button class="scroll-btn scroll-left"
-        onclick="scrollProducts('bestsellers', -1)">
+                onclick="scrollProducts('bestsellers', -1)">
             <i class="fas fa-chevron-left"></i>
         </button>
         <div class="product-scroll" id="bestsellers">
@@ -83,75 +83,9 @@
             <!-- Single Example Product -->
             @foreach (var item in Model.BestSellers)
             {
-                <div class="product-card">
-                    <a asp-action="Index" asp-controller="Landing">
-                        <div class="product-image">
-                            <img src="@item.ImageUrl" alt="@item.ProductName" />
-
-                        </div>
-                        <div class="product-title">
-                            @item.ProductName
-                        </div>
-                        <div class="product-rating">
-                            <div class="stars">
-                                @for (var i = 1; i <= item.ratting; i++)
-                                {
-                                    <span>★</span>
-                                }
-                                @for (var i = 1; i <= item.rattingStarMinuse; i++)
-                                {
-                                    <span>☆</span>
-                                }
-                            </div>
-                            <span class="rating-count">@item.ratingCount</span>
-                        </div>
-                        <div class="product-price">
-                            <span class="price-symbol">$</span>
-                            <span class="price-whole">@item.Price</span>
-                        </div>
-                        <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
-                        <div class="product-prime">
-                            <span class="prime-logo">prime</span>
-                            <span>FREE delivery</span>
-                        </div>
-                    </a>
-
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-
-            }
-   
-        
-        </div>
-        <button class="scroll-btn scroll-right"
-        onclick="scrollProducts('bestsellers', 1)">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-
-</section>
-
-<!-- New Items Section -->
-<section class="amazon-section">
-    <div class="section-header">
-        <h2 class="section-title">New Arrivals</h2>
-        <a href="#" class="see-more">See what's new</a>
-    </div>
-    <div class="products-container">
-        <button class="scroll-btn scroll-left"
-        onclick="scrollProducts('newitems', -1)">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="product-scroll" id="newitems">
-            <!-- products is here -->
-            <!-- new items -->
-            <!-- Single Example Product -->
-            @foreach (var item in Model.NewArrivals)
-            {
-                <div class="product-card">
+                <div class="product-card" data-product-id="@item.ProductId">
                     <div class="product-image">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" style="width:100%; height:100%" />
-
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -178,7 +112,66 @@
                         <span class="prime-logo">prime</span>
                         <span>FREE delivery</span>
                     </div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+
+            }
+        </div>
+        <button class="scroll-btn scroll-right"
+                onclick="scrollProducts('bestsellers', 1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+</section>
+
+<!-- New Items Section -->
+<section class="amazon-section">
+    <div class="section-header">
+        <h2 class="section-title">New Arrivals</h2>
+        <a href="/Category/Index?filter=newarrivals" class="see-more">See what's new</a>
+    </div>
+    <div class="products-container">
+        <button class="scroll-btn scroll-left"
+                onclick="scrollProducts('newitems', -1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="product-scroll" id="newitems">
+            <!-- products is here -->
+            <!-- new items -->
+            <!-- Single Example Product -->
+            @foreach (var item in Model.NewArrivals)
+            {
+                <div class="product-card" data-product-id="@item.ProductId">
+                    <div class="product-image">
+                        <img src="@item.ImageUrl" alt="@item.ProductName" style="width:100%; height:100%" />
+                    </div>
+                    <div class="product-title">
+                        @item.ProductName
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">
+                            @for (var i = 1; i <= item.ratting; i++)
+                            {
+                                <span>★</span>
+                            }
+                            @for (var i = 1; i <= item.rattingStarMinuse; i++)
+                            {
+                                <span>☆</span>
+                            }
+                        </div>
+                        <span class="rating-count">@item.ratingCount</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="price-symbol">$</span>
+                        <span class="price-whole">@item.Price</span>
+                    </div>
+                    <div class="product-delivery">FREE delivery @item.delaviryTiming.ToString("D")</div>
+                    <div class="product-prime">
+                        <span class="prime-logo">prime</span>
+                        <span>FREE delivery</span>
+                    </div>
+                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
                 </div>
 
             }
@@ -191,6 +184,24 @@
 </section>
 
 
-@section Scripts{
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.product-card').on('click', function(e) {
+                var productId = $(this).data('product-id');
+
+                console.log('Redirecting to product ID:', productId);
+
+                if (productId) {
+                    window.location.href = `/Category/Index?id=${productId}`;
+                } else {
+                    console.error('Product ID not found');
+                }
+            });
+
+        });
+    </script>
+
     <script src="./js/LandingPageJS.js"></script>
+
 }

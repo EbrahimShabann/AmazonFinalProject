@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
@@ -10,7 +11,7 @@ namespace Final_project
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             //==================SignalR Services=========================
@@ -79,10 +80,12 @@ namespace Final_project
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+     
 
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseSession();
+
             app.UseAuthorization();
             app.MapStaticAssets();
             //app.MapHub<>("");
@@ -90,6 +93,12 @@ namespace Final_project
                 name: "default",
                 pattern: "{controller=Landing}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                await DbSeeder.SeedDefaultData(scope.ServiceProvider);
+            }
 
             app.Run();
         }

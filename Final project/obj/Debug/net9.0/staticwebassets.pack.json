@@ -5,6 +5,22 @@
       "PackagePath": "staticwebassets\\Final project.ha0l2qay2m.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg",
+      "PackagePath": "staticwebassets\\Image\\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg",
+      "PackagePath": "staticwebassets\\Image\\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\72b735db-3970-4821-a4d0-842211783748_oar2.jpg",
+      "PackagePath": "staticwebassets\\Image\\72b735db-3970-4821-a4d0-842211783748_oar2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\AccountPage.css",
+      "PackagePath": "staticwebassets\\css\\AccountPage.css"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\LandingPageCSS.css",
       "PackagePath": "staticwebassets\\css\\LandingPageCSS.css"
     },
@@ -15,6 +31,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\AccountPageJS.js",
+      "PackagePath": "staticwebassets\\js\\AccountPageJS.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\CategoryJS.js",

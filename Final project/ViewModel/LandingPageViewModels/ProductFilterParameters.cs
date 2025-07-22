@@ -10,6 +10,7 @@
         public string SortBy { get; set; } = "relevance";
         public int PageSize { get; set; } = 20;
         public int Skip { get; set; } = 0;
+        public string Filter { get; set; }
     }
     public enum ProductSortOption
     {

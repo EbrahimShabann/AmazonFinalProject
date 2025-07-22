@@ -17,9 +17,9 @@
             <!-- Prime Dropdown -->
             <div class="prime-dropdown dropdown">
                 <button class="dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
                     Prime
                 </button>
                 <ul class="dropdown-menu">
@@ -42,7 +42,20 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h3><i class="fas fa-user me-2"></i>Hello, Sign in</h3>
+        <h3>
+            <i class="fas fa-user me-2"></i>Hello, @{
+                var userName = User.Identity?.Name;
+                if (!string.IsNullOrEmpty(userName))
+                {
+                    @(userName.Contains("@") ? userName.Split("@")[0] : userName)
+                }
+                else
+                {
+                    @("Sign in")
+                }
+            }
+
+        </h3>
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
         </button>
@@ -59,7 +72,6 @@
                 <li><a href="#">Download Games</a></li>
             </ul>
         </div>
-
         <div class="sidebar-section">
             <h4>Shop by Category</h4>
             <ul>
@@ -83,6 +95,36 @@
                 <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
                 <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
                 <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
+            </ul>
+        </div>
+
+
+        <div class="sidebar-section">
+            <h4>Programs & Features</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link">Today's Deals</a></li>
+                <li><a href="#" class="sidebar-main-link">Amazon Pay</a></li>
+                <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
+                <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
+            </ul>
+        </div>
+
+
+
+        <div class="sidebar-section">
+            <h4>Help & Settings</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link">Your Account</a></li>
+                <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li><a asp-action="signOut" asp-controller="Account" class="sidebar-main-link">Sign Out</a></li>
+                }
+                else
+                {
+                    <li><a asp-action="Login" asp-controller="Account" class="sidebar-main-link">Sign in</a></li>
+                }
+
             </ul>
         </div>
     </div>

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CategoryFilter
+@{
     ViewData["Title"] = "Category";
     Layout = "_LandingAmazonPage";
 }
@@ -197,12 +198,14 @@
 </div>
 
 @section Scripts {
-<script>
-            // Enhanced filtering script with toggle functionality for price and stars
+    <script src="~/js/CategoryJS.js"></script>
+
+    <script>
+                // Enhanced filtering script with toggle functionality for price, stars, and landing page filters
         let filterState = {
             department: {
                 selected: null,
-                selectedId:  '@ViewBag.CategoryId',
+                selectedId: '@Model.categoryId',
                 subcategory: null,
                 subcategoryId: null
             },
@@ -214,6 +217,7 @@
                 selected: null,
                 rating: null
             },
+            filter: '@Model.filter', // Landing page filter (discounts, bestsellers, newarrivals)
             lastUpdated: null,
             filterType: null
         };
@@ -221,7 +225,7 @@
         let currentPage = 1;
         let isLoading = false;
 
-            function getUrlParameter(name) {
+        function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
             var results = regex.exec(location.search);
@@ -235,6 +239,79 @@
             if (show) {
                 productContainer.html('<div class="col-12 text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading products...</p></div>');
             }
+        }
+
+        // Function to display active filters badge
+        function updateActiveFiltersBadge() {
+            let activeFilters = [];
+
+            if (filterState.department.selected && filterState.department.selected !== 'All Categories') {
+                activeFilters.push(filterState.department.selected);
+            }
+
+            if (filterState.price.selected) {
+                activeFilters.push(filterState.price.selected);
+            }
+
+            if (filterState.customerReview.selected) {
+                activeFilters.push(filterState.customerReview.selected);
+            }
+
+            if (filterState.filter) {
+                switch(filterState.filter.toLowerCase()) {
+                    case 'discounts':
+                        activeFilters.push('Discounted Items');
+                        break;
+                    case 'bestsellers':
+                        activeFilters.push('Best Sellers');
+                        break;
+                    case 'newarrivals':
+                        activeFilters.push('New Arrivals');
+                        break;
+                }
+            }
+
+            // Update or create active filters display
+            let filtersDisplay = $('.active-filters-display');
+            if (filtersDisplay.length === 0) {
+                $('.category-header').after('<div class="active-filters-display mb-3"></div>');
+                filtersDisplay = $('.active-filters-display');
+            }
+
+            if (activeFilters.length > 0) {
+                let filtersHtml = '<div class="active-filters"><h6>Active Filters:</h6>';
+                activeFilters.forEach(filter => {
+                    filtersHtml += `<span class="badge bg-primary me-2 mb-1">${filter} <button class="btn-close btn-close-white ms-1" onclick="removeFilter('${filter}')" style="font-size: 0.7em;"></button></span>`;
+                });
+                filtersHtml += '</div>';
+                filtersDisplay.html(filtersHtml);
+            } else {
+                filtersDisplay.empty();
+            }
+        }
+
+        // Function to remove individual filter
+        function removeFilter(filterToRemove) {
+            if (filterToRemove === filterState.department.selected) {
+                filterState.department.selected = null;
+                filterState.department.selectedId = null;
+                $('.filter-section[data-filter-type="department"] .filter-item').removeClass('active');
+                $('.filter-item[data-category-id="all"]').addClass('active');
+            } else if (filterToRemove === filterState.price.selected) {
+                filterState.price.selected = null;
+                filterState.price.range = null;
+                $('.filter-section[data-filter-type="price"] .filter-item').removeClass('active');
+            } else if (filterToRemove === filterState.customerReview.selected) {
+                filterState.customerReview.selected = null;
+                filterState.customerReview.rating = null;
+                $('.filter-section[data-filter-type="rating"] .filter-item').removeClass('active');
+            } else if (filterToRemove.includes('Discounted') || filterToRemove.includes('Best Sellers') || filterToRemove.includes('New Arrivals')) {
+                filterState.filter = null;
+                $('.landing-filter-item').removeClass('active');
+            }
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
         }
 
         // Function to load filtered products
@@ -276,6 +353,11 @@
                 params.minRating = filterState.customerReview.rating.stars;
             }
 
+            // Add landing page filter
+            if (filterState.filter) {
+                params.filter = filterState.filter;
+            }
+
             console.log('Loading products with params:', params);
 
             $.ajax({
@@ -292,9 +374,10 @@
                     }
 
                     renderProducts(response.products);
-                    updatePagination(response);
-                    updateResultsInfo(response);
-                    currentPage = response.currentPage;
+                    updatePagination(response.pagination);
+                    updateResultsInfo(response.pagination);
+                    updateStatistics(response.statistics);
+                    currentPage = response.pagination.currentPage;
 
                     console.log('Products loaded successfully:', response);
                 },
@@ -306,7 +389,20 @@
             });
         }
 
-        // Updated renderProducts function with proper product links
+        // Function to update statistics display
+        function updateStatistics(statistics) {
+            if (!statistics) return;
+
+            let statsDisplay = $('.statistics-display');
+            if (statsDisplay.length === 0) {
+                $('.sort-bar').after('<div class="statistics-display mb-3"></div>');
+                statsDisplay = $('.statistics-display');
+            }
+                statsDisplay.empty();
+            
+        }
+
+        // Updated renderProducts function with enhanced discount and product display
         function renderProducts(products) {
             const productContainer = $('.row.justify-content-center');
             productContainer.empty();
@@ -324,8 +420,8 @@
             products.forEach(item => {
                 // Generate star rating HTML
                 let starsHtml = '';
-                const rating = item.ratting || 0;
-                const ratingStarMinus = item.rattingStarMinuse || (5 - rating);
+                const rating = item.rating || item.ratting || 0;
+                const ratingStarMinus = item.ratingStarMinus || item.rattingStarMinuse || (5 - rating);
 
                 for (let i = 0; i < rating; i++) {
                     starsHtml += '<span>★</span>';
@@ -334,9 +430,68 @@
                     starsHtml += '<span>☆</span>';
                 }
 
+                // Determine if product has discount
+                const hasDiscount = item.hasDiscount || (item.discountPrice && item.discountPrice < item.originalPrice);
+                const discountPercentage = item.discountPercentage || 0;
+                const finalPrice = item.finalPrice || item.discountPrice || item.originalPrice || item.price;
+                const originalPrice = item.originalPrice || item.price;
+
+                // Create discount badge HTML if product has discount
+                const discountBadgeHtml = hasDiscount ? `<div class="discount-badge">-${discountPercentage}%</div>` : '';
+
+                // Add bestseller badge if this is a bestseller filter
+                const bestsellerBadge = (filterState.filter === 'bestsellers' && item.totalSold > 0) ?
+                    `<div class="bestseller-badge">Best Seller</div>` : '';
+
+                // Add new arrival badge if this is a new arrivals filter
+                const newArrivalBadge = (filterState.filter === 'newarrivals') ?
+                    `<div class="new-arrival-badge">New</div>` : '';
+
+                // Create price HTML based on whether product has discount
+                let priceHtml = '';
+                if (hasDiscount) {
+                    priceHtml = `
+                        <div class="product-price">
+                            <span class="price-symbol">$</span>
+                            <span class="price-whole">${finalPrice}</span>
+                            <span class="price-original">$${originalPrice}</span>
+                        </div>
+                    `;
+                } else {
+                    priceHtml = `
+                        <div class="product-price">
+                            <span class="price-symbol">$</span>
+                            <span class="price-whole">${finalPrice}</span>
+                        </div>
+                    `;
+                }
+
+                // Format delivery timing
+                const deliveryDate = item.deliveryTiming || item.delaviryTiming;
+                let deliveryText = 'Soon';
+                if (deliveryDate) {
+                    try {
+                        deliveryText = new Date(deliveryDate).toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    } catch (e) {
+                        deliveryText = 'Soon';
+                    }
+                }
+
+                // Add sales info for bestsellers
+                const salesInfo = (filterState.filter === 'bestsellers' && item.totalSold) ?
+                    `<div class="sales-info">Sold: ${item.totalSold}</div>` : '';
+
                 const productHtml = `
                     <div class="product-card m-1 col-3">
-                        <a href="/Landing/ProductDetails/${item.productId || item.id}" class="text-decoration-none text-dark">
+                        ${discountBadgeHtml}
+                        ${bestsellerBadge}
+                        ${newArrivalBadge}
+                        <a href="/dfga/ProductDetails/${item.productId || item.id}" onclick="redirectToProduct(${item.productId || item.id}); return false;" class="text-decoration-none text-dark">
                             <div class="product-image">
                                 <img src="${item.imageUrl || '/images/placeholder.jpg'}" alt="${item.productName}" onerror="this.src='/images/placeholder.jpg'" />
                             </div>
@@ -347,16 +502,14 @@
                                 <div class="stars">
                                     ${starsHtml}
                                 </div>
-                                <span class="rating-count">${item.ratingCount || 0}</span>
+                                <span class="rating-count">${item.ratingCount || rating || 0}</span>
                             </div>
-                            <div class="product-price">
-                                <span class="price-symbol">$</span>
-                                <span class="price-whole">${item.price}</span>
-                            </div>
-                            <div class="product-delivery">FREE delivery ${item.delaviryTiming ? new Date(item.delaviryTiming).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Soon'}</div>
+                            ${priceHtml}
+                            ${salesInfo}
+                            <div class="product-delivery">FREE delivery ${deliveryText}</div>
                             <div class="product-prime">
                                 <span class="prime-logo">prime</span>
-                                <span>FREE delivery</span>
+                                <span>FREE ${item.prime ? 'One-Day' : 'delivery'}</span>
                             </div>
                         </a>
                         <button class="add-to-cart">Add to Cart</button>
@@ -368,15 +521,15 @@
         }
 
         // Function to update pagination
-        function updatePagination(response) {
+        function updatePagination(pagination) {
             const paginationContainer = $('.pagination');
             paginationContainer.empty();
 
-            const currentPage = response.currentPage;
-            const totalPages = response.totalPages;
+            const currentPage = pagination.currentPage;
+            const totalPages = pagination.totalPages;
 
             // Previous button
-            if (response.hasPreviousPage) {
+            if (pagination.hasPreviousPage) {
                 paginationContainer.append(`
                     <li class="page-item">
                         <a class="page-link pagination-link" href="#" data-page="${currentPage - 1}">Previous</a>
@@ -442,7 +595,7 @@
             }
 
             // Next button
-            if (response.hasNextPage) {
+            if (pagination.hasNextPage) {
                 paginationContainer.append(`
                     <li class="page-item">
                         <a class="page-link pagination-link" href="#" data-page="${currentPage + 1}">Next</a>
@@ -458,9 +611,9 @@
         }
 
         // Function to update results info
-        function updateResultsInfo(response) {
-            const startResult = ((response.currentPage - 1) * response.pageSize) + 1;
-            const endResult = Math.min(response.currentPage * response.pageSize, response.totalProducts);
+        function updateResultsInfo(pagination) {
+            const startResult = ((pagination.currentPage - 1) * pagination.pageSize) + 1;
+            const endResult = Math.min(pagination.currentPage * pagination.pageSize, pagination.totalProducts);
 
             // Add or update results info display
             let resultsInfo = $('.results-info');
@@ -469,8 +622,23 @@
                 resultsInfo = $('.results-info');
             }
 
+            let filterText = '';
+            if (filterState.filter) {
+                switch(filterState.filter.toLowerCase()) {
+                    case 'discounts':
+                        filterText = ' with discounts';
+                        break;
+                    case 'bestsellers':
+                        filterText = ' (Best Sellers)';
+                        break;
+                    case 'newarrivals':
+                        filterText = ' (New Arrivals)';
+                        break;
+                }
+            }
+
             resultsInfo.html(`
-                <span>Showing ${startResult}-${endResult} of ${response.totalProducts} results</span>
+                <span>Showing ${startResult}-${endResult} of ${pagination.totalProducts} results${filterText}</span>
             `);
         }
 
@@ -508,9 +676,7 @@
             filterState.lastUpdated = new Date().toISOString();
             filterState.filterType = 'department';
 
-            console.log('Department Filter State JSON:', JSON.stringify(filterState, null, 2));
-
-            // Load filtered products
+            updateActiveFiltersBadge();
             loadFilteredProducts(1, true);
         }
 
@@ -519,16 +685,11 @@
             const priceText = element.textContent.trim();
             const isCurrentlyActive = $(element).hasClass('active');
 
-            console.log('Price text clicked:', priceText, 'Currently active:', isCurrentlyActive);
-
             // If clicking the same price filter, toggle it off
             if (isCurrentlyActive && filterState.price.selected === priceText) {
-                // Clear price filter
                 filterState.price.selected = null;
                 filterState.price.range = null;
                 $(element).removeClass('active');
-
-                console.log('Price filter toggled OFF');
             } else {
                 // Remove active class from all price filters
                 $('.filter-section[data-filter-type="price"] .filter-item').removeClass('active');
@@ -550,16 +711,12 @@
                 filterState.price.selected = priceText;
                 filterState.price.range = range;
                 $(element).addClass('active');
-
-                console.log('Price filter set to:', priceText, 'Range:', range);
             }
 
             filterState.lastUpdated = new Date().toISOString();
             filterState.filterType = 'price';
 
-            console.log('Price Filter State JSON:', JSON.stringify(filterState, null, 2));
-
-            // Load filtered products
+            updateActiveFiltersBadge();
             loadFilteredProducts(1, true);
         }
 
@@ -568,16 +725,11 @@
             const ratingText = element.textContent.trim();
             const isCurrentlyActive = $(element).hasClass('active');
 
-            console.log('Rating text clicked:', ratingText, 'Currently active:', isCurrentlyActive);
-
             // If clicking the same rating filter, toggle it off
             if (isCurrentlyActive && filterState.customerReview.selected === ratingText) {
-                // Clear rating filter
                 filterState.customerReview.selected = null;
                 filterState.customerReview.rating = null;
                 $(element).removeClass('active');
-
-                console.log('Rating filter toggled OFF');
             } else {
                 // Remove active class from all rating filters
                 $('.filter-section[data-filter-type="rating"] .filter-item').removeClass('active');
@@ -593,16 +745,58 @@
                 filterState.customerReview.selected = ratingText;
                 filterState.customerReview.rating = rating;
                 $(element).addClass('active');
-
-                console.log('Rating filter set to:', ratingText, 'Rating:', rating);
             }
 
             filterState.lastUpdated = new Date().toISOString();
             filterState.filterType = 'customerReview';
 
-            console.log('Rating Filter State JSON:', JSON.stringify(filterState, null, 2));
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
 
-            // Load filtered products
+        // Function to add landing page filter buttons
+        function addLandingPageFilters() {
+            const filterSection = `
+                <div class="filter-section" data-filter-type="landing">
+                    <h5>Special Offers</h5>
+                    <ul class="filter-list">
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="discounts">Discounted Items</a></li>
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="bestsellers">Best Sellers</a></li>
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="newarrivals">New Arrivals</a></li>
+                    </ul>
+                </div>
+            `;
+
+            $('.filter-section[data-filter-type="rating"]').after(filterSection);
+
+            // Mark active filter if one was passed from landing page
+            if (filterState.filter) {
+                $(`.landing-filter-item[data-filter="${filterState.filter}"]`).addClass('active');
+            }
+        }
+
+        // Function to handle landing page filter clicks
+        function updateLandingFilter(element) {
+            const filterValue = element.getAttribute('data-filter');
+            const isCurrentlyActive = $(element).hasClass('active');
+
+            // If clicking the same filter, toggle it off
+            if (isCurrentlyActive && filterState.filter === filterValue) {
+                filterState.filter = null;
+                $(element).removeClass('active');
+            } else {
+                // Remove active class from all landing filters
+                $('.landing-filter-item').removeClass('active');
+
+                // Set new filter
+                filterState.filter = filterValue;
+                $(element).addClass('active');
+            }
+
+            filterState.lastUpdated = new Date().toISOString();
+            filterState.filterType = 'landing';
+
+            updateActiveFiltersBadge();
             loadFilteredProducts(1, true);
         }
 
@@ -623,63 +817,24 @@
                     selected: null,
                     rating: null
                 },
+                filter: null,
                 lastUpdated: null,
                 filterType: null
             };
 
             // Remove active classes
             $('.filter-item').removeClass('active');
+            $('.landing-filter-item').removeClass('active');
             $('.filter-item[data-category-id="all"]').addClass('active');
 
             // Reset sort
             $('#sortSelect').val('relevance');
 
-            // Load all products
+            updateActiveFiltersBadge();
             loadFilteredProducts(1, true);
         }
 
-        // Event handlers with enhanced toggle functionality
-        $(document).on('click', '.filter-section[data-filter-type="department"] .filter-item', function(e) {
-            e.preventDefault();
-            console.log('Department filter clicked!');
-            updateDepartmentFilter(this);
-            return false;
-        });
-
-        $(document).on('click', '.filter-section[data-filter-type="price"] .filter-item', function(e) {
-            e.preventDefault();
-            console.log('Price filter clicked!');
-            updatePriceFilter(this);
-            return false;
-        });
-
-        $(document).on('click', '.filter-section[data-filter-type="rating"] .filter-item', function(e) {
-            e.preventDefault();
-            console.log('Rating filter clicked!');
-            updateCustomerReviewFilter(this);
-            return false;
-        });
-
-        // Pagination click handler
-        $(document).on('click', '.pagination-link', function(e) {
-            e.preventDefault();
-            const page = parseInt($(this).data('page'));
-            if (page && !isLoading) {
-                loadFilteredProducts(page, false);
-                // Scroll to top of the page smoothly
-                $('html, body').animate({
-                    scrollTop: 0
-                }, 600);
-            }
-            return false;
-        });
-
-        // Sort change handler
-        $(document).on('change', '#sortSelect', function() {
-            loadFilteredProducts(1, true);
-        });
-
-           // Render categories in filter sidebar
+        // Render categories in filter sidebar
         function renderCategories(categories) {
             const filterList = $('.filter-section[data-filter-type="department"] .filter-list').first();
             filterList.empty();
@@ -716,54 +871,120 @@
             });
         }
 
+        // Event handlers
+        $(document).on('click', '.filter-section[data-filter-type="department"] .filter-item', function(e) {
+            e.preventDefault();
+            updateDepartmentFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.filter-section[data-filter-type="price"] .filter-item', function(e) {
+            e.preventDefault();
+            updatePriceFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.filter-section[data-filter-type="rating"] .filter-item', function(e) {
+            e.preventDefault();
+            updateCustomerReviewFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.landing-filter-item', function(e) {
+            e.preventDefault();
+            updateLandingFilter(this);
+            return false;
+        });
+
+        // Pagination click handler
+        $(document).on('click', '.pagination-link', function(e) {
+            e.preventDefault();
+            const page = parseInt($(this).data('page'));
+            if (page && !isLoading) {
+                loadFilteredProducts(page, false);
+                $('html, body').animate({ scrollTop: 0 }, 600);
+            }
+            return false;
+        });
+
+        // Sort change handler
+        $(document).on('change', '#sortSelect', function() {
+            loadFilteredProducts(1, true);
+        });
 
         // Document ready function
         $(document).ready(function() {
-               // Initialize category from URL parameter
-               const urlCategoryId = getUrlParameter('categoryId');
-               const urlCategoryName = getUrlParameter('categoryName');
+            // Initialize filters from URL parameters
+            const urlCategoryId = getUrlParameter('categoryId') || '@Model.categoryId';
+            const urlCategoryName = getUrlParameter('categoryName') || '@Model.categoryName';
+            const urlFilter = getUrlParameter('filter') || '@Model.filter';
 
-               if (urlCategoryId) {
-                   filterState.department.selectedId = urlCategoryId;
-                   if (urlCategoryName) {
-                       filterState.department.selected = urlCategoryName;
-                       $('#categoryTitle').text(urlCategoryName);
-                   }
-               }
+            if (urlCategoryId && urlCategoryId !== '') {
+                filterState.department.selectedId = urlCategoryId;
+                if (urlCategoryName && urlCategoryName !== '') {
+                    filterState.department.selected = urlCategoryName;
+                }
+            }
 
-               console.log('Initial Filter State:', JSON.stringify(filterState, null, 2));
+            if (urlFilter && urlFilter !== '') {
+                filterState.filter = urlFilter;
+            }
 
-               // Load categories
-               $.ajax({
-                   url: "/Category/GetCategorys",
-                   type: "GET",
-                   success: function (result) {
-                       console.log("Categories loaded successfully:", result);
-                       renderCategories(result);
+            console.log('Initial Filter State:', JSON.stringify(filterState, null, 2));
 
-                       // Load products after categories are loaded
-                       loadFilteredProducts(1, true);
-                   },
-                   error: function (xhr, status, error) {
-                       console.log("Error loading categories:", xhr.responseText, status, error);
-                       alert("Error loading categories: " + xhr.status + " - " + xhr.responseText);
+            // Load categories
+            $.ajax({
+                url: "/Category/GetCategorys",
+                type: "GET",
+                success: function (result) {
+                    console.log("Categories loaded successfully:", result);
+                    renderCategories(result);
 
-                       // Still try to load products even if categories fail
-                       loadFilteredProducts(1, true);
-                   }
-               });
-           });
-        // Utility function to manually print current state (for debugging)
+                    // Add landing page filters after categories are loaded
+                    addLandingPageFilters();
+
+                    // Update active filters badge
+                    updateActiveFiltersBadge();
+
+                    // Load products after categories are loaded
+                    loadFilteredProducts(1, true);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error loading categories:", xhr.responseText, status, error);
+
+                    // Add landing page filters even if categories fail
+                    addLandingPageFilters();
+                    updateActiveFiltersBadge();
+
+                    // Still try to load products even if categories fail
+                    loadFilteredProducts(1, true);
+                }
+            });
+        });
+
+        // Utility functions
         function printFilterState() {
             console.log('Current Filter State:', JSON.stringify(filterState, null, 2));
             return filterState;
         }
 
         function redirectToProduct(productId) {
-            window.location.href = `/Landing/Index/${productId}`;
-            // changeit once the productselectProduct ditails is done
+            window.location.href = `/dfga/ProductDetails/${productId}`;
         }
-</script>
+
+        // Add clear filters button
+        function addClearFiltersButton() {
+            if ($('.clear-filters-btn').length === 0) {
+                $('.category-header').after(`
+                    <div class="mb-3">
+                        <button class="btn btn-outline-secondary btn-sm clear-filters-btn" onclick="clearAllFilters()">
+                            Clear All Filters
+                        </button>
+                    </div>
+                `);
+            }
+        }
+    </script>
+
 }
 
-<script src="./js/CategoryJS.js"></script> 

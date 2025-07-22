@@ -52,6 +52,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<ticket_history> ticket_histories { get; set; }
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
+    public virtual DbSet<AccountLog> AccountLog { get; set; }
 
 
 
@@ -199,6 +200,13 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.NoAction);
 
         OnModelCreatingPartial(modelBuilder);
+
+        modelBuilder.Entity<AccountLog>(entity =>
+        {
+            entity.HasKey(e => e.LogID).HasName("PK__AccountLog__5E5499A8A33FBCA4");
+
+            entity.Property(e => e.TimeStamp).HasDefaultValueSql("(getdate())");
+        });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
