@@ -1,76 +1,13 @@
-﻿
+﻿@using Final_project.ViewModel.Customer
+@model OrderDetailsVM
 <link href="/css/CustomerProfile.css" rel="stylesheet"/>
     <!-- Header (simplified) -->
-    <header class="bg-dark py-2">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="#" class="navbar-brand">
-                    <img src="https://www.amazon.com/favicon.ico" alt="Amazon" height="30">
-                </a>
-                <div class="d-flex align-items-center">
-                    <span class="text-white me-3">Hello, User</span>
-                    <a href="#" class="text-white"><i class="fas fa-shopping-cart fa-lg"></i></a>
-                </div>
-            </div>
-        </div>
-    </header>
+<partial name="_Header" />
 
     <div class="container my-4">
         <div class="row">
             <!-- Left Sidebar Navigation -->
-            <div class="col-md-3 mb-4">
-                <div class="account-sidebar p-3">
-                    <h5 class="mb-3">Your Account</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-user me-2"></i> Account Overview
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-box-open me-2"></i> Your Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-lock me-2"></i> Login & Security
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-gift me-2"></i> Gift Cards
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-credit-card me-2"></i> Your Payments
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-map-marker-alt me-2"></i> Your Addresses
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-calendar-alt me-2"></i> Installment Plan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-envelope me-2"></i> Your Messages
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-headset me-2"></i> Contact Us
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
+        <partial name="_SideBar" />
             <!-- Main Content Area -->
             <div class="col-md-9">
                 <div class="order-details-container p-4">
@@ -78,22 +15,22 @@
                     <div class="order-section">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4><i class="fas fa-box-open amazon-orange me-2"></i> Order Details</h4>
-                            <a href="#" class="btn btn-outline-secondary"><i class="fas fa-print me-1"></i> Print order details</a>
+                        
                         </div>
 
                         <div class="row">
                             <div class="col-md-4">
-                                <p class="mb-1"><strong>Order #:</strong> 114-1234567-9876543</p>
-                                <p class="mb-1"><strong>Order placed:</strong> June 15, 2023</p>
+                                <p class="mb-1"><strong>Order #:</strong> @Model.Order.id</p>
+                                <p class="mb-1"><strong>Order placed:</strong> @Model.Order.order_date?.ToString("dd MMMM yyyy")</p>
                             </div>
                             <div class="col-md-4">
-                                <p class="mb-1"><strong>Total:</strong> $49.99</p>
-                                <p class="mb-1"><strong>Payment method:</strong> Visa ending in 1234</p>
+                                <p class="mb-1"><strong>Total:</strong> @Model.Order.total_amount?.ToString("C")</p>
+                                <p class="mb-1"><strong>Payment method:</strong> @Model.Order.payment_method</p>
                             </div>
                             <div class="col-md-4">
                                 <div class="shipping-address-box">
                                     <p class="mb-1"><strong>Shipping address:</strong></p>
-                                    <p class="mb-0">John Smith<br>123 Main St<br>Apt 4B<br>New York, NY 10001<br>United States</p>
+                                    <p class="mb-0">@Model.Order.shipping_address</p>
                                 </div>
                             </div>
                         </div>
@@ -103,158 +40,109 @@
                     <div class="order-section">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <h5 class="mb-1">Delivered June 18, 2023</h5>
-                                <p class="text-success mb-0"><i class="fas fa-check-circle me-1"></i> Your package was delivered</p>
+                                <h5 class="mb-1">Delivered @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</h5>
+                                @if(Model.Order.status == "Delivered")
+                                {
+                                    <p class="text-success mb-0"><i class="fas fa-check-circle me-1"></i> Your package was delivered</p>
+                                }
+                                else
+                                {
+                                    <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is on the way</p>
+                                }
+
+                               
                             </div>
-                            <button class="btn btn-amazon"><i class="fas fa-box me-1"></i> Track package</button>
+                    
                         </div>
 
                         <div class="tracking-progress mb-3">
                             <div class="tracking-progress-bar" style="width: 100%"></div>
                         </div>
-
                         <div class="row text-center">
+                            <!-- Ordered (Always done) -->
                             <div class="col">
                                 <i class="fas fa-check-circle text-success"></i>
                                 <p class="mb-0">Ordered</p>
-                                <p class="text-muted small">Jun 15</p>
+                                <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
                             </div>
+
+                            <!-- Shipped -->
                             <div class="col">
-                                <i class="fas fa-check-circle text-success"></i>
-                                <p class="mb-0">Shipped</p>
-                                <p class="text-muted small">Jun 16</p>
+                                @if (Model.OrderHistory.status?.ToLower() == "shipped")
+                                {
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <p class="mb-0">Shipped</p>
+                                    <p class="text-muted small">@Model.OrderHistory.changed_at?.ToShortDateString()</p>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-clock text-muted"></i>
+                                    <p class="mb-0">Shipped</p>
+                                    <p class="text-muted small">Pending</p>
+                                }
                             </div>
+
+                            <!-- Delivered -->
                             <div class="col">
-                                <i class="fas fa-check-circle text-success"></i>
-                                <p class="mb-0">Out for delivery</p>
-                                <p class="text-muted small">Jun 18</p>
+                                @if (Model.Order.delivered_at != null)
+                                {
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <p class="mb-0">Delivered</p>
+                                    <p class="text-muted small">@Model.Order.delivered_at?.ToShortDateString()</p>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-clock text-muted"></i>
+                                    <p class="mb-0">Delivered</p>
+                                    <p class="text-muted small">Pending</p>
+                                }
                             </div>
-                            <div class="col">
-                                <i class="fas fa-check-circle text-success"></i>
-                                <p class="mb-0">Delivered</p>
-                                <p class="text-muted small">Jun 18</p>
-                            </div>
+
                         </div>
+                        
                     </div>
 
                     <!-- Order Items -->
                     <div class="order-section">
                         <h5 class="mb-3">Order Summary</h5>
-
-                        <div class="card mb-3">
+                    @foreach(var item in Model.OrderItems)
+                    {
+                          <div class="card mb-3">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-2">
-                                        <img src="https://m.media-amazon.com/images/I/71h6PpGaz9L._AC_UL320_.jpg" class="order-productDetails-img">
-                                    </div>
+                                    @* <div class="col-md-2">
+                                        <img src="/images/@item.product" class="order-productDetails-img">
+                                    </div> *@
                                     <div class="col-md-6">
-                                        <h6>Amazon Echo Dot (4th Gen) - Smart speaker with Alexa - Charcoal</h6>
+                                        <h6>@item.product.name</h6>
                                         <p class="text-muted mb-2">Sold by: Amazon.com</p>
-                                        <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on Jun 18, 2023</p>
-                                        <p class="mb-2"><strong>Quantity:</strong> 1</p>
-                                        <p class="mb-2"><strong>Item price:</strong> $49.99</p>
+                                        <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+                                        <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
+                                        <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
                                     </div>
                                     <div class="col-md-4 text-end">
-                                        <button class="btn btn-amazon mb-2">Buy it again</button>
-                                        <button class="btn btn-outline-secondary mb-2">Return or replace items</button>
-                                        <button class="btn btn-outline-secondary mb-2">View your item</button>
+                                        <a href="/Customer/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
+                                        @* <button class="btn btn-outline-secondary mb-2">Return or replace items</button> *@
+                                        <a href="/Customer/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
                                         <div>
-                                            <a href="#" class="text-primary me-2">Leave seller feedback</a>
-                                            <a href="#" class="text-primary">Write a product review</a>
+                                          
+                                            <a href="/Customer/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Payment Information -->
-                    <div class="order-section">
-                        <h5 class="mb-3">Payment Information</h5>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Payment method</h6>
-                                        <p class="mb-1">Visa ending in 1234</p>
-                                        <p class="mb-1">Expires 05/2025</p>
-                                        <p class="mb-0">Billing address: Same as shipping address</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Payment summary</h6>
-                                        <table class="table table-sm">
-                                            <tr>
-                                                <td>Item(s) Subtotal:</td>
-                                                <td class="text-end">$49.99</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Shipping & Handling:</td>
-                                                <td class="text-end">$0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total before tax:</td>
-                                                <td class="text-end">$49.99</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Estimated tax:</td>
-                                                <td class="text-end">$3.50</td>
-                                            </tr>
-                                            <tr class="table-active fw-bold">
-                                                <td>Order Total:</td>
-                                                <td class="text-end">$53.49</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Information -->
-                    <div class="order-section">
-                        <h5 class="mb-3">Shipping Information</h5>
-
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6>Shipping address</h6>
-                                        <p>
-                                            John Smith<br>
-                                            123 Main St<br>
-                                            Apt 4B<br>
-                                            New York, NY 10001<br>
-                                            United States
-                                        </p>
-                                        <a href="#" class="text-primary">View or edit shipping address</a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>Shipping speed</h6>
-                                        <p>FREE Shipping - Standard (3-5 business days)</p>
-                                        <h6 class="mt-3">Carrier information</h6>
-                                        <p>
-                                            Amazon Logistics<br>
-                                            Tracking ID: AMZL_US1234567890
-                                        </p>
-                                        <a href="#" class="text-primary">Track package</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    }
+                </div>
+                   
                     <!-- Order Actions -->
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
-                        <div>
+                        @* <div>
                             <button class="btn btn-outline-secondary me-2">Invoice</button>
                             <button class="btn btn-outline-secondary">Archive order</button>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
             </div>

@@ -10,19 +10,7 @@
 <link href="/css/CustomerProfile.css" rel="stylesheet"/>
 
     <!-- Header (simplified) -->
-    <header class="bg-dark py-2">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="#" class="navbar-brand">
-                    <img src="https://www.amazon.com/favicon.ico" alt="Amazon" height="30">
-                </a>
-                <div class="d-flex align-items-center">
-                    <span class="text-white me-3">Hello, User</span>
-                    <a href="#" class="text-white"><i class="fas fa-shopping-cart fa-lg"></i></a>
-                </div>
-            </div>
-        </div>
-    </header>
+<partial name="_Header" />
 
     <div class="container my-4">
         <div class="row">
@@ -34,8 +22,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4><i class="fas fa-box-open amazon-orange me-2"></i> Your Orders</h4>
                         <div class="d-flex">
-                            <input type="text" class="form-control me-2" placeholder="Search all orders" style="width: 250px;">
-                            <button class="btn btn-amazon">Search Orders</button>
+                            <input type="text" id="searchInput" class="form-control me-2" placeholder="Search all orders" style="width: 250px;">
+                            <button onclick="search()" class="btn btn-amazon">Search Orders</button>
                         </div>
                     </div>
 
@@ -44,27 +32,24 @@
                         <div class="row">
                             <div class="col-md-3 mb-2">
                                 <label class="form-label">Orders placed in</label>
-                                <select class="form-select">
-                                    <option>Last 30 days</option>
-                                    <option>Last 3 months</option>
-                                    <option>2023</option>
-                                    <option>2022</option>
+                                <select class="form-select" id="orderDate">
+                                    <option value="30">Last 30 days</option>
+                                    <option value="90">Last 3 months</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
                                 </select>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label class="form-label">Order status</label>
-                                <select class="form-select">
-                                    <option>All orders</option>
-                                    <option>Not yet shipped</option>
-                                    <option>Delivered</option>
-                                    <option>Cancelled</option>
+                                <select class="form-select" id="orderStatus">
+                                    <option value="all">All orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 d-flex align-items-end mb-2">
-                                <button class="btn btn-outline-secondary me-2">Buy Again</button>
-                                <button class="btn btn-outline-secondary me-2">Not Yet Shipped</button>
-                                <button class="btn btn-outline-secondary">Cancelled Orders</button>
-                            </div>
+                           
                         </div>
                     </div>
 
@@ -89,32 +74,11 @@
                                 </div>
                                 <div>
                                     <span class="fw-bold">ORDER # @order.id</span><br>
-                                    <a href="#" class="text-primary">Order Details</a>
+                                    <a href="/Customer/Profile/orderDetails?id=@order.id" class="text-primary">Order Details</a>
                                 </div>
                             </div>
 
-                            <div class="order-status mb-3">
-                                <span class="badge bg-success">Delivered on Jun 18, 2023</span>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <img src="https://m.media-amazon.com/images/I/71h6PpGaz9L._AC_UL320_.jpg" class="order-product-img">
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Amazon Echo Dot (4th Gen) - Smart speaker with Alexa - Charcoal</h6>
-                                    <p class="text-muted">Sold by: Amazon.com</p>
-                                    <p class="text-success">Your item was delivered</p>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-amazon mb-2">Buy it again</button>
-                                    <button class="btn btn-outline-secondary">View your item</button>
-                                    <div class="mt-2">
-                                        <a href="#" class="text-primary">Leave seller feedback</a> |
-                                        <a href="#" class="text-primary">Write a product review</a>
-                                    </div>
-                                </div>
-                            </div>
+                         
                         </div>
 
                         }        
@@ -190,4 +154,32 @@
         </div>
     </div>
 
-   
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           
+      
+       //filter orders based on delivery date
+       document.getElementById('orderDate').addEventListener('change', function() {
+           const selectedValue = this.value;
+           this.setAttribute('data-selected', selectedValue);
+           // Implement filtering logic based on selected value
+          window.location.href = `/Customer/Profile/Orders?dateFilter=${selectedValue}`;
+    });
+       //filter orders based on delivery date
+       document.getElementById('orderStatus').addEventListener('change', function() {
+           const selectedValue = this.value;
+             this.setAttribute('data-selected', selectedValue);
+           // Implement filtering logic based on selected value
+          window.location.href = `/Customer/Profile/Orders?statusFilter=${selectedValue}`;
+    });
+
+
+     });//end of load
+
+     function search() {
+         const searchInput = document.getElementById('searchInput').value;
+         if (searchInput.trim() !== '') {
+             window.location.href = `/Customer/Profile/Orders?search=${encodeURIComponent(searchInput)}`;
+         }
+     }
+   </script>

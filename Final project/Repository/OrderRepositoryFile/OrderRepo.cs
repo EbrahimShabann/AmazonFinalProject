@@ -30,6 +30,18 @@ namespace Final_project.Repository.OrderRepositoryFile
            return db.orders.SingleOrDefault(o => o.id == id && !o.is_deleted);
         }
 
+        public order_history GetOrderHistoryByOrderId(string orderId)
+        {
+            return db.order_histories.SingleOrDefault(oh=>oh.order_id == orderId );
+        }
+
+        public List<order_item> GetOrderItemsOfOrder(string orderId)
+        {
+           return db.order_items
+                .Where(oi => oi.order_id == orderId )
+                .ToList();
+        }
+
         public void Update(order entity)
         {
             db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;

@@ -21,7 +21,7 @@ body {
             border-left: 3px solid #ff9900;
         }
 
-        .account-sidebar .nav-link.active {
+        .account-sidebar .nav-link:active {
             font-weight: bold;
             border-left: 3px solid #ff9900;
         }
