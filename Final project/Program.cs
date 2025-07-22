@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace Final_project
 {
@@ -30,6 +31,10 @@ namespace Final_project
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            //==================Stripe Payment Configuration====================
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
             //FOR GOOGLE ALSO 
             builder.Services.ConfigureApplicationCookie(options =>

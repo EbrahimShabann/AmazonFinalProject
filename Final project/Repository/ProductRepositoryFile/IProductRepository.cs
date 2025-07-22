@@ -8,6 +8,8 @@ namespace Final_project.Repository.Product
     {
          void delete(product entity);
          List<ProductsVM> getProductsWithImagesAndRating();
-
+        List<product_image> GetProduct_Images(string productId);
+        List<product_review> getProductReviews(string productId);
+        void addReview(product_review review);
     }
 }

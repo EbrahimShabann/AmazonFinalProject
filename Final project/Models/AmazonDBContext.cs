@@ -115,7 +115,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.OrdersAsBuyer)
             .HasForeignKey(o => o.buyer_id);
 
-        modelBuilder.Entity<order>()
+        modelBuilder.Entity<order_item>()
             .HasOne(o => o.Seller)
             .WithMany(u => u.OrdersAsSeller)
             .HasForeignKey(o => o.seller_id);

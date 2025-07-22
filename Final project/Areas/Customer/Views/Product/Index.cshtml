@@ -13,7 +13,7 @@
    
     <!-- Header with Search -->
     <header class="header">
-    <img src="https://koto.studio/wp-content/uploads/2025/04/Amazon_CS_01_Intro_00_Thumbnail.jpg" style="width:50vw" alt="Logo" class="header__logo">
+    <img src="https://koto.studio/wp-content/uploads/2025/04/Amazon_CS_01_Intro_00_Thumbnail.jpg" style="width:80px" alt="Logo" class="header__logo">
         
         <div class="header__search">
             <input type="text" class="header__searchInput" placeholder="Search products...">
@@ -25,58 +25,44 @@
     </header>
     
     <!-- Subheader with Categories -->
-    <div class="subheader">
+
         <div class="subheader__menu">
             <i class="fas fa-bars subheader__menuIcon"></i>
-            <span>All</span>
+
+        <form method="get" id="paginationForm" class="amazon-page-size-form">
+            <div class="d-flex align-items-center gap-2">
+                <label for="size" class="mb-0 small text-muted">Items per page:</label>
+                <select name="size" id="size" class="form-select amazon-page-select" onchange="this.form.submit()">
+                    @foreach (var sizeOption in sizeOptions)
+                    {
+                        <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
+                    }
+                </select>
+            </div>
+            <input type="hidden" name="page" value="@currentPage" />
+        </form>
         </div>
         
-        <div class="subheader__links">
-            <div class="subheader__link">Today's Deals</div>
-            <div class="subheader__link">Customer Service</div>
-            <div class="subheader__link">Registry</div>
-            <div class="subheader__link">Gift Cards</div>
-            <div class="subheader__link">Sell</div>
-        </div>
-    </div>
+        
 
-<form method="get" id="paginationForm" class="amazon-page-size-form">
-    <div class="d-flex align-items-center gap-2">
-        <label for="size" class="mb-0 small text-muted">Items per page:</label>
-        <select name="size" id="size" class="form-select amazon-page-select" onchange="this.form.submit()">
-            @foreach (var sizeOption in sizeOptions)
-            {
-                <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
-            }
-        </select>
-    </div>
-    <input type="hidden" name="page" value="@currentPage" />
-</form>
     <!-- Main Content Area -->
     <div class="main">
         <!-- Sidebar Filters -->
         <aside class="sidebar">
             <h2 class="sidebar__title">Filter Products</h2>
-            
+            @* 
             <div class="sidebar__section">
                 <h3 class="sidebar__sectionTitle">Categories</h3>
+            @foreach (var category in ViewBag.categories)
+            {
                 <div class="sidebar__filterItem">
-                    <input type="checkbox" id="category1" class="sidebar__filterCheckbox">
-                    <label for="category1" class="sidebar__filterLabel">Electronics</label>
+                    <input type="checkbox" id="@category.id" class="sidebar__filterCheckbox">
+                    <label for="@category.id" class="sidebar__filterLabel">@category.name</label>
                 </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="category2" class="sidebar__filterCheckbox">
-                    <label for="category2" class="sidebar__filterLabel">Home & Kitchen</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="category3" class="sidebar__filterCheckbox">
-                    <label for="category3" class="sidebar__filterLabel">Books</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="category4" class="sidebar__filterCheckbox">
-                    <label for="category4" class="sidebar__filterLabel">Clothing</label>
-                </div>
-            </div>
+
+            }
+                
+            </div> *@
             
             <div class="sidebar__section">
                 <h3 class="sidebar__sectionTitle">Price Range</h3>
@@ -102,38 +88,7 @@
                     <label for="rating2" class="sidebar__filterLabel">2 Stars & Up</label>
                 </div>
             </div>
-            
-            <div class="sidebar__section">
-                <h3 class="sidebar__sectionTitle">Brand</h3>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="brand1" class="sidebar__filterCheckbox">
-                    <label for="brand1" class="sidebar__filterLabel">Samsung</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="brand2" class="sidebar__filterCheckbox">
-                    <label for="brand2" class="sidebar__filterLabel">Apple</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="brand3" class="sidebar__filterCheckbox">
-                    <label for="brand3" class="sidebar__filterLabel">Sony</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="brand4" class="sidebar__filterCheckbox">
-                    <label for="brand4" class="sidebar__filterLabel">Bose</label>
-                </div>
-            </div>
-            
-            <div class="sidebar__section">
-                <h3 class="sidebar__sectionTitle">Availability</h3>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="inStock" class="sidebar__filterCheckbox" checked>
-                    <label for="inStock" class="sidebar__filterLabel">In Stock Only</label>
-                </div>
-                <div class="sidebar__filterItem">
-                    <input type="checkbox" id="prime" class="sidebar__filterCheckbox">
-                    <label for="prime" class="sidebar__filterLabel">Prime Eligible</label>
-                </div>
-            </div>
+        
         </aside>
         
         <!-- Product Grid -->
@@ -205,6 +160,10 @@
 
                             <!-- Buttons -->
                             <div class="product-card__buttons">
+                         
+                                <button class="details-btn btn btn-outline-warning" data-id="@product.id">
+                                    Details
+                              </button>
                                 <button class="product-card__wishlist-btn">
                                     <i class="far fa-heart"></i> Add to Wishlist
                                 </button>
@@ -288,60 +247,77 @@
 
     <script>
         // Basic search functionality
-        document.querySelector('.header__searchIcon').addEventListener('click', function() {
-            const searchTerm = document.querySelector('.header__searchInput').value;
-            alert(`Searching for: ${searchTerm}`);
-            // In a real implementation, you would filter products based on search term
-        });
+    //     document.querySelector('.header__searchIcon').addEventListener('click', function() {
+    //         const searchTerm = document.querySelector('.header__searchInput').value;
+    //        $.ajax({
+    //        url:"{area=customer}/{controller=product}/{action=Search}",
+    //       error:function(error){
+    //           alert(error)
+    //       }
+    //        })
+               
+    //        }
+    //     });
         
-        // Filter functionality
-        const checkboxes = document.querySelectorAll('.sidebar__filterCheckbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                // In a real implementation, you would filter products based on selected filters
-                console.log(`Filter changed: ${this.id} - ${this.checked}`);
-            });
-        });
+    //     Filter functionality
+    //     const checkboxes = document.querySelectorAll('.sidebar__filterCheckbox');
+    //     checkboxes.forEach(checkbox => {
+    //         checkbox.addEventListener('change', function() {
+    //             In a real implementation, you would filter products based on selected filters
+    //             console.log(`Filter changed: ${this.id} - ${this.checked}`);
+    //         });
+    //     });
         
-        // Price range filter
-        const priceRange = document.querySelector('.sidebar__priceRange');
-        const priceInputs = document.querySelectorAll('.sidebar__priceInput');
+    //     Price range filter
+    //     const priceRange = document.querySelector('.sidebar__priceRange');
+    //     const priceInputs = document.querySelectorAll('.sidebar__priceInput');
         
-        priceRange.addEventListener('input', function() {
-            priceInputs[1].value = this.value;
-            // In a real implementation, you would filter products based on price range
-        });
+    //     priceRange.addEventListener('input', function() {
+    //         priceInputs[1].value = this.value;
+    //         In a real implementation, you would filter products based on price range
+    //     });
         
-        priceInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                // In a real implementation, you would update the range slider and filter products
-                if (this === priceInputs[0]) {
-                    // Min price changed
-                } else {
-                    // Max price changed
-                    priceRange.value = this.value;
-                }
-            });
-        });
+    //     priceInputs.forEach(input => {
+    //         input.addEventListener('change', function() {
+    //             In a real implementation, you would update the range slider and filter products
+    //             if (this === priceInputs[0]) {
+    //                 Min price changed
+    //             } else {
+    //                 Max price changed
+    //                 priceRange.value = this.value;
+    //             }
+    //         });
+    //     });
         
-        // Sort functionality
-        document.querySelector('.products__sortSelect').addEventListener('change', function() {
-            // In a real implementation, you would sort products based on selected option
-            console.log(`Sort by: ${this.value}`);
-        });
+    //     Sort functionality
+    //     document.querySelector('.products__sortSelect').addEventListener('change', function() {
+    //         In a real implementation, you would sort products based on selected option
+    //         console.log(`Sort by: ${this.value}`);
+    //     });
         
-        // Add to cart functionality
-        const addToCartButtons = document.querySelectorAll('.product__addToCart');
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const productTitle = this.closest('.product').querySelector('.product__title').textContent;
-                const productPrice = this.closest('.product').querySelector('.product__price').textContent;
+    //     Add to cart functionality
+    //     const addToCartButtons = document.querySelectorAll('.product__addToCart');
+    //     addToCartButtons.forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const productTitle = this.closest('.product').querySelector('.product__title').textContent;
+    //             const productPrice = this.closest('.product').querySelector('.product__price').textContent;
                 
-                alert(`Added to cart: ${productTitle} - ${productPrice}`);
+    //             alert(`Added to cart: ${productTitle} - ${productPrice}`);
                 
-                // Update cart count
-                const cartCount = document.querySelector('.header__cartCount');
-                cartCount.textContent = parseInt(cartCount.textContent) + 1;
-            });
-        });
+    //             Update cart count
+    //             const cartCount = document.querySelector('.header__cartCount');
+    //             cartCount.textContent = parseInt(cartCount.textContent) + 1;
+    //         });
+    //     });
+ 
+    // });
+document.addEventListener('load',function(){
+         document.querySelectorAll('.details-btn').forEach(button => {
+             console.log("details btn clicked")
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    window.location.href = `/Customer/Product/Details/${productId}`;
+                });
+})
+    
     </script>

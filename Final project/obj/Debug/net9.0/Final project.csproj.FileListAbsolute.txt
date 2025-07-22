@@ -272,7 +272,8 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-wm6afhb2yo.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\z5q4b6ps11-kqv6t48z1k.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-ozuavp8us1.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-b9sayid5wm.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\rnp52oshlg-xtxxf3hu2r.gz
@@ -4672,3 +4673,5 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\refint\Final project.dll
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.genruntimeconfig.cache
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\ref\Final project.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Stripe.net.dll
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\btpj4hj0h7-m4gfkyivox.gz
