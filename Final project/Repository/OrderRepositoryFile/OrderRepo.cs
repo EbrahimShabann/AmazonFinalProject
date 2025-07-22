@@ -27,7 +27,7 @@ namespace Final_project.Repository.OrderRepositoryFile
 
         public order getById(string id)
         {
-            throw new NotImplementedException();
+           return db.orders.SingleOrDefault(o => o.id == id && !o.is_deleted);
         }
 
         public void Update(order entity)

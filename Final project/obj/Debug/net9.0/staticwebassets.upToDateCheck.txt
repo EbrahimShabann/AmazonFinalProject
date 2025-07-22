@@ -1,6 +1,7 @@
 wwwroot\css\CustomerCheckOut.css
 wwwroot\css\customerProductDetails.css
 wwwroot\css\CustomerProductsIndex.css
+wwwroot\css\CustomerProfile.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\f.png
@@ -4516,6 +4517,7 @@ wwwroot\lib\signalr\src\WebSocketTransport.ts
 wwwroot\lib\signalr\src\XhrHttpClient.ts
 I:\AmazonFinalProject\Final project\wwwroot\css\CustomerCheckOut.css
 I:\AmazonFinalProject\Final project\wwwroot\css\customerProductDetails.css
+I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProductsIndex.css
 I:\AmazonFinalProject\Final project\wwwroot\css\site.css
 I:\AmazonFinalProject\Final project\wwwroot\favicon.ico
 I:\AmazonFinalProject\Final project\wwwroot\js\site.js
@@ -8900,6 +8902,6 @@ I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.j
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.min.js
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\dist\webworker\signalr.min.js.map
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\package.json
-I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\src\third-party-notices.txt
 I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\README.md
-I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProductsIndex.css
+I:\AmazonFinalProject\Final project\wwwroot\lib\signalr\src\third-party-notices.txt
+I:\AmazonFinalProject\Final project\wwwroot\css\CustomerProfile.css
