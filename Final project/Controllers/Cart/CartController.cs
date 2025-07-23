@@ -87,7 +87,6 @@ namespace Final_project.Controllers.Cart
         {
             string userId = "c7"; 
 
-            // Get or create cart
             var cart = _shoppingCartRepo.GetShoppingCartByUserId(userId);
             if (cart == null)
             {
@@ -102,7 +101,6 @@ namespace Final_project.Controllers.Cart
                 _shoppingCartRepo.save();
             }
 
-            // Check if product already exists in cart
             var existingItem = _cartItemRepo.GetCartItemsByCartId(cart.id)
                                 .FirstOrDefault(ci => ci.product_id == productId);
 

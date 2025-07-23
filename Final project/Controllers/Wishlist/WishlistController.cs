@@ -15,7 +15,7 @@ namespace Final_project.Controllers.Wishlist
 
         public WishlistController(IWishlistRepository _wishlistRepo, IWishlistItemRepository _wishlistItemRepo, IShoppingCartRepository _cartRepo, ICartItemRepository _cartItemRepo)
         {
-            wishlistItemRepo = _wishlistItemRepo;
+            wishlistRepo = _wishlistRepo;
             wishlistItemRepo = _wishlistItemRepo;
             cartRepo = _cartRepo;
             cartItemRepo = _cartItemRepo;

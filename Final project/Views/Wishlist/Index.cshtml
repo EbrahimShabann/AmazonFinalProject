@@ -1,7 +1,157 @@
-﻿
+﻿@model List<WishlistItemViewModel>
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Wishlist";
 }
 
-<h1>Index</h1>
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    .wishlist-wrapper {
+        max-width: 1000px;
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+
+    .wishlist-title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .wishlist-card {
+        display: flex;
+        background-color: #fff;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .wishlist-card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .wishlist-img {
+        width: 130px;
+        height: 130px;
+        object-fit: contain;
+        border-radius: 12px;
+        background-color: #fafafa;
+        border: 1px solid #eee;
+    }
+
+    .wishlist-details {
+        flex: 1;
+        margin-left: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .wishlist-product-name {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .stock-status {
+        font-size: 0.9rem;
+    }
+
+    .stock-status.in-stock {
+        color: #1a7f37;
+    }
+
+    .stock-status.out-of-stock {
+        color: #c81e1e;
+    }
+
+    .price {
+        font-size: 1.3rem;
+        color: #b12704;
+        font-weight: bold;
+    }
+
+    .wishlist-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-warning {
+        background-color: #ffd814;
+        border: none;
+        color: #111;
+        font-weight: 500;
+        padding: 6px 16px;
+    }
+
+    .btn-warning:hover {
+        background-color: #f7ca00;
+    }
+
+    .btn-remove {
+        border: 1px solid #d00;
+        color: #d00;
+        background-color: transparent;
+    }
+
+    .btn-remove:hover {
+        background-color: #d00;
+        color: white;
+    }
+
+    .empty-state {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        color: #555;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+</style>
+
+<div class="wishlist-wrapper">
+    <h2 class="wishlist-title">Your Wishlist</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">Your wishlist is currently empty. Start shopping now!</div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="wishlist-card">
+                <img src="@item.ImageUrl" class="wishlist-img" alt="@item.ProductName" />
+                <div class="wishlist-details">
+                    <div>
+                        <p class="wishlist-product-name">@item.ProductName</p>
+                        <p class="stock-status @(item.InStock ? "in-stock" : "out-of-stock")">
+                            @(item.InStock ? "In Stock" : "Out of Stock")
+                        </p>
+                        <p class="price">EGP @item.Price.ToString("N2")</p>
+                    </div>
+                    <div class="wishlist-actions">
+                        <form asp-action="MoveToCart" method="post">
+                            <input type="hidden" name="id" value="@item.ItemId" />
+                            <button class="btn btn-warning btn-sm" @(item.InStock ? "" : "disabled")>Add to Cart</button>
+                        </form>
+                        <form asp-action="Delete" method="post">
+                            <input type="hidden" name="id" value="@item.ItemId" />
+                            <button class="btn btn-outline-danger btn-sm btn-remove">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
 
