@@ -25,9 +25,8 @@ public partial class product
     [StringLength(255)]
     public string Brand { get; set; }
 
-    
     public List<string> SelectedSizes { get; set; } = new List<string>();
-   
+
     public List<string> SelectedColors { get; set; } = new List<string>();
 
 

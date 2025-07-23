@@ -491,10 +491,10 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.PrimitiveCollection<string>("SelectedColors")
+                    b.Property<string>("SelectedColors")
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("SelectedSizes")
+                    b.Property<string>("SelectedSizes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("approved_at")
@@ -768,6 +768,50 @@ namespace Final_project.Migrations
                     b.HasIndex("sender_id");
 
                     b.ToTable("ticket_messages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("wishlists");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist_item", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("added_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("product_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("wishlist_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("product_id");
+
+                    b.HasIndex("wishlist_id");
+
+                    b.ToTable("wishlist_items");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1116,6 +1160,36 @@ namespace Final_project.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist_item", b =>
+                {
+                    b.HasOne("Final_project.Models.product", "Product")
+                        .WithMany()
+                        .HasForeignKey("product_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_project.Models.wishlist", "Wishlist")
+                        .WithMany("Items")
+                        .HasForeignKey("wishlist_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1200,6 +1274,11 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

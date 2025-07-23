@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "I:\\AmazonFinalProject\\Final project\\Final project.csproj": {}
+    "E:\\Tracks\\Web\\ITI Full Stack .Net\\ITI .net\\FinalProject\\AmazonFinalProject\\Final project\\Final project.csproj": {}
   },
   "projects": {
-    "I:\\AmazonFinalProject\\Final project\\Final project.csproj": {
+    "E:\\Tracks\\Web\\ITI Full Stack .Net\\ITI .net\\FinalProject\\AmazonFinalProject\\Final project\\Final project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "I:\\AmazonFinalProject\\Final project\\Final project.csproj",
+        "projectUniqueName": "E:\\Tracks\\Web\\ITI Full Stack .Net\\ITI .net\\FinalProject\\AmazonFinalProject\\Final project\\Final project.csproj",
         "projectName": "Final project",
-        "projectPath": "I:\\AmazonFinalProject\\Final project\\Final project.csproj",
-        "packagesPath": "C:\\Users\\BG\\.nuget\\packages\\",
-        "outputPath": "I:\\AmazonFinalProject\\Final project\\obj\\",
+        "projectPath": "E:\\Tracks\\Web\\ITI Full Stack .Net\\ITI .net\\FinalProject\\AmazonFinalProject\\Final project\\Final project.csproj",
+        "packagesPath": "C:\\Users\\Islam\\.nuget\\packages\\",
+        "outputPath": "E:\\Tracks\\Web\\ITI Full Stack .Net\\ITI .net\\FinalProject\\AmazonFinalProject\\Final project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\BG\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Islam\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
