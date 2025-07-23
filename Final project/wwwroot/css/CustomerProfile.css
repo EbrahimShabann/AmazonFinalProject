@@ -1,0 +1,139 @@
+﻿
+
+body {
+    background-color: #f3f3f3;
+}
+
+.account-sidebar {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+    .account-sidebar .nav-link {
+        color: #111;
+        padding: 8px 15px;
+        border-left: 3px solid transparent;
+    }
+
+        .account-sidebar .nav-link:hover {
+            background-color: #f5f5f5;
+            border-left: 3px solid #ff9900;
+        }
+
+        .account-sidebar .nav-link:active {
+            font-weight: bold;
+            border-left: 3px solid #ff9900;
+        }
+
+.orders-container {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.order-header {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    margin: -15px -15px 15px -15px;
+}
+
+.order-product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+
+
+.order-filter {
+    background-color: white;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.btn-amazon {
+    background-color: #ffd814;
+    border-color: #fcd200;
+    color: #0F1111;
+}
+
+    .btn-amazon:hover {
+        background-color: #f7ca00;
+        border-color: #f2c200;
+    }
+
+.section-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-option {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+    .card-option:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+.amazon-orange {
+    color: #ff9900;
+}
+
+
+
+.order-details-container {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.order-section {
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+.order-productDetails-img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}
+
+
+.tracking-progress {
+    height: 8px;
+    background-color: #e7e7e7;
+    border-radius: 4px;
+}
+
+.tracking-progress-bar {
+    background-color: #ff9900;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.shipping-address-box {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+
