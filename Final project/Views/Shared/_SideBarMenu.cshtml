@@ -8,7 +8,7 @@
 
         <!-- Navigation Links -->
         <div class="nav-links">
-            <a href="#" class="nav-link">Today's Deals</a>
+            <a href="#" class="nav-link" data-filter="todaysdeals">Today's Deals</a>
             <a asp-action="Index" asp-controller="Category" class="nav-link">Category</a>
             <a href="#" class="nav-link">Electronics</a>
             <a href="#" class="nav-link">Fashion</a>
@@ -17,9 +17,9 @@
             <!-- Prime Dropdown -->
             <div class="prime-dropdown dropdown">
                 <button class="dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
                     Prime
                 </button>
                 <ul class="dropdown-menu">
@@ -90,19 +90,7 @@
         <div class="sidebar-section">
             <h4>Programs & Features</h4>
             <ul>
-                <li><a href="#" class="sidebar-main-link">Today's Deals</a></li>
-                <li><a href="#" class="sidebar-main-link">Amazon Pay</a></li>
-                <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
-                <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
-                <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
-            </ul>
-        </div>
-
-
-        <div class="sidebar-section">
-            <h4>Programs & Features</h4>
-            <ul>
-                <li><a href="#" class="sidebar-main-link">Today's Deals</a></li>
+                <li><a href="#" class="sidebar-main-link" data-filter="todaysdeals">Today's Deals</a></li>
                 <li><a href="#" class="sidebar-main-link">Amazon Pay</a></li>
                 <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
                 <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
@@ -133,6 +121,16 @@
 
 <script>
     $(document).ready(function() {
+        // Handle Today's Deals click
+        $(document).on('click', '[data-filter="todaysdeals"]', function(e) {
+            e.preventDefault();
+
+            // Navigate to Category/Index with todaysdeals filter
+            window.location.href = `/Category/Index?filter=todaysdeals`;
+
+            return false;
+        });
+
         // Handle hamburger menu click - load categories and show sidebar
         $(document).on('click', '.hamburger-menu', function() {
             $.ajax({
@@ -183,7 +181,7 @@
         }
 
         // Handle parent category clicks - navigate to Category/Index with categoryId
-        $(document).on('click', '.sidebar-main-link', function(e) {
+        $(document).on('click', '.sidebar-main-link[data-category-id]', function(e) {
             e.preventDefault();
             const categoryId = $(this).data('category-id');
             const categoryName = $(this).text();
@@ -202,5 +200,4 @@
             $('#sidebarOverlay').removeClass('active');
         });
     });
-
 </script>

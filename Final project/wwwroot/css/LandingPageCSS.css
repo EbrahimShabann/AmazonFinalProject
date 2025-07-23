@@ -1929,3 +1929,23 @@ body {
         }
 }
 
+
+
+/* Optional: Add CSS animation for cart counter updates */
+.cart-updated {
+    animation: cartBounce 0.3s ease-in-out;
+}
+
+@keyframes cartBounce {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

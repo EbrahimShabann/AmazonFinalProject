@@ -13,7 +13,6 @@ namespace Final_project.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        // Updated Index action to accept categoryId parameter and filter
         public IActionResult Index(CategoryFilter filter)
         {
             return View(filter);
@@ -56,6 +55,10 @@ namespace Final_project.Controllers
                         case "newarrivals":
                             sortBy = "newest"; // Sort by newest arrivals
                             break;
+                        case "todaysdeals":
+                            // Filter for today's special deals - products with active discounts created today
+                            sortBy = "todaysdeals";
+                            break;
                     }
                 }
 
@@ -92,6 +95,12 @@ namespace Final_project.Controllers
                             // Assuming you have a creation date or similar field
                             products = products.OrderByDescending(p => p.delaviryTiming).ToList();
                             break;
+                        case "todaysdeals":
+                            // Filter for products with active discounts and sort by discount percentage
+                            products = products.Where(p => p.DiscountPrice.HasValue && p.DiscountPrice < p.Price)
+                                             .OrderByDescending(p => p.DiscountPercentage ?? 0)
+                                             .ToList();
+                            break;
                     }
                 }
 
@@ -104,6 +113,7 @@ namespace Final_project.Controllers
                     switch (filter.ToLower())
                     {
                         case "discounts":
+                        case "todaysdeals":
                             // You might need to implement a separate count method that handles discounts
                             totalProducts = products.Count(); // Temporary solution
                             break;
@@ -188,6 +198,7 @@ namespace Final_project.Controllers
                 });
             }
         }
+
 
     }
 }

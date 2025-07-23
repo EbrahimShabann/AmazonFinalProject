@@ -29,6 +29,14 @@ namespace Final_project.Controllers
         {
             return Json(unitOfWork.LandingPageReposotory.ProductSearch(query));
         }
-    
+
+        [HttpPost]
+        public IActionResult CartCount(string UserName)
+        {
+            var cart=unitOfWork.LandingPageReposotory.GetCartCount(UserName); 
+            return Json(cart);
+        }
+
+
     }
 }

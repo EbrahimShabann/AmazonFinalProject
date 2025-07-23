@@ -13,6 +13,8 @@ namespace Final_project.Repository.NewFolder
         public int GetProductRating(string productId);
         public int GetProductRatingCount(string productId);
 
+        //cart
+        public int GetCartCount(string Username);
 
         //Category
         public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams);

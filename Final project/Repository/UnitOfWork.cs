@@ -1,5 +1,6 @@
 ﻿using Final_project.Models;
 using Final_project.Repository.AccountRepositoryFile;
+using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
 using Final_project.Repository.NewFolder;
 using Final_project.Repository.ProductRepositoryFile;
@@ -14,6 +15,9 @@ namespace Final_project.Repository
         private ILandingPageRepository _landingPageReposotory;
         private ICategoryRepository _categoryRepository;
         private IAccountRepository _accountRepository;
+        private ICartItemRepository _cartItemRepository;
+        private IShoppingCartRepository _shoppingCartRepository;
+
         public UnitOfWork(AmazonDBContext db)
         {
             this.db = db;
@@ -47,6 +51,25 @@ namespace Final_project.Repository
             }
         }
 
+        public ICartItemRepository CartItemRepository
+        {
+            get
+            {
+                if (_cartItemRepository == null)
+                    _cartItemRepository = new CartItemRepository(db);
+                return _cartItemRepository;
+            }
+        }
+
+        public IShoppingCartRepository ShoppingCartRepository
+        {
+            get
+            {
+                if (_shoppingCartRepository == null)
+                    _shoppingCartRepository = new ShoppingCartRepository(db);
+                return _shoppingCartRepository;
+            }
+        }
 
         public void save()
         {

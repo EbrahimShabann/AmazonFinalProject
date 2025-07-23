@@ -968,23 +968,22 @@
             return filterState;
         }
 
+
+        // Setup event listeners for all add-to-cart buttons
+        function setupCartButtons() {
+            document.querySelectorAll(".add-to-cart").forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    addToCart(button);
+                });
+            });
+          }
+
+
         function redirectToProduct(productId) {
             window.location.href = `/dfga/ProductDetails/${productId}`;
         }
-
-        // Add clear filters button
-        function addClearFiltersButton() {
-            if ($('.clear-filters-btn').length === 0) {
-                $('.category-header').after(`
-                    <div class="mb-3">
-                        <button class="btn btn-outline-secondary btn-sm clear-filters-btn" onclick="clearAllFilters()">
-                            Clear All Filters
-                        </button>
-                    </div>
-                `);
-            }
-        }
-    </script>
+        </script>
 
 }
 

@@ -15,7 +15,7 @@
     </div>
     <div class="products-container">
         <button class="scroll-btn scroll-left"
-                onclick="scrollProducts('discounts', -1)">
+        onclick="scrollProducts('discounts', -1)">
             <i class="fas fa-chevron-left"></i>
         </button>
         <div class="product-scroll" id="discounts">
@@ -54,13 +54,13 @@
                         <span class="prime-logo">prime</span>
                         <span>FREE One-Day</span>
                     </div>
-                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <button class="add-to-cart" onclick="event.stopPropagation();" data-product-id="@item.ProductId">Add to Cart</button>
                 </div>
 
             }
         </div>
         <button class="scroll-btn scroll-right"
-                onclick="scrollProducts('discounts', 1)">
+        onclick="scrollProducts('discounts', 1)">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -74,7 +74,7 @@
     </div>
     <div class="products-container">
         <button class="scroll-btn scroll-left"
-                onclick="scrollProducts('bestsellers', -1)">
+        onclick="scrollProducts('bestsellers', -1)">
             <i class="fas fa-chevron-left"></i>
         </button>
         <div class="product-scroll" id="bestsellers">
@@ -112,13 +112,13 @@
                         <span class="prime-logo">prime</span>
                         <span>FREE delivery</span>
                     </div>
-                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <button class="add-to-cart" onclick="event.stopPropagation();" data-product-id="@item.ProductId">Add to Cart</button>
                 </div>
 
             }
         </div>
         <button class="scroll-btn scroll-right"
-                onclick="scrollProducts('bestsellers', 1)">
+        onclick="scrollProducts('bestsellers', 1)">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -133,7 +133,7 @@
     </div>
     <div class="products-container">
         <button class="scroll-btn scroll-left"
-                onclick="scrollProducts('newitems', -1)">
+        onclick="scrollProducts('newitems', -1)">
             <i class="fas fa-chevron-left"></i>
         </button>
         <div class="product-scroll" id="newitems">
@@ -171,13 +171,13 @@
                         <span class="prime-logo">prime</span>
                         <span>FREE delivery</span>
                     </div>
-                    <button class="add-to-cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <button class="add-to-cart" onclick="event.stopPropagation();" data-product-id="@item.ProductId">Add to Cart</button>
                 </div>
 
             }
         </div>
         <button class="scroll-btn scroll-right"
-                onclick="scrollProducts('newitems', 1)">
+        onclick="scrollProducts('newitems', 1)">
             <i class="fas fa-chevron-right"></i>
         </button>
     </div>
@@ -186,6 +186,9 @@
 
 @section Scripts {
     <script>
+
+
+
         $(document).ready(function() {
             $('.product-card').on('click', function(e) {
                 var productId = $(this).data('product-id');

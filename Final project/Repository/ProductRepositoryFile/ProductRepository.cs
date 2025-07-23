@@ -57,7 +57,7 @@ namespace Final_project.Repository.ProductRepositoryFile
             throw new NotImplementedException();
         }
 
-        public product getById(int id)
+        public product getById(string id)
         {
             throw new NotImplementedException();
         }
