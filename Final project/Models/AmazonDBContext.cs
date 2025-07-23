@@ -53,6 +53,10 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
 
+    public virtual DbSet<notification> notifications { get; set; }
+
+    public virtual DbSet<review_reply> review_replies { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -114,11 +118,6 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .HasOne(o => o.Buyer)
             .WithMany(u => u.OrdersAsBuyer)
             .HasForeignKey(o => o.buyer_id);
-
-        modelBuilder.Entity<order>()
-            .HasOne(o => o.Seller)
-            .WithMany(u => u.OrdersAsSeller)
-            .HasForeignKey(o => o.seller_id);
 
         modelBuilder.Entity<product>()
             .HasOne(p => p.Seller)
@@ -200,6 +199,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
 
         OnModelCreatingPartial(modelBuilder);
     }
+    
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -7,7 +7,8 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Final_project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/scopedcss/bundle/Final project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -25,6 +26,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Seller" asp-action="Notifications">
+                                Notifications
+                                <span id="notification-badge" class="badge badge-danger" style="display: none;">0</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -45,6 +52,32 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/chart.js/chart.umd.min.js"></script>
+    <script>
+        // تحديث عدد الإشعارات غير المقروءة
+        function updateNotificationCount() {
+            fetch('/Seller/GetUnreadNotificationsCount')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationBadge = document.getElementById('notification-badge');
+                    if (notificationBadge) {
+                        if (data.count > 0) {
+                            notificationBadge.textContent = data.count;
+                            notificationBadge.style.display = 'inline';
+                        } else {
+                            notificationBadge.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error updating notification count:', error));
+        }
+
+        // تحديث كل 30 ثانية
+        setInterval(updateNotificationCount, 30000);
+        
+        // تحديث عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', updateNotificationCount);
+    </script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

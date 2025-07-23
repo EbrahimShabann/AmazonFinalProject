@@ -16,10 +16,8 @@ public partial class order
 
     [ForeignKey("buyer_id")]
     public virtual ApplicationUser Buyer { get; set; }
-    public string seller_id { get; set; }
-
-    [ForeignKey("seller_id")]
-    public virtual ApplicationUser Seller { get; set; }
+    // تم حذف seller_id
+    // تم حذف Navigation property Seller
 
     public DateTime? order_date { get; set; }
 
@@ -45,4 +43,7 @@ public partial class order
     public DateOnly? estimated_delivery_date { get; set; }
 
     public DateTime? delivered_at { get; set; }
+
+    // Navigation property for order items
+    public virtual ICollection<order_item> OrderItems { get; set; }
 }

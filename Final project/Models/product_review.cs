@@ -16,6 +16,9 @@ public partial class product_review
 
     [StringLength(255)]
     public string product_id { get; set; }
+    [ForeignKey("product_id")]
+    public virtual product product { get; set; }
+    
     public string user_id { get; set; }
     [ForeignKey("user_id")]
     public virtual ApplicationUser User { get; set; }
@@ -30,4 +33,7 @@ public partial class product_review
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
     public bool? is_verified_purchase { get; set; }
+
+    // Navigation property for replies
+    public virtual ICollection<review_reply> replies { get; set; }
 }

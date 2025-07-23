@@ -14,16 +14,22 @@ public partial class discount
     [StringLength(255)]
     public string id { get; set; }
 
+    [Required(ErrorMessage = "Description is required")]
     public string description { get; set; }
 
+    [Required(ErrorMessage = "Discount type is required")]
     [StringLength(255)]
     public string discount_type { get; set; }
 
+    [Required(ErrorMessage = "Value is required")]
+    [Range(0.01, 100000, ErrorMessage = "Value must be greater than 0")]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? value { get; set; }
 
-    public DateTime? start_date { get; set; } = DateTime.UtcNow;
+    [Required(ErrorMessage = "Start date is required")]
+    public DateTime? start_date { get; set; }
 
+    [Required(ErrorMessage = "End date is required")]
     public DateTime? end_date { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
@@ -33,11 +39,17 @@ public partial class discount
 
     public int? current_uses { get; set; }
 
-    public bool? is_active { get; set; }
+    [Required]
+    public bool is_active { get; set; }
+
+    public bool is_deleted { get; set; } = false;
+
+    public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
 
-    public DateTime? created_at { get; set; } = DateTime.UtcNow;
+    // Navigation property for product discounts **********************************
+    public virtual ICollection<product_discount> ProductDiscounts { get; set; }
 }

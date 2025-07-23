@@ -1,6 +1,7 @@
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
+using Final_project.Repository.ProductRepositoryFile;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,15 @@ namespace Final_project
             });
 
             //======================Injection============================
-            builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IProductRepository, Repository.ProductRepositoryFile.ProductRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddScoped<IProductDiscountRepository, ProductDiscountRepository>();
             //======================SQLInjection=========================
 
             builder.Services.AddDbContext<AmazonDBContext>(

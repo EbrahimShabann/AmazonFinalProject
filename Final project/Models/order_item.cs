@@ -27,4 +27,7 @@ public partial class order_item
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? discount_applied { get; set; }
+
+    [Column(TypeName = "nvarchar(32)")]
+    public string status { get; set; }
 }

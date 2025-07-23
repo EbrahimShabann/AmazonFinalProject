@@ -61,4 +61,8 @@ public partial class product
 
     public bool is_deleted { get; set; } = false;
     
+    [StringLength(255)]
+    public string product_image { get; set; }
+
+    public virtual ICollection<product_image> product_images { get; set; }
 }
