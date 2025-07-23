@@ -15,22 +15,31 @@ namespace Final_project.Repository.OrderRepositoryFile
             db.orders.Add(entity);
         }
 
-        public void delete(order entity)
+        public void addOrderItem(order_item entity)
         {
-            var order= getById(entity.id);
-            order.is_deleted = true; // Soft delete
-            Update(order);
+            db.order_items.Add(entity);
         }
 
         public List<order> getAll()
         {
-           return db.orders.Where(e => e.is_deleted != true).ToList();
+            return db.orders.Where(o => !o.is_deleted).ToList();
         }
 
         public order getById(string id)
         {
-            return db.orders
-                .Where(e => e.is_deleted != true ).FirstOrDefault(o=>o.id==id);
+           return db.orders.SingleOrDefault(o => o.id == id && !o.is_deleted);
+        }
+
+        public order_history GetOrderHistoryByOrderId(string orderId)
+        {
+            return db.order_histories.SingleOrDefault(oh=>oh.order_id == orderId );
+        }
+
+        public List<order_item> GetOrderItemsOfOrder(string orderId)
+        {
+           return db.order_items
+                .Where(oi => oi.order_id == orderId )
+                .ToList();
         }
 
         public void Update(order entity)

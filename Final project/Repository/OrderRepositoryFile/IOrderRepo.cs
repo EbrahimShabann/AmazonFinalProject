@@ -4,6 +4,8 @@ namespace Final_project.Repository.OrderRepositoryFile
 {
     public interface IOrderRepo:IRepository<order>
     {
-        public void delete(order entity);
+       void addOrderItem(order_item entity);
+        List<order_item> GetOrderItemsOfOrder(string orderId);
+        order_history GetOrderHistoryByOrderId(string orderId);
     }
 }

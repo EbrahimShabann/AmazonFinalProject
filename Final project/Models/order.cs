@@ -47,4 +47,6 @@ public partial class order
     public DateTime? delivered_at { get; set; }
 
     public bool is_deleted { get; set; } = false;
+    //public string payment_session_id { get; set; }
+
 }

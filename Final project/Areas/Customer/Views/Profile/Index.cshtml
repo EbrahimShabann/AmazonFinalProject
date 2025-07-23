@@ -1,99 +1,126 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Your Account";
+}
+
     <title>Your Account - Amazon</title>
-   
-   <link href="/css/CustomerProfile.css" rel="stylesheet" />
 
-    <!-- Header (simplified) -->
-<partial name="_Header" />
+<style>
+    .account-tile {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 20px;
+        display: block;
+        color: #000;
+        background-color: #fff;
+        height: 100%;
+    }
 
-    <div class="container my-4">
-        <div class="row">
-            <!-- Left Sidebar Navigation -->
-          <partial name="_SideBar"/>
-            <!-- Main Content Area -->
-            <div class="col-md-9">
-                <div class="bg-white p-4 rounded shadow-sm">
-                    <h4 class="mb-4">Account Overview</h4>
 
-                    <!-- Order Summary -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-box-open amazon-orange me-2"></i> Your Orders</h5>
-                                <p class="mb-0 text-muted">Track, return, or buy things again</p>
-                            </div>
+
+                    <div>
+                    </div>
                             <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary btn-sm">View All</a>
-                        </div>
-                    </div>
+                </div>
+            </a>
+        </div>
 
-                    <!-- Login & Security -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-lock amazon-orange me-2"></i> Login & Security</h5>
-                                <p class="mb-0 text-muted">Manage password, email, mobile number, and security settings</p>
-                            </div>
+                    <div>
+                    </div>
                             <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                        </div>
-                    </div>
+                </div>
+            </a>
+        </div>
 
-                    <!-- Gift Cards -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-gift amazon-orange me-2"></i> Gift Cards</h5>
-                                <p class="mb-0 text-muted">View balance or redeem a card</p>
-                            </div>
-                            <a href="#" class="btn btn-outline-secondary btn-sm">View</a>
-                        </div>
-                    </div>
+                    <div>
+                </div>
+        </div>
 
-                    <!-- Payments -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-credit-card amazon-orange me-2"></i> Your Payments</h5>
-                                <p class="mb-0 text-muted">View all transactions, manage payment methods and settings</p>
-                            </div>
-                            <a href="#" class="btn btn-outline-secondary btn-sm">Manage</a>
-                        </div>
+        <!-- Row 2 -->
+        <div class="col-md-4">
+            <a href="/Customer/GiftCards" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/gift_card._CB657847415_.png" class="icon-img">
                     </div>
-
-                    <!-- Addresses -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-map-marker-alt amazon-orange me-2"></i> Your Addresses</h5>
-                                <p class="mb-0 text-muted">Edit addresses for orders</p>
-                            </div>
-                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                        </div>
-                    </div>
-
-                    <!-- Installment Plan -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-calendar-alt amazon-orange me-2"></i> Installment Plan</h5>
-                                <p class="mb-0 text-muted">View installment plans offered</p>
-                            </div>
-                            <a href="#" class="btn btn-outline-secondary btn-sm">View</a>
-                        </div>
-                    </div>
-
-                    <!-- Contact Us -->
-                    <div class="card-option">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5><i class="fas fa-headset amazon-orange me-2"></i> Contact Us</h5>
-                                <p class="mb-0 text-muted">Contact our Customer Service via Phone or Chat</p>
-                            </div>
-                            <a href="#" class="btn btn-outline-secondary btn-sm">Contact</a>
-                        </div>
+                    <div>
+                        <h6>Gift Cards</h6>
+                        <p>View balance or redeem a card</p>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
+
+                    <div>
+                    </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Manage</a>
+                </div>
+            </a>
+        </div>
+
+                    <div>
+                    </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+                </div>
+            </a>
+        </div>
+
+                    <div>
+                    </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">View</a>
+                </div>
+            </a>
+        </div>
+
+                    <div>
+                    </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Contact</a>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/Customer/App" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fa-solid fa-mobile-screen fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h6>Amazon Mobile App</h6>
+                        <p>Download the Amazon App</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="col-md-4">
+            <a href="/Customer/Lists" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fa-solid fa-list fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h6>Your Lists</h6>
+                        <p>Modify and share your lists</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/Customer/Contact" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/contact_us._CB665051409_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Contact Us</h6>
+                        <p>Customer service via phone/chat</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-
-    
+</div>
