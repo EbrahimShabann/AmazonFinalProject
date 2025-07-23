@@ -58,6 +58,27 @@
                 <div id="orderResults">                 
                     <partial name="_OrdersList" />
                 </div>
+                                <div>
+                                    <span class="fw-bold">TOTAL</span><br>
+                                    <span>@order.total_amount?.ToString("C")</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">SHIP TO</span><br>
+                                    <span>@order.Buyer.UserName</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">ORDER # @order.id</span><br>
+                                    <a href="/Customer/Profile/orderDetails?id=@order.id" class="text-primary">Order Details</a>
+                                </div>
+                            </div>
+
+                         
+                        </div>
+
+                        }        
+                       
+                    
+                    </div>
 
                 <!-- Pagination -->
                 <nav class="d-flex justify-content-between align-items-center my-4">
@@ -130,6 +151,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
    <script>
+       document.addEventListener('DOMContentLoaded', function() {
 
         document.addEventListener('DOMContentLoaded', function () {
                   // Search on Enter
@@ -140,16 +162,7 @@
                 }
             });
 
-                    // Order Date Filter
-            document.getElementById('orderDate').addEventListener('change', function () {
-                const selected = this.value;
-                filterOrders('dateFilter', selected);
             });
-
-            // Status Filter
-            document.getElementById('orderStatus').addEventListener('change', function () {
-                const selected = this.value;
-                filterOrders('statusFilter', selected);
             });
         });//end of load
 
@@ -172,10 +185,9 @@
             });
          }
 
+     });//end of load
 
             function search() {
-                const searchValue = document.getElementById('searchInput').value;
-                filterOrders('search', searchValue);
             }
 
       

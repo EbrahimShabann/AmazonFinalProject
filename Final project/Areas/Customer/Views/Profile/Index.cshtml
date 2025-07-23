@@ -2,6 +2,7 @@
     ViewData["Title"] = "Your Account";
 }
 
+    <title>Your Account - Amazon</title>
 
 <style>
     .account-tile {
@@ -16,91 +17,24 @@
         height: 100%;
     }
 
-        .account-tile:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-        }
 
-    .icon-circle {
-        width: 50px;
-        height: 50px;
-        background-color: #f0f2f2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        overflow: hidden; /* important for rounding the image */
-    }
 
-    .icon-img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* or "cover" if you want to fill the circle */
-    }
-
-    .account-tile h6 {
-        font-weight: bold;
-    }
-
-    .account-tile p {
-        font-size: 0.875rem;
-    }
-    a h2:hover{
-        cursor: pointer;
-        text-decoration: underline;
-        color:darkgoldenrod
-    }
-</style>
-
-<div class="container my-5">
-    <a href="/Customer/Profile/Index">
-        <h2 class="mb-4">Your Account</h2>
-    </a>
-
-    <div class="row g-4">
-        <!-- Row 1 -->
-        <div class="col-md-4">
-            <a href="/Customer/Profile/Orders" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <img alt="Orders" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/order._CB657847415_.png" class="icon-img" />
-                    </div>
                     <div>
-                        <h6>Your Orders</h6>
-                        <p>Track, return, or buy things again</p>
                     </div>
+                            <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary btn-sm">View All</a>
                 </div>
             </a>
         </div>
 
-
-        <div class="col-md-4">
-            <a href="/Customer/Security" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/security._CB657836742_.png" class="icon-img">
-                    </div>
                     <div>
-                        <h6>Login & Security</h6>
-                        <p>Manage password, email, mobile number</p>
                     </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
                 </div>
             </a>
         </div>
 
-        <div class="col-md-4">
-            <a href="/Customer/Prime" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/fshub/fshub_prime._CB608110998_.png" class="icon-img">
-                    </div>
                     <div>
-                        <h6>Prime</h6>
-                        <p>View benefits and payment settings</p>
-                    </div>
                 </div>
-            </a>
         </div>
 
         <!-- Row 2 -->
@@ -118,59 +52,30 @@
             </a>
         </div>
 
-        <div class="col-md-4">
-            <a href="/Customer/Payments" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/payment._CB657847415_.png" class="icon-img">
-                    </div>
                     <div>
-                        <h6>Your Payments</h6>
-                        <p>Manage your cards and transactions</p>
                     </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Manage</a>
                 </div>
             </a>
         </div>
 
-        <div class="col-md-4">
-            <a href="/Customer/Messages" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/fshub/FS_Message_Centre._CB647329578_.png" class="icon-img">
-                    </div>
                     <div>
-                        <h6>Your Messages</h6>
-                        <p>View messages from sellers & Amazon</p>
                     </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
                 </div>
             </a>
         </div>
 
-        <!-- Row 3 -->
-        <div class="col-md-4">
-            <a href="/Customer/Addresses" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <i class="fa-solid fa-location-dot fa-2x text-primary"></i>
-                    </div>
                     <div>
-                        <h6>Your Addresses</h6>
-                        <p>Edit addresses for your orders</p>
                     </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">View</a>
                 </div>
             </a>
         </div>
 
-        <div class="col-md-4">
-            <a href="/Customer/Installments" class="account-tile">
-                <div class="d-flex align-items-center">
-                    <div class="icon-circle me-3">
-                        <i class="fa-solid fa-calendar fa-2x text-primary"></i>
-                    </div>
                     <div>
-                        <h6>Installment Plan</h6>
-                        <p>View installment options</p>
                     </div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">Contact</a>
                 </div>
             </a>
         </div>

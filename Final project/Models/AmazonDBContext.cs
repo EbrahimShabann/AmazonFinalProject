@@ -2,9 +2,11 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Final_project.Models;
 
@@ -53,11 +55,28 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
 
+    public DbSet<wishlist> wishlists { get; set; }
+    public DbSet<wishlist_item> wishlist_items { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+
+        var stringListConverter = new ValueConverter<List<string>, string>(
+        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+    );
+
+        modelBuilder.Entity<product>()
+            .Property(p => p.SelectedSizes)
+            .HasConversion(stringListConverter);
+
+        modelBuilder.Entity<product>()
+            .Property(p => p.SelectedColors)
+            .HasConversion(stringListConverter);
+
 
         modelBuilder.Entity<ApplicationUser>(entity => {
             entity.ToTable("Users");

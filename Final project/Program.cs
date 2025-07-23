@@ -1,6 +1,8 @@
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
+using Final_project.Repository.CartRepository;
+using Final_project.Repository.WishlistRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -51,6 +53,12 @@ namespace Final_project
                 options => options
                 .UseLazyLoadingProxies()
                 .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+
+            builder.Services.AddScoped<IWishlistItemRepository, WishlistItemRepository>();
+            builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 
             //====================UserManagerInjection===================
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
