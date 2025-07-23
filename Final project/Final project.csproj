@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Repository\DiscountsRepositoryFile\" />
+    <Folder Include="Repository\OrderRepositoryFile\" />
+    <Folder Include="Repository\ProductDiscountsRepositoryFile\" />
+    <Folder Include="Repository\OrderItemsRepositoryFile\" />
+    <Folder Include="Repository\ProductImageRepositoryFile\" />
+    <Folder Include="Repository\UsersRepositoryFile\" />
     <Folder Include="ViewModel\Zeyad\" />
   </ItemGroup>
 

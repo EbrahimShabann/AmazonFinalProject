@@ -197,6 +197,7 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script src="~/js/CategoryJS.js"></script>
 
@@ -487,7 +488,7 @@
                     `<div class="sales-info">Sold: ${item.totalSold}</div>` : '';
 
                 const productHtml = `
-                    <div class="product-card m-1 col-3">
+                    <div class="product-card m-1 col-3" >
                         ${discountBadgeHtml}
                         ${bestsellerBadge}
                         ${newArrivalBadge}
@@ -512,7 +513,7 @@
                                 <span>FREE ${item.prime ? 'One-Day' : 'delivery'}</span>
                             </div>
                         </a>
-                        <button class="add-to-cart">Add to Cart</button>
+                        <button class="add-to-cart" data-product-id="${item.productId || item.id}">Add to Cart</button>
                     </div>
                 `;
 
@@ -983,7 +984,38 @@
         function redirectToProduct(productId) {
             window.location.href = `/dfga/ProductDetails/${productId}`;
         }
+
+        $(document).on('click', '.add-to-cart', function(e) {
+        var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
+               if(isAuth){
+                   var productId= $(this).data('product-id');
+                   console.log(productId);
+                   $.ajax({
+                      url: "Cart/AddToCart",
+                      type: "post",
+                      data: {
+                         productId: productId,
+                      },
+                      success: function (result) {
+                          console.log("Search results:", result);
+                          UpdateCartValue(result);
+                      },
+                      error: function (xhr, status, error) {
+                          console.error("Search error:", error);
+                      }
+                   });
+               }
+               else{
+                   window.location.href='Account/Login';
+               }
+
+        });
+        function UpdateCartValue(number) {
+            $('#cartCounter').text(number);
+        }
+ 
         </script>
+
 
 }
 

@@ -16,10 +16,7 @@ public partial class order
 
     [ForeignKey("buyer_id")]
     public virtual ApplicationUser Buyer { get; set; }
-    public string seller_id { get; set; }
 
-    [ForeignKey("seller_id")]
-    public virtual ApplicationUser Seller { get; set; }
 
     public DateTime? order_date { get; set; }
 

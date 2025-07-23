@@ -161,7 +161,7 @@
         else{
             window.location.href='Account/Login';
         }
-        })
+        });
 
                  // Replace the existing script section with this updated version
         $(document).ready(function() {
@@ -241,6 +241,9 @@
             $('#cartCounter').text(number);
         }
         
+        $('.cart-container').on('click',function(){
+            console.log("carrrttt");
+        })
         // *******************************************************************
       
         

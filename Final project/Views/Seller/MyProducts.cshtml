@@ -1,0 +1,195 @@
+@model IEnumerable<Final_project.Models.product>
+@{
+    var categoriesDict = ViewBag.CategoriesDict as Dictionary<string, string>;
+}
+
+<h2>My Products</h2>
+<div style="width:100%;display:flex;justify-content:flex-end;margin-bottom:16px;">
+    <div style="display:flex;gap:10px;">
+        <a asp-action="AddProduct" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Product
+        </a>
+        <a href="/Seller/AllProducts" class="btn btn-info">View All Products in Database</a>
+    </div>
+</div>
+<form method="get" class="mb-3">
+    <div class="form-row row align-items-end gx-2 gy-1 flex-nowrap" style="flex-wrap:nowrap;">
+        <div class="form-group col-auto">
+            <input type="text" name="searchName" value="@ViewBag.SearchName" class="form-control" placeholder="Product Name" />
+        </div>
+        <div class="form-group col-auto">
+            <input type="number" name="minPrice" value="@ViewBag.MinPrice" class="form-control" placeholder="Min Price" step="0.01" />
+        </div>
+        <div class="form-group col-auto">
+            <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="form-control" placeholder="Max Price" step="0.01" />
+        </div>
+        <div class="form-group col-auto">
+            <select name="isActive" class="form-control">
+                <option value="">All Status</option>
+                @if (ViewBag.IsActive != null && ViewBag.IsActive.ToString() == "True") { <option value="true" selected>Active</option> } else { <option value="true">Active</option> }
+                @if (ViewBag.IsActive != null && ViewBag.IsActive.ToString() == "False") { <option value="false" selected>Inactive</option> } else { <option value="false">Inactive</option> }
+            </select>
+        </div>
+        <div class="form-group col-auto">
+            <select name="categoryId" class="form-control">
+                <option value="">All Categories</option>
+                @if (ViewBag.CategoriesList != null)
+                {
+                    foreach (var cat in ViewBag.CategoriesList)
+                    {
+                        if (ViewBag.SelectedCategoryId != null && ViewBag.SelectedCategoryId.ToString() == cat.id)
+                        {
+                            <option value="@cat.id" selected>@cat.name</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.id">@cat.name</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+@{
+    var groupedProducts = Model.GroupBy(item => !string.IsNullOrEmpty(item.category_id) && categoriesDict != null && categoriesDict.ContainsKey(item.category_id) ? categoriesDict[item.category_id] : "No Category");
+}
+<table class="table table-striped table-bordered table-hover align-middle" style="background:#fff;">
+    <thead class="thead-dark">
+        <tr>
+            <th style="text-align:center;">Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Discount Price</th>
+            <th>Stock Quantity</th>
+            <th>Brand</th>
+            <th style="text-align:center;">Colors</th>
+            <th>Sizes</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>Created At</th>
+            <th>Active?</th>
+            <th>Approved?</th>
+            <th style="text-align:center;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var group in groupedProducts)
+        {
+            <tr class="table-primary">
+                <td colspan="15" style="font-weight:bold;font-size:1.1em;">@group.Key</td>
+            </tr>
+            foreach (var item in group)
+            {
+            <tr>
+                <td style="text-align:center;vertical-align:middle;">
+                    @if (item.product_images != null && item.product_images.Any())
+                    {
+                        var mainImage = item.product_images.FirstOrDefault(img => img.image_type == "main");
+                        if (mainImage != null)
+                        {
+                            <img src="@mainImage.image_url" alt="Product Main Image" style="width:80px;height:80px;object-fit:cover;border-radius:8px;" />
+                        }
+                        else
+                        {
+                            <img src="@item.product_images.First().image_url" alt="Product Image" style="width:80px;height:80px;object-fit:cover;border-radius:8px;" />
+                        }
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+                <td>@item.name</td>
+                <td>@item.description</td>
+                <td>@item.price</td>
+                <td>@item.discount_price</td>
+                <td>@item.stock_quantity</td>
+                <td>@item.Brand</td>
+                <td style="text-align:center;">
+                    @if (!string.IsNullOrEmpty(item.Colors))
+                    {
+                        var colors = item.Colors.Split(',');
+                        for (int i = 0; i < colors.Length; i += 2)
+                        {
+                            <div style="display:flex;justify-content:center;gap:6px;margin-bottom:2px;">
+                                <span style="display:inline-block;width:22px;height:22px;border-radius:50%;border:2px solid #eee;margin-right:3px;vertical-align:middle;background:@colors[i].Trim();box-shadow:0 1px 4px #0002;" title="@colors[i].Trim()"></span>
+                                @if (i + 1 < colors.Length)
+                                {
+                                    <span style="display:inline-block;width:22px;height:22px;border-radius:50%;border:2px solid #eee;margin-right:3px;vertical-align:middle;background:@colors[i+1].Trim();box-shadow:0 1px 4px #0002;" title="@colors[i+1].Trim()"></span>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <span>No Color</span>
+                    }
+                </td>
+                <td>@item.Sizes</td>
+                <td>@item.sku</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.category_id) && categoriesDict != null && categoriesDict.ContainsKey(item.category_id))
+                    {
+                        @categoriesDict[item.category_id]
+                    }
+                    else
+                    {
+                        <span>No Category</span>
+                    }
+                </td>
+                <td>@item.created_at?.ToString("yyyy-MM-dd")</td>
+                <td>@(item.is_active == true ? "Yes" : "No")</td>
+                <td>@(item.is_approved == true ? "Approved" : "Pending")</td>
+                <td style="text-align:center;">
+                    <div style="display:flex;flex-direction:row;flex-wrap:nowrap;gap:7px;justify-content:center;align-items:center;">
+                        <a asp-action="ProductDetails" asp-route-id="@item.id" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Product Details
+                        </a>
+                        <a asp-action="EditProduct" asp-route-id="@item.id" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form asp-action="DeleteProduct" asp-route-id="@item.id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            @Html.AntiForgeryToken()
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            }
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="15" class="text-center text-muted">No products found</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<style>
+    .table thead th {
+        background: #343a40;
+        color: #fff;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table-hover tbody tr:hover {
+        background: #f1f7ff;
+        transition: background 0.2s;
+    }
+    .table td, .table th {
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+</style> 

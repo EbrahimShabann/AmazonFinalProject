@@ -1,4 +1,5 @@
-﻿using Final_project.Models;
+﻿using System.Linq.Expressions;
+using Final_project.Models;
 using Final_project.ViewModel.LandingPageViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,7 +65,44 @@ namespace Final_project.Repository.CategoryFile
                     .GroupBy(oi => oi.product_id)
                     .Count();
         }
- 
+
+
+        public IQueryable<category> GetAll(Expression<Func<category, bool>> filter = null, params Expression<Func<category, object>>[] includes)
+        {
+            IQueryable<category> query = db.categories;
+            if (filter != null)
+                query = query.Where(filter);
+            if (includes != null)
+                foreach (var include in includes)
+                    query = query.Include(include);
+            return query;
+        }
+        public async Task<category> GetAsync(Expression<Func<category, bool>> filter, params Expression<Func<category, object>>[] includes)
+        {
+            return await GetAll(filter, includes).FirstOrDefaultAsync();
+        }
+        public async Task<category> GetByIdAsync(string id) => await db.categories.FindAsync(id);
+        public async Task<int> GetCountAsync(Expression<Func<category, bool>> filter = null)
+        {
+            if (filter != null)
+                return await db.categories.CountAsync(filter);
+            return await db.categories.CountAsync();
+        }
+        public async Task AddAsync(category entity) => await db.categories.AddAsync(entity);
+        public void add(category entity) => db.categories.Add(entity);
+        public void Update(category entity) => db.categories.Update(entity);
+        public void Delete(category entity) => db.categories.Remove(entity);
+
+        public List<category> getAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public category getById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

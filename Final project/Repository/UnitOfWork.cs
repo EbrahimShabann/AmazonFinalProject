@@ -17,6 +17,13 @@ namespace Final_project.Repository
         private IAccountRepository _accountRepository;
         private ICartItemRepository _cartItemRepository;
         private IShoppingCartRepository _shoppingCartRepository;
+        private IDiscountRepository _discountRepository;
+        private IOrderItemRepository _orderItemRepository;
+        private IOrderRepository _orderRepository;
+        private IProductDiscountRepository _productDiscountRepository;
+        private IProductImageRepository _productImageRepository;
+        private IUserRepository _userRepository;
+
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -50,7 +57,6 @@ namespace Final_project.Repository
                 return _accountRepository;
             }
         }
-
         public ICartItemRepository CartItemRepository
         {
             get
@@ -60,7 +66,6 @@ namespace Final_project.Repository
                 return _cartItemRepository;
             }
         }
-
         public IShoppingCartRepository ShoppingCartRepository
         {
             get
@@ -70,6 +75,63 @@ namespace Final_project.Repository
                 return _shoppingCartRepository;
             }
         }
+        public IDiscountRepository DiscountRepository
+        {
+            get
+            {
+                if (_discountRepository == null)
+                    _discountRepository = new DiscountRepository(db);
+                return _discountRepository;
+            }
+        }
+        public IOrderItemRepository OrderItemRepository
+        {
+            get
+            {
+                if (_orderItemRepository == null)
+                    _orderItemRepository = new OrderItemRepository(db);
+                return _orderItemRepository;
+            }
+        }
+        public IOrderRepository OrderRepository
+        {
+            get
+            {
+                if (_orderRepository == null)
+                    _orderRepository = new OrderRepository(db);
+                return _orderRepository;
+            }
+        }
+
+        public IProductDiscountRepository ProductDiscountRepository
+        {
+            get
+            {
+                if (_productDiscountRepository == null)
+                    _productDiscountRepository = new ProductDiscountRepository(db);
+                return _productDiscountRepository;
+            }
+        }
+        public IProductImageRepository ProductImageRepository
+        {
+            get
+            {
+                if (_productImageRepository == null)
+                    _productImageRepository = new ProductImageRepository(db);
+                return _productImageRepository;
+            }
+        }
+        public IUserRepository IUserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                    _userRepository = new UserRepository(db);
+                return _userRepository;
+            }
+        }
+
+
 
         public void save()
         {

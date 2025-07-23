@@ -21,6 +21,8 @@ public partial class product_image
 
     [StringLength(255)]
     public string image_url { get; set; }
+    public string image_type { get; set; } = "sub"; // "main" or "sub"
+
 
     public bool? is_primary { get; set; }
 

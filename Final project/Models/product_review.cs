@@ -16,6 +16,8 @@ public partial class product_review
 
     [StringLength(255)]
     public string product_id { get; set; }
+    [ForeignKey("product_id")]
+    public virtual product Product { get; set; }
     public string user_id { get; set; }
     [ForeignKey("user_id")]
     public virtual ApplicationUser User { get; set; }
