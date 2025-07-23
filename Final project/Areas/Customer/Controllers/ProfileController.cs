@@ -44,6 +44,9 @@ namespace Final_project.Areas.Customer.Controllers
                     case "2022":
                         orders = orders.Where(o => o.delivered_at != null && o.delivered_at.Value.Year == 2022);
                         break;
+                    default:
+                        orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
+                        break;
                 }
             };
             if(!string.IsNullOrEmpty(statusFilter))
@@ -78,9 +81,17 @@ namespace Final_project.Areas.Customer.Controllers
 
             }
 
-            var pagedOrders=orders.ToPagedResult(page,size);
+            var pagedOrders = orders.ToPagedResult(page, size);
+
+            //request from ajax
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_OrdersList", pagedOrders);
+            }
+
                return View(pagedOrders);
         }
+      
         public IActionResult orderDetails(string id)
         {
             var order = uof.OrderRepo.getById(id);
