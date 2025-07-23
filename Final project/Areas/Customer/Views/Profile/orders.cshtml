@@ -33,6 +33,7 @@
                             <div class="col-md-3 mb-2">
                                 <label class="form-label">Orders placed in</label>
                                 <select class="form-select" id="orderDate">
+                                <option value="all">All time</option>
                                     <option value="30">Last 30 days</option>
                                     <option value="90">Last 3 months</option>
                                     <option value="2023">2023</option>
@@ -54,37 +55,9 @@
                     </div>
 
                     <!-- Order List -->
-                    <div class="order-list">
-                        <!-- Order  -->
-                        @foreach(var order in Model.Items)
-                        {
-                        <div class="order-card">
-                            <div class="order-header d-flex justify-content-between">
-                                <div>
-                                    <span class="fw-bold">ORDER PLACED</span><br>
-                                    <span>@order.order_date?.ToString("dd,MMMM,yyyy")</span>
-                                </div>
-                                <div>
-                                    <span class="fw-bold">TOTAL</span><br>
-                                    <span>@order.total_amount?.ToString("C")</span>
-                                </div>
-                                <div>
-                                    <span class="fw-bold">SHIP TO</span><br>
-                                    <span>@order.Buyer.UserName</span>
-                                </div>
-                                <div>
-                                    <span class="fw-bold">ORDER # @order.id</span><br>
-                                    <a href="/Customer/Profile/orderDetails?id=@order.id" class="text-primary">Order Details</a>
-                                </div>
-                            </div>
-
-                         
-                        </div>
-
-                        }        
-                       
-                    
-                    </div>
+                <div id="orderResults">                 
+                    <partial name="_OrdersList" />
+                </div>
 
                 <!-- Pagination -->
                 <nav class="d-flex justify-content-between align-items-center my-4">
@@ -154,32 +127,56 @@
         </div>
     </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
    <script>
-       document.addEventListener('DOMContentLoaded', function() {
-           
-      
-       //filter orders based on delivery date
-       document.getElementById('orderDate').addEventListener('change', function() {
-           const selectedValue = this.value;
-           this.setAttribute('data-selected', selectedValue);
-           // Implement filtering logic based on selected value
-          window.location.href = `/Customer/Profile/Orders?dateFilter=${selectedValue}`;
-    });
-       //filter orders based on delivery date
-       document.getElementById('orderStatus').addEventListener('change', function() {
-           const selectedValue = this.value;
-             this.setAttribute('data-selected', selectedValue);
-           // Implement filtering logic based on selected value
-          window.location.href = `/Customer/Profile/Orders?statusFilter=${selectedValue}`;
-    });
 
+        document.addEventListener('DOMContentLoaded', function () {
+                  // Search on Enter
+            document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const searchValue = this.value;
+                    filterOrders('search', searchValue);
+                }
+            });
 
-     });//end of load
+                    // Order Date Filter
+            document.getElementById('orderDate').addEventListener('change', function () {
+                const selected = this.value;
+                filterOrders('dateFilter', selected);
+            });
 
-     function search() {
-         const searchInput = document.getElementById('searchInput').value;
-         if (searchInput.trim() !== '') {
-             window.location.href = `/Customer/Profile/Orders?search=${encodeURIComponent(searchInput)}`;
+            // Status Filter
+            document.getElementById('orderStatus').addEventListener('change', function () {
+                const selected = this.value;
+                filterOrders('statusFilter', selected);
+            });
+        });//end of load
+
+       
+
+           function filterOrders(filterName, value) {
+            const data = {};
+            data[filterName] = value;
+
+            $.ajax({
+                url: '/Customer/Profile/Orders',
+                type: 'GET',
+                data: data,
+                success: function (response) {
+                    $('#orderResults').html(response);
+                },
+                error: function (res) {
+                    alert("Error: " + res.responseText);
+                }
+            });
          }
-     }
+
+
+            function search() {
+                const searchValue = document.getElementById('searchInput').value;
+                filterOrders('search', searchValue);
+            }
+
+      
    </script>
