@@ -137,7 +137,7 @@
                         </button>
                     </div>
                     
-                    <button class="btn btn-outline-danger">
+                    <button class="btn btn-outline-danger wishlist-btn">
                         <i class="far fa-heart"></i> Add to Wishlist
                     </button>
                 </div>
@@ -399,13 +399,55 @@
 
         // Add to cart button
         document.querySelector('.product-btn-cart').addEventListener('click', function() {
-            const quantity = document.getElementById('quantity').value;
-            const size = document.getElementById('selectedSize')?.value;
-            const color = document.getElementById('selectedColor')?.value;
+            $.ajax({
+                 url: '/Customer/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    productId: @Model.id,
+                    @* quantity: document.getElementById('quantity').value,
+                    size: document.getElementById('selectedSize')?.value,
+                    color: document.getElementById('selectedColor')?.value *@
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Item added to cart successfully');
+                    } else {
+                        toastr.error(response.message || 'Failed to add item to cart');
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred while adding item to cart');
+                }
+            });
+            })
             
-            toastr.success(`Added ${quantity} item(s) to cart${size ? ', Size: ' + size : ''}${color ? ', Color: ' + color : ''}`);
-        });
-
+          
+        // Add to WishList
+        document.querySelector('.wishlist-btn').addEventListener('click', function() {
+            $.ajax({
+                 url: '/Customer/Wishlist/AddToWishlist',
+                type: 'POST',
+                data: {
+                    productId: @Model.id,
+                    @* quantity: document.getElementById('quantity').value,
+                    size: document.getElementById('selectedSize')?.value,
+                    color: document.getElementById('selectedColor')?.value *@
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Item added to wishlist successfully');
+                    } else {
+                        toastr.error(response.message || 'Failed to add item to wishlist');
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred while adding item to wishlist');
+                }
+            });
+            })
+            
+          
+ 
         // Buy now button 
         document.getElementById('buyProduct').addEventListener('click', function() {
             const quantity = document.getElementById('quantity').value;

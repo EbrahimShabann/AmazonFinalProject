@@ -1,4 +1,5 @@
-﻿using Final_project.Repository;
+﻿using Final_project.Models;
+using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
@@ -109,5 +110,56 @@ namespace Final_project.Areas.Customer.Controllers
             }
             return View(orderDetailsVM);
         }
+
+        public IActionResult CancelOrder(string orderId)
+        {
+            var order = uof.OrderRepo.getById(orderId);
+            var orderHistory = uof.OrderRepo.GetOrderHistoryByOrderId(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.status = "cancelled";
+
+            if (orderHistory == null) 
+            {
+                //add order history if it does not exist
+                var newOrderHistory = new order_history
+                {
+                    id = Guid.NewGuid().ToString(),
+                    order_id = orderId,
+                    status = "cancelled",
+                    notes = "Order has been cancelled by user",
+                    changed_at = DateTime.Now,
+                    changed_by = "c4" //User.FindFirstValue(ClaimTypes.NameIdentifier)
+                };
+                uof.OrderRepo.AddOrderHistory(newOrderHistory);
+            }
+            else
+            {
+                //update order history if it exists
+                orderHistory.status = "cancelled";
+                orderHistory.notes = "Order has been cancelled by user";
+                orderHistory.changed_at = DateTime.Now;
+                orderHistory.changed_by = "c4"; //User.FindFirstValue(ClaimTypes.NameIdentifier)
+                uof.OrderRepo.UpdateOrderHistory(orderHistory);
+            }
+   
+            uof.OrderRepo.Update(order);
+            uof.save();
+            return Ok();
+        }
+
+        public IActionResult Messages(int page=1,int size=5) 
+        { 
+            var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            var messages = uof.MessageRepo.getBySenderId(userId).ToPagedResult(page,size);
+            return View(messages);
+        }
+    
     }
 }

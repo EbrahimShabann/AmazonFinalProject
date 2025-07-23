@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
@@ -10,6 +11,7 @@ namespace Final_project.Repository
         private readonly AmazonDBContext db;
         private IProductRepository _productRepository;
         private IOrderRepo _orderRepo;
+        private IMessagesRepo _messageRepo;
        
         public UnitOfWork(AmazonDBContext db)
         {
@@ -32,6 +34,15 @@ namespace Final_project.Repository
                 if (_orderRepo == null)
                     _orderRepo = new OrderRepo(db);
                 return _orderRepo;
+            }
+        }
+        public IMessagesRepo MessageRepo
+        {
+            get
+            {
+                if (_messageRepo == null)
+                    _messageRepo = new MessageRepo(db);
+                return _messageRepo;
             }
         }
 

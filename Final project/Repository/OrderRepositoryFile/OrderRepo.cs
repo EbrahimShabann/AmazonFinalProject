@@ -15,6 +15,11 @@ namespace Final_project.Repository.OrderRepositoryFile
             db.orders.Add(entity);
         }
 
+        public void AddOrderHistory(order_history entity)
+        {
+            db.order_histories.Add(entity);
+        }
+
         public void addOrderItem(order_item entity)
         {
             db.order_items.Add(entity);
@@ -43,6 +48,11 @@ namespace Final_project.Repository.OrderRepositoryFile
         }
 
         public void Update(order entity)
+        {
+            db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        }
+
+        public void UpdateOrderHistory(order_history entity)
         {
             db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }

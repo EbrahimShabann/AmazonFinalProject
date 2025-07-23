@@ -55,8 +55,8 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
 
-    public DbSet<wishlist> wishlists { get; set; }
-    public DbSet<wishlist_item> wishlist_items { get; set; }
+    public virtual DbSet<wishlist> wishlists { get; set; }
+    public virtual DbSet<wishlist_item> wishlist_items { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,6 +1,7 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
+using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -80,7 +81,7 @@ namespace Final_project.Areas.Customer.Controllers
 
 
         [HttpGet]
-        public IActionResult CheckOut(CheckOutVM cartVM=null)
+        public IActionResult CheckOut(List<CartVM> cartVM )
         {
             var userId = "c4"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
             //if (string.IsNullOrEmpty(userId))
@@ -108,10 +109,10 @@ namespace Final_project.Areas.Customer.Controllers
                 newOrder.payment_method = lastOrder.payment_method;
             }
 
-            if(cartVM.Carts!=null && cartVM.Carts.Any())
+            if(cartVM!=null && cartVM.Any())
             {
                 //Coming from cart with multiple products
-                foreach (var cart in cartVM.Carts)
+                foreach (var cart in cartVM)
                 {
                     var product = uof.ProductRepository.getById(cart.ProductId);
                     if (product == null)
@@ -129,12 +130,13 @@ namespace Final_project.Areas.Customer.Controllers
                         ProductId = product.id,
                         seller_id=product.seller_id,
                         ProductName = product.name,
-                        price = product.price,
+                        price = product.discount_price ?? product.price,
+                        originalPrice = product.price,
                         CategoryName = product.Category?.name ?? "Unknown Category",
                         Quantity = cart.Quantity,
-                        ProductColor=cart.ProductColor,
-                        ProductSize=cart.ProductSize,
-                        imageUrl = uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
+                        //ProductColor=cart.ProductColor,
+                        //ProductSize=cart.ProductSize,
+                        imageUrl = cart.imageUrl//uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
                     });
                 }
             }
@@ -258,14 +260,14 @@ namespace Final_project.Areas.Customer.Controllers
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = c.ProductName,
-                                Images = new List<string> { c.imageUrl }
+                                //Images = new List<string> { c.imageUrl }
                             }
                         },
                         Quantity = c.Quantity
                     }).ToList(),
                     Mode = "payment",
-                    SuccessUrl = Url.Action("Index", "Product", new { area = "Customer", Controller = "Product",Action="Index", orderId = order.id }, protocol: Request.Scheme),
-                    CancelUrl = Url.Action("CheckOut", "Product", new { area = "Customer"}, protocol: Request.Scheme),
+                    SuccessUrl = Url.Action("Index", "Product", new { area = "Customer", orderId = order.id }, protocol: Request.Scheme),
+                    CancelUrl = Url.Action("Index", "Cart", new { area = "Customer" }, protocol: Request.Scheme),
                 };
                 var service= new SessionService();
                 Session session = service.Create(options);

@@ -36,72 +36,117 @@
                         </div>
                     </div>
 
-                    <!-- Order Status -->
-                    <div class="order-section">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
+                <!-- Order Status -->
+                <div class="order-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            @if (Model.Order.status.ToLower() == "delivered")
+                            {
                                 <h5 class="mb-1">Delivered @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</h5>
-                                @if(Model.Order.status == "Delivered")
-                                {
-                                    <p class="text-success mb-0"><i class="fas fa-check-circle me-1"></i> Your package was delivered</p>
-                                }
-                                else
-                                {
-                                    <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is on the way</p>
-                                }
-
-                               
-                            </div>
-                    
+                                <p class="text-success mb-0"><i class="fas fa-check-circle me-1"></i> Your package was delivered</p>
+                            }
+                            else if (Model.Order.status.ToLower() == "cancelled")
+                            {
+                                <h5 class="mb-1">Order Cancelled</h5>
+                                <p class="text-danger mb-0"><i class="fas fa-times-circle me-1"></i> This order was cancelled</p>
+                            }
+                            else
+                            {
+                                <h5 class="mb-1">Order @Model.Order.status</h5>
+                                <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is on the way</p>
+                            }
                         </div>
+                        @if (Model.Order.status.ToLower() != "cancelled")
+                        {
+                            <button class="btn btn-amazon"><i class="fas fa-box me-1"></i> Track package</button>
+                        }
+                    </div>
 
+                    @if (Model.Order.status.ToLower() != "cancelled")
+                    {
                         <div class="tracking-progress mb-3">
-                            <div class="tracking-progress-bar" style="width: 100%"></div>
+                            @{
+                                var progressWidth = 0;
+                                if (Model.Order.status.ToLower() == "delivered") { progressWidth = 100; }
+                                else if (Model.OrderHistory?.status?.ToLower() == "shipped") { progressWidth = 66; }
+                                else { progressWidth = 33; }
+                            }
+                            <div class="tracking-progress-bar" style="width: @progressWidth%"></div>
                         </div>
-                        <div class="row text-center">
-                            <!-- Ordered (Always done) -->
-                            <div class="col">
+                    }
+
+                    <div class="row text-center">
+                        <!-- Ordered (Always done) -->
+                        <div class="col">
+                            @if (Model.Order.status.ToLower() == "cancelled")
+                            {
+                                <i class="fas fa-check-circle text-muted"></i>
+                                <p class="mb-0">Ordered</p>
+                                <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
+                            }
+                            else
+                            {
                                 <i class="fas fa-check-circle text-success"></i>
                                 <p class="mb-0">Ordered</p>
                                 <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
-                            </div>
-
-                            <!-- Shipped -->
-                            <div class="col">
-                                @if (Model.OrderHistory.status?.ToLower() == "shipped")
-                                {
-                                    <i class="fas fa-check-circle text-success"></i>
-                                    <p class="mb-0">Shipped</p>
-                                    <p class="text-muted small">@Model.OrderHistory.changed_at?.ToShortDateString()</p>
-                                }
-                                else
-                                {
-                                    <i class="fas fa-clock text-muted"></i>
-                                    <p class="mb-0">Shipped</p>
-                                    <p class="text-muted small">Pending</p>
-                                }
-                            </div>
-
-                            <!-- Delivered -->
-                            <div class="col">
-                                @if (Model.Order.delivered_at != null)
-                                {
-                                    <i class="fas fa-check-circle text-success"></i>
-                                    <p class="mb-0">Delivered</p>
-                                    <p class="text-muted small">@Model.Order.delivered_at?.ToShortDateString()</p>
-                                }
-                                else
-                                {
-                                    <i class="fas fa-clock text-muted"></i>
-                                    <p class="mb-0">Delivered</p>
-                                    <p class="text-muted small">Pending</p>
-                                }
-                            </div>
-
+                            }
                         </div>
-                        
+
+                        <!-- Shipped -->
+                        <div class="col">
+                            @if (Model.Order.status.ToLower() == "cancelled")
+                            {
+                                <i class="fas fa-times-circle text-muted"></i>
+                                <p class="mb-0">Shipped</p>
+                                <p class="text-muted small">Cancelled</p>
+                            }
+                            else if (Model.OrderHistory?.status?.ToLower() == "shipped" || Model.Order.status.ToLower() == "delivered")
+                            {
+                                <i class="fas fa-check-circle text-success"></i>
+                                <p class="mb-0">Shipped</p>
+                                <p class="text-muted small">@Model.OrderHistory?.changed_at?.ToShortDateString()</p>
+                            }
+                            else
+                            {
+                                <i class="fas fa-clock text-muted"></i>
+                                <p class="mb-0">Shipped</p>
+                                <p class="text-muted small">Pending</p>
+                            }
+                        </div>
+
+                        <!-- Delivered -->
+                        <div class="col">
+                            @if (Model.Order.status.ToLower() == "cancelled")
+                            {
+                                <i class="fas fa-times-circle text-muted"></i>
+                                <p class="mb-0">Delivered</p>
+                                <p class="text-muted small">Cancelled</p>
+                            }
+                            else if (Model.Order.delivered_at != null)
+                            {
+                                <i class="fas fa-check-circle text-success"></i>
+                                <p class="mb-0">Delivered</p>
+                                <p class="text-muted small">@Model.Order.delivered_at?.ToShortDateString()</p>
+                            }
+                            else
+                            {
+                                <i class="fas fa-clock text-muted"></i>
+                                <p class="mb-0">Delivered</p>
+                                <p class="text-muted small">Pending</p>
+                            }
+                        </div>
                     </div>
 
+                    @if (Model.Order.status.ToLower() == "cancelled")
+                    {
+                        <div class="alert alert-danger mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <span>This order has been cancelled.</span>
+  
+                          
+                        </div>
+                    }
+                </div>
                     <!-- Order Items -->
                     <div class="order-section">
                         <h5 class="mb-3">Order Summary</h5>
@@ -116,7 +161,15 @@
                                     <div class="col-md-6">
                                         <h6>@item.product.name</h6>
                                         <p class="text-muted mb-2">Sold by: Amazon.com</p>
-                                        <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+                                        @if (Model.Order.status.ToLower() == "cancelled")
+                                        {
+                                            <p class="text-danger mb-0"><i class="fas fa-times-circle me-1"></i>Order  Cancelled</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+
+                                        }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
                                         <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
                                     </div>
@@ -140,8 +193,16 @@
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
                          <div>
-                          
-                            <button class="btn btn-outline-secondary" data>Cancel order</button>
+                        @if (Model.Order.status.ToLower() != "cancelled")
+                        {
+                            <button id="cancelOrder" class="btn btn-outline-warning">Cancel Order</button>
+                        }
+                        else
+                        {
+                            <button id="cancelOrder" class="btn btn-outline-warning" disabled>Cancel Order</button>
+
+                        }
+
                         </div> 
                     </div>
                 </div>
@@ -149,3 +210,24 @@
         </div>
     </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<partial name="Tostar" />
+<script>
+  $(document).ready(function(){
+        $('#cancelOrder').on('click',function(e){
+     
+            $.ajax({
+                       url: `/Customer/Profile/CancelOrder?orderId=@Model.Order.id`,
+                success:function(){
+                       toastr.success(`Order has been cancelled`);
+                         location.reload();
+                },
+                error:function(err){
+                    toastr.error(`Error cancelling order` + err);
+                  }
+            });
+        });
+  }) //end of load
+</script>

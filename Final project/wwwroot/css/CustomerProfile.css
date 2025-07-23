@@ -137,3 +137,44 @@ body {
 }
 
 
+.messages-container {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.message-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+}
+
+    .message-card:hover {
+        background-color: #f9f9f9;
+    }
+
+    .message-card.unread {
+        background-color: #f0f8ff;
+        border-left: 3px solid #0066c0;
+    }
+
+.message-sender-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+
+.message-actions {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.message-card:hover .message-actions {
+    opacity: 1;
+}
+

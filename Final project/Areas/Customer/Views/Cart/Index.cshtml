@@ -1,0 +1,80 @@
+﻿@using Final_project.ViewModel.Cart
+@using Final_project.ViewModel.Customer
+@model List<CartItemViewModel>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    var subtotal = ViewBag.Subtotal ?? 0M;
+
+    List<CartVM> cartVM = new List<CartVM>();
+}
+
+<div class="container mt-5">
+    <h2 class="mb-3">Shopping Cart</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Your cart is empty.</div>
+    }
+    else
+    {
+        <a href="#" class="text-primary mb-3 d-inline-block">Deselect all items</a>
+
+        @foreach (var item in Model)
+        {
+            <div class="card mb-3 p-3">
+                <div class="d-flex">
+                    <input type="checkbox" class="form-check-input me-3 mt-2" checked />
+                    <img src="@item.ImageUrl" width="100" class="me-4" />
+                    <div class="flex-grow-1">
+                        <h6>@item.ProductName</h6>
+                        @if (!string.IsNullOrEmpty(item.Badge))
+                        {
+                            <span class="badge bg-warning text-dark mb-1">@item.Badge</span>
+                        }
+                        <p class="text-success">@(item.InStock ? "In Stock" : "Out of Stock")</p>
+                        <p class="text-muted small">Eligible for FREE delivery</p>
+
+                        <div class="d-flex align-items-center mb-2">
+                            <form asp-action="Decrease" method="post" class="me-1">
+                                <input type="hidden" name="id" value="@item.CartItemId" />
+                                <button type="submit" class="btn btn-outline-secondary">-</button>
+                            </form>
+                            <span class="btn btn-outline-secondary">@item.Quantity</span>
+                            <form asp-action="Increase" method="post" class="ms-1 me-3">
+                                <input type="hidden" name="id" value="@item.CartItemId" />
+                                <button type="submit" class="btn btn-outline-secondary">+</button>
+                            </form>
+
+                            <form asp-action="Delete" method="post" class="me-2">
+                                <input type="hidden" name="id" value="@item.CartItemId" />
+                                <button type="submit" class="btn btn-link text-decoration-none">Delete</button>
+                            </form>
+                            <a href="#" class="me-3 text-decoration-none">Save for later</a>
+                        </div>
+
+                        <p class="fw-bold">EGP @item.Price.ToString("N2")</p>
+                    </div>
+                </div>
+            </div>
+        }
+        <form method="get" asp-area="Customer" asp-controller="Product" asp-action="CheckOut">
+            @for(int i=0; i < Model.Count; i++)
+            {
+                <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+                <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+                <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+                <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+                <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
+            
+            }
+            <div class="text-end">
+                <h5 class="mb-3">Subtotal (@Model.Sum(x => x.Quantity) items): <span class="text-danger">EGP @subtotal.ToString("N2")</span></h5>
+                <button type="submit" class="btn btn-warning fw-bold px-4 py-2">Proceed to Buy</button>
+            </div>
+        </form>
+
+        
+    }
+</div>
+
+
