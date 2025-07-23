@@ -161,6 +161,9 @@ body {
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+    text-decoration:none;
+    color:white;
+        
 }
 
     .sidebar-item:before {

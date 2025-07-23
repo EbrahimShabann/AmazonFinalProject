@@ -125,6 +125,19 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.Products)
             .HasForeignKey(p => p.seller_id);
 
+        modelBuilder.Entity<product>()
+           .Property(p => p.category_id)
+           .HasColumnType("nvarchar(255)");
+
+        modelBuilder.Entity<category>()
+            .Property(c => c.id)
+            .HasColumnType("nvarchar(255)");
+
+        modelBuilder.Entity<product>()
+            .HasOne(p => p.category)
+            .WithMany()
+            .HasForeignKey(p => p.category_id);
+
         modelBuilder.Entity<product_review>()
             .HasOne(pr => pr.User)
             .WithMany(u => u.ProductReviews)

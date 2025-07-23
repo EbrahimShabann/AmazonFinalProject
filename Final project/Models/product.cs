@@ -40,14 +40,16 @@ public partial class product
     public string sku { get; set; }
 
     [StringLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
     public string category_id { get; set; }
     [ForeignKey("category_id")]
     public virtual category category { get; set; }
+    public virtual ICollection<product_image> Product_Images { get; set; } = new List<product_image>();
 
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
-    public virtual List<product_image> Product_Images { get; set; }
+
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
     public DateTime? last_modified_at { get; set; }
@@ -62,5 +64,5 @@ public partial class product
     public DateTime? approved_at { get; set; }
 
     public bool is_deleted { get; set; } = false;
-    
+
 }

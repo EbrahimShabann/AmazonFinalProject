@@ -12,6 +12,7 @@ public partial class category
 {
     [Key]
     [StringLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
     public string id { get; set; }
 
     [StringLength(255)]

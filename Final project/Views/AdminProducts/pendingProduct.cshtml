@@ -81,73 +81,39 @@
                 <p>You don't have any pending products to review.</p>
             </div>}
         </div>
-        <a href="#" class="view-all-btn">View All Products</a>
+        <a asp-action="AllProducts" class="view-all-btn">View All Products</a>
 
     </div>
 
 </main>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-          // Handle Approve buttons
-          document.querySelectorAll('.btn-approve').forEach(button => {
-              button.addEventListener('click', function() {
-                  const productId = this.getAttribute('data-id');
-                  processAction(productId, 'Approve');
-              });
-          });
+    $(document).ready(function () {
 
-          // Handle Reject buttons
-          document.querySelectorAll('.btn-reject').forEach(button => {
-              button.addEventListener('click', function() {
-                  const productId = this.getAttribute('data-id');
-                  processAction(productId, 'Reject');
-              });
-          });
+        // Approve Product
+        $(document).on('click', '.btn-approve', function () {
+            const productId = $(this).data('id');
+            $.post('/AdminProducts/ApproveProduct', { id: productId }, function (response) {
+                if (response.success) {
+                    location.reload(); 
+                } else {
+                    alert("Failed to approve product.");
+                }
+            });
+        });
 
-          function processAction(productId, action) {
-              const url = `/AdminProducts/${action}/${productId}`;
+        // Reject Product
+        $(document).on('click', '.btn-reject', function () {
+            const productId = $(this).data('id');
+            $.post('/AdminProducts/RejectProduct', { id: productId }, function (response) {
+                if (response.success) {
+                    location.reload(); 
+                } else {
+                    alert("Failed to reject product.");
+                }
+            });
+        });
 
-              fetch(url, {
-                  method: 'GET',
-                  headers: {
-                      'X-Requested-With': 'XMLHttpRequest'
-                  }
-              })
-              .then(response => {
-                  if (response.ok) {
-                      // Remove product card from UI
-                      const productElement = document.getElementById(`product-${productId}`);
-                      if (productElement) productElement.remove();
-
-                      // Update counts
-                      updateCounts(action);
-                  } else {
-                      alert('Action failed. Please try again.');
-                  }
-              })
-              .catch(error => console.error('Error:', error));
-          }
-
-          function updateCounts(action) {
-              const pendingEl = document.getElementById('count-pending');
-              const acceptedEl = document.getElementById('count-accepted');
-              const rejectedEl = document.getElementById('count-rejected');
-
-              let pending = parseInt(pendingEl.textContent);
-              let accepted = parseInt(acceptedEl.textContent);
-              let rejected = parseInt(rejectedEl.textContent);
-
-              pendingEl.textContent = --pending;
-
-              if (action === 'Approve') {
-                  acceptedEl.textContent = ++accepted;
-              } else {
-                  rejectedEl.textContent = ++rejected;
-              }
-          }
-      });
+    });
 </script>
-
-

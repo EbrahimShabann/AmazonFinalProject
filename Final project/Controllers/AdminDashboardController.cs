@@ -21,16 +21,15 @@ namespace Final_project.Controllers
             // Total Users with roles
             var customerRoleId = _context.Roles.Where(r => r.Name == "Customer").Select(r => r.Id).FirstOrDefault();
             var sellerRoleId = _context.Roles.Where(r => r.Name == "Seller").Select(r => r.Id).FirstOrDefault();
-            var SellerCount = _context.UserRoles.Count(ur => ur.RoleId == sellerRoleId);
-
-            var customeCount = _context.UserRoles.Count(ur => ur.RoleId == customerRoleId);
+            var customeCount = _context.UserRoles.Count(u=>u.RoleId==customerRoleId);
+            var SellerCount = _context.UserRoles.Count(u => u.RoleId == sellerRoleId);
 
             // Product Stats
             var lastMonthDate = DateTime.Now.AddMonths(-1);
 
             var counttotalProducts = _context.products.Count();
             var countProductsToLastMonth = _context.products.Where(p => p.created_at <= lastMonthDate && (bool)p.is_active).Count();
-            var pendingProducts = _context.products.Count(p => (bool)!p.is_approved);
+            var pendingProducts = _context.products.Count(p => (bool)!p.is_approved&(bool)p.is_active&!p.is_deleted);
             var productPercetage = countProductsToLastMonth != 0 ? ((counttotalProducts - countProductsToLastMonth) / countProductsToLastMonth) : 0;
 
             // Pending Sellers: sellers with account not yet active or approved
@@ -98,7 +97,7 @@ namespace Final_project.Controllers
 
             // For Pending Chart
             ViewBag.PendingChartData = new List<int> { pendingSellers, pendingProducts };
-
+            ViewBag.ActivePage = "Dashboard";
             return View();
         }
     }

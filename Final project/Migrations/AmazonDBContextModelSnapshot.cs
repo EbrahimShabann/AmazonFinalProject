@@ -192,7 +192,7 @@ namespace Final_project.Migrations
                 {
                     b.Property<string>("id")
                         .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("created_at")
                         .HasColumnType("datetime2");
@@ -231,7 +231,7 @@ namespace Final_project.Migrations
 
                     b.Property<string>("parent_category_id")
                         .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("id");
 
@@ -540,6 +540,8 @@ namespace Final_project.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("category_id");
 
                     b.HasIndex("seller_id");
 
@@ -1025,11 +1027,17 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
+                    b.HasOne("Final_project.Models.category", "category")
+                        .WithMany()
+                        .HasForeignKey("category_id");
+
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany("Products")
                         .HasForeignKey("seller_id");
 
                     b.Navigation("Seller");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Final_project.Models.product_discount", b =>
@@ -1050,7 +1058,7 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.product_image", b =>
                 {
                     b.HasOne("Final_project.Models.product", "product")
-                        .WithMany()
+                        .WithMany("Product_Images")
                         .HasForeignKey("product_id");
 
                     b.Navigation("product");
@@ -1175,6 +1183,11 @@ namespace Final_project.Migrations
                     b.Navigation("SupportTickets");
 
                     b.Navigation("TicketMessages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product", b =>
+                {
+                    b.Navigation("Product_Images");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
