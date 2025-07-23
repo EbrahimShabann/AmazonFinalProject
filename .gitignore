@@ -1,1 +1,11 @@
 .vs
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
