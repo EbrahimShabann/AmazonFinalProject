@@ -25,9 +25,15 @@ public partial class product
     [StringLength(255)]
     public string Brand { get; set; }
 
-    public List<string> SelectedSizes { get; set; } = new List<string>();
+    public string SelectedColorsRaw { get; set; }
+    public string SelectedSizesRaw { get; set; }
 
-    public List<string> SelectedColors { get; set; } = new List<string>();
+    [NotMapped]
+    public List<string> SelectedColors => SelectedColorsRaw?.Split(',').ToList() ?? new List<string>();
+
+    [NotMapped]
+    public List<string> SelectedSizes => SelectedSizesRaw?.Split(',').ToList() ?? new List<string>();
+
 
 
     [Column(TypeName = "decimal(18, 2)")]

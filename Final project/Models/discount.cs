@@ -41,5 +41,5 @@ public partial class discount
 
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
-    public bool is_deleted { get; set; } = false;
+    public bool? is_deleted { get; set; } = false;
 }

@@ -64,18 +64,18 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
 
-        var stringListConverter = new ValueConverter<List<string>, string>(
-        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-        v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
-    );
+        //var stringListConverter = new ValueConverter<List<string>, string>(
+        //v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+        //v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
+    //);
 
-        modelBuilder.Entity<product>()
-            .Property(p => p.SelectedSizes)
-            .HasConversion(stringListConverter);
+        //modelBuilder.Entity<product>()
+        //    .Property(p => p.SelectedSizes)
+        //    .HasConversion(stringListConverter);
 
-        modelBuilder.Entity<product>()
-            .Property(p => p.SelectedColors)
-            .HasConversion(stringListConverter);
+        //modelBuilder.Entity<product>()
+        //    .Property(p => p.SelectedColors)
+        //    .HasConversion(stringListConverter);
 
 
         modelBuilder.Entity<ApplicationUser>(entity => {

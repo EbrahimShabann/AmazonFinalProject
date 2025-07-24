@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace Final_project.Areas.Customer.Controllers
 {
     [Area("Customer")]
-  
+
     public class ProfileController : Controller
     {
         private readonly UnitOfWork uof;
@@ -21,7 +21,7 @@ namespace Final_project.Areas.Customer.Controllers
         {
             return View();
         }
-        public IActionResult Orders(string dateFilter,string statusFilter,string search, int page=1,int size=10)
+        public IActionResult Orders(string dateFilter, string statusFilter, string search, int page = 1, int size = 10)
         {
             string userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
@@ -49,8 +49,9 @@ namespace Final_project.Areas.Customer.Controllers
                         orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
                         break;
                 }
-            };
-            if(!string.IsNullOrEmpty(statusFilter))
+            }
+            ;
+            if (!string.IsNullOrEmpty(statusFilter))
             {
                 switch (statusFilter)
                 {
@@ -90,9 +91,9 @@ namespace Final_project.Areas.Customer.Controllers
                 return PartialView("_OrdersList", pagedOrders);
             }
 
-               return View(pagedOrders);
+            return View(pagedOrders);
         }
-      
+
         public IActionResult orderDetails(string id)
         {
             var order = uof.OrderRepo.getById(id);
@@ -102,7 +103,7 @@ namespace Final_project.Areas.Customer.Controllers
             {
                 Order = order,
                 OrderItems = orderItems,
-                OrderHistory= orderHistory,
+                OrderHistory = orderHistory,
             };
             if (order == null)
             {
@@ -121,15 +122,15 @@ namespace Final_project.Areas.Customer.Controllers
             }
             order.status = "cancelled";
 
-            if (orderHistory == null) 
+            if (orderHistory == null)
             {
-                //add order history if it does not exist
+                //add order history 
                 var newOrderHistory = new order_history
                 {
                     id = Guid.NewGuid().ToString(),
-                    order_id = orderId,
-                    status = "cancelled",
-                    notes = "Order has been cancelled by user",
+                    order_id = order.id,
+                    status = "Pending",
+                    notes = "Order has been created",
                     changed_at = DateTime.Now,
                     changed_by = "c4" //User.FindFirstValue(ClaimTypes.NameIdentifier)
                 };
@@ -144,22 +145,82 @@ namespace Final_project.Areas.Customer.Controllers
                 orderHistory.changed_by = "c4"; //User.FindFirstValue(ClaimTypes.NameIdentifier)
                 uof.OrderRepo.UpdateOrderHistory(orderHistory);
             }
-   
+
             uof.OrderRepo.Update(order);
             uof.save();
             return Ok();
         }
 
-        public IActionResult Messages(int page=1,int size=5) 
-        { 
+        public IActionResult Messages(string filter, string search, int page = 1, int size = 5)
+        {
             var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
                 return NotFound();
             }
-            var messages = uof.MessageRepo.getBySenderId(userId).ToPagedResult(page,size);
-            return View(messages);
+            var messages = uof.MessageRepo.getBySenderId(userId);
+            if (!string.IsNullOrEmpty(filter))
+            {
+                switch (filter.ToLower())
+                {
+                    case "unread":
+                        messages = messages.Where(m => m.is_read == false).ToList();
+                        break;
+                    case "read":
+                        messages = messages.Where(m => m.is_read == true).ToList();
+                        break;
+                    default:
+                        messages = uof.MessageRepo.getBySenderId(userId);
+                        break;
+                }
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                messages = messages.Where(m => m.message.Contains(search)).ToList();
+            }
+
+            var pagedMessages = messages.ToPagedResult(page, size);
+
+
+            //request from ajax
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_MessagesList", pagedMessages);
+            }
+            return View(pagedMessages);
         }
-    
+
+        public IActionResult DeleteSelected(List<string> selectedIds , string msgId)
+        {
+            if(!string.IsNullOrEmpty(msgId))
+            {
+               selectedIds.Add(msgId);
+            }
+            if (selectedIds == null || selectedIds.Count == 0)
+            {
+                return BadRequest("No messages selected for deletion.");
+            }
+            var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            foreach (var id in selectedIds)
+            {
+                var message = uof.MessageRepo.getById(id);
+                if (message != null && message.sender_id == userId)
+                {
+                    uof.MessageRepo.Delete(message);
+                   
+                }
+                else 
+                {
+                    return BadRequest();
+                }
+            }
+
+            uof.save();
+            return Ok("Selected messages deleted successfully.");
+        }
     }
 }

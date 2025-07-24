@@ -6,6 +6,7 @@ using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Stripe.Checkout;
+using Stripe.Climate;
 using System.Security.Claims;
 
 namespace Final_project.Areas.Customer.Controllers
@@ -15,20 +16,20 @@ namespace Final_project.Areas.Customer.Controllers
     {
         private readonly UnitOfWork uof;
 
-        public ProductController(UnitOfWork uof )
+        public ProductController(UnitOfWork uof)
         {
             this.uof = uof;
-           
+
         }
-        
-        public IActionResult Index(int page=1,int size=10)
+
+        public IActionResult Index(int page = 1, int size = 10)
         {
             var products = uof.ProductRepository.getProductsWithImagesAndRating().ToPagedResult(page, size);
             return View(products);
-        } 
+        }
         public IActionResult Details(string id)
         {
-            var product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p=>p.id==id);
+            var product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
             if (product == null)
             {
                 return NotFound();
@@ -43,7 +44,7 @@ namespace Final_project.Areas.Customer.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(reviewVM.rating < 1 || reviewVM.rating > 5)
+                if (reviewVM.rating < 1 || reviewVM.rating > 5)
                 {
                     TempData["error"] = "Rating must be between 1 and 5.";
                     return RedirectToAction("Details", new { id = reviewVM.product_id });
@@ -81,7 +82,7 @@ namespace Final_project.Areas.Customer.Controllers
 
 
         [HttpGet]
-        public IActionResult CheckOut(List<CartVM> cartVM )
+        public IActionResult CheckOut(List<CartVM> cartVM)
         {
             var userId = "c4"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
             //if (string.IsNullOrEmpty(userId))
@@ -95,21 +96,21 @@ namespace Final_project.Areas.Customer.Controllers
 
             var newOrder = new CheckOutVM
             {
-                UserName=userName,
-                UserPhone=userPhone,
-                Carts=new List<CartVM>(),
+                UserName = userName,
+                UserPhone = userPhone,
+                Carts = new List<CartVM>(),
             };
 
 
-            var lastOrder = uof.OrderRepo.getAll().OrderByDescending(o=>o.order_date)
+            var lastOrder = uof.OrderRepo.getAll().OrderByDescending(o => o.order_date)
                                 .FirstOrDefault(o => o.buyer_id == userId); //last order
-            if(lastOrder != null)
+            if (lastOrder != null)
             {
                 newOrder.shipping_address = lastOrder.shipping_address;
                 newOrder.payment_method = lastOrder.payment_method;
             }
 
-            if(cartVM!=null && cartVM.Any())
+            if (cartVM != null && cartVM.Any())
             {
                 //Coming from cart with multiple products
                 foreach (var cart in cartVM)
@@ -128,7 +129,7 @@ namespace Final_project.Areas.Customer.Controllers
                     newOrder.Carts.Add(new CartVM
                     {
                         ProductId = product.id,
-                        seller_id=product.seller_id,
+                        seller_id = product.seller_id,
                         ProductName = product.name,
                         price = product.discount_price ?? product.price,
                         originalPrice = product.price,
@@ -140,7 +141,7 @@ namespace Final_project.Areas.Customer.Controllers
                     });
                 }
             }
-            else if(Request.Query.ContainsKey("productId")&& Request.Query.ContainsKey("quantity"))
+            else if (Request.Query.ContainsKey("productId") && Request.Query.ContainsKey("quantity"))
             {
                 //Coming from buy now button with single product
                 var productId = Request.Query["productId"].ToString();
@@ -161,10 +162,10 @@ namespace Final_project.Areas.Customer.Controllers
                 newOrder.Carts.Add(new CartVM
                 {
                     ProductId = product.id,
-                    seller_id=product.seller_id,
+                    seller_id = product.seller_id,
                     ProductName = product.name,
-                    price = product.discount_price?? product.price,
-                    originalPrice=product.price,
+                    price = product.discount_price ?? product.price,
+                    originalPrice = product.price,
                     CategoryName = product.Category?.name ?? "Unknown Category",
                     Quantity = quantity,
                     imageUrl = uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
@@ -176,7 +177,7 @@ namespace Final_project.Areas.Customer.Controllers
                 TempData["error"] = "No products selected for checkout.";
                 return RedirectToAction("Index", "Product");
             }
-           
+
 
             return View(newOrder);
         }
@@ -195,7 +196,7 @@ namespace Final_project.Areas.Customer.Controllers
             //}
 
             //basic validation
-            if (!ModelState.IsValid || model.Carts==null || !model.Carts.Any())
+            if (!ModelState.IsValid || model.Carts == null || !model.Carts.Any())
             {
                 TempData["error"] = "Invalid order data.";
                 return RedirectToAction("CheckOut", model);
@@ -212,12 +213,23 @@ namespace Final_project.Areas.Customer.Controllers
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
                 order_date = DateTime.Now,
-                delivered_at=DateTime.Now+ TimeSpan.FromDays(7), //assuming delivery in 7 days
+                delivered_at = DateTime.Now + TimeSpan.FromDays(2), //assuming delivery in 7 days
                 status = "Pending",
             };
+
             uof.OrderRepo.add(order);
             uof.save();
-
+            //add order history 
+            var newOrderHistory = new order_history
+            {
+                id = Guid.NewGuid().ToString(),
+                order_id = order.id,
+                status = "Pending",
+                notes = "Order has been created",
+                changed_at = DateTime.Now,
+                changed_by = "c4" //User.FindFirstValue(ClaimTypes.NameIdentifier)
+            };
+            uof.OrderRepo.AddOrderHistory(newOrderHistory);
 
             //create order items for each product in the cart
             foreach (var cart in model.Carts)
@@ -225,10 +237,10 @@ namespace Final_project.Areas.Customer.Controllers
                 var orderItem = new order_item
                 {
                     order_id = order.id,
-                    seller_id=cart.seller_id,
+                    seller_id = cart.seller_id,
                     product_id = cart.ProductId,
                     quantity = cart.Quantity,
-                    discount_applied = cart.originalPrice-cart.price, //price is originalPrice or DiscountPrice
+                    discount_applied = cart.originalPrice - cart.price, //price is originalPrice or DiscountPrice
                     unit_price = cart.originalPrice ?? 0,
 
                 };
@@ -269,7 +281,7 @@ namespace Final_project.Areas.Customer.Controllers
                     SuccessUrl = Url.Action("Index", "Product", new { area = "Customer", orderId = order.id }, protocol: Request.Scheme),
                     CancelUrl = Url.Action("Index", "Cart", new { area = "Customer" }, protocol: Request.Scheme),
                 };
-                var service= new SessionService();
+                var service = new SessionService();
                 Session session = service.Create(options);
                 order.payment_status = session.Id;          // Save session ID if needed for future validation
                 uof.OrderRepo.Update(order);
@@ -277,8 +289,8 @@ namespace Final_project.Areas.Customer.Controllers
 
                 return Redirect(session.Url);
             }
-          
-                TempData["success"] = $"Order placed successfully with ID: {order.id}!";
+
+            TempData["success"] = $"Order placed successfully with ID: {order.id}!";
             return RedirectToAction("Index");
         }
     }
