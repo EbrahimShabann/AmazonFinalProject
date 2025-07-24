@@ -1,0 +1,203 @@
+﻿<nav class="secondary-navbar">
+    <div class="container">
+        <!-- Hamburger Menu -->
+        <div class="hamburger-menu" id="hamburgerMenu">
+            <i class="fas fa-bars"></i>
+            <span>All</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a href="#" class="nav-link" data-filter="todaysdeals">Today's Deals</a>
+            <a asp-action="Index" asp-controller="Category" class="nav-link">Category</a>
+            <a href="#" class="nav-link">Electronics</a>
+            <a href="#" class="nav-link">Fashion</a>
+            <a href="#" class="nav-link">Video Games</a>
+
+            <!-- Prime Dropdown -->
+            <div class="prime-dropdown dropdown">
+                <button class="dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Prime
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Prime Video</a></li>
+                    <li><a class="dropdown-item" href="#">Prime Music</a></li>
+                    <li><a class="dropdown-item" href="#">Prime Reading</a></li>
+                    <li><a class="dropdown-item" href="#">Prime Gaming</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#">Join Prime</a></li>
+                </ul>
+            </div>
+
+            <a href="#" class="nav-link">Appliances</a>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Sidebar Menu -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h3>
+            <i class="fas fa-user me-2"></i>Hello, @{
+                var userName = User.Identity?.Name;
+                if (!string.IsNullOrEmpty(userName))
+                {
+                    @(userName.Contains("@") ? userName.Split("@")[0] : userName)
+                }
+                else
+                {
+                    @("Sign in")
+                }
+            }
+
+        </h3>
+        <button class="sidebar-close" id="sidebarClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="sidebar-content">
+        <div class="sidebar-section">
+            <h4>Digital Content & Devices</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link">Amazon Music</a></li>
+                <li><a href="#">Unlimited Music Streaming</a></li>
+                <li><a href="#" class="sidebar-main-link">Prime Video</a></li>
+                <li><a href="#">Movies & TV Shows</a></li>
+                <li><a href="#" class="sidebar-main-link">Amazon Gaming</a></li>
+                <li><a href="#">Download Games</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <h4>Shop by Category</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link">Electronics</a></li>
+                <li><a href="#">Mobiles & Accessories</a></li>
+                <li><a href="#">Computers & Accessories</a></li>
+                <li><a href="#" class="sidebar-main-link">Fashion</a></li>
+                <li><a href="#">Men's Fashion</a></li>
+                <li><a href="#">Women's Fashion</a></li>
+                <li><a href="#" class="sidebar-main-link">Home & Garden</a></li>
+                <li><a href="#">Kitchen & Dining</a></li>
+                <li><a href="#">Home Decor</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Programs & Features</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link" data-filter="todaysdeals">Today's Deals</a></li>
+                <li><a href="#" class="sidebar-main-link">Amazon Pay</a></li>
+                <li><a href="#" class="sidebar-main-link">Gift Cards</a></li>
+                <li><a href="#" class="sidebar-main-link">Amazon Prime</a></li>
+            </ul>
+        </div>
+
+
+
+        <div class="sidebar-section">
+            <h4>Help & Settings</h4>
+            <ul>
+                <li><a href="#" class="sidebar-main-link">Your Account</a></li>
+                <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li><a asp-action="signOut" asp-controller="Account" class="sidebar-main-link">Sign Out</a></li>
+                }
+                else
+                {
+                    <li><a asp-action="Login" asp-controller="Account" class="sidebar-main-link">Sign in</a></li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        // Handle Today's Deals click
+        $(document).on('click', '[data-filter="todaysdeals"]', function(e) {
+            e.preventDefault();
+
+            // Navigate to Category/Index with todaysdeals filter
+            window.location.href = `/Category/Index?filter=todaysdeals`;
+
+            return false;
+        });
+
+        // Handle hamburger menu click - load categories and show sidebar
+        $(document).on('click', '.hamburger-menu', function() {
+            $.ajax({
+                url: "/Category/GetCategorys",
+                type: "GET",
+                success: function (result) {
+                    console.log("Success:", result);
+
+                    // Generate the HTML for categories (parents only)
+                    let categoriesHtml = generateCategoriesHtml(result);
+
+                    // Find the existing "Shop by Category" section and replace it
+                    let existingSection = $('.sidebar-section').filter(function() {
+                        return $(this).find('h4').text() === 'Shop by Category';
+                    });
+
+                    if (existingSection.length > 0) {
+                        existingSection.replaceWith(categoriesHtml);
+                    } else {
+                        // If section doesn't exist, append it to sidebar content
+                        $('.sidebar-content').append(categoriesHtml);
+                    }
+
+                    // Show the sidebar
+                    $('#sidebar').addClass('active');
+                    $('#sidebarOverlay').addClass('active');
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error details:", xhr.responseText, status, error);
+                    alert("Error: " + xhr.status + " - " + xhr.responseText);
+                }
+            });
+        });
+
+        // Simplified function to generate HTML with only parent categories
+        function generateCategoriesHtml(categories) {
+            let html = '<div class="sidebar-section"><h4>Shop by Category</h4><ul class="category-list">';
+
+            categories.forEach(function(parentCategory) {
+                // Only parent category (no children)
+                html += `<li class="category-item">
+                    <a href="/Category/Index?categoryId=${parentCategory.id}" class="sidebar-main-link" data-category-id="${parentCategory.id}">${parentCategory.name}</a>
+                </li>`;
+            });
+
+            html += '</ul></div>';
+            return html;
+        }
+
+        // Handle parent category clicks - navigate to Category/Index with categoryId
+        $(document).on('click', '.sidebar-main-link[data-category-id]', function(e) {
+            e.preventDefault();
+            const categoryId = $(this).data('category-id');
+            const categoryName = $(this).text();
+
+            console.log('Selected category:', categoryName, 'ID:', categoryId);
+
+            // Navigate to Category/Index with categoryId as query parameter
+            window.location.href = `/Category/Index?categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}`;
+
+            return false;
+        });
+
+        // Handle sidebar close functionality
+        $(document).on('click', '#sidebarClose, #sidebarOverlay', function() {
+            $('#sidebar').removeClass('active');
+            $('#sidebarOverlay').removeClass('active');
+        });
+    });
+</script>

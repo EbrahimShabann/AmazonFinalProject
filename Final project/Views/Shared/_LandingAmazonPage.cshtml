@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon - @ViewData["Title"]</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/LandingPageCSS.css" asp-append-version="true" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" asp-action="Index" asp-controller="Landing"><i class="fab fa-amazon"></i> Amazon</a>
+            <div class="search-container">
+                <input type="text"
+                       id="searchInput"
+                       class="search-input"
+                       placeholder="Search for products..." />
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <!-- Add this line -->
+            <div id="searchResults" class="search-results-container"></div>
+            <div class="navbar-actions">
+                @if (User.Identity.IsAuthenticated)
+                {
+
+                    <!-- Cart with Counter -->
+                    <div class="cart-container">
+                        <i class="fas fa-shopping-cart text-white fs-4"></i>
+                        <span class="cart-counter" id="cartCounter">0</span>
+                    </div>
+                }
+
+                <!-- User Dropdown -->
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fas fa-user text-white fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Your Account</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-box me-2"></i>Your Orders</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Your Wish List</a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="SignOut" asp-controller="Account"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Login" asp-controller="Account"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- Footer -->
+    <footer class="footer d-flrex flex-column">
+        <div class="container justify-content-center">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Get to Know Us</h3>
+                    <ul>
+                        <li><a href="#">About Amazon</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press Releases</a></li>
+                        <li><a href="#">Amazon Cares</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Make Money with Us</h3>
+                    <ul>
+                        <li><a href="#">Sell products on Amazon</a></li>
+                        <li><a href="#">Sell on Amazon Business</a></li>
+                        <li><a href="#">Sell apps on Amazon</a></li>
+                        <li><a href="#">Become an Affiliate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Amazon Payment Products</h3>
+                    <ul>
+                        <li><a href="#">Amazon Business Card</a></li>
+                        <li><a href="#">Shop with Points</a></li>
+                        <li><a href="#">Reload Your Balance</a></li>
+                        <li><a href="#">Amazon Currency Converter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Let Us Help You</h3>
+                    <ul>
+                        <li><a href="#">Amazon and COVID-19</a></li>
+                        <li><a href="#">Your Account</a></li>
+                        <li><a href="#">Your Orders</a></li>
+                        <li><a href="#">Shipping Rates & Policies</a></li>
+                        <li><a href="#">Returns & Replacements</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>&copy; 2024 Amazon Clone. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/LandingPageLayoutJS.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+
+        $('.add-to-cart').on('click',function(){
+        var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
+        if(isAuth){
+            var productId= $(this).data('product-id');
+            console.log(productId);
+            $.ajax({
+               url: "Cart/AddToCart",
+               type: "post",
+               data: {
+                  productId: productId,
+               },
+               success: function (result) {
+                   console.log("Search results:", result);
+                   UpdateCartValue(result);
+               },
+               error: function (xhr, status, error) {
+                   console.error("Search error:", error);
+               }
+            });
+        }
+        else{
+            window.location.href='Account/Login';
+        }
+        });
+
+                 // Replace the existing script section with this updated version
+        $(document).ready(function() {
+        var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
+        if(isAuth){
+             $.ajax({
+               url: "Landing/CartCount",
+               type: "post",
+               data: {
+                  UserName: '@User.Identity.Name',
+               },
+               success: function (result) {
+                   console.log("Search results:", result);
+                   UpdateCartValue(result)
+               },
+               error: function (xhr, status, error) {
+                   console.error("Search error:", error);
+               }
+            });
+        }
+        
+
+            let searchTimeout;
+
+            $('#searchInput').on('input', function() {
+                const searchTerm = $(this).val();
+
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (searchTerm.length > 2) {
+                        $.ajax({
+                            url: "Landing/Search",
+                            type: "GET",
+                            data: {
+                               query: searchTerm,
+                               pageSize: 10,
+                               pageNumber: 1
+                            },
+                            beforeSend: function() {
+                                showSearchLoading();
+                            },
+                            success: function (result) {
+                                console.log("Search results:", result);
+                                displaySearchResults(result);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Search error:", error);
+                                showSearchError();
+                            },
+                            complete: function() {
+                                hideSearchLoading();
+                            }
+                        });
+                    } else {
+                        clearSearchResults();
+                    }
+                }, 300);
+            });
+
+            // Hide search results when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    hideSearchResults();
+                }
+            });
+
+            // Show search results when clicking on input (if there are results)
+            $('#searchInput').on('click', function() {
+                if ($('#searchResults .search-results').length > 0) {
+                    showSearchResults();
+                }
+            });
+        });
+       
+        
+        function UpdateCartValue(number) {
+            $('#cartCounter').text(number);
+        }
+        
+        $('.cart-container').on('click',function(){
+            console.log("carrrttt");
+        })
+        // *******************************************************************
+      
+        
+        function redirectToProduct(productId) {
+            window.location.href = `/Landing/Index/${productId}`;
+            // changeit once the productselectProduct ditails is done
+        }
+
+        // Updated helper functions
+        function displaySearchResults(results) {
+            if (results && results.length > 0) {
+                let html = '<ul class="search-results">';
+                results.forEach(function(product) {
+                    html += `<li class="search-result-item" onclick="redirectToProduct('${product.productId}')">
+                        <img src="${product.imageUrl}" alt="${product.productName}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNiAxNkgyNFYyNEgxNlYxNloiIGZpbGw9IiNDQ0NDQ0MiLz4KPC9zdmc+Cg=='" />
+                        <span>${product.productName}</span>
+                    </li>`;
+                });
+                html += '</ul>';
+
+                $('#searchResults').html(html);
+                showSearchResults();
+            } else {
+                $('#searchResults').html('<div class="search-loading">No results found</div>');
+                showSearchResults();
+            }
+        }
+
+        function clearSearchResults() {
+            $('#searchResults').empty();
+            hideSearchResults();
+        }
+
+        function showSearchLoading() {
+            $('#searchResults').html('<div class="search-loading"><i class="fas fa-spinner fa-spin"></i> Searching...</div>');
+            showSearchResults();
+        }
+
+        function hideSearchLoading() {
+            $('.search-loading').remove();
+        }
+
+        function showSearchError() {
+            $('#searchResults').html('<div class="search-error"><i class="fas fa-exclamation-triangle"></i> Error occurred while searching</div>');
+            showSearchResults();
+        }
+
+        function showSearchResults() {
+            $('#searchResults').addClass('show');
+        }
+
+        function hideSearchResults() {
+            $('#searchResults').removeClass('show');
+        }
+
+        function selectProduct(productName) {
+            $('#searchInput').val(productName);
+            hideSearchResults();
+            // Add your product selection logic here
+            console.log('Selected product:', productName);
+        }
+    </script>
+</body>
+</html>

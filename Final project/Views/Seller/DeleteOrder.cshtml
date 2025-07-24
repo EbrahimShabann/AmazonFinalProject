@@ -1,0 +1,32 @@
+@model Final_project.Models.order
+
+@{
+    ViewData["Title"] = "Delete Order";
+}
+
+<h2>Delete Order</h2>
+
+<div class="alert alert-danger">
+    <strong>Are you sure you want to delete this order?</strong>
+</div>
+
+<div>
+    <h4>Order ID: @Model.id</h4>
+    <p><strong>Date:</strong> @Model.order_date?.ToString("yyyy-MM-dd")</p>
+    <p><strong>Customer:</strong> @Model.Buyer?.UserName</p>
+    <p><strong>Status:</strong> @Model.status</p>
+    <p><strong>Total Amount:</strong> @Model.total_amount</p>
+    <h5>Products:</h5>
+    <ul>
+        @foreach (var item in Model.OrderItems)
+        {
+            <li>@item.product?.name (x@item.quantity)</li>
+        }
+    </ul>
+</div>
+
+<form asp-action="DeleteOrder" method="post">
+    <input type="hidden" asp-for="id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Orders" class="btn btn-secondary">Cancel</a>
+</form> 
