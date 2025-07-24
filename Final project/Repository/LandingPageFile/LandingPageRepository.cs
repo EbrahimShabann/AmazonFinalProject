@@ -672,8 +672,9 @@ namespace Final_project.Repository.LandingPageFile
             return db.cart_items.Include(c => c.Cart)
                          .Include(c => c.Product)
                          .Where(c => c.Cart.user_id == userId && c.Product.is_active == true &&
-                                   c.Product.is_approved == true && c.Product.is_deleted == false).Count();
-
+                                   c.Product.is_approved == true && c.Product.is_deleted == false)
+                         .Select(ci => ci.quantity)
+                         .Sum() ?? 0;
         }
     }
 }
