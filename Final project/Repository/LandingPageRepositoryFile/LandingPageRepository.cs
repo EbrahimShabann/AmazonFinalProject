@@ -50,9 +50,12 @@ namespace Final_project.Repository.NewFolder
                     TotalSold = product.TotalSold,
                     TotalRevenue = product.TotalRevenue,
                     ImageUrl = GetProductImageUrl(product.ProductId),
+                    ratting = GetProductRating(product.ProductId),
+                    ratingCount = GetProductRatingCount(product.ProductId),
                     delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)), // Random 1-3 days
                     prime = _random.Next(2) == 1 // Random true/false
                 };
+                data.rattingStarMinuse = 5 - data.ratting;
                 landingPageProducts.Add(data);
             }
 
@@ -82,9 +85,12 @@ namespace Final_project.Repository.NewFolder
                     ProductName = product.name,
                     Price = product.price,
                     ImageUrl = GetProductImageUrl(product.id),
+                    ratting = GetProductRating(product.id),
+                    ratingCount = GetProductRatingCount(product.id),
                     delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)), // Random 1-3 days
                     prime = _random.Next(2) == 1 // Random true/false
                 };
+                data.rattingStarMinuse = 5 - data.ratting;
                 landingPageProducts.Add(data);
             }
 
@@ -144,9 +150,12 @@ namespace Final_project.Repository.NewFolder
                     Price = Math.Round((decimal)item.Product.price, 2),
                     DiscountPrice = discountedPrice,
                     TotalSold = (int)item.TotalSold,
+                    ratting = GetProductRating(item.Product.id),
+                    ratingCount = GetProductRatingCount(item.Product.id),
                     delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)), // Random 1-3 days
                     prime = _random.Next(2) == 1 // Random true/false
                 };
+                data.rattingStarMinuse = 5 - data.ratting;
                 result.Add(data);
             }
 
@@ -200,7 +209,33 @@ namespace Final_project.Repository.NewFolder
             }
         }
 
-        // تم تعليق أو حذف كل الأكواد التي تعتمد على db.product_reviews مؤقتًا حتى ينجح الـ build.
+        public int GetProductRating(string productId)
+        {
+            try
+            {
+                var averageRating = db.product_reviews
+                    .Where(pr => pr.product_id == productId)
+                    .Average(r => (double?)r.rating); // Note the (double?) cast
+
+                return averageRating.HasValue ? (int)Math.Round(averageRating.Value) : 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public int GetProductRatingCount(string productId)
+        {
+            try
+            {
+                return db.product_reviews.Count(pr => pr.product_id == productId);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
         public List<ProductSearchViewModel> ProductSearch(string searchTerm, int pageNumber = 1, int pageSize = 10)
         {
@@ -307,6 +342,18 @@ namespace Final_project.Repository.NewFolder
                     query = query.Where(p => p.price <= filterParams.MaxPrice.Value);
                 }
 
+                // Apply rating filter (requires joining with reviews)
+                if (filterParams.MinRating.HasValue)
+                {
+                    var productsWithMinRating = db.product_reviews
+                        .GroupBy(pr => pr.product_id)
+                        .Where(g => g.Average(r => r.rating) >= filterParams.MinRating.Value)
+                        .Select(g => g.Key)
+                        .ToList();
+
+                    query = query.Where(p => productsWithMinRating.Contains(p.id));
+                }
+
                 // Apply sorting
                 query = ApplySorting(query, filterParams.SortBy);
 
@@ -364,13 +411,14 @@ namespace Final_project.Repository.NewFolder
                         DiscountPrice = discountedPrice,
                         // REMOVED: DiscountPercentage assignment - property appears to be read-only
                         ImageUrl = GetProductImageUrl(product.id),
+                        ratting = GetProductRating(product.id),
+                        ratingCount = GetProductRatingCount(product.id),
                         delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)),
                         prime = _random.Next(2) == 1,
                         // Add sales data if needed for sorting
-                        TotalSold = GetProductSalesCount(product.id),
-                        Rating = 0, // Placeholder, as product_reviews are commented out
-                        RatingCount = 0 // Placeholder, as product_reviews are commented out
+                        TotalSold = GetProductSalesCount(product.id)
                     };
+                    data.rattingStarMinuse = 5 - data.ratting;
                     landingPageProducts.Add(data);
                 }
 
@@ -424,6 +472,18 @@ namespace Final_project.Repository.NewFolder
                     query = query.Where(p => p.price <= filterParams.MaxPrice.Value);
                 }
 
+                // Apply rating filter
+                if (filterParams.MinRating.HasValue)
+                {
+                    var productsWithMinRating = db.product_reviews
+                        .GroupBy(pr => pr.product_id)
+                        .Where(g => g.Average(r => r.rating) >= filterParams.MinRating.Value)
+                        .Select(g => g.Key)
+                        .ToList();
+
+                    query = query.Where(p => productsWithMinRating.Contains(p.id));
+                }
+
                 return query.Count();
             }
             catch (Exception ex)
@@ -475,10 +535,13 @@ namespace Final_project.Repository.NewFolder
 
                 case "highestrated":
                     // Join with reviews to sort by rating
-                    // var ratedProductIds = db.product_reviews
-                    // ... أي منطق sorting أو استخدام لاحق لهذا المتغير يتم تعليقه أيضًا ...
-                    return query.OrderByDescending(p => p.created_at)
-                               .ThenByDescending(p => p.price);
+                    var ratedProductIds = db.product_reviews
+                        .GroupBy(pr => pr.product_id)
+                        .OrderByDescending(g => g.Average(r => r.rating))
+                        .Select(g => g.Key)
+                        .ToList();
+
+                    return query.OrderBy(p => ratedProductIds.IndexOf(p.id));
 
                 case "relevance":
                 case "featured":
@@ -574,9 +637,12 @@ namespace Final_project.Repository.NewFolder
                     // REMOVED: DiscountPercentage assignment - property appears to be read-only
                     TotalSold = (int)item.TotalSold,
                     TotalRevenue = (decimal)item.TotalRevenue,
+                    ratting = GetProductRating(item.Product.id),
+                    ratingCount = GetProductRatingCount(item.Product.id),
                     delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)), // Random 1-3 days
                     prime = _random.Next(2) == 1 // Random true/false
                 };
+                data.rattingStarMinuse = 5 - data.ratting;
                 result.Add(data);
             }
 

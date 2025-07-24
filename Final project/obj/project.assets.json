@@ -7910,23 +7910,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\AB\\.nuget\\packages\\": {},
+    "C:\\Users\\Zeyad\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Final Project\\ana w zyad\\AmazonFinalProject-bi_ze\\Final project\\Final project.csproj",
+      "projectUniqueName": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\Final project.csproj",
       "projectName": "Final project",
-      "projectPath": "E:\\Final Project\\ana w zyad\\AmazonFinalProject-bi_ze\\Final project\\Final project.csproj",
-      "packagesPath": "C:\\Users\\AB\\.nuget\\packages\\",
-      "outputPath": "E:\\Final Project\\ana w zyad\\AmazonFinalProject-bi_ze\\Final project\\obj\\",
+      "projectPath": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\Final project.csproj",
+      "packagesPath": "C:\\Users\\Zeyad\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\AB\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Zeyad\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7953,7 +7953,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -8005,7 +8005,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

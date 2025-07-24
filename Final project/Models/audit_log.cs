@@ -11,30 +11,31 @@ namespace Final_project.Models;
 public partial class audit_log
 {
     [Key]
-    [StringLength(450)]
+    [StringLength(255)]
     public string id { get; set; }
 
-    [StringLength(450)]
     public string user_id { get; set; }
+    [ForeignKey("user_id")]
+    public virtual ApplicationUser User { get; set; }
 
     [StringLength(255)]
     public string action { get; set; }
 
     [StringLength(255)]
-    public string table_name { get; set; }
+    public string entity_type { get; set; }
 
-    [StringLength(450)]
-    public string record_id { get; set; }
+    [StringLength(255)]
+    public string entity_id { get; set; }
 
     public string old_values { get; set; }
 
     public string new_values { get; set; }
 
-    public DateTime? timestamp { get; set; } = DateTime.UtcNow;
-
-    [StringLength(45)]
+    [StringLength(255)]
     public string ip_address { get; set; }
 
-    [StringLength(500)]
+    [StringLength(255)]
     public string user_agent { get; set; }
+
+    public DateTime? timestamp { get; set; } = DateTime.UtcNow;
 }

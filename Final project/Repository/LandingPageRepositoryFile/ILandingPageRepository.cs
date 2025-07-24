@@ -10,8 +10,8 @@ namespace Final_project.Repository.NewFolder
         public List<LandingPageProducts> GetNewArrivals(int take = 10, int skip = 0);
         public List<ProductSearchViewModel> ProductSearch(string searchTerm, int pageNumber = 1, int pageSize = 10);
         public string GetProductImageUrl(string productId);
-        //        public int GetProductRating(string productId);
-        //        public int GetProductRatingCount(string productId);
+        public int GetProductRating(string productId);
+        public int GetProductRatingCount(string productId);
 
         //cart
         public int GetCartCount(string Username);

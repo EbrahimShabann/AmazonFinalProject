@@ -45,45 +45,45 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
-        public async Task<IActionResult> Increase(string id)
+        public IActionResult Increase(string id)
         {
             var item = unitOfWork.CartItemRepository.getById(id);
             if (item != null)
             {
                 item.quantity++;
                 unitOfWork.CartItemRepository.Update(item);
-                await unitOfWork.SaveAsync();
+                unitOfWork.save();
             }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Decrease(string id)
+        public IActionResult Decrease(string id)
         {
             var item = unitOfWork.CartItemRepository.getById(id);
             if (item != null && item.quantity > 1)
             {
                 item.quantity--;
                 unitOfWork.CartItemRepository.Update(item);
-                await unitOfWork.SaveAsync();
+                unitOfWork.save();
             }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        public IActionResult Delete(string id)
         {
             var item = unitOfWork.CartItemRepository.getById(id);
             if (item != null)
             {
                 unitOfWork.CartItemRepository.Remove(item);
-                await unitOfWork.SaveAsync();
+                unitOfWork.save();
             }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToCart(string productId)
+        public IActionResult AddToCart(string productId)
         {
             var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
             string userId = IdClaim.Value;
@@ -99,7 +99,7 @@ namespace Final_project.Controllers.Cart
                     last_updated_at = DateTime.UtcNow
                 };
                 unitOfWork.ShoppingCartRepository.add(cart);
-                await unitOfWork.SaveAsync();
+                unitOfWork.save();
             }
 
             // Check if product already exists in cart
@@ -124,7 +124,7 @@ namespace Final_project.Controllers.Cart
                 unitOfWork.CartItemRepository.add(newItem);
             }
 
-            await unitOfWork.SaveAsync();
+            unitOfWork.save();
             var val =unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
             return Json(val);
         }

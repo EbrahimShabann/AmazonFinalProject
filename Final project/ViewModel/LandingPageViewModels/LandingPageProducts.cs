@@ -19,8 +19,6 @@
                 return Math.Round(discount, 1);
             }
         }
-        public int Rating { get; set; }
-        public int RatingCount { get; set; }
         public int ratting { get; set; }
         public int rattingStarMinuse { get; set; }
         public int ratingCount { get; set; }
