@@ -1,13 +1,12 @@
-﻿using System.Runtime.Intrinsics.Arm;
-using System.Threading.Tasks;
-using Final_project.Models;
+﻿using Final_project.Models;
+using Final_project.Repository.NewFolder;
 using Final_project.ViewModel.LandingPageViewModels;
 using Final_project.ViewModel.NewFolder;
 using Microsoft.EntityFrameworkCore;
 
-namespace Final_project.Repository.NewFolder
+namespace Final_project.Repository.LandingPageFile
 {
-    public class LandingPageRepository : ILandingPageRepository
+    public class LandingPageRepository:ILandingPageRepository
     {
         private readonly AmazonDBContext db;
 
@@ -295,11 +294,16 @@ namespace Final_project.Repository.NewFolder
 
 
 
-
         public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams)
         {
             try
             {
+                // Handle special filter for Today's Deals
+                if (!string.IsNullOrEmpty(filterParams.Filter) && filterParams.Filter.ToLower() == "todaysdeals")
+                {
+                    return GetTodaysDeals(filterParams.PageSize, filterParams.Skip);
+                }
+
                 // Start with base query
                 var query = db.products
                     .Where(p => p.is_active == true &&
@@ -377,15 +381,20 @@ namespace Final_project.Repository.NewFolder
 
                     // Calculate discounted price if discount exists
                     decimal? discountedPrice = null;
+                    decimal? discountPercentage = null;
+
                     if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
                     {
                         if (activeDiscount.Discount.discount_type == "Percentage")
                         {
+                            discountPercentage = activeDiscount.Discount.value.Value;
                             discountedPrice = product.price * (1 - activeDiscount.Discount.value.Value / 100);
                         }
                         else if (activeDiscount.Discount.discount_type == "Fixed")
                         {
                             discountedPrice = product.price - activeDiscount.Discount.value.Value;
+                            // Calculate percentage for fixed discount - FIXED: Cast to decimal? instead of using Math.Round
+                            discountPercentage = (decimal?)((activeDiscount.Discount.value.Value / product.price) * 100);
                         }
 
                         // Ensure discounted price is not negative
@@ -399,6 +408,7 @@ namespace Final_project.Repository.NewFolder
                         ProductName = product.name,
                         Price = product.price,
                         DiscountPrice = discountedPrice,
+                        // REMOVED: DiscountPercentage assignment - property appears to be read-only
                         ImageUrl = GetProductImageUrl(product.id),
                         ratting = GetProductRating(product.id),
                         ratingCount = GetProductRatingCount(product.id),
@@ -419,6 +429,7 @@ namespace Final_project.Repository.NewFolder
                 return new List<LandingPageProducts>();
             }
         }
+
         public int GetFilteredProductsCount(ProductFilterParameters filterParams)
         {
             try
@@ -496,6 +507,20 @@ namespace Final_project.Repository.NewFolder
                 case "newestarrivals":
                     return query.OrderByDescending(p => p.created_at);
 
+                case "todaysdeals":
+                    // For today's deals, we want to prioritize products with the highest discounts
+                    var currentDate = DateTime.UtcNow;
+                    var productsWithHighDiscounts = db.product_discounts
+                        .Include(pd => pd.Discount)
+                        .Where(pd => pd.Discount.is_active == true &&
+                                    pd.Discount.start_date <= currentDate &&
+                                    (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+                        .OrderByDescending(pd => pd.Discount.value)
+                        .Select(pd => pd.product_id)
+                        .ToList();
+
+                    return query.OrderBy(p => productsWithHighDiscounts.IndexOf(p.id) == -1 ? int.MaxValue : productsWithHighDiscounts.IndexOf(p.id));
+
                 case "bestselling":
                     // Join with order_items to sort by sales
                     var bestSellingProductIds = db.order_items
@@ -542,5 +567,113 @@ namespace Final_project.Repository.NewFolder
 
 
 
+        public List<LandingPageProducts> GetTodaysDeals(int take = 10, int skip = 0)
+        {
+            var currentDate = DateTime.UtcNow;
+            var todayStart = currentDate.Date;
+            var todayEnd = todayStart.AddDays(1).AddTicks(-1);
+
+            // Get products with discounts that were created today or are specially marked as today's deals
+            var todaysDealsProducts = db.product_discounts
+                .Include(pd => pd.product)
+                .Include(pd => pd.Discount)
+                .Where(pd => pd.product.is_active == true &&
+                            pd.product.is_approved == true &&
+                            pd.product.is_deleted == false &&
+                            pd.Discount.is_active == true &&
+                            pd.Discount.start_date <= currentDate &&
+                            (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate) &&
+                            // Today's deals can be either created today or have high discount percentage
+                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 20)) // 20% or more discount
+                .OrderByDescending(pd => pd.Discount.value) // Order by highest discount first
+                .ThenByDescending(pd => pd.Discount.created_at) // Then by newest
+                .Skip(skip)
+                .Take(take)
+                .Select(pd => new
+                {
+                    Product = pd.product,
+                    Discount = pd.Discount,
+                    TotalSold = db.order_items
+                                 .Where(oi => oi.product_id == pd.product_id)
+                                 .Sum(oi => oi.quantity) ?? 0,
+                    TotalRevenue = db.order_items
+                                   .Where(oi => oi.product_id == pd.product_id)
+                                   .Sum(oi => oi.quantity * oi.unit_price) ?? 0
+                })
+                .ToList();
+
+            var result = new List<LandingPageProducts>();
+
+            foreach (var item in todaysDealsProducts)
+            {
+                // Calculate the discounted price based on discount type
+                decimal? discountedPrice = item.Product.price;
+                decimal? discountPercentage = null;
+
+                if (item.Discount.discount_type == "Percentage" && item.Discount.value.HasValue)
+                {
+                    discountPercentage = item.Discount.value.Value;
+                    discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
+                }
+                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
+                {
+                    discountedPrice = item.Product.price - item.Discount.value.Value;
+                    // Calculate percentage for fixed discount - FIXED: Cast to decimal? instead of using Math.Round
+                    discountPercentage = (decimal?)((item.Discount.value.Value / item.Product.price) * 100);
+                }
+
+                // Ensure discounted price is not negative
+                if (discountedPrice < 0)
+                    discountedPrice = 0;
+
+                var data = new LandingPageProducts
+                {
+                    ProductId = item.Product.id,
+                    ProductName = item.Product.name,
+                    ImageUrl = GetProductImageUrl(item.Product.id),
+                    Price = Math.Round((decimal)item.Product.price, 2),
+                    DiscountPrice = discountedPrice,
+                    // REMOVED: DiscountPercentage assignment - property appears to be read-only
+                    TotalSold = (int)item.TotalSold,
+                    TotalRevenue = (decimal)item.TotalRevenue,
+                    ratting = GetProductRating(item.Product.id),
+                    ratingCount = GetProductRatingCount(item.Product.id),
+                    delaviryTiming = DateTime.Now.AddDays(_random.Next(1, 4)), // Random 1-3 days
+                    prime = _random.Next(2) == 1 // Random true/false
+                };
+                data.rattingStarMinuse = 5 - data.ratting;
+                result.Add(data);
+            }
+
+            return result;
+        }
+
+        public int GetTodaysDealsCount()
+        {
+            var currentDate = DateTime.UtcNow;
+            var todayStart = currentDate.Date;
+
+            return db.product_discounts
+                .Include(pd => pd.product)
+                .Include(pd => pd.Discount)
+                .Where(pd => pd.product.is_active == true &&
+                            pd.product.is_approved == true &&
+                            pd.product.is_deleted == false &&
+                            pd.Discount.is_active == true &&
+                            pd.Discount.start_date <= currentDate &&
+                            (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate) &&
+                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 20))
+                .Count();
+        }
+
+        public int GetCartCount(string UserName)
+        {
+            var userId = db.Users.FirstOrDefault(u => u.UserName == UserName).Id;
+            return db.cart_items.Include(c => c.Cart)
+                         .Include(c => c.Product)
+                         .Where(c => c.Cart.user_id == userId && c.Product.is_active == true &&
+                                   c.Product.is_approved == true && c.Product.is_deleted == false).Count();
+
+        }
     }
 }

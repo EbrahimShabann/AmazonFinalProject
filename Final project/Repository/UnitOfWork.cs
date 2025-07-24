@@ -2,6 +2,7 @@
 using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
+using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.NewFolder;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;

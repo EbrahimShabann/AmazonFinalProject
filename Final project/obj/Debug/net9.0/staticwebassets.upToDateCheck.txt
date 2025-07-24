@@ -4401,6 +4401,12 @@ wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
 wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
 wwwroot\Image\72b735db-3970-4821-a4d0-842211783748_oar2.jpg
 wwwroot\Image\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg
+wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
+wwwroot\images\products\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg
+wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
+wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
+wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
+wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
 wwwroot\js\LandingPageJS.js
