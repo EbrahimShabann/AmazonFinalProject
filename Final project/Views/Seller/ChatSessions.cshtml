@@ -1,0 +1,28 @@
+@model IEnumerable<Final_project.Models.chat_session>
+@{
+    ViewData["Title"] = "Chat Sessions";
+}
+<h2>Chat Sessions</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Last Message</th>
+            <th>Last Message Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var session in Model)
+    {
+        <tr>
+            <td>@session.Customer?.UserName</td>
+            <td>@(session.ChatMessages?.LastOrDefault()?.message ?? "No messages")</td>
+            <td>@session.LastMessageAt?.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>
+                <a asp-action="ChatMessages" asp-route-sessionId="@session.Id" class="btn btn-primary btn-sm">Open Chat</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table> 

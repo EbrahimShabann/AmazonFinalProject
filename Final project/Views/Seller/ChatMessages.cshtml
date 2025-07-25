@@ -1,0 +1,22 @@
+@model Final_project.Models.chat_session
+@{
+    ViewData["Title"] = "Chat with " + Model.Customer?.UserName;
+}
+<h2>Chat with @Model.Customer?.UserName</h2>
+<div class="chat-container" style="height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+    @foreach (var message in Model.ChatMessages.OrderBy(m => m.sent_at))
+    {
+        <div class="message @(message.sender_id == User.Identity.Name ? "text-right" : "text-left")">
+            <strong>@message.Sender?.UserName:</strong>
+            <p>@message.message</p>
+            <small>@message.sent_at?.ToString("HH:mm")</small>
+        </div>
+    }
+</div>
+<form asp-action="SendMessage" method="post">
+    <input type="hidden" name="sessionId" value="@Model.Id" />
+    <div class="form-group">
+        <textarea name="message" class="form-control" rows="3" placeholder="Type your message..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send Message</button>
+</form> 

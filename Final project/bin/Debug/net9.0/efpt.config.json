@@ -1,0 +1,125 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "AmazonDBContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Final_project",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[audit_logs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[cart_items]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[chat_messages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[chat_sessions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[discounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[order_history]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[order_items]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[orders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[product_discounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[product_images]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[product_reviews]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[products]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[roles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[shopping_carts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[support_tickets]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ticket_history]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ticket_messages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[user_roles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[users]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
