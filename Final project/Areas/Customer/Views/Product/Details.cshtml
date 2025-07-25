@@ -132,12 +132,12 @@
                         <button class="btn btn-warning flex-grow-1" id="buyProduct">
                             <i class="fas fa-bolt"></i> Buy Now
                         </button>
-                        <button class="btn btn-outline-secondary flex-grow-1 product-btn-cart">
+                        <button class="btn btn-outline-secondary flex-grow-1 product-btn-cart" >
                             <i class="fas fa-shopping-cart"></i> Add to Cart
                         </button>
                     </div>
                     
-                    <button class="btn btn-outline-danger " id="wishlist-btn">
+                    <button class="btn btn-outline-danger wishlist-btn" >
                         <i class="far fa-heart"></i> Add to Wishlist
                     </button>
                 </div>
@@ -264,8 +264,9 @@
     </div>
     
     <!-- Recommended Products -->
-    @if (Model.RecommendedProducts != null && Model.RecommendedProducts.Any())
-    {
+    <!-- Recommended Products -->
+@if (Model.RecommendedProducts != null && Model.RecommendedProducts.Any())
+{
         <div class="mb-5">
             <h2 class="mb-4">Recommended For You</h2>
             <div id="recommendedCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -273,11 +274,11 @@
                     @{
                         var chunkSize = 4;
                         var chunks = Model.RecommendedProducts.Select((x, i) => new { Index = i, Value = x })
-                            .GroupBy(x => x.Index / chunkSize)
-                            .Select(x => x.Select(v => v.Value).ToList())
-                            .ToList();
+                        .GroupBy(x => x.Index / chunkSize)
+                        .Select(x => x.Select(v => v.Value).ToList())
+                        .ToList();
                     }
-                    
+
                     @for (int i = 0; i < chunks.Count; i++)
                     {
                         <div class="carousel-item @(i == 0 ? "active" : "")">
@@ -289,7 +290,7 @@
                                             <!-- Sale Badge - Only shows if there's a discount -->
                                             @if (product.discount_price.HasValue && product.discount_price < product.price)
                                             {
-                                                <span class=" start-0 translate-middle-y bg-warning text-white px-2 py-1 rounded-end"
+                                                <span class="start-0 translate-middle-y bg-warning text-white px-2 py-1 rounded-end"
                                                       style="z-index: 1; font-size: 0.8rem; position:absolute;top:21px">
                                                     SALE
                                                     @{
@@ -298,6 +299,18 @@
                                                     @discountPercent% OFF
                                                 </span>
                                             }
+
+                                            <!-- Wishlist and Cart Icons -->
+                                            <div class="position-absolute end-0 top-0 p-2" style="z-index: 1;">
+                                                <button class="btn btn-sm btn-outline-secondary rounded-circle me-1 wishlist-btn"
+                                                        title="Add to wishlist">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-warning rounded-circle product-btn-cart"
+                                                        title="Add to cart">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </button>
+                                            </div>
 
                                             <a href="/Customer/Product/Details/@product.id" class="text-decoration-none text-dark">
                                                 <img src="/images/@product.image_url" class="card-img-top" alt="@product.name" style="height: 200px; object-fit: contain;">
@@ -340,7 +353,7 @@
                         </div>
                     }
                 </div>
-                
+
                 <button class="carousel-control-prev" type="button" data-bs-target="#recommendedCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -351,9 +364,7 @@
                 </button>
             </div>
         </div>
-    }
-</div>
-
+}
 <!-- Back to Top Button -->
 <partial name="_BackToTopBtn" />
 
@@ -396,35 +407,39 @@
         });
 
            // Add to cart button
-    document.querySelector('.product-btn-cart').addEventListener('click', function () {
-        $.ajax({
-            url: '/Customer/Cart/AddToCart?productId=@Model.id',
-            success: function (response) {
-                if (response.success) {
-                    toastr.success('Item added to cart successfully');
-                } else {
-                    toastr.error(response.message || 'Failed to add item to cart');
+    $('.product-btn-cart').each(function(){
+             $(this).click(function () {
+            $.ajax({
+                        url: '/Customer/Cart/AddToCart?productId=@Model.id',
+                success: function (response) {
+                   
+                        toastr.success('Item added to cart successfully');
+                  
+                },
+                error: function () {
+                    toastr.error('An error occurred while adding item to cart');
                 }
-            },
-            error: function () {
-                toastr.error('An error occurred while adding item to cart');
-            }
+            });
         });
-    });
+    })
+   
 
           // Add to WishList
-    $('#wishlist-btn').click(function () {
-        $.ajax({
-            url: '/Customer/Wishlist/AddToWishlist?productId=@Model.id',
-            success: function (response) {
-                toastr.success('Item added to cart successfully');
-            },
-            error: function () {
-                toastr.error('An error occurred while adding item to cart');
-            }
+    $('.wishlist-btn').each(function(){
+             $(this).click(function () {
+            $.ajax({
+                url: '/Customer/Wishlist/AddToWishlist?productId=@Model.id',
+                success: function (response) {
+                    toastr.success('Item added to wishlist successfully');
+                },
+                error: function () {
+                    toastr.error('An error occurred while adding item to wishlist');
+                }
+            });
         });
-    });
 
+    })
+   
             
           
  

@@ -2,13 +2,14 @@
 using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Customer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Final_project.Areas.Customer.Controllers
 {
     [Area("Customer")]
-
+    //[Authorize(Roles = "Customer")]
     public class ProfileController : Controller
     {
         private readonly UnitOfWork uof;
@@ -23,7 +24,7 @@ namespace Final_project.Areas.Customer.Controllers
         }
         public IActionResult Orders(string dateFilter, string statusFilter, string search, int page = 1, int size = 10)
         {
-            string userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = "c2";//User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
 
             // Filter based on delivered_at
@@ -222,5 +223,85 @@ namespace Final_project.Areas.Customer.Controllers
             uof.save();
             return Ok("Selected messages deleted successfully.");
         }
+   
+        public IActionResult staticPages(string page)
+        {
+            if (page == "app")
+            {
+                return View("AmazonApp");
+            }          
+            else if (page == "contact")
+            {
+                var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ViewBag.userOrders=uof.OrderRepo.getAll().Where(o => o.buyer_id == userId).ToList();
+                return View("ContactUs");
+            }
+            else if (page == "faq")
+            {
+                return View("FAQ");
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult CreateReturn(string id)
+        {
+            var orderItem = uof.OrderRepo.GetOrderItemById(id);
+            if (orderItem == null)
+            {
+                TempData["error"] = "Order item not found.";
+                return RedirectToAction("orderDetails",orderItem.order_id);
+            }
+            var revertVM = new ordersReverted
+            {
+                order_itemId = orderItem.id,
+                orderId = orderItem.order_id,
+                RevertDate = DateTime.Now,
+                Reason = "",
+                Notes = ""
+            };
+            return PartialView("_revertOrder", revertVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateReturn(ordersReverted revertVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var orderItem = uof.OrderRepo.GetOrderItemById(revertVM.order_itemId);
+                if (orderItem == null)
+                {
+                    TempData["error"] = "Order item not found.";
+                    return RedirectToAction("orderDetails", orderItem.order_id);
+                }
+                // Create new revert record
+                var revertRecord = new ordersReverted
+                {
+
+                    orderId = orderItem.order_id,
+                    order_itemId = orderItem.id,
+                    RevertDate = DateTime.Now,
+                    Reason = revertVM.Reason,
+                    Notes = revertVM.Notes
+                };
+
+               var orderHistory= uof.OrderRepo.GetOrderHistoryByOrderId(revertVM.orderId);
+                orderHistory.status = revertVM.Reason;
+
+                uof.OrderRepo.AddReturnOrder(revertRecord);
+                uof.OrderRepo.UpdateOrderHistory(orderHistory);
+                uof.save();
+                TempData["success"] = "Order item reverted successfully.";
+                return RedirectToAction("orderDetails", orderItem.order_id);
+            }
+            TempData["error"] = "Invalid data.";
+            return RedirectToAction("orderDetails", revertVM.orderId);
+        }
+
     }
 }

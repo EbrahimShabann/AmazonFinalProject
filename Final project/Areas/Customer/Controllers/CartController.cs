@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Final_project.Controllers.Cart
 {
     [Area("Customer")]
+    //[Authorize(Roles = "Customer")]
+
     public class CartController : Controller
     {
         private readonly IShoppingCartRepository _shoppingCartRepo;

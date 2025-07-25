@@ -25,9 +25,14 @@ namespace Final_project.Repository.OrderRepositoryFile
             db.order_items.Add(entity);
         }
 
+        public void AddReturnOrder(ordersReverted entity)
+        {
+            db.Orders_Reverted.Add(entity);
+        }
+
         public List<order> getAll()
         {
-            return db.orders.Where(o => !o.is_deleted).ToList();
+            return db.orders.Where(o => o.is_deleted!= true).ToList();
         }
 
         public order getById(string id)
@@ -38,6 +43,11 @@ namespace Final_project.Repository.OrderRepositoryFile
         public order_history GetOrderHistoryByOrderId(string orderId)
         {
             return db.order_histories.SingleOrDefault(oh=>oh.order_id == orderId );
+        }
+
+        public order_item GetOrderItemById(string id)
+        {
+            return db.order_items.SingleOrDefault(oi => oi.id == id );
         }
 
         public List<order_item> GetOrderItemsOfOrder(string orderId)

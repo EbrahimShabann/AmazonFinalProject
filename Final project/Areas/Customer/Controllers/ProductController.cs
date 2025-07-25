@@ -12,6 +12,8 @@ using System.Security.Claims;
 namespace Final_project.Areas.Customer.Controllers
 {
     [Area("Customer")]
+    //[Authorize(Roles = "Customer")]
+
     public class ProductController : Controller
     {
         private readonly UnitOfWork uof;
@@ -293,5 +295,6 @@ namespace Final_project.Areas.Customer.Controllers
             TempData["success"] = $"Order placed successfully with ID: {order.id}!";
             return RedirectToAction("Index");
         }
-    }
+
+     }
 }

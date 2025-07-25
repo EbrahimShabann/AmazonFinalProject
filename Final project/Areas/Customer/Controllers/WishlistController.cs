@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Final_project.Areas.Customer.Controllers
 {
     [Area("Customer")]
+    //[Authorize(Roles = "Customer")]
+
     public class WishlistController : Controller
     {
         private readonly IWishlistRepository wishlistRepo;

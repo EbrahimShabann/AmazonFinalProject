@@ -18,6 +18,17 @@
                         
                         </div>
 
+                        @* Revert or replace items modal *@
+                    <div class="modal fade" id="upsertModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+
+                                <div id="modalBody"><!-- partial will be injected here --></div>
+
+                            </div>
+                        </div>
+                    </div>
+
                         <div class="row">
                             <div class="col-md-4">
                                 <p class="mb-1"><strong>Order #:</strong> @Model.Order.id</p>
@@ -175,7 +186,11 @@
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <a href="/Customer/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
-                                        @* <button class="btn btn-outline-secondary mb-2">Return or replace items</button> *@
+                                        @if ( Model.Order.status.ToLower() == "delivered")
+                                        {
+                                            <button class="btn btn-outline-secondary mb-2 returnItem" data-id="@item.id">Return or replace items</button>
+
+                                        }
                                         <a href="/Customer/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
                                         <div>
                                           
@@ -193,13 +208,13 @@
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
                          <div>
-                        @if (Model.Order.status.ToLower() != "cancelled")
+                        @if (Model.Order.status.ToLower() != "cancelled" || Model.Order.status.ToLower() != "delivered")
                         {
                             <button id="cancelOrder" class="btn btn-outline-danger">Cancel Order</button>
                         }
                         else
                         {
-                            <button id="cancelOrder" class="btn btn-outline-warning" disabled>Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
 
                         }
 
@@ -250,5 +265,22 @@
                         });
            
         });
+
+        //revert order
+             $(".returnItem").click(function(){
+          const id = $(this).data('id')
+            $("#modalBody").load(`/Customer/Profile/CreateReturn?id=${id}`,function(response,status,xhr){
+              if(status=="error"){
+                  alert(response);
+              }
+              else{
+                  new bootstrap.Modal('#upsertModal').show();
+              }
+
+          })
+      })
+
+
+
   }) //end of load
 </script>

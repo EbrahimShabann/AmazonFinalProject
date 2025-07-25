@@ -495,6 +495,35 @@ namespace Final_project.Migrations
                     b.ToTable("order_items");
                 });
 
+            modelBuilder.Entity("Final_project.Models.ordersReverted", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RevertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("orderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("order_itemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("orderId");
+
+                    b.HasIndex("order_itemId");
+
+                    b.ToTable("Orders_Reverted");
+                });
+
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
                     b.Property<string>("id")
@@ -1094,6 +1123,21 @@ namespace Final_project.Migrations
                     b.Navigation("order");
 
                     b.Navigation("product");
+                });
+
+            modelBuilder.Entity("Final_project.Models.ordersReverted", b =>
+                {
+                    b.HasOne("Final_project.Models.order", "Order")
+                        .WithMany()
+                        .HasForeignKey("orderId");
+
+                    b.HasOne("Final_project.Models.order_item", "Order_Item")
+                        .WithMany()
+                        .HasForeignKey("order_itemId");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Order_Item");
                 });
 
             modelBuilder.Entity("Final_project.Models.product", b =>
