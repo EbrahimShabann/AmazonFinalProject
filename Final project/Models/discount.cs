@@ -33,7 +33,7 @@ public partial class discount
 
     public int? current_uses { get; set; }
 
-    public bool? is_active { get; set; }
+    public bool is_active { get; set; }
     public bool is_deleted { get; set; } = false;
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]

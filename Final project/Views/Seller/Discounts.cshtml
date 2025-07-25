@@ -8,13 +8,16 @@
     var selectedInactive = ViewBag.IsActive != null && ViewBag.IsActive.ToString() == "False" ? "selected" : "";
 }
 
-<h2>My Discounts</h2>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <span class="seller-id-badge">
-            <span class="seller-id-label">Current Seller ID:</span>
-            <span class="seller-id-value">@ViewBag.CurrentSellerId</span>
-        </span>
+        <h2 style="font-weight:800;letter-spacing:0.5px;margin-bottom:0;">My Discounts</h2>
+        @if (!string.IsNullOrEmpty((string)ViewBag.CurrentSellerId))
+        {
+            <div class="mt-1 mb-2">
+                <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
+                <span class="badge bg-primary" style="font-size:1em;">@ViewBag.CurrentSellerId</span>
+            </div>
+        }
     </div>
     <div>
         <a asp-action="AddDiscount" class="btn btn-success" style="font-size:1.1em; padding:10px 24px;">Add New Discount</a>
@@ -196,7 +199,7 @@
                 }
             </td>
             <td>
-                <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <div style="display:flex;flex-wrap:wrap;gap:6px;max-width:800px;overflow:hidden;text-overflow:ellipsis;white-space:normal;">
                 @foreach (var pd in discount.ProductDiscounts)
                 {
                     if (!string.IsNullOrEmpty(pd.product?.name))
@@ -256,7 +259,24 @@
             });
             $('#confirmDeleteBtn').click(function() {
                 var discountId = $('#confirmDeleteModal').data('discount-id');
-                window.location.href = '/Seller/DeleteDiscount/' + discountId;
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                $.ajax({
+                    url: '/Seller/DeleteDiscount',
+                    type: 'POST',
+                    data: { id: discountId },
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    success: function() {
+                        // احذف الصف من الجدول أو أعد تحميل الصفحة
+                        $('button[data-discount-id="' + discountId + '"]').closest('tr').remove();
+                        showNotification('Discount deleted successfully!', 'success');
+                    },
+                    error: function() {
+                        showNotification('Error deleting discount!', 'error');
+                    }
+                });
+                $('#confirmDeleteModal').modal('hide');
             });
 
 
@@ -291,7 +311,7 @@
                                 .html('<i class="fas fa-ban"></i> Deactivate').data('current-status', 'true');
                         }
 
-                        var statusCell = button.closest('tr').find('td:nth-child(6)');
+                        var statusCell = button.closest('tr').find('td:nth-child(5)');
                         if (currentStatus === 'true') {
                             statusCell.html('<span class="badge bg-danger">Inactive</span>');
                         } else {

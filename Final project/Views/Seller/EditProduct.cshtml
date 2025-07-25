@@ -45,8 +45,26 @@
         <span asp-validation-for="Brand" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Colors"></label>
-        <input asp-for="Colors" class="form-control" />
+        <label>Colors</label>
+        <div id="colorSwatchContainer" class="mb-2">
+            <span class="color-swatch" data-color="Red" style="background:red;"></span>
+            <span class="color-swatch" data-color="Blue" style="background:blue;"></span>
+            <span class="color-swatch" data-color="Green" style="background:green;"></span>
+            <span class="color-swatch" data-color="Black" style="background:black;"></span>
+            <span class="color-swatch" data-color="White" style="background:white; border:1px solid #ccc;"></span>
+            <span class="color-swatch" data-color="Yellow" style="background:yellow;"></span>
+            <span class="color-swatch" data-color="Orange" style="background:orange;"></span>
+            <span class="color-swatch" data-color="Purple" style="background:purple;"></span>
+            <span class="color-swatch" data-color="Gray" style="background:gray;"></span>
+            <span class="color-swatch" data-color="Brown" style="background:brown;"></span>
+            <span class="color-swatch" data-color="Pink" style="background:pink;"></span>
+            <span class="color-swatch" data-color="Cyan" style="background:cyan;"></span>
+            <span class="color-swatch" data-color="Gold" style="background:gold;"></span>
+            <span class="color-swatch" data-color="Silver" style="background:silver;"></span>
+        </div>
+        <input type="hidden" name="Colors" id="ColorsInput" value="@Model.Colors" required />
+        <small class="form-text text-muted">Select one or more colors.</small>
+        <div id="selectedColorsText" class="mt-1 text-secondary small"></div>
         <span asp-validation-for="Colors" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -168,7 +186,50 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <style>
+    .color-swatch {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #eee;
+        margin: 0 4px 4px 0;
+        cursor: pointer;
+        transition: border 0.2s, box-shadow 0.2s;
+        vertical-align: middle;
+    }
+    .color-swatch.selected {
+        border: 3px solid #007bff;
+        box-shadow: 0 0 0 2px #007bff33;
+    }
+    </style>
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const swatches = document.querySelectorAll('.color-swatch');
+        const colorsInput = document.getElementById('ColorsInput');
+        const selectedColorsText = document.getElementById('selectedColorsText');
+        let selectedColors = colorsInput.value ? colorsInput.value.split(',').map(c => c.trim()).filter(c => c) : [];
+        // تظليل الألوان المختارة مسبقًا
+        swatches.forEach(swatch => {
+            const color = swatch.getAttribute('data-color');
+            if (selectedColors.includes(color)) {
+                swatch.classList.add('selected');
+            }
+            swatch.addEventListener('click', function() {
+                if (selectedColors.includes(color)) {
+                    selectedColors = selectedColors.filter(c => c !== color);
+                    this.classList.remove('selected');
+                } else {
+                    selectedColors.push(color);
+                    this.classList.add('selected');
+                }
+                colorsInput.value = selectedColors.join(',');
+                selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+            });
+        });
+        // عرض النص عند تحميل الصفحة
+        selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+    });
     document.getElementById('editProductForm').addEventListener('submit', function(e) {
         console.log('Form submit event triggered!');
     });

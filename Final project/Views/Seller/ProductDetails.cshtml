@@ -32,15 +32,24 @@
             {
                 <div class="thumbnail-container">
                     <div class="row">
-                        @foreach (var image in Model.product_images.Take(5))
+                        @{
+                            var subImgs = Model.product_images.ToList();
+                            int colCount = 0;
+                        }
+                        @foreach (var image in subImgs)
                         {
-                            <div class="col-3 mb-2">
-                                <img src="@image.image_url" 
-                                     class="img-thumbnail thumbnail-image" 
+                            if (colCount % 3 == 0 && colCount != 0)
+                            {
+                                @:</div><div class="row">
+                            }
+                            <div class="col-4 mb-2">
+                                <img src="@image.image_url"
+                                     class="img-thumbnail thumbnail-image"
                                      style="height: 60px; width: 100%; object-fit: cover; cursor: pointer;"
                                      onclick="changeMainImage('@image.image_url')"
                                      alt="Product Thumbnail" />
                             </div>
+                            colCount++;
                         }
                     </div>
                 </div>
@@ -48,33 +57,89 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h4 class="card-title">@Model.name</h4>
+                <h2 class="card-title mb-3" style="font-size:2.2rem;font-weight:800;letter-spacing:1px;color:#1a237e;text-shadow:0 2px 8px #0001,0 1px 0 #fff;">
+                    <i class="fas fa-cube me-2" style="color:#ff9800;"></i>@Model.name
+                </h2>
                 <div class="mb-3">
                     <strong>Description:</strong>
                     <div class="border rounded p-2 bg-light">@Model.description</div>
                 </div>
-                <ul class="list-unstyled">
-                    <li><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
+                <ul class="list-unstyled" style="margin-bottom:0;">
+                    <li style="margin-bottom:12px;"><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
                     @if (Model.discount_price.HasValue)
                     {
-                        <li><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
+                        <li style="margin-bottom:12px;"><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
                     }
-                    <li><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
-                    <li><strong>Brand:</strong> @Model.Brand</li>
-                    <li><strong>SKU:</strong> @Model.sku</li>
-                    <li><strong>Category:</strong> @Model.category_id</li>
-                    <li><strong>Colors:</strong> @Model.Colors</li>
-                    <li><strong>Sizes:</strong> @Model.Sizes</li>
-                    <li><strong>Created At:</strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
-                    <li><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
-                    <li><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
+                    <li style="margin-bottom:12px;"><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
+                    <li style="margin-bottom:12px;"><strong>Brand:</strong> @Model.Brand</li>
+                    <li style="margin-bottom:12px;"><strong>SKU:</strong> @Model.sku</li>
+                    <li style="margin-bottom:12px;"><strong>Category:</strong> @Model.category_id</li>
+                    <li style="margin-bottom:12px;"><strong>Colors:</strong>
+                        @if (!string.IsNullOrEmpty(Model.Colors))
+                        {
+                            var colors = Model.Colors.Split(',');
+                            foreach (var color in colors)
+                            {
+                                <span style="display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid #eee;margin-right:6px;vertical-align:middle;background:@color.Trim();box-shadow:0 1px 4px #0002;" title="@color.Trim()"></span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">No Colors</span>
+                        }
+                    </li>
+                    <li style="margin-bottom:12px;"><strong>Sizes:</strong> @Model.Sizes</li>
+                    <li style="margin-bottom:12px;"><strong>Created At:</strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
+                    <li style="margin-bottom:12px;"><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
+                    <li style="margin-bottom:12px;"><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
                 </ul>
-                <hr />
-                <h6>Seller Info</h6>
-                <ul class="list-unstyled mb-0">
-                    <li><strong>Seller ID:</strong> <span class="text-muted">@Model.seller_id</span></li>
-                    <li><strong>Seller Name:</strong> <span class="text-muted">@Model.Seller?.UserName ?? "-"</span></li>
-                </ul>
+                <hr class="my-4" />
+                
+                <!-- Seller Info Section -->
+                <div class="seller-info-section">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="seller-icon me-3">
+                            <i class="fas fa-store text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="text-primary fw-bold mb-0">Seller Information</h5>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="seller-info-card mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="info-icon me-3">
+                                        <i class="fas fa-id-badge text-info"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Seller ID</small>
+                                        <strong class="text-dark">@Model.seller_id</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="seller-info-card mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="info-icon me-3">
+                                        <i class="fas fa-user text-success"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Seller Name</small>
+                                        <strong class="text-dark">@Model.Seller?.UserName ?? "Unknown"</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="seller-status-badge mt-3">
+                        <span class="badge bg-primary">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Verified Seller
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -91,3 +156,88 @@ function changeMainImage(imageUrl) {
     document.getElementById('mainImage').src = imageUrl;
 }
 </script> 
+@section Scripts {
+    <style>
+    .card-body ul.list-unstyled li strong {
+        color: #1976d2; /* أزرق داكن متناسق */
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .card-body ul.list-unstyled li {
+        color: #333;
+        font-size: 1.08rem;
+    }
+    
+    /* Seller Info Section Styles */
+    .seller-info-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .seller-info-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .seller-info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: #007bff;
+    }
+    
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,123,255,0.1);
+        font-size: 1.2rem;
+    }
+    
+    .seller-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+    }
+    
+    .seller-status-badge .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .seller-info-section h5 {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .seller-info-card strong {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .seller-info-card small {
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    </style>
+} 

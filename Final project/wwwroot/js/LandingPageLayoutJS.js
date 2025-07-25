@@ -33,9 +33,11 @@
       });
 
     // Prevent sidebar from closing when clicking inside it
-    sidebar.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
+    if (sidebar) {
+        sidebar.addEventListener("click", function (e) {
+            e.stopPropagation();
+        });
+    }
 
     // ========================================================================================
     // PRODUCT SCROLLING FUNCTIONALITY

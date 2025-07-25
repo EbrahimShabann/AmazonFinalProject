@@ -124,7 +124,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
         // Configure order-item relationships
         modelBuilder.Entity<order_item>()
             .HasOne(oi => oi.order)
-            .WithMany()
+            .WithMany(o => o.OrderItems)
             .HasForeignKey(oi => oi.order_id);
 
         modelBuilder.Entity<order_item>()
@@ -146,7 +146,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
         // Configure product-image relationship
         modelBuilder.Entity<product_image>()
             .HasOne(pi => pi.product)
-            .WithMany()
+            .WithMany(p => p.product_images)
             .HasForeignKey(pi => pi.product_id);
 
         // Configure support ticket relationships

@@ -297,7 +297,7 @@ namespace Final_project.Migrations
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("is_active")
+                    b.Property<bool>("is_active")
                         .HasColumnType("bit");
 
                     b.Property<bool>("is_deleted")
@@ -416,9 +416,6 @@ namespace Final_project.Migrations
                     b.Property<string>("order_id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("orderid")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("product_id")
                         .HasColumnType("nvarchar(255)");
 
@@ -426,8 +423,7 @@ namespace Final_project.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("seller_id")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("seller_id");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("status")
                         .HasColumnType("nvarchar(32)");
@@ -438,8 +434,6 @@ namespace Final_project.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("order_id");
-
-                    b.HasIndex("orderid");
 
                     b.HasIndex("product_id");
 
@@ -567,17 +561,12 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("productid")
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<DateTime?>("uploaded_at")
                         .HasColumnType("datetime2");
 
                     b.HasKey("id");
 
                     b.HasIndex("product_id");
-
-                    b.HasIndex("productid");
 
                     b.ToTable("product_images");
                 });
@@ -922,12 +911,8 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.order_item", b =>
                 {
                     b.HasOne("Final_project.Models.order", "order")
-                        .WithMany()
-                        .HasForeignKey("order_id");
-
-                    b.HasOne("Final_project.Models.order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("orderid");
+                        .HasForeignKey("order_id");
 
                     b.HasOne("Final_project.Models.product", "product")
                         .WithMany()
@@ -977,12 +962,8 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.product_image", b =>
                 {
                     b.HasOne("Final_project.Models.product", "product")
-                        .WithMany()
-                        .HasForeignKey("product_id");
-
-                    b.HasOne("Final_project.Models.product", null)
                         .WithMany("product_images")
-                        .HasForeignKey("productid");
+                        .HasForeignKey("product_id");
 
                     b.Navigation("product");
                 });
