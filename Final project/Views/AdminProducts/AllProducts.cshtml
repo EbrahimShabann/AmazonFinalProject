@@ -1,0 +1,889 @@
+﻿@model List<product>
+@{
+    ViewData["Title"] = "AllProducts";
+    Layout = "AdminLayout";
+    
+}
+
+
+<style>
+    .filter-section {
+        background: var(--amazon-card);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid var(--border-color);
+        transition: var(--transition);
+    }
+
+    .filter-section:hover {
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.8rem;
+    }
+
+    .section-title i {
+        background: var(--amazon-secondary);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 1.2rem;
+    }
+
+    .section-title h2 {
+        color: var(--amazon-dark);
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .filter-group {
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .filter-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--amazon-dark);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-label i {
+        margin-right: 8px;
+        color: var(--amazon-secondary);
+        font-size: 0.9rem;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        font-size: 0.95rem;
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 0.85rem 0.85rem 0.85rem 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        background: #888;
+        box-shadow: var(--shadow-light);
+    }
+
+    .filter-input:focus {
+        outline: none;
+        border-color: var(--amazon-primary);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: #888;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 0.85rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: #888;
+        background-size: 12px;
+        font-size: 0.95rem;
+        appearance: none;
+        transition: var(--transition);
+        box-shadow: var(--shadow-light);
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--amazon-primary);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+    }
+
+    .price-range-container {
+        display: flex;
+        gap: 12px;
+    }
+
+    .price-input {
+        flex: 1;
+        padding: 0.85rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        background: #fafafa;
+        box-shadow: var(--shadow-light);
+    }
+
+    .price-input:focus {
+        outline: none;
+        border-color: var(--amazon-primary);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: #fff;
+    }
+
+    .filter-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .result-count {
+        background: var(--amazon-card);
+        border-radius: 8px;
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+        color: var(--amazon-dark);
+        box-shadow: var(--shadow-medium);
+        border: 1px solid var(--border-color);
+        margin-top: 25px;
+        display: flex;
+        align-items: center;
+    }
+
+    .result-count i {
+        margin-right: 10px;
+        color: var(--amazon-primary);
+        font-size: 1.4rem;
+    }
+
+    .result-count strong {
+        color: var(--amazon-secondary);
+        margin: 0 5px;
+    }
+    /* Product Table */
+    .products-table-container {
+        background: var(--amazon-card);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+    }
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+    }
+
+    .products-table th {
+        background: var(--amazon-dark);
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        font-weight: 500;
+    }
+
+    .products-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .products-table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    .products-table tr:hover {
+        background: #f0f7ff;
+    }
+
+    .product-image-cell {
+        width: 60px;
+    }
+
+    .product-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ccc;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: rgba(243, 156, 18, 0.15);
+        color: var(--amazon-warning);
+    }
+
+    .status-approved {
+        background: rgba(0, 166, 90, 0.15);
+        color: var(--amazon-success);
+    }
+
+    .status-rejected {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--amazon-danger);
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        gap: 5px;
+    }
+
+    .pagination-btn {
+        padding: 8px 14px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .pagination-btn:hover {
+        background: var(--amazon-orange);
+        color: white;
+        border-color: var(--amazon-orange);
+    }
+
+    .pagination-btn.active {
+        background: var(--amazon-orange);
+        color: white;
+        border-color: var(--amazon-orange);
+    }
+
+    /* Action Buttons */
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+    }
+
+    .btn-approve {
+        background: var(--amazon-success);
+        color: white;
+    }
+
+    .btn-reject {
+        background: var(--amazon-danger);
+        color: white;
+    }
+
+    .btn-details {
+        background: var(--amazon-info);
+        color: white;
+    }
+
+    .btn-delete {
+        background: var(--amazon-danger);
+        color: white;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #suggestions, #sellerSuggestions {
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .select-wrapper {
+        position: relative;
+    }
+
+    .select-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--amazon-secondary);
+        font-size: 1rem;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 1rem 1rem 1rem 45px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+        background: #fafafa;
+        box-shadow: var(--shadow-light);
+        appearance: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .styled-date-input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+        color: var(--text-color);
+    }
+
+    .styled-date-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        background-color: #fff;
+    }
+
+    .date-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-color);
+        pointer-events: none;
+    }
+
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--amazon-primary);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: #fff;
+    }
+
+    /* Custom dropdown arrow */
+    .form-control::after {
+        content: "";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 6px solid transparent;
+        border-top-color: #666;
+        pointer-events: none;
+    }
+
+    /* Dropdown options styling */
+    .form-control option {
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+    }
+
+    .form-control option:hover {
+        background-color: rgba(20, 110, 180, 0.1);
+    }
+
+    .form-control option:checked {
+        background-color: var(--amazon-secondary);
+        color: white;
+    }
+
+    .form-control option:first-child {
+        color: #888;
+        font-style: italic;
+    }
+
+    /* Hover effect for dropdown */
+    .form-control:hover {
+        border-color: #a7acac;
+    }
+
+    .form-control:focus {
+        animation: pulse 1.5s infinite;
+    }
+
+    /* Animation for dropdown focus */
+    @@keyframes pulse 
+    {
+        0%
+        {
+            box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.4);
+        }
+
+        70% 
+        {
+            box-shadow: 0 0 0 8px rgba(255, 153, 0, 0);
+        }
+
+        100% 
+        {
+            box-shadow: 0 0 0 0 rgba(255, 153, 0, 0);
+        }
+
+    }
+</style>
+<!-- Main Content -->
+<main class="main-content">
+    <h1 class="dashboard-title">Product Management</h1>
+     <!-- Stats Overview -->
+    <div class="stats-container">
+        <a class="stat-card" style="text-decoration: none">
+            <div class="stat-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <div class="stat-value" id="count-pending">@ViewBag.CountActiveProducts</div>
+            <div class="stat-title">Active Products</div>
+
+        </a>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value" id="count-accepted">@ViewBag.CountInactiveProducts</div>
+            <div class="stat-title">Inactive Products</div>
+       
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-value" id="count-rejected">@ViewBag.CountDeletedProducts</div>
+            <div class="stat-title">Deleted Products</div>
+
+        </div>
+    </div>
+    <div class="filter-section">
+        <div class="section-title">
+            <i class="fas fa-filter"></i>
+            <h2>Filter Products</h2>
+        </div>
+
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label class="filter-label" for="filter-product">
+                    <i class="fas fa-box"></i> Product Name
+                </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchBox" placeholder="Search products..." autocomplete="off" class="form-control filter-input" />
+                    <div id="suggestions" class="list-group"></div>
+
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label" for="filter-seller">
+                    <i class="fas fa-store"></i> Seller Name
+                </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user-tie"></i>
+                    <input type="text" id="sellerSearchBox" class="form-control filter-input" placeholder="Search sellers..." autocomplete="off">
+                    <div id="sellerSuggestions" class="list-group"></div>
+
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <i class="fas fa-tag"></i>
+                <select id="categoryDropdown" class="filter-select form-control">
+                    <option value="">All Categories</option>
+                    @foreach (category category in ViewBag.Categories)
+                    {
+                        <option value="@category.id">@category.name</option>
+                    }
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="filter-status">
+                    <i class="fas fa-info-circle"></i> Status
+                </label>
+                <select class="filter-select form-control" id="statusDropdown">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="filter-select form-control">
+                <label for="dateFilter" class="filter-label">
+                     Approved From
+                </label>
+                <div class="date-input-wrapper">
+                    <input type="date" id="approvedFrom" class="styled-date-input">
+                </div>
+            </div>
+            <div class="filter-select form-control">
+                <label for="dateFilter" class="filter-label">
+                    Approved To
+                </label>
+                <div class="date-input-wrapper">
+                    <input type="date" id="approvedTo" class="styled-date-input">
+                </div>
+            </div>
+            <div class="col-md-2 mb-2 d-flex align-items-center">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="approvedByMeCheckbox">
+                    <label class="form-check-label" for="approvedByMeCheckbox">Approved By Me</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="filter-actions">
+            <button class="action-btn btn-details" id="reset-filters">
+                <i class="fas fa-sync-alt"></i> Reset Filters
+            </button>
+            <button class="action-btn btn-approve" id="filterBtn">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+
+
+    </div>
+@* 
+    <div class="result-count">
+        <i class="fas fa-chart-bar"></i>
+        Showing <strong>24</strong> results from <strong>86</strong> products matching your criteria
+    </div> *@
+    
+
+    <!-- Products Table -->
+    <div class="products-table-container">
+        <table class="products-table" id="productsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Seller</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productRows">
+                @foreach(product p in Model)
+                {
+                    <tr>
+                        <td>@p.id</td>
+                        <td>@p.name</td>
+                        <td>@p.price</td>
+                        <td>@p.Seller.UserName</td>
+                        <td>@p.category.name</td>
+                        <td>
+                            @if ((bool)p.is_active & (bool)p.is_approved& !p.is_deleted)
+                            {
+                                <span class="status-badge status-approved">Active</span>
+                            }
+                            else if((bool)p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                            {
+                                <span class="status-badge status-pending">Pending</span>
+                            }else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                            {
+                                <span class="status-badge status-pending">Rejected</span>
+                            }
+                            else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
+                            {
+                                <span class="status-badge status-pending">Inactive</span>
+                            }
+
+                        </td>
+                        <td>
+                            @if ((bool)p.is_active & (bool)!p.is_approved && !p.is_deleted)
+                            {
+                                <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button id="reject-btn" class="action-btn btn-reject" data-id="@p.id">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            }
+                            else if ((bool)p.is_active & (bool)p.is_approved & !p.is_deleted)
+                            {
+                                <button id="inactive-btn" class="action-btn btn-reject" data-id="@p.id">
+                                    <i class="fas fa-ban"></i> Inactive
+                                </button>
+
+                            }
+                            else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
+                            {
+                                <button id="active-btn" class="action-btn btn-approve" data-id="@p.id">
+                                    <i class="fas fa-check"></i> Activate
+                                </button>
+                                <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            }
+                            else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                            {
+                                <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
+                                    <i class="fas fa-check"></i> Approved
+                                </button>
+                                <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            }
+                            <button id="details-btn" class="action-btn btn-details" data-id="@p.id">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+       
+</div>
+ <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center my-3">
+            <div>
+                <label>Show:</label>
+                <select id="pageSizeDropdown" class="form-select d-inline-block w-auto ms-1">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select> <span>products per page</span>
+            </div>
+            <div id="pagination" class="btn-group"></div>
+        </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    let currentPage = 1;
+
+    // Load filtered and paginated products
+    function loadProducts() {
+        const name = $("#searchBox").val();
+        const seller = $("#sellerSearchBox").val();
+        const categoryId = $("#categoryDropdown").val();
+        const status = $("#statusDropdown").val();
+        const approvedByMe = $("#approvedByMeCheckbox").is(":checked");
+        const approvedFrom = $("#approvedFrom").val();
+        const approvedTo = $("#approvedTo").val();
+        const pageSize = $("#pageSizeDropdown").val();
+        $.get('/AdminProducts/FilterProducts',{ name, seller, categoryId, status, approvedByMe, approvedFrom, approvedTo,page: currentPage, pageSize: pageSize} ,
+                    function (response) {
+                    let rows = '';
+                    response.data.forEach(p => {
+                        let statusHtml = (p.approved)
+                        ? `<span class="status-badge status-approved">Active</span>`
+                        : (p.pending)
+                            ? `<span class="status-badge status-pending">Pending</span>`
+                                :(p.inactive)?`<span class="status-badge status-pending">Inactive</span>`
+                                :(p.rejected)?`<span class="status-badge status-pending">Rejected</span>`:'';
+                        let ActionButtonHtml = (p.pending)
+                        ? `     <button id="approved-btn" class="action-btn btn-approve" data-id="${p.id}">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button id="reject-btn" class="action-btn btn-reject" data-id="${p.id}">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>`
+                        : (p.approved)
+                            ? `     <button id="inactive-btn" class="action-btn btn-reject" data-id="${p.id}">
+                                        <i class="fas fa-ban"></i> Inactive
+                                    </button>`
+                        :(p.inactive)
+                            ?`      <button id="active-btn" class="action-btn btn-approve" data-id="${p.id}">
+                                        <i class="fas fa-check"></i> Activate
+                                    </button>
+                                    <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>`
+                        :(p.rejected)?`<button id="approved-btn" class="action-btn btn-approve" data-id="${p.id}">
+                                    <i class="fas fa-check"></i> Approved
+                                </button>
+                                <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>`: '';
+                        rows += `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td>${p.price}</td>
+                            <td>${p.sellerName}</td>
+                            <td>${p.categoryName}</td>
+                            <td>${statusHtml}</td>
+                            <td>${ActionButtonHtml}
+                                <button id="details-btn" class="action-btn btn-details data-id="${p.id}">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                            </td>
+                        </tr>`;
+                    });
+                    $("#productRows").html(rows);
+                    renderPagination(response.totalPages);
+
+                });
+    }
+    function renderPagination(totalPages) {
+        let html = '';
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="pagination-btn  ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} page-btn" data-page="${i}">${i}</button>`;
+        }
+        $("#pagination").html(html);
+    }
+    $("#searchBox").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminProducts/GetSuggestions', { term: query }, function (data) {
+                $("#suggestions").empty();
+                data.forEach(item => {
+                    $("#suggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item.name + '">' + item.name + '</div>');
+                });
+            });
+        } else {
+            $("#suggestions").empty();
+        }
+    });  
+
+    $(document).on('click', '#suggestions .list-group-item', function () {
+        $("#searchBox").val($(this).data('name'));
+        $("#suggestions").empty();
+    });
+    
+    $("#sellerSearchBox").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminProducts/GetSellerSuggestions', { term: query }, function (data) {
+                $("#sellerSuggestions").empty();
+                data.forEach(item => {
+                    $("#sellerSuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item.name + '">' + item.name + '</div>');
+                });
+            });
+        } else {
+            $("#sellerSuggestions").empty();
+        }
+    });
+
+    $(document).on('click', '#sellerSuggestions .list-group-item', function () {
+        $("#sellerSearchBox").val($(this).data('name'));
+        $("#sellerSuggestions").empty();
+    });
+
+    $(document).on('click', '.page-btn', function () {
+        currentPage = parseInt($(this).data('page'));
+        loadProducts();
+    });
+
+    $("#pageSizeDropdown").change(function () {
+        currentPage = 1;
+        loadProducts();
+    });
+
+    $("#filterBtn").click(function () {
+        currentPage = 1;
+        loadProducts();
+    });
+
+    $("#clearBtn").click(function () {
+        $("#searchBox").val('');
+        $("#sellerSearchBox").val('');
+        $("#categoryDropdown").val('');
+        $("#statusDropdown").val('');
+        $("#approvedByMeCheckbox").prop('checked', false);
+        $("#approvedFrom").val('');
+        $("#approvedTo").val('');
+        $("#pageSizeDropdown").val('10');
+        currentPage = 1;
+        loadProducts();
+    });
+
+    $(document).ready(function () {
+        loadProducts();
+    });
+
+
+    // Approve button click
+    $(document).on('click', '#approved-btn', function () {
+        const productId = $(this).data('id');
+        $.post('/AdminProducts/ApproveProduct', { id: productId }, function (response) {
+            if (response.success) {
+                loadProducts();
+            } else {
+                alert("Failed to approve product.");
+            }
+        });
+    });
+
+    // Reject button click
+    $(document).on('click', '#reject-btn', function () {
+        const productId = $(this).data('id');
+        $.post('/AdminProducts/RejectProduct', { id: productId }, function (response) {
+            if (response.success) {
+                loadProducts();
+            } else {
+                alert("Failed to reject product.");
+            }
+        });
+    });
+    // Approve button click
+    $(document).on('click', '#delete-btn', function () {
+        const productId = $(this).data('id');
+        $.post('/AdminProducts/deleteProduct', { id: productId }, function (response) {
+            if (response.success) {
+                loadProducts();
+            } else {
+                alert("Failed to approve product.");
+            }
+        });
+    });
+
+    // Reject button click
+    $(document).on('click', '#active-btn', function () {
+        const productId = $(this).data('id');
+        $.post('/AdminProducts/activeProduct', { id: productId }, function (response) {
+            if (response.success) {
+                loadProducts();
+            } else {
+                alert("Failed to reject product.");
+            }
+        });
+    });
+    // Approve button click
+    $(document).on('click', '#inactive-btn', function () {
+        const productId = $(this).data('id');
+        $.post('/AdminProducts/inactiveProduct', { id: productId }, function (response) {
+            if (response.success) {
+                loadProducts();
+            } else {
+                alert("Failed to approve product.");
+            }
+        });
+    });
+</script>

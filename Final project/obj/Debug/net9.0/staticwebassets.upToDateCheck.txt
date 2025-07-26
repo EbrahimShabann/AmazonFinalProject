@@ -596,6 +596,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstra
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\rulers.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\heart-pulse.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\brands\firefox.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\css\Admin.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\valentine2.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\badge-vo.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\hand-holding-heart.svg
@@ -4399,6 +4400,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawes
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\regular\face-meh-blank.svg
 wwwroot\css\_ErrorLayoutCSS.css
 wwwroot\css\AccountPage.css
+wwwroot\css\Admin.css
 wwwroot\css\CustomerCheckOut.css
 wwwroot\css\customerProductDetails.css
 wwwroot\css\CustomerProductsIndex.css
@@ -4409,6 +4411,7 @@ wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\Image\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg
 wwwroot\Image\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg
+wwwroot\Image\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg
 wwwroot\Image\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg
 wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
 wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
