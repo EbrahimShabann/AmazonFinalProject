@@ -103,10 +103,10 @@ namespace Final_project
             //app.MapHub<>("");
 
 
-            app.MapControllerRoute(
-                name: "areas",
-                pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
-                  .WithStaticAssets();
+            //app.MapControllerRoute(
+            //    name: "areas",
+            //    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
+            //      .WithStaticAssets();
             //======================EndAreas============================
             app.MapControllerRoute(
                 name: "default",

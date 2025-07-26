@@ -1,0 +1,214 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = "LoginAndSecurity";
+}
+
+<style>
+    body {
+        background-color: #f3f3f3;
+        font-family: 'Amazon Ember', Arial, sans-serif;
+    }
+
+    .security-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .breadcrumb-nav {
+        font-size: 0.85rem;
+        padding: 15px 0;
+        color: #555;
+    }
+
+    .breadcrumb-nav a {
+        color: #0066c0;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: #c45500;
+        text-decoration: underline;
+    }
+
+    .security-card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 20px 25px;
+        background-color: #fff;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .security-card:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .security-card h5 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #111;
+    }
+
+    .security-card .card-content {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .security-card small {
+        color: #767676;
+        font-size: 0.85rem;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .btn-amazon {
+        background-color: #FFD814;
+        border: 1px solid #FCD200;
+        border-radius: 8px;
+        color: #0F1111;
+        font-weight: 500;
+        padding: 6px 18px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .btn-amazon:hover {
+        background-color: #F7CA00;
+        border-color: #F2C200;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 7px 0 rgba(213,217,217,.6);
+    }
+
+    .warning-text {
+        color: #C45500 !important;
+        font-weight: 500;
+    }
+
+    .section-title {
+        font-weight: 400;
+        font-size: 1.8rem;
+        margin: 15px 0 25px;
+        color: #0F1111;
+    }
+
+    .divider {
+        border-top: 1px solid #e7e7e7;
+        margin: 25px 0;
+    }
+
+    @@keyframes pulse-glow {
+        0% { box-shadow: 0 0 0 0 rgba(255,216,20,0.4); }
+        70% { box-shadow: 0 0 0 8px rgba(255,216,20,0); }
+        100% { box-shadow: 0 0 0 0 rgba(255,216,20,0); }
+    }
+
+    .pulse-animation {
+        animation: pulse-glow 1.5s infinite;
+    }
+
+    @@media (max-width: 768px) {
+        .security-card {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .btn-amazon {
+            margin-top: 15px;
+            align-self: flex-end;
+        }
+    }
+</style>
+
+<div class="security-container my-4">
+    <nav class="breadcrumb-nav">
+        <a href="/Customer/Profile" class="text-decoration-none">Your Account</a> ›
+        <span class="text-muted">Login & Security</span>
+    </nav>
+
+    <h1 class="section-title">Login & Security</h1>
+
+    <div class="security-card d-flex justify-content-between align-items-center">
+        <div>
+            <h5>Name</h5>
+            <div class="card-content">@Model.UserName</div>
+        </div>
+        <a href="/Customer/Profile/EditName" class="btn btn-amazon pulse-animation">Edit</a>
+    </div>
+
+    <div class="security-card d-flex justify-content-between align-items-center">
+        <div>
+            <h5>Email</h5>
+            @if (string.IsNullOrEmpty(Model.Email))
+            {
+                <div class="card-content warning-text">
+                    <i class="fas fa-exclamation-triangle me-1"></i> For stronger account security, add your email address.
+                </div>
+            }
+            else
+            {
+                <div class="card-content">@Model.Email</div>
+            }
+        </div>
+        <a href="/Customer/Profile/EditEmail" class="btn btn-amazon pulse-animation">
+            @(string.IsNullOrEmpty(Model.Email) ? "Add" : "Edit")
+        </a>
+    </div>
+
+    <div class="security-card d-flex justify-content-between align-items-center">
+        <div>
+            <h5>Primary mobile number</h5>
+            <div class="card-content">@Model.PhoneNumber</div>
+            <small>Quickly sign in, recover passwords, and receive security notifications.</small>
+        </div>
+        <a href="/Customer/Profile/EditPhone" class="btn btn-amazon pulse-animation">Edit</a>
+    </div>
+
+    <div class="security-card d-flex justify-content-between align-items-center">
+        <div>
+            <h5>Password</h5>
+            <div class="card-content">••••••••</div>
+        </div>
+        <a href="/Customer/Profile/ChangePassword" class="btn btn-amazon pulse-animation">Edit</a>
+    </div>
+
+    <div class="security-card d-flex justify-content-between align-items-center">
+        <div>
+            <h5>Two-Step Verification (2SV)</h5>
+            <div class="card-content warning-text">
+                <i class="fas fa-exclamation-triangle me-1"></i> Add a layer of security with code in addition to your password.
+            </div>
+            <small>Get a verification code by text message or authenticator app when you sign in.</small>
+        </div>
+        <button class="btn btn-amazon pulse-animation">Turn on</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="security-card">
+        <h5>Secure your account</h5>
+        <div class="card-content">
+            Amazon takes your security seriously. We recommend:
+        </div>
+        <ul class="mt-2" style="color: #555; font-size: 0.95rem;">
+            <li>Using a unique password for your Amazon account</li>
+            <li>Enabling two-step verification</li>
+            <li>Keeping your contact information up to date</li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+<script>
+    document.querySelectorAll('.security-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>

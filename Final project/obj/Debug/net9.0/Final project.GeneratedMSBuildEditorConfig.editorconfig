@@ -40,8 +40,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/EditEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxFZGl0RW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/EditName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxFZGl0TmFtZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/EditPhone.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxFZGl0UGhvbmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/LoginAndSecurity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZmlsZVxMb2dpbkFuZFNlY3VyaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Tracks/Web/ITI Full Stack .Net/ITI .net/FinalProject/AmazonFinalProject/Final project/Areas/Customer/Views/Profile/orderDetails.cshtml]

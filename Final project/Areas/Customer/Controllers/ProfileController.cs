@@ -1,7 +1,10 @@
-﻿using Final_project.Repository;
+﻿using Final_project.Models;
+using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Customer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Security.Claims;
 
 namespace Final_project.Areas.Customer.Controllers
@@ -11,10 +14,12 @@ namespace Final_project.Areas.Customer.Controllers
     public class ProfileController : Controller
     {
         private readonly UnitOfWork uof;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ProfileController(UnitOfWork uof)
+        public ProfileController(UnitOfWork uof, UserManager<ApplicationUser> _userManager)
         {
             this.uof = uof;
+            userManager = _userManager;
         }
         public IActionResult Index()
         {
@@ -108,6 +113,101 @@ namespace Final_project.Areas.Customer.Controllers
                 return NotFound();
             }
             return View(orderDetailsVM);
+        }
+
+        public async Task<IActionResult> LoginAndSecurity()
+        {
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            //var user = await userManager.GetUserAsync(User);
+            //if (user == null)
+            //    RedirectToAction("Login", "Account");
+            return View(user);
+        }
+
+        public async Task<IActionResult> EditName()
+        {
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var model = new UpdateNameViewModel()
+            {
+                FullName = user.UserName
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditName(UpdateNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            //var user = await userManager.GetUserAsync(User);
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            user.UserName = model.FullName;
+            await userManager.UpdateAsync(user);
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public async Task<IActionResult> EditEmail()
+        {
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var model = new UpdateEmailViewModel
+            {
+                NewEmail = user.Email
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmail(UpdateEmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            //var user = await userManager.GetUserAsync(User);
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            await userManager.SetEmailAsync(user, model.NewEmail);
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public async Task<IActionResult> EditPhone()
+        {
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var model = new UpdatePhoneViewModel
+            {
+                PhoneNumber = user.PhoneNumber
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPhone(UpdatePhoneViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            //var user = await userManager.GetUserAsync(User);
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            await userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View(new ChangePasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            //var user = await userManager.GetUserAsync(User);
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+                return View(model);
+            }
+            return RedirectToAction("LoginAndSecurity");
         }
     }
 }

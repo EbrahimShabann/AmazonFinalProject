@@ -1,152 +1,252 @@
 ﻿@model List<WishlistItemViewModel>
-
 @{
-    ViewData["Title"] = "Wishlist";
+    ViewData["Title"] = "Wish List";
 }
 
 <style>
-    body {
-        background-color: #f0f2f5;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #333;
+    :root {
+        --amazon-orange: #FF9900;
+        --amazon-dark: #131921;
+        --amazon-light: #232F3E;
+        --amazon-yellow: #FFD814;
+        --amazon-light-gray: #EAEDED;
+        --amazon-dark-gray: #565959;
+        --amazon-green: #007600;
+        --amazon-red: #B12704;
     }
 
-    .wishlist-wrapper {
-        max-width: 1000px;
-        margin: 60px auto;
-        padding: 0 20px;
+    body {
+        background-color: var(--amazon-light-gray);
+        font-family: 'Amazon Ember', Arial, sans-serif;
+    }
+
+    .wishlist-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    .wishlist-header {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
     }
 
     .wishlist-title {
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 400;
+        color: var(--amazon-dark);
+        margin: 0;
     }
 
-    .wishlist-card {
-        display: flex;
-        background-color: #fff;
-        border-radius: 18px;
+    .wishlist-count {
+        font-size: 14px;
+        color: var(--amazon-dark-gray);
+        margin-top: 5px;
+    }
+
+    .empty-wishlist {
+        background: white;
+        padding: 40px;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .empty-icon {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-text {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .wishlist-item {
+        background: white;
         padding: 20px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        display: flex;
+        transition: all 0.2s;
     }
 
-    .wishlist-card:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    .wishlist-item:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
-    .wishlist-img {
-        width: 130px;
-        height: 130px;
+    .item-image {
+        width: 180px;
+        height: 180px;
         object-fit: contain;
-        border-radius: 12px;
-        background-color: #fafafa;
-        border: 1px solid #eee;
+        margin-right: 20px;
+        cursor: pointer;
+        transition: transform 0.2s;
     }
 
-    .wishlist-details {
+    .item-image:hover {
+        transform: scale(1.03);
+    }
+
+    .item-details {
         flex: 1;
-        margin-left: 25px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
     }
 
-    .wishlist-product-name {
-        font-size: 1.2rem;
-        font-weight: 500;
-        margin-bottom: 5px;
+    .item-title {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--amazon-dark);
+        margin-bottom: 8px;
+        cursor: pointer;
     }
 
-    .stock-status {
-        font-size: 0.9rem;
+    .item-title:hover {
+        color: var(--amazon-orange);
+        text-decoration: none;
     }
 
-    .stock-status.in-stock {
-        color: #1a7f37;
+    .item-stock {
+        color: var(--amazon-green);
+        font-size: 14px;
+        margin: 5px 0;
     }
 
-    .stock-status.out-of-stock {
-        color: #c81e1e;
+    .item-stock.out-of-stock {
+        color: var(--amazon-red);
     }
 
-    .price {
-        font-size: 1.3rem;
-        color: #b12704;
-        font-weight: bold;
+    .item-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--amazon-dark);
+        margin: 10px 0;
     }
 
-    .wishlist-actions {
+    .item-actions {
+        margin-top: auto;
         display: flex;
-        gap: 10px;
-        margin-top: 10px;
+        gap: 15px;
     }
 
-    .btn-warning {
-        background-color: #ffd814;
-        border: none;
+    .btn-add-to-cart {
+        background: linear-gradient(to bottom,#f7dfa5,#f0c14b);
+        border-radius: 3px;
+        border: 1px solid #a88734;
         color: #111;
         font-weight: 500;
-        padding: 6px 16px;
+        padding: 8px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
-    .btn-warning:hover {
-        background-color: #f7ca00;
+    .btn-add-to-cart:hover {
+        background: linear-gradient(to bottom,#f5d78e,#eeb933);
+    }
+
+    .btn-add-to-cart:disabled {
+        background: #e7e7e7;
+        border-color: #a6a6a6;
+        color: #767676;
+        cursor: not-allowed;
     }
 
     .btn-remove {
-        border: 1px solid #d00;
-        color: #d00;
-        background-color: transparent;
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        color: #0066c0;
+        font-weight: 500;
+        padding: 8px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
     .btn-remove:hover {
-        background-color: #d00;
-        color: white;
+        background: #f0f2f2;
+        color: #c45500;
     }
 
-    .empty-state {
-        background-color: #fff;
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        color: #555;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .wishlist-item {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .wishlist-item {
+            flex-direction: column;
+        }
+
+        .item-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
     }
 </style>
 
-<div class="wishlist-wrapper">
-    <h2 class="wishlist-title">Your Wishlist</h2>
+<div class="wishlist-container">
+    <div class="wishlist-header">
+        <h1 class="wishlist-title">Your Wish List</h1>
+        <div class="wishlist-count">@Model.Count items</div>
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="empty-state">Your wishlist is currently empty. Start shopping now!</div>
+        <div class="empty-wishlist">
+            <div class="empty-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3 class="empty-text">Your Wish List is empty</h3>
+            <p>Save items you want to purchase later by clicking the "Add to Wish List" button.</p>
+            <a href="/" class="btn btn-warning">Shop today's deals</a>
+        </div>
     }
     else
     {
         foreach (var item in Model)
         {
-            <div class="wishlist-card">
-                <img src="@item.ImageUrl" class="wishlist-img" alt="@item.ProductName" />
-                <div class="wishlist-details">
-                    <div>
-                        <p class="wishlist-product-name">@item.ProductName</p>
-                        <p class="stock-status @(item.InStock ? "in-stock" : "out-of-stock")">
-                            @(item.InStock ? "In Stock" : "Out of Stock")
-                        </p>
-                        <p class="price">EGP @item.Price.ToString("N2")</p>
+            <div class="wishlist-item">
+                <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                <div class="item-details">
+                    <h4 class="item-title">@item.ProductName</h4>
+                    <div class="item-stock @(item.InStock ? "" : "out-of-stock")">
+                        @(item.InStock ? "In Stock" : "Currently unavailable")
                     </div>
-                    <div class="wishlist-actions">
+                    <div class="item-price">EGP @item.Price.ToString("N2")</div>
+
+                    <div class="item-actions">
                         <form asp-action="MoveToCart" method="post">
                             <input type="hidden" name="id" value="@item.ItemId" />
-                            <button class="btn btn-warning btn-sm" @(item.InStock ? "" : "disabled")>Add to Cart</button>
+                            <button class="btn-add-to-cart" @(item.InStock ? "" : "disabled")>
+                                Add to Cart
+                            </button>
                         </form>
-                        <form asp-action="Delete" method="post">
+                        <form asp-action="RemoveFromWishlist" method="post">
                             <input type="hidden" name="id" value="@item.ItemId" />
-                            <button class="btn btn-outline-danger btn-sm btn-remove">Remove</button>
+                            <button class="btn-remove">
+                                Remove
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -154,4 +254,47 @@
         }
     }
 </div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<script>
+    document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!this.disabled) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                setTimeout(() => {
+                    this.innerHTML = 'Added to Cart';
+                    this.style.background = '#e7e7e7';
+                    this.style.borderColor = '#a6a6a6';
+                    this.style.color = '#767676';
+                }, 800);
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const item = this.closest('.wishlist-item');
+            item.style.transform = 'translateX(-100px)';
+            item.style.opacity = '0';
+            setTimeout(() => {
+                item.remove();
+                const count = document.querySelectorAll('.wishlist-item').length;
+                document.querySelector('.wishlist-count').textContent = count + ' items';
+
+                if (count === 0) {
+                    document.querySelector('.wishlist-header').insertAdjacentHTML('afterend',
+                        `<div class="empty-wishlist">
+                            <div class="empty-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3 class="empty-text">Your Wish List is empty</h3>
+                            <p>Save items you want to purchase later by clicking the "Add to Wish List" button.</p>
+                            <a href="/" class="btn btn-warning">Shop today's deals</a>
+                        </div>`);
+                }
+            }, 300);
+        });
+    });
+</script>
 

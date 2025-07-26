@@ -74,6 +74,7 @@ namespace Final_project.Controllers.Wishlist
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public IActionResult RemoveFromWishlist(string id) {
             wishlist_item item = wishlistItemRepo.getById(id);
             if (item != null)
@@ -84,6 +85,7 @@ namespace Final_project.Controllers.Wishlist
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public IActionResult MoveToCart(string id)
         {
             string user_id = "c1";
@@ -123,6 +125,7 @@ namespace Final_project.Controllers.Wishlist
                     quantity = 1,
                     added_at = DateTime.UtcNow
                 };
+                cartItemRepo.add(new_cart_item);
             }
 
             cartItemRepo.save();
