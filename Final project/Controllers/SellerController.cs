@@ -40,7 +40,7 @@ namespace Final_project.Controllers
         public async Task<IActionResult> MyProducts(string searchName, decimal? minPrice, decimal? maxPrice, bool? isActive, string categoryId)
         {
             var sellerId = GetCurrentSellerId();
-            var query = _unitOfWork.Products.GetAll(p => p.is_deleted == false, p => p.product_images);
+            var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false, p => p.product_images);
             if (!string.IsNullOrEmpty(searchName))
                 query = query.Where(p => p.name.Contains(searchName));
             if (minPrice.HasValue)
@@ -52,9 +52,9 @@ namespace Final_project.Controllers
             if (!string.IsNullOrEmpty(categoryId))
                 query = query.Where(p => p.category_id == categoryId);
             var products = await query.ToListAsync();
-            var categoriesDict = await _unitOfWork.Categories.GetAll().ToListAsync();
+            var categoriesDict = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
             ViewBag.CategoriesDict = categoriesDict.ToDictionary(c => c.id, c => c.name);
-            var categoriesList = await _unitOfWork.Categories.GetAll().ToListAsync();
+            var categoriesList = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
             ViewBag.CategoriesList = categoriesList;
             ViewBag.SearchName = searchName;
             ViewBag.MinPrice = minPrice;
@@ -69,7 +69,7 @@ namespace Final_project.Controllers
 
         public async Task<IActionResult> AllProducts(string searchName, decimal? minPrice, decimal? maxPrice, string categoryId)
         {
-            var query = _unitOfWork.Products.GetAll(p => p.is_deleted == false, p => p.product_images);
+            var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false, p => p.product_images);
             if (!string.IsNullOrEmpty(searchName))
                 query = query.Where(p => p.name.Contains(searchName));
             if (minPrice.HasValue)
@@ -79,7 +79,7 @@ namespace Final_project.Controllers
             if (!string.IsNullOrEmpty(categoryId))
                 query = query.Where(p => p.category_id == categoryId);
             var products = await query.ToListAsync();
-            var categoriesDict = await _unitOfWork.Categories.GetAll().ToListAsync();
+            var categoriesDict = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
             ViewBag.CategoriesDict = categoriesDict.ToDictionary(c => c.id, c => c.name);
             ViewBag.SearchName = searchName;
             ViewBag.MinPrice = minPrice;
@@ -92,7 +92,7 @@ namespace Final_project.Controllers
         #region Add product
         public async Task<IActionResult> AddProduct()
         {
-            var categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+            var categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
 
             ViewBag.Categories = categories;
             return View();
@@ -106,7 +106,7 @@ namespace Final_project.Controllers
             {
                 product.id = Guid.NewGuid().ToString();
 
-                var testUser = await _unitOfWork.Users.GetAsync(u => u.Id == "test-seller-id");
+                var testUser = await _unitOfWork.UserRepository.GetAsync(u => u.Id == "test-seller-id");
                 if (testUser == null)
                 {
                     testUser = new Final_project.Models.ApplicationUser
@@ -120,7 +120,7 @@ namespace Final_project.Controllers
                         LockoutEnabled = false,
                         AccessFailedCount = 0
                     };
-                    _unitOfWork.Users.add(testUser);
+                    _unitOfWork.UserRepository.add(testUser);
                     await _unitOfWork.SaveAsync();
                 }
 
@@ -134,7 +134,7 @@ namespace Final_project.Controllers
                     product.Sizes = Sizes;
                 }
 
-                _unitOfWork.Products.add(product);
+                _unitOfWork.ProductRepository.add(product);
                 await _unitOfWork.SaveAsync();
 
                 var productId = product.id;
@@ -170,7 +170,7 @@ namespace Final_project.Controllers
                                 is_primary = isMain,
                                 uploaded_at = DateTime.UtcNow
                             };
-                            _unitOfWork.ProductImages.add(productImage);
+                            _unitOfWork.ProductImageRepository.add(productImage);
                         }
                     }
                     await _unitOfWork.SaveAsync();
@@ -179,7 +179,7 @@ namespace Final_project.Controllers
                 return RedirectToAction("AllProducts");
             }
 
-            var categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+            var categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
             ViewBag.Categories = categories;
 
             return View(product);
@@ -190,11 +190,11 @@ namespace Final_project.Controllers
         public async Task<IActionResult> EditProduct(string id)
         {
             if (id == null) return NotFound();
-            var product = await _unitOfWork.Products.GetAsync(p => p.id == id, p => p.product_images);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
             if (product == null) return NotFound();
 
-            
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll().ToListAsync();
+
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
 
             return View(product);
         }
@@ -220,12 +220,12 @@ namespace Final_project.Controllers
                         System.IO.File.AppendAllText("C:/temp/editproduct.log", $"{key}: {error.ErrorMessage}\n");
                     }
                 }
-                ViewBag.Categories = await _unitOfWork.Categories.GetAll().ToListAsync();
-                updatedProduct.product_images = await _unitOfWork.ProductImages.GetAll(img => img.product_id == id).ToListAsync();
+                ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
+                updatedProduct.product_images = await _unitOfWork.ProductImageRepository.GetAll(img => img.product_id == id).ToListAsync();
                 return View(updatedProduct);
             }
             System.IO.File.AppendAllText("C:/temp/editproduct.log", $"Name: {updatedProduct.name}, Price: {updatedProduct.price}, Desc: {updatedProduct.description}\n");
-            var product = await _unitOfWork.Products.GetAsync(p => p.id == id, p => p.product_images);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
             if (product == null)
             {
                 System.IO.File.AppendAllText("C:/temp/editproduct.log", "Product not found in DB\n");
@@ -275,7 +275,7 @@ namespace Final_project.Controllers
                             is_primary = isMain,
                             uploaded_at = DateTime.UtcNow
                         };
-                        _unitOfWork.ProductImages.add(productImage);
+                        _unitOfWork.ProductImageRepository.add(productImage);
                     }
                 }
                 await _unitOfWork.SaveAsync();
@@ -306,7 +306,7 @@ namespace Final_project.Controllers
         public async Task<IActionResult> ProductDetails(string id)
         {
             if (id == null) return NotFound();
-            var product = await _unitOfWork.Products.GetAsync(p => p.id == id, p => p.product_images, p => p.Seller);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images, p => p.Seller);
             if (product == null) return NotFound();
             return View(product);
         }
@@ -317,11 +317,11 @@ namespace Final_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeProductImageType(string imageId, string productId, string newType)
         {
-            var image = await _unitOfWork.ProductImages.GetAsync(i => i.id == imageId && i.product_id == productId);
+            var image = await _unitOfWork.ProductImageRepository.GetAsync(i => i.id == imageId && i.product_id == productId);
             if (image == null) return NotFound();
             if (newType == "main")
             {
-                var allImages = await _unitOfWork.ProductImages.GetAll(i => i.product_id == productId).ToListAsync();
+                var allImages = await _unitOfWork.ProductImageRepository.GetAll(i => i.product_id == productId).ToListAsync();
                 foreach (var img in allImages)
                 {
                     img.image_type = "sub";
@@ -346,9 +346,9 @@ namespace Final_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductImage(string imageId, string productId)
         {
-            var image = await _unitOfWork.ProductImages.GetAsync(i => i.id == imageId && i.product_id == productId);
+            var image = await _unitOfWork.ProductImageRepository.GetAsync(i => i.id == imageId && i.product_id == productId);
             if (image == null) return NotFound();
-            _unitOfWork.ProductImages.Delete(image);
+            _unitOfWork.ProductImageRepository.Delete(image);
             await _unitOfWork.SaveAsync();
             return RedirectToAction("EditProduct", new { id = productId });
         }
@@ -359,7 +359,7 @@ namespace Final_project.Controllers
         public async Task<IActionResult> DeleteProduct(string id)
         {
             if (id == null) return NotFound();
-            var product = await _unitOfWork.Products.GetAsync(p => p.id == id, p => p.product_images);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
             if (product == null) return NotFound();
             return View(product);
         }
@@ -371,7 +371,7 @@ namespace Final_project.Controllers
             System.Diagnostics.Debug.WriteLine("=== DeleteProductConfirmed called ===");
             System.Diagnostics.Debug.WriteLine($"Product ID to delete: {id}");
 
-            var product = await _unitOfWork.Products.GetAsync(p => p.id == id, p => p.product_images);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
             if (product == null) return NotFound();
 
             System.Diagnostics.Debug.WriteLine($"Product found: {product.name}");
@@ -403,11 +403,7 @@ namespace Final_project.Controllers
         {
             var sellerId = GetCurrentSellerId();
 
-            var query = _context.orders
-                .Where(o => o.OrderItems.Any(oi => oi.product.seller_id == sellerId))
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.product)
-                .Include(o => o.Buyer);
+            var query = _unitOfWork.OrderRepository.GetAll(o => o.OrderItems.Any(oi => oi.product.seller_id == sellerId), o => o.OrderItems, o => o.Buyer);
 
             if (!string.IsNullOrEmpty(searchOrderId))
                 query = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<order, ApplicationUser>)query.Where(o => o.id.Contains(searchOrderId));
@@ -429,13 +425,13 @@ namespace Final_project.Controllers
         public async Task<IActionResult> CreateTestOrders()
         {
             var sellerId = GetCurrentSellerId();
-            var products = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).ToListAsync();
+            var products = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).ToListAsync();
             if (!products.Any())
             {
                 TempData["ErrorMessage"] = "No products found for this seller. Please add products first.";
                 return RedirectToAction("Orders");
             }
-            var buyer = await _unitOfWork.Users.GetAsync(u => u.Id != sellerId);
+            var buyer = await _unitOfWork.UserRepository.GetAsync(u => u.Id != sellerId);
             if (buyer == null)
             {
                 TempData["ErrorMessage"] = "No buyer found. Please add a buyer user first.";
@@ -454,7 +450,7 @@ namespace Final_project.Controllers
                     billing_address = "Test Billing",
                     status = GetRandomStatus(),
                 };
-                _unitOfWork.Orders.add(order);
+                _unitOfWork.OrderRepository.add(order);
                 int itemsCount = random.Next(1, Math.Min(4, products.Count + 1));
                 var selectedProducts = products.OrderBy(x => random.Next()).Take(itemsCount).ToList();
                 foreach (var prod in selectedProducts)
@@ -471,7 +467,7 @@ namespace Final_project.Controllers
                         status = "Pending"
                     };
                     order.total_amount += (prod.price ?? 0) * qty;
-                    _unitOfWork.OrderItems.add(orderItem);
+                    _unitOfWork.OrderItemRepository.add(orderItem);
                 }
             }
             await _unitOfWork.SaveAsync();
@@ -485,11 +481,13 @@ namespace Final_project.Controllers
         public async Task<IActionResult> OrderDetails(string id)
         {
             if (id == null) return NotFound();
-            var order = await _unitOfWork.Orders.GetAll(o => o.id == id)
+
+            var order = await _unitOfWork.OrderRepository.GetAll(o => o.id == id)
                 .Include(o => o.Buyer)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.product)
                 .FirstOrDefaultAsync();
+
             if (order == null) return NotFound();
 
             return View(order);
@@ -503,7 +501,7 @@ namespace Final_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeOrderStatus(string id, string newStatus)
         {
-            var order = await _unitOfWork.Orders.GetAsync(o => o.id == id, o => o.OrderItems);
+            var order = await _unitOfWork.OrderRepository.GetAsync(o => o.id == id, o => o.OrderItems);
             if (order == null) return NotFound();
 
 
@@ -513,7 +511,7 @@ namespace Final_project.Controllers
                 return RedirectToAction("OrderDetails", new { id = id });
             }
 
-            var itemStatuses = (await _unitOfWork.OrderItems.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
+            var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
             bool canChange = false;
             switch (newStatus)
             {
@@ -558,7 +556,7 @@ namespace Final_project.Controllers
         public async Task<IActionResult> ChangeOrderItemStatus(string orderItemId, string newStatus)
         {
             var sellerId = GetCurrentSellerId();
-            var orderItem = await _unitOfWork.OrderItems.GetAsync(oi => oi.id == orderItemId, oi => oi.product, oi => oi.order);
+            var orderItem = await _unitOfWork.OrderItemRepository.GetAsync(oi => oi.id == orderItemId, oi => oi.product, oi => oi.order);
             if (orderItem == null || orderItem.product.seller_id != sellerId)
                 return Forbid();
 
@@ -574,7 +572,7 @@ namespace Final_project.Controllers
             await _unitOfWork.SaveAsync();
 
 
-            var itemStatuses = (await _unitOfWork.OrderItems.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
+            var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
 
             if (itemStatuses.All(s => s == "Pending"))
                 order.status = "Pending";
@@ -601,7 +599,7 @@ namespace Final_project.Controllers
         public async Task<IActionResult> DeleteOrder(string id)
         {
             if (id == null) return NotFound();
-            var order = await _unitOfWork.Orders.GetAsync(o => o.id == id, o => o.Buyer, o => o.OrderItems, o => o.OrderItems.Select(oi => oi.product));
+            var order = await _unitOfWork.OrderRepository.GetAsync(o => o.id == id, o => o.Buyer, o => o.OrderItems, o => o.OrderItems.Select(oi => oi.product));
             if (order == null) return NotFound();
             return View(order);
         }
@@ -611,7 +609,7 @@ namespace Final_project.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOrderConfirmed(string id)
         {
-            var order = await _unitOfWork.Orders.GetAsync(o => o.id == id);
+            var order = await _unitOfWork.OrderRepository.GetAsync(o => o.id == id);
             if (order == null) return NotFound();
             order.status = "Deleted";
             await _unitOfWork.SaveAsync();
@@ -625,12 +623,13 @@ namespace Final_project.Controllers
         {
             var sellerId = GetCurrentSellerId();
 
-            var productIds = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).Select(p => p.id).ToListAsync();
+            var productIds = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).Select(p => p.id).ToListAsync();
 
             IQueryable<discount> query = _context.discounts
                 .Where(d => d.ProductDiscounts.Any(pd => productIds.Contains(pd.product_id)))
                 .Include(d => d.ProductDiscounts)
                 .ThenInclude(pd => pd.product);
+
 
             if (!string.IsNullOrEmpty(searchDescription))
                 query = query.Where(d => d.description.Contains(searchDescription));
@@ -652,7 +651,7 @@ namespace Final_project.Controllers
             ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
             ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
             ViewBag.ProductId = productId;
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
             ViewBag.CurrentSellerId = sellerId;
             return View(discounts);
         }
@@ -662,8 +661,9 @@ namespace Final_project.Controllers
 
         public async Task<IActionResult> AddDiscount()
         {
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
             return View();
         }
 
@@ -678,7 +678,8 @@ namespace Final_project.Controllers
                 discount.seller_id = GetCurrentSellerId();
                 discount.created_at = DateTime.UtcNow;
 
-                _unitOfWork.Discounts.add(discount);
+                _unitOfWork.DiscountRepository.add(discount);
+
                 await _unitOfWork.SaveAsync();
 
                 if (productIds != null)
@@ -691,7 +692,7 @@ namespace Final_project.Controllers
                             product_id = pid,
                             discount_id = discount.id
                         };
-                        _unitOfWork.ProductDiscounts.add(pd);
+                        _unitOfWork.ProductDiscountRepository.add(pd);
                     }
                     await _unitOfWork.SaveAsync();
                 }
@@ -700,27 +701,31 @@ namespace Final_project.Controllers
 
             foreach (var pid in productIds)
             {
-                var overlap = await _unitOfWork.ProductDiscounts.GetAll(pd => pd.product_id == pid && pd.Discount != null && pd.Discount.is_active == true && pd.Discount.is_deleted == false)
+                var overlap = await _unitOfWork.ProductDiscountRepository.GetAll(pd => pd.product_id == pid && pd.Discount != null && pd.Discount.is_active == true && pd.Discount.is_deleted == false)
                     .AnyAsync(pd =>
                         (discount.start_date <= pd.Discount.end_date && discount.end_date >= pd.Discount.start_date)
                     );
                 if (overlap)
                 {
                     ModelState.AddModelError("", "There is already an active discount for one or more selected products in the same period.");
-                    ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-                    ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
+                    ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+                    ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
                     return View(discount);
                 }
             }
             if (productIds == null || !productIds.Any())
             {
                 ModelState.AddModelError("", "You must select at least one product.");
-                ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-                ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
+                ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+                ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
                 return View(discount);
             }
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
             return View(discount);
         }
         #endregion
@@ -731,15 +736,17 @@ namespace Final_project.Controllers
         public async Task<IActionResult> EditDiscount(string id)
         {
             if (id == null) return NotFound();
-            var discount = await _unitOfWork.Discounts.GetAsync(d => d.id == id, d => d.ProductDiscounts);
+            var discount = await _unitOfWork.DiscountRepository.GetAsync(d => d.id == id, d => d.ProductDiscounts);
             if (discount == null) return NotFound();
 
 
             var sellerId = GetCurrentSellerId();
             if (discount.seller_id != sellerId) return Forbid();
 
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
             ViewBag.SelectedProducts = discount.ProductDiscounts.Select(pd => pd.product_id).ToList();
             return View(discount);
         }
@@ -752,14 +759,14 @@ namespace Final_project.Controllers
             if (id != updatedDiscount.id) return NotFound();
             if (ModelState.IsValid)
             {
-                var discount = await _unitOfWork.Discounts.GetAsync(d => d.id == id, d => d.ProductDiscounts);
+                var discount = await _unitOfWork.DiscountRepository.GetAsync(d => d.id == id, d => d.ProductDiscounts);
                 if (discount == null) return NotFound();
 
 
                 var sellerId = GetCurrentSellerId();
                 if (discount.seller_id != sellerId) return Forbid();
                 discount.description = updatedDiscount.description;
-                discount.discount_type = updatedDiscount.discount_type;  
+                discount.discount_type = updatedDiscount.discount_type;
                 discount.value = updatedDiscount.value;
                 discount.start_date = updatedDiscount.start_date;
                 discount.end_date = updatedDiscount.end_date;
@@ -781,8 +788,10 @@ namespace Final_project.Controllers
                 await _unitOfWork.SaveAsync();
                 return RedirectToAction("Discounts");
             }
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.is_deleted == false).ToListAsync();
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll(c => c.is_active == true && c.is_deleted == false).ToListAsync();
+
             ViewBag.SelectedProducts = productIds;
             return View(updatedDiscount);
         }
@@ -796,13 +805,14 @@ namespace Final_project.Controllers
         public async Task<IActionResult> DeleteDiscount(string id)
         {
             if (id == null) return NotFound();
-            var discount = await _unitOfWork.Discounts.GetAsync(d => d.id == id, d => d.ProductDiscounts);
+            var discount = await _unitOfWork.DiscountRepository.GetAsync(d => d.id == id, d => d.ProductDiscounts);
             if (discount == null) return NotFound();
 
             var sellerId = GetCurrentSellerId();
             if (discount.seller_id != sellerId) return Forbid();
 
-            _unitOfWork.Discounts.Delete(discount);
+            _unitOfWork.DiscountRepository.Delete(discount);
+
             await _unitOfWork.SaveAsync();
             return RedirectToAction("Discounts");
         }
@@ -816,7 +826,7 @@ namespace Final_project.Controllers
         {
             try
             {
-                var discount = await _unitOfWork.Discounts.GetAsync(d => d.id == id);
+                var discount = await _unitOfWork.DiscountRepository.GetAsync(d => d.id == id);
                 if (discount == null) return Json(new { success = false, message = "Discount not found" });
 
 
@@ -848,10 +858,10 @@ namespace Final_project.Controllers
             var sellerId = GetCurrentSellerId();
 
 
-            var productsCount = await _unitOfWork.Products.GetCountAsync(p => p.seller_id == sellerId && p.is_deleted == false);
+            var productsCount = await _unitOfWork.ProductRepository.GetCountAsync(p => p.seller_id == sellerId && p.is_deleted == false);
             var ordersCount = await GetSellerOrdersQuery(sellerId).CountAsync();
             var totalSales = await GetSellerOrdersQuery(sellerId).Where(o => o.status == "Delivered").SumAsync(o => (decimal?)o.total_amount) ?? 0;
-            var activeDiscounts = await _unitOfWork.Discounts.GetCountAsync(d => d.seller_id == sellerId && d.is_active == true);
+            var activeDiscounts = await _unitOfWork.DiscountRepository.GetCountAsync(d => d.seller_id == sellerId && d.is_active == true);
             var pendingOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Pending");
             var processingOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Processing");
             var shippedOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Shipped");
@@ -884,8 +894,8 @@ namespace Final_project.Controllers
             ViewBag.MonthlySales = monthlySales;
             ViewBag.MonthlyOrders = monthlyOrders;
 
-            ViewBag.Categories = await _unitOfWork.Categories.GetAll().ToListAsync();
-            ViewBag.Products = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).ToListAsync();
+            ViewBag.Categories = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
+            ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).ToListAsync();
             return View();
         }
         #endregion
@@ -898,10 +908,10 @@ namespace Final_project.Controllers
             var sellerId = GetCurrentSellerId();
 
 
-            var productsCount = await _unitOfWork.Products.GetCountAsync(p => p.seller_id == sellerId && p.is_deleted == false);
+            var productsCount = await _unitOfWork.ProductRepository.GetCountAsync(p => p.seller_id == sellerId && p.is_deleted == false);
             var ordersCount = await GetSellerOrdersQuery(sellerId).CountAsync();
             var totalSales = await GetSellerOrdersQuery(sellerId).Where(o => o.status == "Delivered").SumAsync(o => (decimal?)o.total_amount) ?? 0;
-            var activeDiscounts = await _unitOfWork.Discounts.GetCountAsync(d => d.seller_id == sellerId && d.is_active == true);
+            var activeDiscounts = await _unitOfWork.DiscountRepository.GetCountAsync(d => d.seller_id == sellerId && d.is_active == true);
             var pendingOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Pending");
             var processingOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Processing");
             var shippedOrders = await GetSellerOrdersQuery(sellerId).CountAsync(o => o.status == "Shipped");
@@ -985,9 +995,9 @@ namespace Final_project.Controllers
         public async Task<IActionResult> GetOrdersStatusChartData()
         {
             var sellerId = GetCurrentSellerId();
-            var productIds = await _unitOfWork.Products
+            var productIds = await _unitOfWork.ProductRepository
                 .GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
-            var statusData = await _unitOfWork.OrderItems.GetAll(oi => productIds.Contains(oi.product_id)).ToListAsync();
+            var statusData = await _unitOfWork.OrderItemRepository.GetAll(oi => productIds.Contains(oi.product_id)).ToListAsync();
             var grouped = statusData
                 .GroupBy(x => string.IsNullOrEmpty(x.status) ? "Unknown" : x.status)
                 .Select(g => new { Status = g.Key, Count = g.Count() })
@@ -1001,6 +1011,7 @@ namespace Final_project.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMonthlyRevenueData(int year = 0)
         {
+
             try
             {
                 if (year == 0) year = DateTime.UtcNow.Year;
@@ -1008,9 +1019,9 @@ namespace Final_project.Controllers
                 
                 var debugInfo = new { sellerId = sellerId, year = year };
                 
-                var productIds = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
+                var productIds = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
 
-                var allOrderItems = await _unitOfWork.OrderItems.GetAll(oi => productIds.Contains(oi.product_id)).ToListAsync();
+                var allOrderItems = await _unitOfWork.OrderItemRepository.GetAll(oi => productIds.Contains(oi.product_id)).ToListAsync();
                 
 
                 var orderItemsWithOrder = allOrderItems.Where(oi => oi.order != null).ToList();
@@ -1064,6 +1075,7 @@ namespace Final_project.Controllers
             {
                 return Json(new { error = ex.Message, stack = ex.StackTrace });
             }
+
         }
         #endregion
 
@@ -1075,8 +1087,10 @@ namespace Final_project.Controllers
             try
             {
                 var sellerId = GetCurrentSellerId();
-                var productIds = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
-                var orderItemsQuery = _unitOfWork.OrderItems.GetAll(oi => productIds.Contains(oi.product_id) && oi.order != null);
+
+                var productIds = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
+                var orderItemsQuery = _unitOfWork.OrderItemRepository.GetAll(oi => productIds.Contains(oi.product_id) && oi.order != null);
+
                 if (startDate.HasValue)
                     orderItemsQuery = orderItemsQuery.Where(oi => oi.order.order_date >= startDate.Value);
                 if (endDate.HasValue)
@@ -1088,8 +1102,8 @@ namespace Final_project.Controllers
                 var orderItems = await orderItemsQuery
                     .Select(oi => new { ProductId = oi.product_id, Quantity = oi.quantity })
                     .ToListAsync();
-                // جلب أسماء المنتجات
-                var productNames = await _unitOfWork.Products.GetAll(p => productIds.Contains(p.id)).Select(p => new { p.id, p.name }).ToListAsync();
+                
+                var productNames = await _unitOfWork.ProductRepository.GetAll(p => productIds.Contains(p.id)).Select(p => new { p.id, p.name }).ToListAsync();
                 var topProducts = orderItems
                     .GroupBy(oi => oi.ProductId)
                     .Select(g => new { Product = productNames.FirstOrDefault(p => p.id == g.Key)?.name ?? g.Key, Quantity = g.Sum(oi => oi.Quantity ?? 0) })
@@ -1110,21 +1124,22 @@ namespace Final_project.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRecentOrders(int count = 5)
         {
+
             try
             {
                 var sellerId = GetCurrentSellerId();
                 
-                // Get all products for this seller
-                var sellerProducts = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
                 
-                // Get all order items for seller's products
-                var orderItems = await _unitOfWork.OrderItems.GetAll(oi => sellerProducts.Contains(oi.product_id)).ToListAsync();
+                var sellerProducts = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId).Select(p => p.id).ToListAsync();
                 
-                // Get unique order IDs
+                
+                var orderItems = await _unitOfWork.OrderItemRepository.GetAll(oi => sellerProducts.Contains(oi.product_id)).ToListAsync();
+                
+                
                 var orderIds = orderItems.Select(oi => oi.order_id).Distinct().ToList();
                 
-                // Get recent orders with includes
-                var recentOrders = await _unitOfWork.Orders.GetAll(o => orderIds.Contains(o.id))
+                
+                var recentOrders = await _unitOfWork.OrderRepository.GetAll(o => orderIds.Contains(o.id))
                     .Include(o => o.Buyer)
                     .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.product)
@@ -1156,6 +1171,7 @@ namespace Final_project.Controllers
             {
                 return Json(new { error = ex.Message, stack = ex.StackTrace });
             }
+
         }
         #endregion
 
@@ -1169,7 +1185,8 @@ namespace Final_project.Controllers
             {
                 var sellerId = GetCurrentSellerId();
 
-                var lowStockProducts = await _unitOfWork.Products.GetAll(p => p.seller_id == sellerId && p.is_deleted == false && (p.stock_quantity ?? 0) < threshold)
+
+                var lowStockProducts = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false && (p.stock_quantity ?? 0) < threshold)
                     .OrderBy(p => p.stock_quantity)
                     .Take(10)
                     .Select(p => new {
@@ -1193,6 +1210,7 @@ namespace Final_project.Controllers
             {
                 return Json(new { error = ex.Message, stack = ex.StackTrace });
             }
+
         }
         #endregion
 
@@ -1220,7 +1238,7 @@ namespace Final_project.Controllers
 
 
 
-/// /////////////////////////////////////////////////////////////////////////////////////////////////
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1445,7 +1463,7 @@ namespace Final_project.Controllers
         {
             var sellerId = GetCurrentSellerId();
 
-            var seller = await _unitOfWork.Users.GetAsync(u => u.Id == sellerId);
+            var seller = await _unitOfWork.UserRepository.GetAsync(u => u.Id == sellerId);
             if (seller == null)
             {
                 seller = new Final_project.Models.ApplicationUser
@@ -1459,7 +1477,7 @@ namespace Final_project.Controllers
                     LockoutEnabled = false,
                     AccessFailedCount = 0
                 };
-                _unitOfWork.Users.add(seller);
+                _unitOfWork.UserRepository.add(seller);
                 await _unitOfWork.SaveAsync();
             }
 
@@ -1478,12 +1496,12 @@ namespace Final_project.Controllers
                     created_at = DateTime.UtcNow.AddDays(-i * 2)
                 };
                 products.Add(prod);
-                _unitOfWork.Products.add(prod);
+                _unitOfWork.ProductRepository.add(prod);
             }
             await _unitOfWork.SaveAsync();
 
 
-            var buyer = await _unitOfWork.Users.GetAsync(u => u.Id != sellerId);
+            var buyer = await _unitOfWork.UserRepository.GetAsync(u => u.Id != sellerId);
             if (buyer == null)
             {
                 buyer = new Final_project.Models.ApplicationUser
@@ -1497,7 +1515,7 @@ namespace Final_project.Controllers
                     LockoutEnabled = false,
                     AccessFailedCount = 0
                 };
-                _unitOfWork.Users.add(buyer);
+                _unitOfWork.UserRepository.add(buyer);
                 await _unitOfWork.SaveAsync();
             }
             var random = new Random();
@@ -1513,7 +1531,7 @@ namespace Final_project.Controllers
                     billing_address = "Test Billing",
                     status = o % 3 == 0 ? "Delivered" : (o % 3 == 1 ? "Pending" : "Processing"),
                 };
-                _unitOfWork.Orders.add(order);
+                _unitOfWork.OrderRepository.add(order);
                 int itemsCount = random.Next(1, products.Count + 1);
                 var selectedProducts = products.OrderBy(x => random.Next()).Take(itemsCount).ToList();
                 foreach (var prod in selectedProducts)
@@ -1530,7 +1548,7 @@ namespace Final_project.Controllers
                         status = order.status == "Delivered" ? "Delivered" : "Pending"
                     };
                     order.total_amount += (prod.price ?? 0) * qty;
-                    _unitOfWork.OrderItems.add(orderItem);
+                    _unitOfWork.OrderItemRepository.add(orderItem);
                 }
             }
             await _unitOfWork.SaveAsync();
@@ -1540,4 +1558,4 @@ namespace Final_project.Controllers
 
 
     }
-} 
+}

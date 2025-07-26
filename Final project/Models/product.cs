@@ -60,6 +60,6 @@ public partial class product
     public DateTime? approved_at { get; set; }
 
     public bool is_deleted { get; set; } = false;
-    
+
     public virtual ICollection<product_image> product_images { get; set; } = new List<product_image>();
 }

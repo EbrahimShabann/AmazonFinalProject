@@ -19,22 +19,42 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    // Add missing DbSets
     public virtual DbSet<audit_log> audit_logs { get; set; }
+
     public virtual DbSet<cart_item> cart_items { get; set; }
+
     public virtual DbSet<category> categories { get; set; }
+
+    public virtual DbSet<chat_message> chat_messages { get; set; }
+
+    public virtual DbSet<chat_session> chat_sessions { get; set; }
+
     public virtual DbSet<discount> discounts { get; set; }
+
     public virtual DbSet<order> orders { get; set; }
+
     public virtual DbSet<order_history> order_histories { get; set; }
+
     public virtual DbSet<order_item> order_items { get; set; }
+
     public virtual DbSet<product> products { get; set; }
+
     public virtual DbSet<product_discount> product_discounts { get; set; }
+
     public virtual DbSet<product_image> product_images { get; set; }
+
+    public virtual DbSet<product_review> product_reviews { get; set; }
+
     public virtual DbSet<shopping_cart> shopping_carts { get; set; }
+
     public virtual DbSet<support_ticket> support_tickets { get; set; }
+
     public virtual DbSet<ticket_history> ticket_histories { get; set; }
+
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
     public virtual DbSet<AccountLog> AccountLog { get; set; }
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,54 +86,46 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             entity.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
         });
 
-        // Configure chat relationships
-        //        modelBuilder.Entity<chat_session>()
-        //            .HasOne(cs => cs.Customer)
-        //            .WithMany(u => u.ChatSessionsAsCustomer)
-        //            .HasForeignKey(cs => cs.CustomerId)
-        //            .OnDelete(DeleteBehavior.NoAction);
 
-        //        modelBuilder.Entity<chat_session>()
-        //            .HasOne(cs => cs.Seller)
-        //            .WithMany(u => u.ChatSessionsAsSeller)
-        //            .HasForeignKey(cs => cs.SellerId)
-        //            .OnDelete(DeleteBehavior.NoAction);
-
-        //        modelBuilder.Entity<chat_message>()
-        //            .HasOne(cm => cm.Sender)
-        //            .WithMany(u => u.ChatMessages)
-        //            .HasForeignKey(cm => cm.sender_id);
+        // Configure relationships
+        modelBuilder.Entity<chat_session>()
+            .HasOne(cs => cs.Customer)
+            .WithMany(u => u.ChatSessionsAsCustomer)
+            .HasForeignKey(cs => cs.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction);
 
 
+        modelBuilder.Entity<chat_session>()
+            .HasOne(cs => cs.Seller)
+            .WithMany(u => u.ChatSessionsAsSeller)
+            .HasForeignKey(cs => cs.SellerId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        // Configure discount relationships
+        modelBuilder.Entity<chat_message>()
+            .HasOne(cm => cm.Sender)
+            .WithMany(u => u.ChatMessages)
+            .HasForeignKey(cm => cm.sender_id);
+
         modelBuilder.Entity<discount>()
             .HasOne(d => d.Seller)
             .WithMany(u => u.Discounts)
             .HasForeignKey(d => d.seller_id);
 
-        // Configure order relationships
         modelBuilder.Entity<order>()
             .HasOne(o => o.Buyer)
             .WithMany(u => u.OrdersAsBuyer)
             .HasForeignKey(o => o.buyer_id);
-        // Configure order-history relationship
-        modelBuilder.Entity<order_history>()
-            .HasOne(oh => oh.order)
-            .WithMany()
-            .HasForeignKey(oh => oh.order_id);
-        // Configure product relationships
+
+
         modelBuilder.Entity<product>()
             .HasOne(p => p.Seller)
             .WithMany(u => u.Products)
             .HasForeignKey(p => p.seller_id);
 
-        // Configure product-category relationship
-        modelBuilder.Entity<product>()
-            .HasOne<category>()
-            .WithMany()
-            .HasForeignKey(p => p.category_id)
-            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<product_review>()
+            .HasOne(pr => pr.User)
+            .WithMany(u => u.ProductReviews)
+            .HasForeignKey(pr => pr.user_id);
 
         // Configure review relationships
         //        modelBuilder.Entity<product_review>()
@@ -139,17 +151,19 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.NoAction);
 
         // Configure shopping cart relationships
+
         modelBuilder.Entity<shopping_cart>()
             .HasOne(sc => sc.User)
             .WithMany(u => u.ShoppingCarts)
             .HasForeignKey(sc => sc.user_id);
+
         // Configure product-image relationship
         modelBuilder.Entity<product_image>()
             .HasOne(pi => pi.product)
             .WithMany(p => p.product_images)
             .HasForeignKey(pi => pi.product_id);
 
-        // Configure support ticket relationships
+
         modelBuilder.Entity<support_ticket>()
             .HasOne(st => st.User)
             .WithMany(u => u.SupportTickets)
@@ -160,43 +174,17 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.TicketMessages)
             .HasForeignKey(tm => tm.sender_id);
 
-        // Configure ticket-message relationship
-        modelBuilder.Entity<ticket_message>()
-            .HasOne<support_ticket>()
-            .WithMany()
-            .HasForeignKey(tm => tm.ticket_id);
-
-        // Configure notification relationships
-        //        modelBuilder.Entity<notification>()
-        //            .HasOne(n => n.Recipient)
-        //            .WithMany()
-        //            .HasForeignKey(n => n.RecipientId)
-        //            .OnDelete(DeleteBehavior.NoAction);
-
-        // Configure product-discount relationship
-        modelBuilder.Entity<product_discount>()
-            .HasOne(pd => pd.product)
-            .WithMany()
-            .HasForeignKey(pd => pd.product_id);
-        modelBuilder.Entity<product_discount>()
-    .HasOne(pd => pd.Discount)
-    .WithMany(d => d.ProductDiscounts)
-    .HasForeignKey(pd => pd.discount_id);
-
-        // Configure audit log properties
         modelBuilder.Entity<audit_log>(entity => {
             entity.Property(e => e.id).HasMaxLength(450);
             entity.Property(e => e.user_id).HasMaxLength(450);
         });
 
-        // Configure order history properties
         modelBuilder.Entity<order_history>(entity => {
             entity.Property(e => e.id).HasMaxLength(450);
             entity.Property(e => e.order_id).HasMaxLength(450);
             entity.Property(e => e.changed_by).HasMaxLength(450);
         });
-
-        // Configure cart item relationships
+        // Cart Item configuration
         modelBuilder.Entity<cart_item>()
             .HasOne(ci => ci.Cart)
             .WithMany(sc => sc.CartItems)
@@ -207,7 +195,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(ci => ci.product_id);
 
-        // Configure category properties and relationships
+        // Category configuration
         modelBuilder.Entity<category>(entity => {
             entity.Property(e => e.id).HasMaxLength(450);
             entity.Property(e => e.parent_category_id).HasMaxLength(450);
@@ -215,7 +203,6 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.last_modified_by).HasMaxLength(450);
             entity.Property(e => e.deleted_by).HasMaxLength(450);
         });
-
         modelBuilder.Entity<category>()
             .HasOne(c => c.ParentCategory)
             .WithMany()
@@ -241,6 +228,13 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.NoAction);
 
         OnModelCreatingPartial(modelBuilder);
+
+        modelBuilder.Entity<AccountLog>(entity =>
+        {
+            entity.HasKey(e => e.LogID).HasName("PK__AccountLog__5E5499A8A33FBCA4");
+
+            entity.Property(e => e.TimeStamp).HasDefaultValueSql("(getdate())");
+        });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

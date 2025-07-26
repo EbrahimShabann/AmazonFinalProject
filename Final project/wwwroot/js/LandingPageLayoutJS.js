@@ -21,9 +21,9 @@
       }
 
     // Event listeners for sidebar controls
-    if (hamburgerMenu) hamburgerMenu.addEventListener("click", openSidebar);
-    if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
-    if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
+    hamburgerMenu.addEventListener("click", openSidebar);
+    sidebarClose.addEventListener("click", closeSidebar);
+    sidebarOverlay.addEventListener("click", closeSidebar);
 
     // Close sidebar on escape key
     document.addEventListener("keydown", function (e) {

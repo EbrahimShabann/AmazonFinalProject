@@ -2,6 +2,7 @@
 using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
+using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.NewFolder;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
@@ -12,7 +13,7 @@ namespace Final_project.Repository
     public class UnitOfWork
     {
         private readonly AmazonDBContext db;
-        //private IProductRepository _productRepository;
+        private IProductRepository _productRepository;
         private ILandingPageRepository _landingPageReposotory;
         private ICategoryRepository _categoryRepository;
         private IAccountRepository _accountRepository;
@@ -122,7 +123,7 @@ namespace Final_project.Repository
                 return _productImageRepository;
             }
         }
-        public IUserRepository IUserRepository
+        public IUserRepository UserRepository
         {
             get
             {
@@ -131,20 +132,26 @@ namespace Final_project.Repository
                 return _userRepository;
             }
         }
+        public IProductRepository ProductRepository
+        {
+            get
+            {
+                if (_productRepository == null)
+                    _productRepository = new ProductRepository(db);
+                return _productRepository;
+            }
+        }
 
-        public IProductRepository Products => (IProductRepository)new ProductRepository(db);
-        public IOrderRepository Orders => OrderRepository;
-        public IOrderItemRepository OrderItems => OrderItemRepository;
-        public ICategoryRepository Categories => CategoryRepository;
-        public IProductImageRepository ProductImages => ProductImageRepository;
-        public IDiscountRepository Discounts => DiscountRepository;
-        public IUserRepository Users => IUserRepository;
-        public IProductDiscountRepository ProductDiscounts => ProductDiscountRepository;
+
+
+        public void save()
+        {
+            db.SaveChanges();
+        }
 
         public async Task SaveAsync()
         {
             await db.SaveChangesAsync();
         }
-
     }
 }

@@ -15,7 +15,7 @@ public partial class order_item
     public string order_id { get; set; }
     [ForeignKey("order_id")]
     public virtual order order { get; set; }
-    
+
     public string seller_id { get; set; }
 
     [ForeignKey("seller_id")]

@@ -142,7 +142,7 @@
                 updateValueField();
             });
 
-           // فلترة المنتجات حسب الفئة
+
            $('#categorySelect').change(function() {
                var selectedCat = $(this).val();
                if (selectedCat) {
@@ -155,7 +155,7 @@
                $('#applyToCategory').prop('checked', false);
            });
 
-           // عند اختيار apply to category يتم تحديد كل المنتجات في الفئة
+
            $('#applyToCategory').change(function() {
                var selectedCat = $('#categorySelect').val();
                if ($(this).is(':checked') && selectedCat) {

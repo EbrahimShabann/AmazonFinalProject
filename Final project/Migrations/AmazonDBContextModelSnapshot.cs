@@ -41,14 +41,17 @@ namespace Final_project.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("TimeStamp")
-                        .HasColumnType("datetime");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("UserID")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.HasKey("LogID");
+                    b.HasKey("LogID")
+                        .HasName("PK__AccountLog__5E5499A8A33FBCA4");
 
                     b.ToTable("AccountLog");
                 });
@@ -154,9 +157,17 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("entity_id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("entity_type")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("ip_address")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("new_values")
                         .HasColumnType("nvarchar(max)");
@@ -164,26 +175,20 @@ namespace Final_project.Migrations
                     b.Property<string>("old_values")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("record_id")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("table_name")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<DateTime?>("timestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("user_agent")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("user_id")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("user_id");
 
                     b.ToTable("audit_logs");
                 });
@@ -273,6 +278,76 @@ namespace Final_project.Migrations
                     b.HasIndex("parent_category_id");
 
                     b.ToTable("categories");
+                });
+
+            modelBuilder.Entity("Final_project.Models.chat_message", b =>
+                {
+                    b.Property<string>("id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("chat_sessionId")
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool?>("is_read")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("sender_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("sent_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("session_id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("chat_sessionId");
+
+                    b.HasIndex("sender_id");
+
+                    b.ToTable("chat_messages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.chat_session", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("chat_sessions");
                 });
 
             modelBuilder.Entity("Final_project.Models.discount", b =>
@@ -511,8 +586,6 @@ namespace Final_project.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("category_id");
-
                     b.HasIndex("seller_id");
 
                     b.ToTable("products");
@@ -569,6 +642,79 @@ namespace Final_project.Migrations
                     b.HasIndex("product_id");
 
                     b.ToTable("product_images");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product_review", b =>
+                {
+                    b.Property<string>("id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("is_verified_purchase")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("product_id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("user_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("product_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("product_reviews");
+                });
+
+            modelBuilder.Entity("Final_project.Models.review_reply", b =>
+                {
+                    b.Property<string>("id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("is_deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("is_seller_reply")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("replier_id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("reply_text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("review_id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("replier_id");
+
+                    b.HasIndex("review_id");
+
+                    b.ToTable("review_reply");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -696,8 +842,6 @@ namespace Final_project.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("sender_id");
-
-                    b.HasIndex("ticket_id");
 
                     b.ToTable("ticket_messages");
                 });
@@ -835,6 +979,15 @@ namespace Final_project.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Final_project.Models.audit_log", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Final_project.Models.cart_item", b =>
                 {
                     b.HasOne("Final_project.Models.shopping_cart", "Cart")
@@ -881,6 +1034,36 @@ namespace Final_project.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("Final_project.Models.chat_message", b =>
+                {
+                    b.HasOne("Final_project.Models.chat_session", null)
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("chat_sessionId");
+
+                    b.HasOne("Final_project.Models.ApplicationUser", "Sender")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("sender_id");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("Final_project.Models.chat_session", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "Customer")
+                        .WithMany("ChatSessionsAsCustomer")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Final_project.Models.ApplicationUser", "Seller")
+                        .WithMany("ChatSessionsAsSeller")
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Seller");
+                });
+
             modelBuilder.Entity("Final_project.Models.discount", b =>
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
@@ -920,8 +1103,7 @@ namespace Final_project.Migrations
 
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany()
-                        .HasForeignKey("seller_id")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("seller_id");
 
                     b.Navigation("Seller");
 
@@ -932,11 +1114,6 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
-                    b.HasOne("Final_project.Models.category", null)
-                        .WithMany()
-                        .HasForeignKey("category_id")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany("Products")
                         .HasForeignKey("seller_id");
@@ -966,6 +1143,37 @@ namespace Final_project.Migrations
                         .HasForeignKey("product_id");
 
                     b.Navigation("product");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product_review", b =>
+                {
+                    b.HasOne("Final_project.Models.product", "product")
+                        .WithMany()
+                        .HasForeignKey("product_id");
+
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany("ProductReviews")
+                        .HasForeignKey("user_id");
+
+                    b.Navigation("User");
+
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("Final_project.Models.review_reply", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "Replier")
+                        .WithMany()
+                        .HasForeignKey("replier_id");
+
+                    b.HasOne("Final_project.Models.product_review", "review")
+                        .WithMany("replies")
+                        .HasForeignKey("review_id");
+
+                    b.Navigation("Replier");
+
+                    b.Navigation("review");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -1000,10 +1208,6 @@ namespace Final_project.Migrations
                     b.HasOne("Final_project.Models.ApplicationUser", "Sender")
                         .WithMany("TicketMessages")
                         .HasForeignKey("sender_id");
-
-                    b.HasOne("Final_project.Models.support_ticket", null)
-                        .WithMany()
-                        .HasForeignKey("ticket_id");
 
                     b.Navigation("Sender");
                 });
@@ -1061,9 +1265,17 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("ChatMessages");
+
+                    b.Navigation("ChatSessionsAsCustomer");
+
+                    b.Navigation("ChatSessionsAsSeller");
+
                     b.Navigation("Discounts");
 
                     b.Navigation("OrdersAsBuyer");
+
+                    b.Navigation("ProductReviews");
 
                     b.Navigation("Products");
 
@@ -1072,6 +1284,11 @@ namespace Final_project.Migrations
                     b.Navigation("SupportTickets");
 
                     b.Navigation("TicketMessages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.chat_session", b =>
+                {
+                    b.Navigation("ChatMessages");
                 });
 
             modelBuilder.Entity("Final_project.Models.discount", b =>
@@ -1087,6 +1304,11 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
                     b.Navigation("product_images");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product_review", b =>
+                {
+                    b.Navigation("replies");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
