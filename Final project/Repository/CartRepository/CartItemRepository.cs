@@ -28,10 +28,6 @@ namespace Final_project.Repository.CartRepository
             return context.cart_items.FirstOrDefault(c => c.id == id);
         }
 
-        public void save()
-        {
-            context.SaveChanges();
-        }
 
         public void Update(cart_item entity)
         {
@@ -48,5 +44,7 @@ namespace Final_project.Repository.CartRepository
             //return context.cart_items.Include(c => c.Product).ToList();
             return context.cart_items.ToList();
         }
+
+
     }
 }

@@ -1,0 +1,109 @@
+@model IEnumerable<Final_project.Models.order>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Final_project.Models.ApplicationUser> UserManager
+@inject SignInManager<Final_project.Models.ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "My Orders";
+    var isAdmin = User.IsInRole("Admin");
+    var sellerId = ViewBag.CurrentSellerId as string;
+}
+
+@if (!string.IsNullOrEmpty(sellerId))
+{
+    <div class="mb-2">
+        <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
+        <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
+    </div>
+}
+<div class="mb-3">
+    <a href="/Seller/CreateTestOrders" class="btn btn-success">Create Test Orders</a>
+</div>
+<form method="get" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <input type="text" name="searchOrderId" value="@ViewBag.SearchOrderId" class="form-control" placeholder="Order ID" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="searchCustomer" value="@ViewBag.SearchCustomer" class="form-control" placeholder="Customer Name" />
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                @if (ViewBag.Status == "Pending") { <option value="Pending" selected>Pending</option> } else { <option value="Pending">Pending</option> }
+                @if (ViewBag.Status == "Processing") { <option value="Processing" selected>Processing</option> } else { <option value="Processing">Processing</option> }
+                @if (ViewBag.Status == "Shipped") { <option value="Shipped" selected>Shipped</option> } else { <option value="Shipped">Shipped</option> }
+                @if (ViewBag.Status == "Delivered") { <option value="Delivered" selected>Delivered</option> } else { <option value="Delivered">Delivered</option> }
+                @if (ViewBag.Status == "Cancelled") { <option value="Cancelled" selected>Cancelled</option> } else { <option value="Cancelled">Cancelled</option> }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th style="text-align:center;">Order ID</th>
+            <th style="text-align:center; white-space:nowrap;">Seller Name</th>
+            <th style="text-align:center;">Date</th>
+            <th style="text-align:center;">Customer</th>
+            <th style="text-align:center;">Status</th>
+            <th style="text-align:center; white-space:nowrap;">Total Amount</th>
+            <th style="text-align:center;">My Products</th>
+            <th style="text-align:center;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td><span class="badge bg-primary">@order.id</span></td>
+            <td>@(order.OrderItems.FirstOrDefault()?.product?.Seller?.UserName ?? "-")</td>
+            <td>
+                <span style="white-space:nowrap;font-size:0.98em;letter-spacing:0.2px;">
+                    @order.order_date?.ToString("yyyy-MM-dd HH:mm")
+                </span>
+            </td>
+            <td>@order.Buyer?.UserName</td>
+            <td>
+                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                    background:@(order.status == "Pending" ? "#ffc107" : order.status == "Processing" ? "#0dcaf0" : order.status == "Shipped" ? "#0d6efd" : order.status == "Delivered" ? "#198754" : order.status == "Cancelled" ? "#dc3545" : "#adb5bd");
+                    color:@(order.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
+                    @order.status
+                </span>
+            </td>
+            <td><strong>@order.total_amount</strong></td>
+                <td>
+                    @foreach (var item in order.OrderItems.Where(oi => oi.product != null && oi.product.seller_id == sellerId))
+                    {
+                        <div style="background:#f8f9fa;border-radius:10px;padding:10px 14px;min-width:140px;box-shadow:0 1px 4px #0001;border:1px solid #dee2e6;display:block;margin-bottom:10px;">
+                            <div style="font-weight:600;font-size:1.05em; margin-bottom:7px;">Product: <span style="color:#0d6efd;">@item.product?.name</span></div>
+                            <div style="margin-bottom:7px;font-size:0.98em;">Quantity: <span class="badge bg-secondary">@item.quantity</span></div>
+                            <div style="font-size:0.98em;">
+                                Status:
+                                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                            background:@(item.status == "Pending" ? "#ffc107" : item.status == "Processing" ? "#0dcaf0" : item.status == "Shipped" ? "#0d6efd" : item.status == "Delivered" ? "#198754" : item.status == "Cancelled" ? "#dc3545" : "#adb5bd");
+                            color:@(item.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
+                                    @item.status
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </td>
+            <td>
+                <a asp-action="OrderDetails" asp-route-id="@order.id" class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+                @if (isAdmin)
+                {
+                    <a asp-action="DeleteOrder" asp-route-id="@order.id" class="btn btn-danger btn-sm ml-1">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table> 

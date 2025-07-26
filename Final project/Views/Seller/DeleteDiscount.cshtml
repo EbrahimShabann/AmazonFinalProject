@@ -1,0 +1,27 @@
+@model Final_project.Models.discount
+@{
+    ViewData["Title"] = "Delete Discount";
+}
+<h2>Delete Discount</h2>
+<div class="alert alert-warning">
+    <strong>Are you sure you want to delete this discount?</strong>
+</div>
+<div>
+    <h4>@Model.description</h4>
+    <p>Type: @Model.discount_type</p>
+    <p>Value: @Model.value</p>
+    <p>Start: @Model.start_date?.ToString("yyyy-MM-dd")</p>
+    <p>End: @Model.end_date?.ToString("yyyy-MM-dd")</p>
+    <p>Active: @(Model.is_active == true ? "Yes" : "No")</p>
+    <ul>
+    @foreach (var pd in Model.ProductDiscounts)
+    {
+        <li>@pd.product?.name</li>
+    }
+    </ul>
+</div>
+<form asp-action="DeleteDiscount" method="post">
+    <input type="hidden" asp-for="id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Discounts" class="btn btn-secondary">Cancel</a>
+</form> 

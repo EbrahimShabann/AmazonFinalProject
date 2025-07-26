@@ -11,7 +11,7 @@ namespace Final_project.Models;
 public partial class category
 {
     [Key]
-    [StringLength(255)]
+    [StringLength(450)]
     public string id { get; set; }
 
     [StringLength(255)]
@@ -22,7 +22,7 @@ public partial class category
     [StringLength(255)]
     public string image_url { get; set; }
 
-    [StringLength(255)]
+    [StringLength(450)]
     public string parent_category_id { get; set; }
     [ForeignKey("parent_category_id")]
     public virtual category ParentCategory { get; set; }
@@ -46,5 +46,4 @@ public partial class category
     public string deleted_by { get; set; }
     [ForeignKey("deleted_by")]
     public virtual ApplicationUser DeletedByUser { get; set; }
-    public virtual List<product> Products { get; set; }
 }

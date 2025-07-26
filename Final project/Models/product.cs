@@ -25,16 +25,11 @@ public partial class product
     [StringLength(255)]
     public string Brand { get; set; }
 
-    public string SelectedColorsRaw { get; set; }
-    public string SelectedSizesRaw { get; set; }
+    [StringLength(255)]
+    public string Colors { get; set; }
 
-    [NotMapped]
-    public List<string> SelectedColors => SelectedColorsRaw?.Split(',').ToList() ?? new List<string>();
-
-    [NotMapped]
-    public List<string> SelectedSizes => SelectedSizesRaw?.Split(',').ToList() ?? new List<string>();
-
-
+    [StringLength(255)]
+    public string Sizes { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? discount_price { get; set; }
@@ -43,11 +38,11 @@ public partial class product
 
     [StringLength(255)]
     public string sku { get; set; }
-
     [StringLength(450)]
     public string category_id { get; set; }
+
     [ForeignKey("category_id")]
-    public virtual category Category { get; set; }
+    public virtual category category { get; set; }
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
@@ -66,6 +61,18 @@ public partial class product
     public DateTime? approved_at { get; set; }
 
     public bool is_deleted { get; set; } = false;
-    
-}
 
+    public virtual ICollection<product_image> product_images { get; set; } = new List<product_image>();
+
+
+    public string SelectedColorsRaw { get; set; }
+    public string SelectedSizesRaw { get; set; }
+
+    [NotMapped]
+    public List<string> SelectedColors => SelectedColorsRaw?.Split(',').ToList() ?? new List<string>();
+
+    [NotMapped]
+    public List<string> SelectedSizes => SelectedSizesRaw?.Split(',').ToList() ?? new List<string>();
+
+
+}

@@ -6,6 +6,5 @@ namespace Final_project.Repository.CartRepository
     {
         List<cart_item> GetCartItemsByCartId(string cart_id);
         void Remove(cart_item entity);
-        void save();
     }
 }

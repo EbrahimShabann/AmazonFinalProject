@@ -25,6 +25,40 @@ namespace Final_project.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Final_project.Models.AccountLog", b =>
+                {
+                    b.Property<int>("LogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"));
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("AdditionalInfo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("TimeStamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("LogID")
+                        .HasName("PK__AccountLog__5E5499A8A33FBCA4");
+
+                    b.ToTable("AccountLog");
+                });
+
             modelBuilder.Entity("Final_project.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -255,6 +289,9 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("chat_sessionId")
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<bool?>("is_deleted")
                         .HasColumnType("bit");
 
@@ -275,6 +312,8 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("chat_sessionId");
 
                     b.HasIndex("sender_id");
 
@@ -339,10 +378,10 @@ namespace Final_project.Migrations
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("is_active")
+                    b.Property<bool>("is_active")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("is_deleted")
+                    b.Property<bool>("is_deleted")
                         .HasColumnType("bit");
 
                     b.Property<int?>("max_uses")
@@ -398,9 +437,6 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("seller_id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("shipping_address")
                         .HasColumnType("nvarchar(max)");
 
@@ -418,8 +454,6 @@ namespace Final_project.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("buyer_id");
-
-                    b.HasIndex("seller_id");
 
                     b.ToTable("orders");
                 });
@@ -466,12 +500,6 @@ namespace Final_project.Migrations
                     b.Property<string>("order_id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("productColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("productSize")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("product_id")
                         .HasColumnType("nvarchar(255)");
 
@@ -480,6 +508,9 @@ namespace Final_project.Migrations
 
                     b.Property<string>("seller_id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<decimal?>("unit_price")
                         .HasColumnType("decimal(18, 2)");
@@ -501,18 +532,22 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reason")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RevertDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("orderId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("order_itemId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -534,11 +569,19 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Colors")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("SelectedColorsRaw")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SelectedSizesRaw")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sizes")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("approved_at")
                         .HasColumnType("datetime2");
@@ -627,6 +670,9 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("image_type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("image_url")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -679,9 +725,46 @@ namespace Final_project.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("product_id");
+
                     b.HasIndex("user_id");
 
                     b.ToTable("product_reviews");
+                });
+
+            modelBuilder.Entity("Final_project.Models.review_reply", b =>
+                {
+                    b.Property<string>("id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("is_deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("is_seller_reply")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("replier_id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("reply_text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("review_id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("replier_id");
+
+                    b.HasIndex("review_id");
+
+                    b.ToTable("review_reply");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -1047,6 +1130,10 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.chat_message", b =>
                 {
+                    b.HasOne("Final_project.Models.chat_session", null)
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("chat_sessionId");
+
                     b.HasOne("Final_project.Models.ApplicationUser", "Sender")
                         .WithMany("ChatMessages")
                         .HasForeignKey("sender_id");
@@ -1086,13 +1173,7 @@ namespace Final_project.Migrations
                         .WithMany("OrdersAsBuyer")
                         .HasForeignKey("buyer_id");
 
-                    b.HasOne("Final_project.Models.ApplicationUser", "Seller")
-                        .WithMany("OrdersAsSeller")
-                        .HasForeignKey("seller_id");
-
                     b.Navigation("Buyer");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Final_project.Models.order_history", b =>
@@ -1107,7 +1188,7 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.order_item", b =>
                 {
                     b.HasOne("Final_project.Models.order", "order")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("order_id");
 
                     b.HasOne("Final_project.Models.product", "product")
@@ -1115,8 +1196,9 @@ namespace Final_project.Migrations
                         .HasForeignKey("product_id");
 
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
-                        .WithMany("OrderItemsAsSeller")
-                        .HasForeignKey("seller_id");
+                        .WithMany()
+                        .HasForeignKey("seller_id")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Seller");
 
@@ -1129,11 +1211,15 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.order", "Order")
                         .WithMany()
-                        .HasForeignKey("orderId");
+                        .HasForeignKey("orderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Final_project.Models.order_item", "Order_Item")
                         .WithMany()
-                        .HasForeignKey("order_itemId");
+                        .HasForeignKey("order_itemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
 
@@ -1142,23 +1228,24 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
-                    b.HasOne("Final_project.Models.category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("category_id");
+                    b.HasOne("Final_project.Models.category", "category")
+                        .WithMany()
+                        .HasForeignKey("category_id")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany("Products")
                         .HasForeignKey("seller_id");
 
-                    b.Navigation("Category");
-
                     b.Navigation("Seller");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Final_project.Models.product_discount", b =>
                 {
                     b.HasOne("Final_project.Models.discount", "Discount")
-                        .WithMany()
+                        .WithMany("ProductDiscounts")
                         .HasForeignKey("discount_id");
 
                     b.HasOne("Final_project.Models.product", "product")
@@ -1173,7 +1260,7 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.product_image", b =>
                 {
                     b.HasOne("Final_project.Models.product", "product")
-                        .WithMany()
+                        .WithMany("product_images")
                         .HasForeignKey("product_id");
 
                     b.Navigation("product");
@@ -1181,11 +1268,32 @@ namespace Final_project.Migrations
 
             modelBuilder.Entity("Final_project.Models.product_review", b =>
                 {
+                    b.HasOne("Final_project.Models.product", "product")
+                        .WithMany()
+                        .HasForeignKey("product_id");
+
                     b.HasOne("Final_project.Models.ApplicationUser", "User")
                         .WithMany("ProductReviews")
                         .HasForeignKey("user_id");
 
                     b.Navigation("User");
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("Final_project.Models.review_reply", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "Replier")
+                        .WithMany()
+                        .HasForeignKey("replier_id");
+
+                    b.HasOne("Final_project.Models.product_review", "review")
+                        .WithMany("replies")
+                        .HasForeignKey("review_id");
+
+                    b.Navigation("Replier");
+
+                    b.Navigation("review");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -1315,11 +1423,7 @@ namespace Final_project.Migrations
 
                     b.Navigation("Discounts");
 
-                    b.Navigation("OrderItemsAsSeller");
-
                     b.Navigation("OrdersAsBuyer");
-
-                    b.Navigation("OrdersAsSeller");
 
                     b.Navigation("ProductReviews");
 
@@ -1332,9 +1436,29 @@ namespace Final_project.Migrations
                     b.Navigation("TicketMessages");
                 });
 
-            modelBuilder.Entity("Final_project.Models.category", b =>
+            modelBuilder.Entity("Final_project.Models.chat_session", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("ChatMessages");
+                });
+
+            modelBuilder.Entity("Final_project.Models.discount", b =>
+                {
+                    b.Navigation("ProductDiscounts");
+                });
+
+            modelBuilder.Entity("Final_project.Models.order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product", b =>
+                {
+                    b.Navigation("product_images");
+                });
+
+            modelBuilder.Entity("Final_project.Models.product_review", b =>
+                {
+                    b.Navigation("replies");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>

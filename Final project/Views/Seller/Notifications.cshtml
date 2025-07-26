@@ -1,0 +1,43 @@
+@model IEnumerable<Final_project.Models.notification>
+@{
+    ViewData["Title"] = "Notifications";
+}
+<h2>Notifications</h2>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No notifications found.</div>
+}
+else
+{
+    @foreach (var notification in Model)
+    {
+        <div class="card mb-3 @(notification.IsRead ? "border-secondary" : "border-primary")">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title @(notification.IsRead ? "text-muted" : "font-weight-bold")">
+                            @notification.Title
+                        </h6>
+                        <p class="card-text">@notification.Message</p>
+                        <small class="text-muted">@notification.CreatedAt?.ToString("yyyy-MM-dd HH:mm")</small>
+                    </div>
+                    <div class="ml-3">
+                        @if (!notification.IsRead)
+                        {
+                            <form asp-action="MarkNotificationAsRead" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="notificationId" value="@notification.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">Mark as Read</button>
+                            </form>
+                        }
+                        <form asp-action="DeleteNotification" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="notificationId" value="@notification.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this notification?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+} 

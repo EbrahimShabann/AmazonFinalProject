@@ -2,15 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Final_project</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Repository\DiscountsRepositoryFile\" />
+    <Folder Include="Repository\OrderRepositoryFile\" />
+    <Folder Include="Repository\ProductDiscountsRepositoryFile\" />
+    <Folder Include="Repository\OrderItemsRepositoryFile\" />
+    <Folder Include="Repository\ProductImageRepositoryFile\" />
+    <Folder Include="Repository\UsersRepositoryFile\" />
+    <Folder Include="ViewModel\Zeyad\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
@@ -19,11 +30,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Stripe.net" Version="48.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Customer\Data\" />
-    <Folder Include="Areas\Customer\Models\" />
   </ItemGroup>
 
 </Project>

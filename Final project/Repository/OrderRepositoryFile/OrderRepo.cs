@@ -32,29 +32,29 @@ namespace Final_project.Repository.OrderRepositoryFile
 
         public List<order> getAll()
         {
-            return db.orders.Where(o => o.is_deleted!= true).ToList();
+            return db.orders.Where(o => o.is_deleted != true).ToList();
         }
 
         public order getById(string id)
         {
-           return db.orders.SingleOrDefault(o => o.id == id && !o.is_deleted);
+            return db.orders.SingleOrDefault(o => o.id == id && !o.is_deleted);
         }
 
         public order_history GetOrderHistoryByOrderId(string orderId)
         {
-            return db.order_histories.SingleOrDefault(oh=>oh.order_id == orderId );
+            return db.order_histories.SingleOrDefault(oh => oh.order_id == orderId);
         }
 
         public order_item GetOrderItemById(string id)
         {
-            return db.order_items.SingleOrDefault(oi => oi.id == id );
+            return db.order_items.SingleOrDefault(oi => oi.id == id);
         }
 
         public List<order_item> GetOrderItemsOfOrder(string orderId)
         {
-           return db.order_items
-                .Where(oi => oi.order_id == orderId )
-                .ToList();
+            return db.order_items
+                 .Where(oi => oi.order_id == orderId)
+                 .ToList();
         }
 
         public void Update(order entity)

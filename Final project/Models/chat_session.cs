@@ -28,4 +28,6 @@ public partial class chat_session
     public DateTime? ClosedAt { get; set; }
     public bool IsDeleted { get; set; } = false;
 
+    // Navigation property for chat messages
+    public virtual ICollection<chat_message> ChatMessages { get; set; }
 }

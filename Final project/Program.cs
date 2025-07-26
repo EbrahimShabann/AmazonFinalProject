@@ -1,30 +1,30 @@
+using System.Threading.Tasks;
+using Final_project.Filter;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
-using Final_project.Repository.CartRepository;
-using Final_project.Repository.WishlistRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Final_project
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             //==================SignalR Services=========================
             builder.Services.AddSignalR();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
-            builder.Services.AddControllersWithViews();
-            //builder.Services.AddControllersWithViews(options =>
-            //{
-            //    options.Filters.Add(new HandelAnyErrorAttribute());
-            //});
+            //builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new HandelAnyErrorAttribute());
+            });
             //==================SessionnConfiguration====================
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -33,10 +33,6 @@ namespace Final_project
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
-            //==================Stripe Payment Configuration====================
-
-            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
             //FOR GOOGLE ALSO 
             builder.Services.ConfigureApplicationCookie(options =>
@@ -53,12 +49,6 @@ namespace Final_project
                 options => options
                 .UseLazyLoadingProxies()
                 .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
-            builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
-
-            builder.Services.AddScoped<IWishlistItemRepository, WishlistItemRepository>();
-            builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 
             //====================UserManagerInjection===================
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -94,25 +84,25 @@ namespace Final_project
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+     
 
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseSession();
+
             app.UseAuthorization();
             app.MapStaticAssets();
             //app.MapHub<>("");
-
-
-            app.MapControllerRoute(
-                name: "areas",
-                pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
-                  .WithStaticAssets();
-            //======================EndAreas============================
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Landing}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+
+            using (var scope = app.Services.CreateScope())
+            {
+                await DbSeeder.SeedDefaultData(scope.ServiceProvider);
+            }
 
             app.Run();
         }

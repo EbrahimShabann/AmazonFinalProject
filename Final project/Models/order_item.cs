@@ -11,19 +11,20 @@ namespace Final_project.Models;
 public partial class order_item
 {
     [Key]
-    public string id { get; set; } = Guid.NewGuid().ToString();
+    public string id { get; set; }
     public string order_id { get; set; }
     [ForeignKey("order_id")]
     public virtual order order { get; set; }
+
     public string seller_id { get; set; }
 
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
+
     public string product_id { get; set; }
     [ForeignKey("product_id")]
     public virtual product product { get; set; }
-    public string productColor { get; set; }
-    public string productSize { get; set; }
+
     public int? quantity { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
@@ -31,5 +32,6 @@ public partial class order_item
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? discount_applied { get; set; }
-   
+    [Column(TypeName = "nvarchar(32)")]
+    public string status { get; set; }
 }

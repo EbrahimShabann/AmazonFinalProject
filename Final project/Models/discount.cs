@@ -33,13 +33,12 @@ public partial class discount
 
     public int? current_uses { get; set; }
 
-    public bool? is_active { get; set; }
-
+    public bool is_active { get; set; }
+    public bool is_deleted { get; set; } = false;
     public string seller_id { get; set; }
     [ForeignKey("seller_id")]
     public virtual ApplicationUser Seller { get; set; }
 
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
-
-    public bool? is_deleted { get; set; } = false;
+    public virtual ICollection<product_discount> ProductDiscounts { get; set; }
 }

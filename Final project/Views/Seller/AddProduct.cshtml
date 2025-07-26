@@ -1,0 +1,254 @@
+@model Final_project.Models.product
+
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<h2>Add Product</h2>
+<form asp-action="AddProduct" method="post" enctype="multipart/form-data" id="addProductForm">
+    <div class="form-group">
+        <label asp-for="name"></label>
+        <input asp-for="name" class="form-control" required />
+        <span asp-validation-for="name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="description"></label>
+        <textarea asp-for="description" class="form-control" required></textarea>
+        <span asp-validation-for="description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="price"></label>
+        <input asp-for="price" class="form-control" type="number" step="0.01" required />
+        <span asp-validation-for="price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="stock_quantity"></label>
+        <input asp-for="stock_quantity" class="form-control" type="number" required />
+        <span asp-validation-for="stock_quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Brand"></label>
+        <input asp-for="Brand" class="form-control" required />
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="sku"></label>
+        <input asp-for="sku" class="form-control" required />
+        <span asp-validation-for="sku" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="category_id">Category</label>
+        <select asp-for="category_id" class="form-control" required>
+            <option value="">Select Category</option>
+            @if (ViewBag.Categories != null)
+            {
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.id">@category.name</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="category_id" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label>Colors</label>
+        <div id="colorSwatchContainer" class="mb-2">
+            <span class="color-swatch" data-color="Red" style="background:red;"></span>
+            <span class="color-swatch" data-color="Blue" style="background:blue;"></span>
+            <span class="color-swatch" data-color="Green" style="background:green;"></span>
+            <span class="color-swatch" data-color="Black" style="background:black;"></span>
+            <span class="color-swatch" data-color="White" style="background:white; border:1px solid #ccc;"></span>
+            <span class="color-swatch" data-color="Yellow" style="background:yellow;"></span>
+            <span class="color-swatch" data-color="Orange" style="background:orange;"></span>
+            <span class="color-swatch" data-color="Purple" style="background:purple;"></span>
+            <span class="color-swatch" data-color="Gray" style="background:gray;"></span>
+            <span class="color-swatch" data-color="Brown" style="background:brown;"></span>
+            <span class="color-swatch" data-color="Pink" style="background:pink;"></span>
+            <span class="color-swatch" data-color="Cyan" style="background:cyan;"></span>
+            <span class="color-swatch" data-color="Gold" style="background:gold;"></span>
+            <span class="color-swatch" data-color="Silver" style="background:silver;"></span>
+        </div>
+        <input type="hidden" name="Colors" id="ColorsInput" required />
+        <small class="form-text text-muted">Select one or more colors.</small>
+        <div id="selectedColorsText" class="mt-1 text-secondary small"></div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Sizes">Sizes</label>
+        <select asp-for="Sizes" class="form-control" required>
+            <option value="">Select Size</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            <option value="XXXL">XXXL</option>
+            <option value="36">36</option>
+            <option value="37">37</option>
+            <option value="38">38</option>
+            <option value="39">39</option>
+            <option value="40">40</option>
+            <option value="41">41</option>
+            <option value="42">42</option>
+            <option value="43">43</option>
+            <option value="44">44</option>
+            <option value="45">45</option>
+            <option value="46">46</option>
+            <option value="47">47</option>
+            <option value="48">48</option>
+            <option value="One Size">One Size</option>
+        </select>
+        <span asp-validation-for="Sizes" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label>Product Images</label>
+        <div id="dropArea" class="border border-primary rounded p-4 text-center mb-2" style="cursor:pointer; background:#f8f9fa;">
+            <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br />
+            <span>Drag & Drop images here or <b>Click to Select</b></span>
+            <input type="file" id="imageFilesInput" name="imageFiles" class="d-none" multiple accept="image/*" required />
+        </div>
+        <small class="form-text text-muted">You can select multiple images. Choose one as Main, others as Sub. You can remove any before saving.</small>
+        <div id="imagePreviewContainer" class="row mt-2"></div>
+        <div id="imageValidationMsg" class="text-danger"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Product</button>
+    <a asp-action="AllProducts" class="btn btn-secondary">Back</a>
+</form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <style>
+    .color-swatch {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #eee;
+        margin: 0 4px 4px 0;
+        cursor: pointer;
+        transition: border 0.2s, box-shadow 0.2s;
+        vertical-align: middle;
+    }
+    .color-swatch.selected {
+        border: 3px solid #007bff;
+        box-shadow: 0 0 0 2px #007bff33;
+    }
+    </style>
+    <script>
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('imageFilesInput');
+    dropArea.addEventListener('click', () => fileInput.click());
+    dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('bg-light'); });
+    dropArea.addEventListener('dragleave', e => { e.preventDefault(); dropArea.classList.remove('bg-light'); });
+    dropArea.addEventListener('drop', e => {
+        e.preventDefault();
+        dropArea.classList.remove('bg-light');
+        fileInput.files = e.dataTransfer.files;
+        previewImages({ target: fileInput });
+    });
+    fileInput.addEventListener('change', previewImages);
+
+    function previewImages(event) {
+        const files = event.target.files;
+        const container = document.getElementById('imagePreviewContainer');
+        container.innerHTML = '';
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 mb-2';
+                col.innerHTML = `
+                    <div class='card position-relative'>
+                        <img src='${e.target.result}' class='card-img-top' style='height:120px;object-fit:cover;' />
+                        <div class='card-body p-2'>
+                            <div class='form-check form-check-inline'>
+                                <input class='form-check-input main-radio' type='radio' name='mainImageRadio' value='${i}' ${i === 0 ? 'checked' : ''} onchange='updateImageTypes()'>
+                                <label class='form-check-label'>Main</label>
+                            </div>
+                            <div class='form-check form-check-inline'>
+                                <input class='form-check-input sub-radio' type='radio' name='subImageRadio${i}' value='${i}' ${i !== 0 ? 'checked' : ''} onchange='updateImageTypes()'>
+                                <label class='form-check-label'>Sub</label>
+                            </div>
+                            <input type='hidden' name='imageTypes' value='${i === 0 ? 'main' : 'sub'}' />
+                        </div>
+                        <button type='button' class='btn btn-sm btn-danger position-absolute top-0 end-0 m-1' onclick='removeImage(${i})'><i class='fas fa-times'></i></button>
+                    </div>
+                `;
+                container.appendChild(col);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    function updateImageTypes() {
+        const mainRadios = document.querySelectorAll('.main-radio');
+        const containers = document.querySelectorAll('#imagePreviewContainer .card');
+        mainRadios.forEach((radio, idx) => {
+            const hidden = containers[idx].querySelector("input[type='hidden'][name='imageTypes']");
+            if (radio.checked) {
+                hidden.value = 'main';
+            } else {
+                hidden.value = 'sub';
+            }
+        });
+    }
+    function removeImage(index) {
+        const fileInput = document.getElementById('imageFilesInput');
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+        for (let i = 0; i < files.length; i++) {
+            if (i !== index) dt.items.add(files[i]);
+        }
+        fileInput.files = dt.files;
+        previewImages({ target: fileInput });
+    }
+
+
+    const swatches = document.querySelectorAll('.color-swatch');
+    const colorsInput = document.getElementById('ColorsInput');
+    const selectedColorsText = document.getElementById('selectedColorsText');
+    let selectedColors = [];
+    swatches.forEach(swatch => {
+        swatch.addEventListener('click', function() {
+            const color = this.getAttribute('data-color');
+            if (selectedColors.includes(color)) {
+                selectedColors = selectedColors.filter(c => c !== color);
+                this.classList.remove('selected');
+            } else {
+                selectedColors.push(color);
+                this.classList.add('selected');
+            }
+            colorsInput.value = selectedColors.join(',');
+            selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+        });
+    });
+
+
+    document.getElementById('addProductForm').addEventListener('submit', function(e) {
+        const fileInput = document.getElementById('imageFilesInput');
+        const files = fileInput.files;
+        let mainCount = 0, subCount = 0;
+        const imageTypes = document.getElementsByName('imageTypes');
+        for (let i = 0; i < imageTypes.length; i++) {
+            if (imageTypes[i].value === 'main') mainCount++;
+            if (imageTypes[i].value === 'sub') subCount++;
+        }
+        let errorMsg = '';
+        if (files.length === 0) {
+            errorMsg = 'You must add at least one main image and one sub image.';
+        } else if (mainCount !== 1) {
+            errorMsg = 'You must select one main image.';
+        } else if (subCount < 1) {
+            errorMsg = 'You must add at least one sub image.';
+        }
+        if (errorMsg) {
+            document.getElementById('imageValidationMsg').textContent = errorMsg;
+            e.preventDefault();
+        } else {
+            document.getElementById('imageValidationMsg').textContent = '';
+        }
+    });
+    </script>
+} 

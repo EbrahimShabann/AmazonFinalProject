@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kGtah/cXwaE=",
+  "dgSpecHash": "szFxFhuO46w=",
   "success": true,
   "projectFilePath": "I:\\AmazonFinalProject\\Final project\\Final project.csproj",
   "expectedPackageFiles": [
@@ -87,6 +87,7 @@
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.7\\microsoft.entityframeworkcore.abstractions.9.0.7.nupkg.sha512",
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.7\\microsoft.entityframeworkcore.analyzers.9.0.7.nupkg.sha512",
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.7\\microsoft.entityframeworkcore.design.9.0.7.nupkg.sha512",
+    "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\9.0.7\\microsoft.entityframeworkcore.inmemory.9.0.7.nupkg.sha512",
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.proxies\\9.0.7\\microsoft.entityframeworkcore.proxies.9.0.7.nupkg.sha512",
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.7\\microsoft.entityframeworkcore.relational.9.0.7.nupkg.sha512",
     "C:\\Users\\BG\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\9.0.7\\microsoft.entityframeworkcore.sqlserver.9.0.7.nupkg.sha512",

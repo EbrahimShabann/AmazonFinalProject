@@ -2,11 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Final_project.Models;
 
@@ -54,29 +52,18 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<ticket_history> ticket_histories { get; set; }
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
+    public virtual DbSet<AccountLog> AccountLog { get; set; }
+
 
     public virtual DbSet<wishlist> wishlists { get; set; }
     public virtual DbSet<wishlist_item> wishlist_items { get; set; }
     public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-
-        //var stringListConverter = new ValueConverter<List<string>, string>(
-        //v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-        //v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null)
-    //);
-
-        //modelBuilder.Entity<product>()
-        //    .Property(p => p.SelectedSizes)
-        //    .HasConversion(stringListConverter);
-
-        //modelBuilder.Entity<product>()
-        //    .Property(p => p.SelectedColors)
-        //    .HasConversion(stringListConverter);
-
 
         modelBuilder.Entity<ApplicationUser>(entity => {
             entity.ToTable("Users");
@@ -134,14 +121,6 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.OrdersAsBuyer)
             .HasForeignKey(o => o.buyer_id);
 
-        modelBuilder.Entity<order>()
-            .HasOne(o => o.Seller)
-            .WithMany(u => u.OrdersAsSeller)
-            .HasForeignKey(o => o.seller_id);
-        modelBuilder.Entity<order_item>()
-            .HasOne(o => o.Seller)
-            .WithMany(u => u.OrderItemsAsSeller)
-            .HasForeignKey(o => o.seller_id);
 
         modelBuilder.Entity<product>()
             .HasOne(p => p.Seller)
@@ -189,10 +168,30 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(ci => ci.product_id);
 
+        modelBuilder.Entity<order_item>()
+     .HasOne(oi => oi.order)
+     .WithMany(o => o.OrderItems)
+     .HasForeignKey(oi => oi.order_id);
+
+        modelBuilder.Entity<order_item>()
+            .HasOne(oi => oi.product)
+            .WithMany()
+            .HasForeignKey(oi => oi.product_id);
+
+        modelBuilder.Entity<order_item>()
+            .HasOne(oi => oi.Seller)
+            .WithMany()
+            .HasForeignKey(oi => oi.seller_id)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Configure product-image relationship
+        modelBuilder.Entity<product_image>()
+            .HasOne(pi => pi.product)
+            .WithMany(p => p.product_images)
+            .HasForeignKey(pi => pi.product_id);
+
         // Category configuration
         modelBuilder.Entity<category>(entity => {
-            entity.Property(e => e.id).HasMaxLength(450);
-            entity.Property(e => e.parent_category_id).HasMaxLength(450);
             entity.Property(e => e.created_by).HasMaxLength(450);
             entity.Property(e => e.last_modified_by).HasMaxLength(450);
             entity.Property(e => e.deleted_by).HasMaxLength(450);
@@ -221,7 +220,20 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(c => c.deleted_by)
             .OnDelete(DeleteBehavior.NoAction);
 
+        modelBuilder.Entity<product>()
+            .HasOne(p => p.category)
+            .WithMany()
+            .HasForeignKey(p => p.category_id)
+            .OnDelete(DeleteBehavior.NoAction);
+
         OnModelCreatingPartial(modelBuilder);
+
+        modelBuilder.Entity<AccountLog>(entity =>
+        {
+            entity.HasKey(e => e.LogID).HasName("PK__AccountLog__5E5499A8A33FBCA4");
+
+            entity.Property(e => e.TimeStamp).HasDefaultValueSql("(getdate())");
+        });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

@@ -28,4 +28,5 @@ public partial class chat_message
 
     public bool? is_read { get; set; }
     public bool? is_deleted { get; set; } = false;
+
 }

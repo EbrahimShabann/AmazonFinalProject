@@ -1,0 +1,813 @@
+@{
+    ViewData["Title"] = "Seller Dashboard";
+}
+<h2>Seller Dashboard</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div></div>
+    <div>
+        <a href="@Url.Action("CreateTestOrders")" class="btn btn-success mr-2">
+            <i class="fas fa-database"></i> Create Test Data
+        </a>
+        <form asp-action="SeedSellerTestData" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-warning mr-2">
+                <i class="fas fa-seedling"></i> Seed Seller Test Data
+            </button>
+        </form>
+    <button id="refreshStats" class="btn btn-outline-primary">
+        <i class="fas fa-sync-alt"></i> Refresh Statistics
+    </button>
+</div>
+</div>
+
+
+<!-- الإحصائيات الأساسية -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Products</h6>
+                <p class="card-text" style="font-size:1.5em" id="productsCount">@ViewBag.ProductsCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Total Orders</h6>
+                <p class="card-text" style="font-size:1.5em" id="ordersCount">@ViewBag.OrdersCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Total Sales</h6>
+                <p class="card-text" style="font-size:1.5em" id="totalSales">£ @ViewBag.TotalSales.ToString("N2")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Active Discounts</h6>
+                <p class="card-text" style="font-size:1.5em" id="activeDiscounts">@ViewBag.ActiveDiscounts</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Monthly Sales</h6>
+                <p class="card-text" style="font-size:1.5em" id="monthlySales">£ @ViewBag.MonthlySales.ToString("N2")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-dark mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Monthly Orders</h6>
+                <p class="card-text" style="font-size:1.5em" id="monthlyOrders">@ViewBag.MonthlyOrders</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- حالة الطلبات -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Orders Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h4 class="text-warning" id="pendingOrders">@ViewBag.PendingOrders</h4>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h4 class="text-info" id="processingOrders">@ViewBag.ProcessingOrders</h4>
+                            <p>Processing</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h4 class="text-primary" id="shippedOrders">@ViewBag.ShippedOrders</h4>
+                            <p>Shipped</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h4 class="text-success" id="deliveredOrders">@ViewBag.DeliveredOrders</h4>
+                            <p>Delivered</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- الرسوم البيانية -->
+    <div class="col-md-8">
+        <!-- رسم بياني ديناميكي للمبيعات -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Dynamic Sales Chart</h5>
+            </div>
+            <div class="card-body">
+                <form id="salesChartFilter" class="mb-3">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label for="salesCategory" class="form-label text-primary fw-semibold mb-2">
+                                <i class="fas fa-tags me-1"></i>Category
+                            </label>
+                            <select id="salesCategory" name="categoryId" class="form-control border-primary">
+                                <option value="">All Categories</option>
+                                @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
+                                {
+                                    <option value="@cat.id">@cat.name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="salesProduct" class="form-label text-primary fw-semibold mb-2">
+                                <i class="fas fa-box me-1"></i>Product
+                            </label>
+                            <select id="salesProduct" name="productId" class="form-control border-primary">
+                                <option value="">All Products</option>
+                                @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
+                                {
+                                    <option value="@p.id">@p.name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter me-1"></i>Apply Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <canvas id="dynamicSalesChart" width="600" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- رسم بياني للمبيعات -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Sales (Last 7 Days)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="salesChart" width="600" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- رسم بياني لحالة الطلبات -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Orders Status Distribution</h5>
+            </div>
+            <div class="card-body d-flex justify-content-center" style="padding: 10px 0;">
+                <div style="width: 720px; height: 360px;">
+                    <canvas id="ordersStatusChart" width="720" height="360"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- رسم بياني للإيرادات الشهرية -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Monthly Revenue</h5>
+                <select id="yearSelector" class="form-control-sm float-right">
+                    @{
+                        int currentYear = DateTime.Now.Year;
+                        for (int year = currentYear; year >= currentYear - 5; year--)
+                        {
+                            if (year == currentYear)
+                            {
+                                <option value="@year" selected="selected">@year</option>
+                            }
+                            else
+                            {
+                                <option value="@year">@year</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyRevenueChart" width="600" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- أفضل المنتجات مبيعاً -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Top Selling Products</h5>
+            </div>
+            <div class="card-body">
+<form id="topProductsFilter" class="mb-3">
+    <div class="row align-items-end">
+        <div class="col-md-2">
+            <label class="form-label text-primary fw-semibold mb-2">
+                <i class="fas fa-calendar-start me-1"></i>Start Date
+            </label>
+            <input type="date" name="startDate" class="form-control border-primary" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label text-primary fw-semibold mb-2">
+                <i class="fas fa-calendar-end me-1"></i>End Date
+            </label>
+            <input type="date" name="endDate" class="form-control border-primary" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-primary fw-semibold mb-2">
+                <i class="fas fa-tags me-1"></i>Category
+            </label>
+            <select name="categoryId" class="form-control border-primary">
+                <option value="">All Categories</option>
+                @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
+                {
+                    <option value="@cat.id">@cat.name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-primary fw-semibold mb-2">
+                <i class="fas fa-box me-1"></i>Product
+            </label>
+            <select name="productId" class="form-control border-primary">
+                <option value="">All Products</option>
+                @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
+                {
+                    <option value="@p.id">@p.name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-search me-1"></i>Show
+            </button>
+        </div>
+    </div>
+</form>
+<canvas id="topProductsChart" width="600" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side   -->
+    <div class="col-md-4">
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Latest Orders</h5>
+            </div>
+            <div class="card-body">
+                <div id="recentOrdersList">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Products   -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Low Stock Products</h5>
+            </div>
+            <div class="card-body">
+                <div id="lowStockProductsList">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats  -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-primary fw-bold">Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h6>Avg Order Value</h6>
+                        <p id="avgOrderValue">-</p>
+                    </div>
+                    <div class="col-6">
+                        <h6>Conversion Rate</h6>
+                        <p id="conversionRate">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function refreshStatistics() {
+            fetch('@Url.Action("GetDashboardStatistics")')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('productsCount').textContent = data.productsCount;
+                    document.getElementById('ordersCount').textContent = data.ordersCount;
+                    document.getElementById('totalSales').textContent = '£ ' + (data.totalSales !== undefined && data.totalSales !== null ? data.totalSales.toFixed(2) : '0.00');
+                    document.getElementById('activeDiscounts').textContent = data.activeDiscounts;
+                    document.getElementById('pendingOrders').textContent = data.pendingOrders;
+                    document.getElementById('processingOrders').textContent = data.processingOrders;
+                    document.getElementById('shippedOrders').textContent = data.shippedOrders;
+                    document.getElementById('deliveredOrders').textContent = data.deliveredOrders;
+                    document.getElementById('monthlySales').textContent = '£ ' + (data.monthlySales !== undefined && data.monthlySales !== null ? data.monthlySales.toFixed(2) : '0.00');
+                    document.getElementById('monthlyOrders').textContent = data.monthlyOrders;
+                    
+
+                    const avgOrderValue = data.ordersCount > 0 && data.totalSales !== undefined && data.totalSales !== null ? (data.totalSales / data.ordersCount).toFixed(2) : '0.00';
+                    document.getElementById('avgOrderValue').textContent = '£ ' + avgOrderValue;
+                    
+                    const conversionRate = data.productsCount > 0 ? ((data.ordersCount / data.productsCount) * 100).toFixed(1) : '0.0';
+                    document.getElementById('conversionRate').textContent = conversionRate + '%';
+                });
+        }
+
+
+        function loadSalesChart() {
+        fetch('@Url.Action("GetSalesChartData")')
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    console.error('API did not return array:', data);
+                    return;
+                }
+                const labels = data.map(x => x.date);
+                const totals = data.map(x => x.total);
+                    const ctx = document.getElementById('salesChart');
+                    if (window.salesChart && typeof window.salesChart.destroy === 'function') window.salesChart.destroy();
+                    window.salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Sales',
+                            data: totals,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+
+
+        function loadOrdersStatusChart() {
+            fetch('@Url.Action("GetOrdersStatusChartData")')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Orders Status Data:', data);
+                    if (!Array.isArray(data) || data.length === 0 || data.every(x => !x.status || x.status === 'Unknown')) {
+                        const ctx = document.getElementById('ordersStatusChart').getContext('2d');
+                        ctx.clearRect(0, 0, 600, 75);
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#888';
+                        ctx.fillText('No Orders Yet', 300, 40);
+                        return;
+                    }
+                    const filtered = data.filter(x => x.status && x.status !== 'Unknown');
+                    const labels = filtered.map(x => x.status);
+                    const counts = filtered.map(x => x.count);
+                    console.log('Labels:', labels);
+                    console.log('Counts:', counts);
+                    const colors = ['#ffc107', '#17a2b8', '#007bff', '#28a745', '#dc3545'];
+                    const ctx = document.getElementById('ordersStatusChart');
+                    if (window.ordersStatusChart && typeof window.ordersStatusChart.destroy === 'function') window.ordersStatusChart.destroy();
+                    window.ordersStatusChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: counts,
+                                backgroundColor: colors.slice(0, counts.length)
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            cutout: '75%',
+                            plugins: {
+                                legend: { display: true }
+                            }
+                        }
+                    });
+                    console.log('Orders Status Chart drawn!');
+                });
+        }
+
+
+        function loadMonthlyRevenueChart(year) {
+            fetch(`@Url.Action("GetMonthlyRevenueData")?year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Monthly Revenue Data:', data);
+                    
+                    // Check if data has error property (from try-catch)
+                    if (data && data.error) {
+                        console.error('API Error:', data.error);
+                        console.error('Stack:', data.stack);
+                        return;
+                    }
+                    
+                    // Check if data has the new structure with 'data' property
+                    let chartData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        chartData = data.data;
+                        console.log('Debug info:', data.debug);
+                        console.log('Product count:', data.productCount);
+                        console.log('Order items count:', data.orderItemsCount);
+                        console.log('Monthly data count:', data.monthlyDataCount);
+                    }
+                    
+                    if (!Array.isArray(chartData)) {
+                        console.error('API did not return array:', chartData);
+
+                        const ctx = document.getElementById('monthlyRevenueChart');
+                        if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
+                        ctx.clearRect(0, 0, 600, 250);
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#888';
+                        ctx.fillText('No Revenue Data Available', 300, 125);
+                        return;
+                    }
+                    
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const labels = chartData.map(x => months[x.month - 1]);
+                    const revenues = chartData.map(x => (x.revenue !== undefined && x.revenue !== null) ? Number(x.revenue).toFixed(2) : '0.00');
+                    const orders = chartData.map(x => (x.orders !== undefined && x.orders !== null) ? x.orders : 0);
+                    console.log('Labels:', labels);
+                    console.log('Revenues:', revenues);
+                    console.log('Orders:', orders);
+                    const ctx = document.getElementById('monthlyRevenueChart');
+                    if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
+                    window.monthlyRevenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Revenue',
+                                data: revenues,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                yAxisID: 'y'
+                            }, {
+                                label: 'Orders',
+                                data: orders,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                yAxisID: 'y1'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    beginAtZero: true
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    grid: {
+                                        drawOnChartArea: false,
+                                    },
+                                }
+                            }
+                        }
+                    });
+                    console.log('Monthly Revenue Chart drawn!');
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    const ctx = document.getElementById('monthlyRevenueChart');
+                    if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
+                    ctx.clearRect(0, 0, 600, 250);
+                    ctx.font = '16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#888';
+                    ctx.fillText('Error Loading Revenue Data', 300, 125);
+                });
+        }
+
+
+        function loadRecentOrders() {
+            fetch('@Url.Action("GetRecentOrders")?count=5')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Recent Orders Data:', data);
+                    
+                    // Check if data has error property
+                    if (data && data.error) {
+                        console.error('API Error:', data.error);
+                        console.error('Stack:', data.stack);
+                        return;
+                    }
+                    
+                    // Check if data has the new structure with 'data' property
+                    let ordersData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        ordersData = data.data;
+                        console.log('Debug info:', data.debug);
+                    }
+                    
+                    const container = document.getElementById('recentOrdersList');
+                    if (!Array.isArray(ordersData) || ordersData.length === 0) {
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:#888;">No Orders Yet</div>';
+                        return;
+                    }
+                    container.innerHTML = ordersData.map(order => {
+                        const name = order.customerName;
+                        const status = order.status ? order.status : '';
+                        let dateStr = '', timeStr = '';
+                        if (order.orderDate) {
+                            try {
+                                const d = new Date(order.orderDate);
+                                if (!isNaN(d)) {
+                                    dateStr = d.toLocaleDateString();
+                                    timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                }
+                            } catch { dateStr = ''; timeStr = ''; }
+                        }
+                        // اختر أيقونة حسب الحالة
+                        let statusIcon = '';
+                        switch(status.toLowerCase()) {
+                            case 'pending': statusIcon = '<i class="fas fa-hourglass-half text-warning mr-1"></i>'; break;
+                            case 'processing': statusIcon = '<i class="fas fa-cogs text-info mr-1"></i>'; break;
+                            case 'shipped': statusIcon = '<i class="fas fa-shipping-fast text-primary mr-1"></i>'; break;
+                            case 'delivered': statusIcon = '<i class="fas fa-check-circle text-success mr-1"></i>'; break;
+                            case 'cancelled': statusIcon = '<i class="fas fa-times-circle text-danger mr-1"></i>'; break;
+                            default: statusIcon = '<i class="fas fa-question-circle text-secondary mr-1"></i>';
+                        }
+                        return `
+                            <div class="recent-order-card mb-2 px-3 py-2 bg-white d-flex flex-column align-items-start shadow-sm rounded" style="gap:6px; transition:box-shadow 0.2s;">
+                                <div class="d-flex align-items-center w-100" style="gap:12px;">
+                                    <div class="font-weight-bold" style="min-width:90px; font-size:1.08em;">${name}</div>
+                                    <span class="badge badge-${getStatusColor(status)} text-dark d-flex align-items-center" style="font-weight:600; min-width:70px; text-align:center;">${statusIcon}${status}</span>
+                                </div>
+                                <div class="d-flex flex-row align-items-center w-100" style="gap:18px;">
+                                    <div class="d-flex align-items-center text-muted" style="gap:3px;">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <span>${dateStr}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center text-muted" style="gap:3px;">
+                                        <i class="far fa-clock"></i>
+                                        <span>${timeStr}</span>
+                                    </div>
+                                </div>
+                                <a href="/Seller/OrderDetails/${order.id}" class="btn btn-outline-primary btn-sm mt-1 px-2 py-0 w-100" style="font-size:0.85em;">Details</a>
+                            </div>
+                        `;
+                    }).join('');
+                });
+        }
+
+
+        function loadLowStockProducts() {
+            fetch('@Url.Action("GetLowStockProducts")?threshold=10')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Low Stock Products Data:', data);
+                    
+                    // Check if data has error property
+                    if (data && data.error) {
+                        console.error('API Error:', data.error);
+                        console.error('Stack:', data.stack);
+                        return;
+                    }
+                    
+                    // Check if data has the new structure with 'data' property
+                    let productsData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        productsData = data.data;
+                        console.log('Debug info:', data.debug);
+                    }
+                    
+                    const container = document.getElementById('lowStockProductsList');
+                    if (!Array.isArray(productsData) || productsData.length === 0) {
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:#888;">No Low Stock Products</div>';
+                        return;
+                    }
+                    container.innerHTML = productsData.map(product => `
+                        <div class="low-stock-card mb-2 px-3 py-2 bg-white d-flex flex-column align-items-start shadow-sm rounded" style="gap:6px; transition:box-shadow 0.2s;">
+                            <div class="d-flex align-items-center w-100" style="gap:12px;">
+                                <div class="font-weight-bold" style="min-width:120px; font-size:1.08em;">${product.name}</div>
+                            </div>
+                            <div class="d-flex flex-column align-items-start w-100" style="gap:2px;">
+                                <div class="d-flex align-items-center" style="gap:4px;">
+                                    <i class="fas fa-box"></i>
+                                    <span class="badge badge-${product.stockQuantity <= 5 ? 'danger' : 'warning'} text-dark ml-1" style="font-weight:600; min-width:40px; text-align:center; font-size:1em;">${product.stockQuantity}</span>
+                                </div>
+                                <span class="text-muted" style="font-size:0.93em; margin-left:24px;">in stock</span>
+                            </div>
+                            <a href="/Seller/ProductDetails/${product.id}" class="btn btn-outline-primary btn-sm mt-1 px-2 py-0 w-100" style="font-size:0.85em;">Details</a>
+                        </div>
+                    `).join('');
+                });
+        }
+
+
+        function getStatusColor(status) {
+            if (!status) return 'secondary';
+            switch(status.toLowerCase()) {
+                case 'pending': return 'warning';
+                case 'processing': return 'info';
+                case 'shipped': return 'primary';
+                case 'delivered': return 'success';
+                case 'cancelled': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+
+        function loadTopProductsChart(params = {}) {
+            const url = new URL('@Url.Action("GetTopSellingProductsChartData")', window.location.origin);
+            Object.keys(params).forEach(key => {
+                if (params[key]) url.searchParams.append(key, params[key]);
+            });
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Top Products Data:', data);
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.product);
+                    const quantities = data.map(x => x.quantity);
+                    console.log('Labels:', labels);
+                    console.log('Quantities:', quantities);
+                    const ctx = document.getElementById('topProductsChart');
+                    if (window.topProductsChart && typeof window.topProductsChart.destroy === 'function') window.topProductsChart.destroy();
+                    window.topProductsChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Quantity Sold',
+                                data: quantities,
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                    console.log('Top Products Chart drawn!');
+                });
+        }
+
+
+        function loadDynamicSalesChart(categoryId = '', productId = '') {
+            const url = new URL('@Url.Action("GetSalesChartData")', window.location.origin);
+            if (categoryId) url.searchParams.append('categoryId', categoryId);
+            if (productId) url.searchParams.append('productId', productId);
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.date);
+                    const totals = data.map(x => x.total);
+                    const ctx = document.getElementById('dynamicSalesChart');
+                    if (window.dynamicSalesChart && typeof window.dynamicSalesChart.destroy === 'function') window.dynamicSalesChart.destroy();
+                    window.dynamicSalesChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sales',
+                                data: totals,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+
+        document.getElementById('refreshStats').addEventListener('click', function() {
+            refreshStatistics();
+            loadSalesChart();
+            loadOrdersStatusChart();
+            loadRecentOrders();
+            loadLowStockProducts();
+        });
+        
+        document.getElementById('topProductsFilter').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = {};
+            for (const [key, value] of formData.entries()) {
+                params[key] = value;
+            }
+            loadTopProductsChart(params);
+        });
+        
+        document.getElementById('yearSelector').addEventListener('change', function() {
+            loadMonthlyRevenueChart(this.value);
+        });
+
+
+        document.getElementById('salesChartFilter').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const categoryId = document.getElementById('salesCategory').value;
+            const productId = document.getElementById('salesProduct').value;
+            loadDynamicSalesChart(categoryId, productId);
+        });
+
+
+        // Function to initialize charts after ensuring Chart.js is loaded
+        function initializeCharts() {
+            console.log('DOM loaded, checking Chart.js...');
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded!');
+                // Try to load Chart.js dynamically if not available
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+                script.onload = function() {
+                    console.log('Chart.js loaded dynamically');
+                    initializeCharts();
+                };
+                script.onerror = function() {
+                    console.error('Failed to load Chart.js');
+                    alert('Chart.js library is not loaded. Please refresh the page.');
+                };
+                document.head.appendChild(script);
+                return;
+            }
+            console.log('Chart.js is loaded successfully');
+            
+            refreshStatistics();
+            loadSalesChart();
+            loadOrdersStatusChart();
+            loadMonthlyRevenueChart(new Date().getFullYear());
+            loadTopProductsChart();
+            loadRecentOrders();
+            loadLowStockProducts();
+            loadDynamicSalesChart();
+        }
+
+        // Wait for both DOM and Chart.js to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCharts);
+        } else {
+            // DOM is already loaded, check if Chart.js is available
+            setTimeout(initializeCharts, 100);
+        }
+
+
+        setInterval(function() {
+            refreshStatistics();
+            loadRecentOrders();
+            loadLowStockProducts();
+        }, 30000);
+    </script>
+} 
