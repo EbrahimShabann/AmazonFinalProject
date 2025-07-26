@@ -258,7 +258,9 @@ namespace Final_project.Areas.Customer.Controllers
             var revertVM = new ordersReverted
             {
                 order_itemId = orderItem.id,
+                Order_Item=uof.OrderRepo.GetOrderItemById(orderItem.id),
                 orderId = orderItem.order_id,
+                Order = uof.OrderRepo.getById(orderItem.order_id),
                 RevertDate = DateTime.Now,
                 Reason = "",
                 Notes = ""
@@ -270,6 +272,8 @@ namespace Final_project.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateReturn(ordersReverted revertVM)
         {
+            revertVM.Order = uof.OrderRepo.getById(revertVM.orderId);
+            revertVM.Order_Item = uof.OrderRepo.GetOrderItemById(revertVM.order_itemId);
             if (ModelState.IsValid)
             {
                 var orderItem = uof.OrderRepo.GetOrderItemById(revertVM.order_itemId);
@@ -298,8 +302,9 @@ namespace Final_project.Areas.Customer.Controllers
                 TempData["success"] = "Order item reverted successfully.";
                 return RedirectToAction("orderDetails", orderItem.order_id);
             }
+          
             TempData["error"] = "Invalid data.";
-            return RedirectToAction("orderDetails", revertVM.orderId);
+            return PartialView("_revertOrder", revertVM);
         }
 
     }

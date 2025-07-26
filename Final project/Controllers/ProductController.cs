@@ -85,13 +85,13 @@ namespace Final_project.Controllers
         [HttpGet]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
-            var userId = "c4"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
+            var userId = "c1"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
             //if (string.IsNullOrEmpty(userId))
             //{
             //    TempData["error"] = "You must be logged in to checkout.";
             //    return RedirectToAction("Login", "Account", new { area = "Customer" });
             //}
-            var userName = "customer4"; //User.Identity.Name;
+            var userName = "customer1"; //User.Identity.Name;
             var userPhone = "1234567800";//User.FindFirstValue(ClaimTypes.MobilePhone);
 
 
@@ -120,7 +120,7 @@ namespace Final_project.Controllers
                     if (product == null)
                     {
                         TempData["error"] = "Product not found.";
-                        return RedirectToAction("Index", "Product");
+                        return RedirectToAction("Index", "Landing");
                     }
                     if (cart.Quantity <= 0)
                     {
@@ -176,7 +176,7 @@ namespace Final_project.Controllers
             else
             {
                 TempData["error"] = "No products selected for checkout.";
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Index", "Landing");
             }
 
 
@@ -196,20 +196,14 @@ namespace Final_project.Controllers
             //    return RedirectToAction("Login", "Account", new { area = "Customer" });
             //}
 
-            //basic validation
-            if (!ModelState.IsValid )
-            {
-                TempData["error"] = "Invalid order data.";
-                return RedirectToAction("CheckOut", model);
-            }
-
+          
             decimal totalAmount = model.TotalPrice + model.ShippingTax;  //total price after tax
 
             //create new order
             var order = new order
             {
                 id = Guid.NewGuid().ToString(),
-                buyer_id = "c4",//userId,
+                buyer_id = "c1",//userId,
                 shipping_address = model.shipping_address,
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
@@ -237,6 +231,7 @@ namespace Final_project.Controllers
             {
                 var orderItem = new order_item
                 {
+                    id = Guid.NewGuid().ToString(),
                     order_id = order.id,
                     seller_id = cart.seller_id,
                     product_id = cart.ProductId,
@@ -279,7 +274,7 @@ namespace Final_project.Controllers
                         Quantity = c.Quantity
                     }).ToList(),
                     Mode = "payment",
-                    SuccessUrl = Url.Action("Index", "Landing", new { area = "Customer", orderId = order.id }, protocol: Request.Scheme),
+                    SuccessUrl = Url.Action("orderConfirmation", "Product", new {  orderId = order.id }, protocol: Request.Scheme),
                     CancelUrl = Url.Action("Index", "Cart", new { area = "Customer" }, protocol: Request.Scheme),
 
                 };
@@ -296,5 +291,15 @@ namespace Final_project.Controllers
             return RedirectToAction("Index","Landing");
         }
 
+        public IActionResult orderConfirmation(string orderId)
+        {
+            if (string.IsNullOrEmpty(orderId))
+            {
+                TempData["error"] = "Invalid order ID.";
+                return RedirectToAction("Index", "Landing");
+            }
+            var order = uof.OrderRepo.getById(orderId);
+            return View(order);
+        }
      }
 }

@@ -14052,3 +14052,5 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.genruntimecon
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\ref\Final project.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Castle.Core.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Proxies.dll
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-zhbllh825q.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\yhcz64ebh2-gahwnve8e4.gz

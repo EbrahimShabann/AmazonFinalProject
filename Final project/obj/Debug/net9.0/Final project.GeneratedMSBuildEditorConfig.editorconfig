@@ -140,12 +140,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[I:/AmazonFinalProject/Final project/Views/Product/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[I:/AmazonFinalProject/Final project/Views/Product/_revertOrder.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfcmV2ZXJ0T3JkZXIuY3NodG1s
+[I:/AmazonFinalProject/Final project/Views/Product/orderConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxvcmRlckNvbmZpcm1hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [I:/AmazonFinalProject/Final project/Views/Profile/AmazonApp.cshtml]
@@ -194,6 +190,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [I:/AmazonFinalProject/Final project/Views/Profile/_Pagination.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfUGFnaW5hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[I:/AmazonFinalProject/Final project/Views/Profile/_revertOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfcmV2ZXJ0T3JkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [I:/AmazonFinalProject/Final project/Views/Profile/_SideBar.cshtml]

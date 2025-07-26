@@ -102,7 +102,7 @@ namespace Final_project.Controllers
             if (!string.IsNullOrWhiteSpace(seller))
                 products = products.Where(p => p.Seller.UserName.Contains(seller));
 
-            if (!categoryId.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(categoryId))
                 products = products.Where(p => p.category_id == categoryId);
 
             if (approvedByMe)

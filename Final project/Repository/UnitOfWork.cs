@@ -169,24 +169,24 @@ namespace Final_project.Repository
             }
         }
 
-        //public IWishlistItemRepository WishlistItemRepository
-        //{
-        //    get
-        //    {
-        //        if (_wishlistItemRepository == null)
-        //            _wishlistItemRepository = new WishlistItemRepository(db);
-        //        return _wishlistItemRepository;
-        //    }
-        //}
-        //public IWishlistRepository WishlistRepository
-        //{
-        //    get
-        //    {
-        //        if (_wishlistRepository == null)
-        //            _wishlistRepository = new WishlistRepository(db);
-        //        return _wishlistRepository;
-        //    }
-        //}
+        public IWishlistItemRepository WishlistItemRepository
+        {
+            get
+            {
+                if (_wishlistItemRepository == null)
+                    _wishlistItemRepository = new WishlistItemRepository(db);
+                return _wishlistItemRepository;
+            }
+        }
+        public IWishlistRepository WishlistRepository
+        {
+            get
+            {
+                if (_wishlistRepository == null)
+                    _wishlistRepository = new WishlistRepository.WishlistRepository(db);
+                return _wishlistRepository;
+            }
+        }
 
 
         //private IWishlistItemRepository _wishlistItemRepository;

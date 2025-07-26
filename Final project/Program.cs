@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Final_project.Filter;
 using Final_project.MapperConfig;
 using Final_project.Models;
@@ -8,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Stripe;
+using System.Threading.Tasks;
 
 namespace Final_project
 {
@@ -25,6 +26,10 @@ namespace Final_project
             {
                 options.Filters.Add(new HandelAnyErrorAttribute());
             });
+
+            //Stripe payment
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
+
             //==================SessionnConfiguration====================
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
