@@ -5,6 +5,26 @@
     var sellerId = User.Identity.Name ?? "test-seller-id";
 }
 
+@section Styles {
+    <style>
+        .order-details-section p strong {
+            color: #1976d2;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .order-details-section p {
+            color: #333;
+            font-size: 1.08rem;
+        }
+        .seller-info-box {
+            transition: box-shadow 0.2s;
+        }
+        .seller-info-box:hover {
+            box-shadow: 0 4px 18px #1976d222, 0 1.5px 4px #0001;
+        }
+    </style>
+}
+
 <h2>Order Details</h2>
 
 @if (TempData["SuccessMessage"] != null)
@@ -22,20 +42,35 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
-<div class="card mb-3">
+<div class="card mb-3 order-details-section">
     <div class="card-body">
         <h5>Order ID: <span class="badge bg-primary">@Model.id</span></h5>
         <p><strong>Date:</strong> @Model.order_date?.ToString("yyyy-MM-dd")</p>
         <p><strong>Customer:</strong> @Model.Buyer?.UserName</p>
-        <p><strong>Status:</strong> <span class="badge bg-info">@Model.status</span></p>
+        <p><strong>Status:</strong> 
+            <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                background:@(Model.status == "Pending" ? "#ffc107" : Model.status == "Processing" ? "#0dcaf0" : Model.status == "Shipped" ? "#0d6efd" : Model.status == "Delivered" ? "#198754" : Model.status == "Cancelled" ? "#dc3545" : "#adb5bd");
+                color:@(Model.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
+                @Model.status
+            </span>
+        </p>
         <p><strong>Total Amount:</strong> <span class="fw-bold">@Model.total_amount</span></p>
         <p><strong>Shipping Address:</strong> @Model.shipping_address</p>
         <hr />
-        <h6>Seller Info</h6>
-        <ul class="list-unstyled mb-0">
-            <li><strong>Seller ID:</strong> <span class="text-muted">@(Model.OrderItems.FirstOrDefault()?.product?.seller_id ?? "-")</span></li>
-            <li><strong>Seller Name:</strong> <span class="text-muted">@(Model.OrderItems.FirstOrDefault()?.product?.Seller?.UserName ?? "-")</span></li>
-        </ul>
+        <div class="seller-info-box mt-4 p-3 rounded shadow-sm" style="background:#f5f7fa;border:1.5px solid #e3e6ed;max-width:400px;">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-store me-2" style="color:#1976d2;font-size:1.3em;"></i>
+                <span style="font-size:1.15em;font-weight:700;color:#1976d2;letter-spacing:0.5px;">Seller Info</span>
+            </div>
+            <div class="mb-2">
+                <i class="fas fa-id-badge me-2" style="color:#607d8b;"></i>
+                <strong>Seller ID:</strong> <span class="text-muted">@(Model.OrderItems.FirstOrDefault()?.product?.seller_id ?? "-")</span>
+            </div>
+            <div>
+                <i class="fas fa-user me-2" style="color:#607d8b;"></i>
+                <strong>Seller Name:</strong> <span class="text-muted">@(Model.OrderItems.FirstOrDefault()?.product?.Seller?.UserName ?? "-")</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -58,7 +93,11 @@
             <td>@item.quantity</td>
             <td>@item.unit_price</td>
             <td>
-                <span class="badge bg-info">@item.status</span>
+                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                    background:@(item.status == "Pending" ? "#ffc107" : item.status == "Processing" ? "#0dcaf0" : item.status == "Shipped" ? "#0d6efd" : item.status == "Delivered" ? "#198754" : item.status == "Cancelled" ? "#dc3545" : "#adb5bd");
+                    color:@(item.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
+                    @item.status
+                </span>
             </td>
             <td>
                 @if (item.product != null && item.product.seller_id == sellerId)

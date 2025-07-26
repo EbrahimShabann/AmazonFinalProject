@@ -1192,6 +1192,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstra
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\microscope.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\reception-3.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\power-off.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\css\_ErrorLayoutCSS.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\pci-card.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\person-circle-minus.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\pallet.svg
@@ -4116,6 +4117,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawes
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\funnel-fill.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\nvme.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\dolly.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\js\_ErrorLayoutJS.js
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\arrow-bar-left.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\calendar-plus-fill.svg
@@ -4390,6 +4392,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstra
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\brands\bots.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\right-to-bracket.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\regular\face-meh-blank.svg
+wwwroot\css\_ErrorLayoutCSS.css
 wwwroot\css\AccountPage.css
 wwwroot\css\LandingPageCSS.css
 wwwroot\css\site.css
@@ -4408,6 +4411,7 @@ wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
 wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
 wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
 wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
+wwwroot\js\_ErrorLayoutJS.js
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
 wwwroot\js\LandingPageJS.js

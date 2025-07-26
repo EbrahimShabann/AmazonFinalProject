@@ -1,6 +1,7 @@
 ﻿using Final_project.Repository;
 using Final_project.ViewModel.NewFolder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Final_project.Controllers
 {
@@ -38,5 +39,10 @@ namespace Final_project.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult Error()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

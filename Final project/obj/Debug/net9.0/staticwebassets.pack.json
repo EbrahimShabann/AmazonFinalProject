@@ -45,6 +45,10 @@
       "PackagePath": "staticwebassets\\css\\LandingPageCSS.css"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\_ErrorLayoutCSS.css",
+      "PackagePath": "staticwebassets\\css\\_ErrorLayoutCSS.css"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -91,6 +95,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\LandingPageLayoutJS.js",
       "PackagePath": "staticwebassets\\js\\LandingPageLayoutJS.js"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\_ErrorLayoutJS.js",
+      "PackagePath": "staticwebassets\\js\\_ErrorLayoutJS.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\site.js",

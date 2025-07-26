@@ -163,6 +163,28 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(ci => ci.product_id);
 
+        modelBuilder.Entity<order_item>()
+     .HasOne(oi => oi.order)
+     .WithMany(o => o.OrderItems)
+     .HasForeignKey(oi => oi.order_id);
+
+        modelBuilder.Entity<order_item>()
+            .HasOne(oi => oi.product)
+            .WithMany()
+            .HasForeignKey(oi => oi.product_id);
+
+        modelBuilder.Entity<order_item>()
+            .HasOne(oi => oi.Seller)
+            .WithMany()
+            .HasForeignKey(oi => oi.seller_id)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Configure product-image relationship
+        modelBuilder.Entity<product_image>()
+            .HasOne(pi => pi.product)
+            .WithMany(p => p.product_images)
+            .HasForeignKey(pi => pi.product_id);
+
         // Category configuration
         modelBuilder.Entity<category>(entity => {
             entity.Property(e => e.created_by).HasMaxLength(450);

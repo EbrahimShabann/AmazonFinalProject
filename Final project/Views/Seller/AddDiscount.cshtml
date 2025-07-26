@@ -2,54 +2,92 @@
 @{
     ViewData["Title"] = "Add Discount";
     var products = ViewBag.Products as List<Final_project.Models.product>;
+    var categories = ViewBag.Categories as List<Final_project.Models.category>;
 }
-<h2>Add Discount</h2>
-<form asp-action="AddDiscount" method="post">
-    <div class="form-group">
-        <label asp-for="description"></label>
-        <input asp-for="description" class="form-control" />
-        <span asp-validation-for="description" class="text-danger"></span>
+<div class="card shadow-sm" style="max-width:100%;margin:auto;">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0" style="font-weight:800;letter-spacing:0.5px;">Add Discount</h2>
     </div>
-    <div class="form-group">
-        <label asp-for="discount_type"></label>
-        <select asp-for="discount_type" class="form-control" id="discount_type">
-            <option value="percentage">Percentage</option>
-            <option value="fixed">Fixed Amount</option>
-        </select>
-        <span asp-validation-for="discount_type" class="text-danger"></span>
+    <div class="card-body">
+        <form asp-action="AddDiscount" method="post">
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label asp-for="description" class="form-label"></label>
+                    <input asp-for="description" class="form-control" />
+                    <span asp-validation-for="description" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="discount_type" class="form-label"></label>
+                    <select asp-for="discount_type" class="form-select" id="discount_type">
+                        <option value="percentage">Percentage</option>
+                        <option value="fixed">Fixed Amount</option>
+                    </select>
+                    <span asp-validation-for="discount_type" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="value" id="valueLabel" class="form-label">Value</label>
+                    <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" />
+                    <small class="form-text text-muted" id="valueHelp">Select discount type first</small>
+                    <span asp-validation-for="value" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="start_date" class="form-label"></label>
+                    <input asp-for="start_date" class="form-control" type="date" />
+                    <span asp-validation-for="start_date" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="end_date" class="form-label"></label>
+                    <input asp-for="end_date" class="form-control" type="date" />
+                    <span asp-validation-for="end_date" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="is_active" class="form-label"></label>
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.is_active, new { @class = "form-check-input", id = "is_active" })
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                    <span asp-validation-for="is_active" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select id="categorySelect" class="form-select">
+                        <option value="">-- Select Category --</option>
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat.id">@cat.name</option>
+                        }
+                    </select>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="applyToCategory" />
+                        <label class="form-check-label" for="applyToCategory">Apply discount to all products in this category</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Products</label>
+                    <select name="productIds" id="productsSelect" class="form-select" multiple size="6">
+                        @foreach (var p in products)
+                        {
+                            <option value="@p.id" data-category="@p.category_id">@p.name</option>
+                        }
+                    </select>
+                    <span id="product-error" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success px-4 py-2">Add Discount</button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="value" id="valueLabel">Value</label>
-        <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" />
-        <small class="form-text text-muted" id="valueHelp">Select discount type first</small>
-        <span asp-validation-for="value" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="start_date"></label>
-        <input asp-for="start_date" class="form-control" type="date" />
-        <span asp-validation-for="start_date" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="end_date"></label>
-        <input asp-for="end_date" class="form-control" type="date" />
-        <span asp-validation-for="end_date" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="is_active"></label>
-        <input asp-for="is_active" type="checkbox" />
-        <span asp-validation-for="is_active" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Products</label>
-        <select name="productIds" class="form-control" multiple>
-            @foreach (var p in products)
-            {
-                <option value="@p.id">@p.name</option>
-            }
-        </select>
-    </div>
-    <button type="submit" class="btn btn-success">Add Discount</button>
-</form>
+</div>
+@section Styles {
+    <style>
+        label.form-label {
+            color: #0d6efd;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+    </style>
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     
@@ -88,15 +126,37 @@
                 updateValueField();
             });
 
+
+            $('#categorySelect').change(function() {
+                var selectedCat = $(this).val();
+                if (selectedCat) {
+                    $('#productsSelect option').hide();
+                    $('#productsSelect option[data-category="' + selectedCat + '"]').show();
+                } else {
+                    $('#productsSelect option').show();
+                }
+                $('#productsSelect').val([]);
+                $('#applyToCategory').prop('checked', false);
+            });
+
+
+            $('#applyToCategory').change(function() {
+                var selectedCat = $('#categorySelect').val();
+                if ($(this).is(':checked') && selectedCat) {
+                    var options = $('#productsSelect option[data-category="' + selectedCat + '"]');
+                    options.prop('selected', true);
+                } else {
+                    $('#productsSelect option').prop('selected', false);
+                }
+            });
+
             $('form').submit(function(e) {
                 var selectedProducts = $('select[name="productIds"]').val();
                 if (!selectedProducts || selectedProducts.length === 0) {
                     e.preventDefault();
-                    if ($('#product-error').length === 0) {
-                        $('select[name="productIds"]').after('<span id="product-error" class="text-danger">You must select at least one product.</span>');
-                    }
+                    $('#product-error').text('You must select at least one product.');
                 } else {
-                    $('#product-error').remove();
+                    $('#product-error').text('');
                 }
             });
         });

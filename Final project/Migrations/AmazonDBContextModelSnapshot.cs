@@ -372,7 +372,7 @@ namespace Final_project.Migrations
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("is_active")
+                    b.Property<bool>("is_active")
                         .HasColumnType("bit");
 
                     b.Property<bool>("is_deleted")
@@ -1105,7 +1105,8 @@ namespace Final_project.Migrations
 
                     b.HasOne("Final_project.Models.ApplicationUser", "Seller")
                         .WithMany()
-                        .HasForeignKey("seller_id");
+                        .HasForeignKey("seller_id")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Seller");
 

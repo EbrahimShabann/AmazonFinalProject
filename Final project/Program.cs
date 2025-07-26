@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Final_project.Filter;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
@@ -18,11 +19,11 @@ namespace Final_project
             builder.Services.AddSignalR();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
-            builder.Services.AddControllersWithViews();
-            //builder.Services.AddControllersWithViews(options =>
-            //{
-            //    options.Filters.Add(new HandelAnyErrorAttribute());
-            //});
+            //builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new HandelAnyErrorAttribute());
+            });
             //==================SessionnConfiguration====================
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>

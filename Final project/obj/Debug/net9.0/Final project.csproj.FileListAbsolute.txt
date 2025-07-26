@@ -4949,7 +4949,6 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\sco
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-ka3duem7f0.gz
-C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-tlw4u1p4v3.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-b9sayid5wm.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\th3pen5v8j-3r8b2a0bt1.gz
@@ -9358,3 +9357,6 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\ref
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\Final project.pdb
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\Final project.genruntimeconfig.cache
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\ref\Final project.dll
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\a0z7ez63h8-1vy8v7pjxj.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\xo4l5966c6-a1qly7p9e7.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-3j857clcfc.gz
