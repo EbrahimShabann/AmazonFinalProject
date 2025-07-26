@@ -4416,6 +4416,7 @@ wwwroot\Image\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg
 wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
 wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
 wwwroot\Image\72b735db-3970-4821-a4d0-842211783748_oar2.jpg
+wwwroot\Image\78fe8eb7-ea62-42e1-a8aa-2cf441cbb4ec_oar2.jpg
 wwwroot\Image\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg
 wwwroot\Image\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg
 wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg

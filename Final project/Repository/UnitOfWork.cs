@@ -13,7 +13,7 @@ using Final_project.Repository.NewFolder;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
-using Final_project.Repository.WishlistRepository;
+using Final_project.Repository.WishlistRepositoryFile;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository
@@ -226,28 +226,26 @@ namespace Final_project.Repository
             }
         }
 
-        //public IWishlistItemRepository WishlistItemRepository
-        //{
-        //    get
-        //    {
-        //        if (_wishlistItemRepository == null)
-        //            _wishlistItemRepository = new WishlistItemRepository(db);
-        //        return _wishlistItemRepository;
-        //    }
-        //}
-        //public IWishlistRepository WishlistRepository
-        //{
-        //    get
-        //    {
-        //        if (_wishlistRepository == null)
-        //            _wishlistRepository = new WishlistRepository(db);
-        //        return _wishlistRepository;
-        //    }
-        //}
+        public IWishlistItemRepository WishlistItemRepository
+        {
+            get
+            {
+                if (_wishlistItemRepository == null)
+                    _wishlistItemRepository = new WishlistItemRepository(db);
+                return _wishlistItemRepository;
+            }
+        }
+        public IWishlistRepository WishlistRepository
+        {
+            get
+            {
+                if (_wishlistRepository == null)
+                    _wishlistRepository = new WishlistRepository(db);
+                return _wishlistRepository;
+            }
+        }
 
 
-        //private IWishlistItemRepository _wishlistItemRepository;
-        //private IWishlistRepository _wishlistRepository;
         public void save()
         {
             db.SaveChanges();
