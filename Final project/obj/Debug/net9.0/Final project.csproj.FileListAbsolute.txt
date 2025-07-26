@@ -9360,3 +9360,8 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\ref
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\a0z7ez63h8-1vy8v7pjxj.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\xo4l5966c6-a1qly7p9e7.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-3j857clcfc.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\Stripe.net.dll
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\btpj4hj0h7-76t0qeyqua.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\z5q4b6ps11-2bv2jk4fis.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-7zmdec0wnx.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\7xdwthpi4y-9j4sjct118.gz

@@ -55,6 +55,11 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<AccountLog> AccountLog { get; set; }
 
 
+    public virtual DbSet<wishlist> wishlists { get; set; }
+    public virtual DbSet<wishlist_item> wishlist_items { get; set; }
+    public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

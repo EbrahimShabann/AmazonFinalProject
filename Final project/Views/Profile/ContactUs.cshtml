@@ -1,0 +1,151 @@
+﻿
+
+    <title>Amazon Customer Service</title>
+    
+<div class="bg-light">
+   
+
+    <div class="container mb-5">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mt-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Customer/Profile/Index" class="text-decoration-none">Account Overview</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Customer Service</li>
+            </ol>
+        </nav>
+
+        <!-- Main Header -->
+        <div class="bg-primary text-white p-3 mb-4">
+            <h1 class="fs-3 mb-0">Amazon Customer Service</h1>
+        </div>
+
+        <div class="row">
+            <!-- Left Column - Help Topics -->
+            <div class="col-md-4">
+                <div class="card mb-4 border-secondary">
+                    <div class="card-header bg-light">
+                        <h2 class="h6 mb-0 fw-bold">Popular Help Topics</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="/Customer/Profile/Orders" class="text-decoration-none">Where's My Stuff? (Track your order)</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Returns & Refunds</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Manage Prime Membership</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Change Payment Method</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Update Account Information</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Cancel Order or Items</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card border-secondary">
+                    <div class="card-header bg-light">
+                        <h2 class="h6 mb-0 fw-bold">Quick Solutions</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="h6 fw-bold">Digital Services and Device Support</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Kindle Support</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Fire TV Support</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Echo & Alexa Support</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Amazon App Support</a></li>
+                        </ul>
+
+                        <h3 class="h6 fw-bold mt-3">Other Help Topics</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Shipping & Delivery</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Amazon Prime</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Payment & Pricing</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Gift Cards</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Contact Form -->
+            <div class="col-md-8">
+                <div class="card mb-4 border-secondary">
+                    <div class="card-body">
+                        <h2 class="h4 mb-4">Need More Help?</h2>
+                        <h3 class="h5 mb-3">Contact Us</h3>
+
+                        <p class="mb-4">Choose your contact method:</p>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="border p-3 text-center active-option" id="emailOption">
+                                    <i class="fas fa-envelope fa-2x mb-2 text-primary"></i>
+                                    <div>Email</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="border p-3 text-center" id="phoneOption">
+                                    <i class="fas fa-phone fa-2x mb-2 text-primary"></i>
+                                    <div>Phone</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="border p-3 text-center" id="chatOption">
+                                    <i class="fas fa-comments fa-2x mb-2 text-primary"></i>
+                                    <div>Chat</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form>
+                            <div class="mb-3">
+                                <label for="issueType" class="form-label">What do you need help with?</label>
+                                <select class="form-select" id="issueType">
+                                    <option selected>Select an issue</option>
+                                    <option>Order issues</option>
+                                    <option>Returns & refunds</option>
+                                    <option>Account settings</option>
+                                    <option>Payment issues</option>
+                                    <option>Prime membership</option>
+                                    <option>Digital services</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="orderSelect" class="form-label">Select your order</label>
+                                <select class="form-select" id="orderSelect" asp-items="@(new SelectList(ViewBag.userOrders,"id","id"))">
+                                    <option selected>Choose an order</option>
+                                    
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="issueDescription" class="form-label">Describe your issue</label>
+                                <textarea class="form-control" id="issueDescription" rows="5"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning">Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <h4 class="alert-heading h6">Did you know?</h4>
+                    <p class="mb-0">Most issues can be resolved quickly using our self-service options. Try our <a href="#" class="alert-link">Help Center</a> before contacting us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+   
+
+   
+    <script>
+        // Simple script to handle contact option selection
+        document.querySelectorAll('.border.p-3').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.border.p-3').forEach(opt => {
+                    opt.classList.remove('border-primary', 'active-option');
+                    opt.classList.add('border-secondary');
+                });
+                this.classList.remove('border-secondary');
+                this.classList.add('border-primary', 'active-option');
+            });
+        });
+    </script>

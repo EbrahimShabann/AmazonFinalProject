@@ -27,4 +27,6 @@ public partial class chat_message
     public DateTime? sent_at { get; set; } = DateTime.UtcNow;
 
     public bool? is_read { get; set; }
+    public bool? is_deleted { get; set; } = false;
+
 }

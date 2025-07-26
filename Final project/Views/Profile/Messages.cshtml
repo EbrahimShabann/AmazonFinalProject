@@ -1,0 +1,197 @@
+﻿@using Final_project.Services.Customer
+@model PagedResult<chat_message>
+<title>Your Messages - Amazon</title>
+<link href="/css/CustomerProfile.css" rel="stylesheet">
+
+<!-- Header (simplified) -->
+<partial name="_Header" />
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Left Sidebar Navigation -->
+        <partial name="_SideBar" />
+
+        <!-- Main Content Area -->
+        <div class="col-md-9">
+            <div class="messages-container p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-envelope amazon-orange me-2"></i> Your Messages</h4>
+                    <div class="d-flex">
+                        <div class="input-group me-3" style="width: 250px;">
+                            <input type="text" class="form-control" placeholder="Search messages" id="searchInput">
+                            <button class="btn btn-outline-secondary" onclick="search()" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="btn btn-amazon" onclick="refresh()"><i class="fas fa-sync-alt me-1"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <!-- Message Filter -->
+                <div class="d-flex mb-4">
+                    <div class="btn-group" role="group">
+                        <input type="button" value="All" onclick="filter(this)" class="btn btn-outline-secondary ">
+                        <input type="button" value="Unread" onclick="filter(this)" class="btn btn-outline-secondary">
+                        <input type="button" value="Read" onclick="filter(this)" class="btn btn-outline-secondary">
+
+                    </div>
+                    <div class="ms-auto">
+
+                        <button class="btn btn-outline-secondary" id="deleteSelectedBtn"><i class="fas fa-trash me-1"></i> Delete selected</button>
+                    </div>
+                </div>
+
+                <!-- Message List -->
+                <div id="messagesResults" class="message-list">
+                    <partial name="_MessagesList" />
+                </div>
+
+                <!-- Pagination -->
+                <partial name="_Pagination" model="@Model" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Back to Top Button -->
+<partial name="_BackToTopBtn" />
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function(){
+
+        //delete multiplie messages
+        $('#deleteSelectedBtn').click(function(){
+            var selectedIds=[];
+            $('.msg-checkbox:checked').each(function(){
+                selectedIds.push($(this).val());
+            });
+
+            if(selectedIds.length===0)
+            {
+                toastr.warning('Please select at least one message to delete.');
+            }
+            else
+            {
+                  Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                      }).then((result) => {
+                        if (result.isConfirmed)
+                        {
+                                 $.ajax({
+                                    url: `/Customer/Profile/DeleteSelected?selectedIds=${selectedIds}`,
+                                     success:function(){
+                                        Swal.fire({
+                                        title: "Deleted!",
+                                        text: "Message has been deleted.",
+                                        icon: "success"
+                                    });
+                                    location.reload();
+                                    },
+                                    error:function(){
+                                  toastr.error(`Error Deleting Messages`);
+                                 }
+                                  });
+                        }
+
+                          });
+             }
+            });
+
+            //delete message by message
+        $('.deleteMsgBtn').each(function(){
+
+        $(this).click(function(){
+            var msgId = $(this).data('id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                     $.ajax({
+                    url: `/Customer/Profile/DeleteSelected?msgId=${msgId}`,
+                    success:function(){
+                        Swal.fire({
+                        title: "Deleted!",
+                        text: "Message has been deleted.",
+                        icon: "success"
+                            });
+                           location.reload();
+                        },
+                            error:function(){
+                                  toastr.error(`Error Deleting Message` );
+                                 }
+                       });//end of ajax
+
+                }
+            });
+          });
+        });
+
+         // Search on Enter
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {      
+                search();
+            }
+        });
+    });//end of load
+
+    //filter messages
+    function filter(e) {
+        const filter = e.value;
+        $('input[type="button"]').each( function(){
+            this.classList.remove('active');
+            });
+         $.ajax({
+                    url: `/Customer/Profile/Messages?filter=${filter}`,
+                    success:function(response){
+                        $('#messagesResults').html(response);
+                           e.classList.add('active');
+                        },
+                            error:function(err){
+                                  alert(err);
+                                 }
+                       });//end of ajax
+
+
+    }
+
+       
+
+    //search in messages
+     function search()
+           {
+                const searchValue = document.getElementById('searchInput').value;
+                // console.log(searchValue);
+                $.ajax({
+                    url: `/Customer/Profile/Messages?search=${searchValue}`,
+                    success:function(response){
+                        $('#messagesResults').html(response);
+                         
+                        },
+                            error:function(err){
+                                  alert(err);
+                                 }
+                       });//end of ajax
+
+           }
+
+           function refresh(){
+               location.reload();
+           }
+</script>

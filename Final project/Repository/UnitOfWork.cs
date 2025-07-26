@@ -3,9 +3,12 @@ using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
 using Final_project.Repository.LandingPageFile;
+using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
+using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
+using Final_project.Repository.WishlistRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository
@@ -25,6 +28,12 @@ namespace Final_project.Repository
         private IProductDiscountRepository _productDiscountRepository;
         private IProductImageRepository _productImageRepository;
         private IUserRepository _userRepository;
+        private IOrderRepo _orderRepo;
+        private IMessagesRepo _messageRepo;
+        private IWishlistItemRepository _wishlistItemRepository;
+        private IWishlistRepository _wishlistRepository;
+
+
 
 
         public UnitOfWork(AmazonDBContext db)
@@ -141,9 +150,47 @@ namespace Final_project.Repository
                 return _productRepository;
             }
         }
+        public IOrderRepo OrderRepo
+        {
+            get
+            {
+                if (_orderRepo == null)
+                    _orderRepo = new OrderRepo(db);
+                return _orderRepo;
+            }
+        }
+        public IMessagesRepo MessageRepo
+        {
+            get
+            {
+                if (_messageRepo == null)
+                    _messageRepo = new MessageRepo(db);
+                return _messageRepo;
+            }
+        }
+
+        //public IWishlistItemRepository WishlistItemRepository
+        //{
+        //    get
+        //    {
+        //        if (_wishlistItemRepository == null)
+        //            _wishlistItemRepository = new WishlistItemRepository(db);
+        //        return _wishlistItemRepository;
+        //    }
+        //}
+        //public IWishlistRepository WishlistRepository
+        //{
+        //    get
+        //    {
+        //        if (_wishlistRepository == null)
+        //            _wishlistRepository = new WishlistRepository(db);
+        //        return _wishlistRepository;
+        //    }
+        //}
 
 
-
+        //private IWishlistItemRepository _wishlistItemRepository;
+        //private IWishlistRepository _wishlistRepository;
         public void save()
         {
             db.SaveChanges();

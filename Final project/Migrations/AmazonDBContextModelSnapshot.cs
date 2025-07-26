@@ -289,6 +289,9 @@ namespace Final_project.Migrations
                     b.Property<string>("chat_sessionId")
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool?>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("is_read")
                         .HasColumnType("bit");
 
@@ -417,6 +420,9 @@ namespace Final_project.Migrations
                     b.Property<DateOnly?>("estimated_delivery_date")
                         .HasColumnType("date");
 
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("order_date")
                         .HasColumnType("datetime2");
 
@@ -517,6 +523,39 @@ namespace Final_project.Migrations
                     b.ToTable("order_items");
                 });
 
+            modelBuilder.Entity("Final_project.Models.ordersReverted", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RevertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("orderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("order_itemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("orderId");
+
+                    b.HasIndex("order_itemId");
+
+                    b.ToTable("Orders_Reverted");
+                });
+
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
                     b.Property<string>("id")
@@ -530,6 +569,12 @@ namespace Final_project.Migrations
                     b.Property<string>("Colors")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("SelectedColorsRaw")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SelectedSizesRaw")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sizes")
                         .HasMaxLength(255)
@@ -848,6 +893,50 @@ namespace Final_project.Migrations
                     b.ToTable("ticket_messages");
                 });
 
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("wishlists");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist_item", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("added_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("product_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("wishlist_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("product_id");
+
+                    b.HasIndex("wishlist_id");
+
+                    b.ToTable("wishlist_items");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1115,6 +1204,25 @@ namespace Final_project.Migrations
                     b.Navigation("product");
                 });
 
+            modelBuilder.Entity("Final_project.Models.ordersReverted", b =>
+                {
+                    b.HasOne("Final_project.Models.order", "Order")
+                        .WithMany()
+                        .HasForeignKey("orderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_project.Models.order_item", "Order_Item")
+                        .WithMany()
+                        .HasForeignKey("order_itemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Order_Item");
+                });
+
             modelBuilder.Entity("Final_project.Models.product", b =>
                 {
                     b.HasOne("Final_project.Models.category", "category")
@@ -1221,6 +1329,36 @@ namespace Final_project.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist_item", b =>
+                {
+                    b.HasOne("Final_project.Models.product", "Product")
+                        .WithMany()
+                        .HasForeignKey("product_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Final_project.Models.wishlist", "Wishlist")
+                        .WithMany("Items")
+                        .HasForeignKey("wishlist_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1323,6 +1461,11 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("Final_project.Models.wishlist", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

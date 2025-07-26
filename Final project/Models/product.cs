@@ -63,4 +63,16 @@ public partial class product
     public bool is_deleted { get; set; } = false;
 
     public virtual ICollection<product_image> product_images { get; set; } = new List<product_image>();
+
+
+    public string SelectedColorsRaw { get; set; }
+    public string SelectedSizesRaw { get; set; }
+
+    [NotMapped]
+    public List<string> SelectedColors => SelectedColorsRaw?.Split(',').ToList() ?? new List<string>();
+
+    [NotMapped]
+    public List<string> SelectedSizes => SelectedSizesRaw?.Split(',').ToList() ?? new List<string>();
+
+
 }

@@ -41,12 +41,28 @@
       "PackagePath": "staticwebassets\\css\\AccountPage.css"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\CustomerCheckOut.css",
+      "PackagePath": "staticwebassets\\css\\CustomerCheckOut.css"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\CustomerProductsIndex.css",
+      "PackagePath": "staticwebassets\\css\\CustomerProductsIndex.css"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\CustomerProfile.css",
+      "PackagePath": "staticwebassets\\css\\CustomerProfile.css"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\LandingPageCSS.css",
       "PackagePath": "staticwebassets\\css\\LandingPageCSS.css"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\_ErrorLayoutCSS.css",
       "PackagePath": "staticwebassets\\css\\_ErrorLayoutCSS.css"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\customerProductDetails.css",
+      "PackagePath": "staticwebassets\\css\\customerProductDetails.css"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\site.css",
