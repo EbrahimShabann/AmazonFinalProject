@@ -4227,6 +4227,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawes
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\receipt.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\arrow-down-square.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\person-circle-exclamation.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\css\CustomerService.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\brands\square-behance.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\scooter.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\brands\square-xing.svg
@@ -4402,6 +4403,7 @@ wwwroot\css\CustomerCheckOut.css
 wwwroot\css\customerProductDetails.css
 wwwroot\css\CustomerProductsIndex.css
 wwwroot\css\CustomerProfile.css
+wwwroot\css\CustomerService.css
 wwwroot\css\LandingPageCSS.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
