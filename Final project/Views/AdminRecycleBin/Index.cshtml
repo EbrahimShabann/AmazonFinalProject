@@ -1,0 +1,128 @@
+﻿@model RecycleBinViewModel
+
+@{
+    ViewData["Title"] = "Recycle Bin";
+}
+
+<h2>🗑 Recycle Bin</h2>
+
+<!-- Categories -->
+<h3>Deleted Categories</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Deleted At</th>
+            <th>Created By</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="deletedCategoriesTable">
+        @foreach (var category in Model.DeletedCategories)
+        {
+            <tr data-id="@category.id">
+                <td>@category.id</td>
+                <td>@category.name</td>
+                <td>@category.CreatedByUser?.UserName</td>
+                <td>
+                    <button class="btn btn-success btn-sm restore-category">Restore</button>
+                    <button class="btn btn-danger btn-sm delete-category">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Products -->
+<h3>Deleted Products</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Deleted At</th>
+            <th>Seller</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="deletedProductsTable">
+        @foreach (var product in Model.DeletedProducts)
+        {
+            <tr data-id="@product.id">
+                <td>@product.id</td>
+                <td>@product.name</td>
+                <td>@product.Seller?.UserName</td>
+                <td>
+                    <button class="btn btn-success btn-sm restore-product">Restore</button>
+                    <button class="btn btn-danger btn-sm delete-product">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <script>
+        function showToast(success, message) {
+            toastr.options = {
+                "positionClass": "toast-bottom-right",
+                "timeOut": "2000",
+                "progressBar": true
+            };
+            if (success) toastr.success(message);
+            else toastr.error(message);
+        }
+
+        // Restore Category
+        $(document).on("click", ".restore-category", function () {
+            const row = $(this).closest("tr");
+            const id = row.data("id");
+
+            $.post("/AdminRecycleBin/RestoreCategory", { id: id }, function (res) {
+                showToast(res.success, res.message);
+                if (res.success) row.fadeOut(300, function () { $(this).remove(); });
+            });
+        });
+
+        // Hard Delete Category
+        $(document).on("click", ".delete-category", function () {
+            if (!confirm("Are you sure you want to permanently delete this category?")) return;
+
+            const row = $(this).closest("tr");
+            const id = row.data("id");
+
+            $.post("/AdminRecycleBin/HardDeleteCategory", { id: id }, function (res) {
+                showToast(res.success, res.message);
+                if (res.success) row.fadeOut(300, function () { $(this).remove(); });
+            });
+        });
+
+        // Restore Product
+        $(document).on("click", ".restore-product", function () {
+            const row = $(this).closest("tr");
+            const id = row.data("id");
+
+            $.post("/AdminRecycleBin/RestoreProduct", { id: id }, function (res) {
+                showToast(res.success, res.message);
+                if (res.success) row.fadeOut(300, function () { $(this).remove(); });
+            });
+        });
+
+        // Hard Delete Product
+        $(document).on("click", ".delete-product", function () {
+            if (!confirm("Are you sure you want to permanently delete this product?")) return;
+
+            const row = $(this).closest("tr");
+            const id = row.data("id");
+
+            $.post("/AdminRecycleBin/HardDeleteProduct", { id: id }, function (res) {
+                showToast(res.success, res.message);
+                if (res.success) row.fadeOut(300, function () { $(this).remove(); });
+            });
+        });
+    </script>
+

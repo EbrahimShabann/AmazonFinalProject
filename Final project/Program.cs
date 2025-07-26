@@ -96,6 +96,8 @@ namespace Final_project
             app.UseSession();
             app.UseAuthorization();
             app.MapStaticAssets();
+            app.UseStaticFiles();
+
             //app.MapHub<>("");
             app.MapControllerRoute(
                 name: "default",

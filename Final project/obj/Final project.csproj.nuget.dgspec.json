@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\esmael\\MVCProject\\FinalProject\\Final project\\Final project.csproj": {}
+    "E:\\ITI\\FinalProject\\Final project\\Final project.csproj": {}
   },
   "projects": {
-    "D:\\esmael\\MVCProject\\FinalProject\\Final project\\Final project.csproj": {
+    "E:\\ITI\\FinalProject\\Final project\\Final project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\esmael\\MVCProject\\FinalProject\\Final project\\Final project.csproj",
+        "projectUniqueName": "E:\\ITI\\FinalProject\\Final project\\Final project.csproj",
         "projectName": "Final project",
-        "projectPath": "D:\\esmael\\MVCProject\\FinalProject\\Final project\\Final project.csproj",
-        "packagesPath": "C:\\Users\\Freee\\.nuget\\packages\\",
-        "outputPath": "D:\\esmael\\MVCProject\\FinalProject\\Final project\\obj\\",
+        "projectPath": "E:\\ITI\\FinalProject\\Final project\\Final project.csproj",
+        "packagesPath": "C:\\Users\\mahmo\\.nuget\\packages\\",
+        "outputPath": "E:\\ITI\\FinalProject\\Final project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Freee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mahmo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

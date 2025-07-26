@@ -481,101 +481,6 @@
 
         </div>
     </div>
-@*     <div class="filter-section">
-        <div class="section-title">
-            <i class="fas fa-filter"></i>
-            <h2>Filter Sellers</h2>
-        </div>
-
-        <div class="filter-grid">
-            <div class="filter-group">
-                <label class="filter-label" for="filter-product">
-                    <i class="fas fa-box"></i> Seller Name
-                </label>
-                <div class="input-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchBox" placeholder="Search products..." autocomplete="off" class="form-control filter-input" />
-                    <div id="suggestions" class="list-group"></div>
-
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label" for="filter-seller">
-                    <i class="fas fa-store"></i> Seller Name
-                </label>
-                <div class="input-wrapper">
-                    <i class="fas fa-user-tie"></i>
-                    <input type="text" id="sellerSearchBox" class="form-control filter-input" placeholder="Search sellers..." autocomplete="off">
-                    <div id="sellerSuggestions" class="list-group"></div>
-
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <i class="fas fa-tag"></i>
-                <select id="categoryDropdown" class="filter-select form-control">
-                    <option value="">All Categories</option>
-                    @foreach (category category in ViewBag.Categories)
-                    {
-                        <option value="@category.id">@category.name</option>
-                    }
-                </select>
-            </div>
-            <div class="filter-group">
-                <label class="filter-label" for="filter-status">
-                    <i class="fas fa-info-circle"></i> Status
-                </label>
-                <select class="filter-select form-control" id="statusDropdown">
-                    <option value="">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <div class="filter-select form-control">
-                <label for="dateFilter" class="filter-label">
-                    Approved From
-                </label>
-                <div class="date-input-wrapper">
-                    <input type="date" id="approvedFrom" class="styled-date-input">
-                </div>
-            </div>
-            <div class="filter-select form-control">
-                <label for="dateFilter" class="filter-label">
-                    Approved To
-                </label>
-                <div class="date-input-wrapper">
-                    <input type="date" id="approvedTo" class="styled-date-input">
-                </div>
-            </div>
-            <div class="col-md-2 mb-2 d-flex align-items-center">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="approvedByMeCheckbox">
-                    <label class="form-check-label" for="approvedByMeCheckbox">Approved By Me</label>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="filter-actions">
-            <button class="action-btn btn-details" id="reset-filters">
-                <i class="fas fa-sync-alt"></i> Reset Filters
-            </button>
-            <button class="action-btn btn-approve" id="filterBtn">
-                <i class="fas fa-filter"></i> Apply Filters
-            </button>
-        </div>
-
-
-    </div>
- *@    @* 
-    <div class="result-count">
-        <i class="fas fa-chart-bar"></i>
-        Showing <strong>24</strong> results from <strong>86</strong> products matching your criteria
-    </div> *@
-
 
     <!-- Sellers Table -->
     <div class="products-table-container">
@@ -604,7 +509,7 @@
                             }
                             else if (!u.is_active & !u.is_deleted)
                             {
-                                <span class="status-badge status-pending">Inactive</span>
+                                <span class="status-badge deactivate-btn">Inactive</span>
                             }
                         </td>
                         <td>
@@ -649,156 +554,13 @@
 </main>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // let currentPage = 1;
-
-    // // Load filtered and paginated products
-    // function loadProducts() {
-    //     const name = $("#searchBox").val();
-    //     const seller = $("#sellerSearchBox").val();
-    //     const categoryId = $("#categoryDropdown").val();
-    //     const status = $("#statusDropdown").val();
-    //     const approvedByMe = $("#approvedByMeCheckbox").is(":checked");
-    //     const approvedFrom = $("#approvedFrom").val();
-    //     const approvedTo = $("#approvedTo").val();
-    //     const pageSize = $("#pageSizeDropdown").val();
-    //     $.get('/AdminProducts/FilterProducts',{ name, seller, categoryId, status, approvedByMe, approvedFrom, approvedTo,page: currentPage, pageSize: pageSize} ,
-    //                 function (response) {
-    //                 let rows = '';
-    //                 response.data.forEach(p => {
-    //                     let statusHtml = (p.approved)
-    //                     ? `<span class="status-badge status-approved">Active</span>`
-    //                     : (p.pending)
-    //                         ? `<span class="status-badge status-pending">Pending</span>`
-    //                             :(p.inactive)?`<span class="status-badge status-pending">Inactive</span>`
-    //                             :(p.rejected)?`<span class="status-badge status-pending">Rejected</span>`:'';
-    //                     let ActionButtonHtml = (p.pending)
-    //                     ? `     <button id="approved-btn" class="action-btn btn-approve" data-id="${p.id}">
-    //                                 <i class="fas fa-check"></i> Approve
-    //                             </button>
-    //                             <button id="reject-btn" class="action-btn btn-reject" data-id="${p.id}">
-    //                                 <i class="fas fa-times"></i> Reject
-    //                             </button>`
-    //                     : (p.approved)
-    //                         ? `     <button id="inactive-btn" class="action-btn btn-reject" data-id="${p.id}">
-    //                                     <i class="fas fa-ban"></i> Inactive
-    //                                 </button>`
-    //                     :(p.inactive)
-    //                         ?`      <button id="active-btn" class="action-btn btn-approve" data-id="${p.id}">
-    //                                     <i class="fas fa-check"></i> Activate
-    //                                 </button>
-    //                                 <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
-    //                                     <i class="fas fa-trash"></i> Delete
-    //                                 </button>`
-    //                     :(p.rejected)?`<button id="approved-btn" class="action-btn btn-approve" data-id="${p.id}">
-    //                                 <i class="fas fa-check"></i> Approved
-    //                             </button>
-    //                             <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
-    //                                 <i class="fas fa-trash"></i> Delete
-    //                             </button>`: '';
-    //                     rows += `
-    //                     <tr>
-    //                         <td>${p.id}</td>
-    //                         <td>${p.name}</td>
-    //                         <td>${p.price}</td>
-    //                         <td>${p.sellerName}</td>
-    //                         <td>${p.categoryName}</td>
-    //                         <td>${statusHtml}</td>
-    //                         <td>${ActionButtonHtml}
-    //                             <button id="details-btn" class="action-btn btn-details data-id="${p.id}">
-    //                                 <i class="fas fa-info-circle"></i> Details
-    //                             </button>
-    //                         </td>
-    //                     </tr>`;
-    //                 });
-    //                 $("#productRows").html(rows);
-    //                 renderPagination(response.totalPages);
-
-    //             });
-    // }
-    // function renderPagination(totalPages) {
-    //     let html = '';
-    //     for (let i = 1; i <= totalPages; i++) {
-    //         html += `<button class="pagination-btn  ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} page-btn" data-page="${i}">${i}</button>`;
-    //     }
-    //     $("#pagination").html(html);
-    // }
-    // $("#searchBox").keyup(function () {
-    //     const query = $(this).val();
-    //     if (query.length >= 2) {
-    //         $.get('/AdminProducts/GetSuggestions', { term: query }, function (data) {
-    //             $("#suggestions").empty();
-    //             data.forEach(item => {
-    //                 $("#suggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item.name + '">' + item.name + '</div>');
-    //             });
-    //         });
-    //     } else {
-    //         $("#suggestions").empty();
-    //     }
-    // });
-
-    // $(document).on('click', '#suggestions .list-group-item', function () {
-    //     $("#searchBox").val($(this).data('name'));
-    //     $("#suggestions").empty();
-    // });
-
-    // $("#sellerSearchBox").keyup(function () {
-    //     const query = $(this).val();
-    //     if (query.length >= 2) {
-    //         $.get('/AdminProducts/GetSellerSuggestions', { term: query }, function (data) {
-    //             $("#sellerSuggestions").empty();
-    //             data.forEach(item => {
-    //                 $("#sellerSuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item.name + '">' + item.name + '</div>');
-    //             });
-    //         });
-    //     } else {
-    //         $("#sellerSuggestions").empty();
-    //     }
-    // });
-
-    // $(document).on('click', '#sellerSuggestions .list-group-item', function () {
-    //     $("#sellerSearchBox").val($(this).data('name'));
-    //     $("#sellerSuggestions").empty();
-    // });
-
-    // $(document).on('click', '.page-btn', function () {
-    //     currentPage = parseInt($(this).data('page'));
-    //     loadProducts();
-    // });
-
-    // $("#pageSizeDropdown").change(function () {
-    //     currentPage = 1;
-    //     loadProducts();
-    // });
-
-    // $("#filterBtn").click(function () {
-    //     currentPage = 1;
-    //     loadProducts();
-    // });
-
-    // $("#clearBtn").click(function () {
-    //     $("#searchBox").val('');
-    //     $("#sellerSearchBox").val('');
-    //     $("#categoryDropdown").val('');
-    //     $("#statusDropdown").val('');
-    //     $("#approvedByMeCheckbox").prop('checked', false);
-    //     $("#approvedFrom").val('');
-    //     $("#approvedTo").val('');
-    //     $("#pageSizeDropdown").val('10');
-    //     currentPage = 1;
-    //     loadProducts();
-    // });
-
-    // $(document).ready(function () {
-    //     loadProducts();
-    // });
-
 
     // Approve button click
     $(document).on('click', '#approved-btn', function () {
         const sellerId = $(this).data('id');
         $.post('/AdminSellers/ApproveSeller', { id: sellerId }, function (response) {
             if (response.success) {
-                //loadsellers();
+                location.reload();
             } else {
                 alert("Failed to approve seller.");
             }
@@ -810,7 +572,7 @@
         const sellerId = $(this).data('id');
         $.post('/AdminSellers/RejectSeller', { id: sellerId }, function (response) {
             if (response.success) {
-                //loadProducts();
+                location.reload();
             } else {
                 alert("Failed to reject seller.");
             }
@@ -821,7 +583,7 @@
         const sellerId = $(this).data('id');
         $.post('/AdminSellers/inactiveSeller', { id: sellerId }, function (response) {
             if (response.success) {
-                loadProducts();
+                location.reload();
             } else {
                 alert("Failed to approve seller.");
             }

@@ -1,0 +1,62 @@
+﻿@model List<category>
+@{
+    int page = ViewBag.Page ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalCount = ViewBag.TotalCount ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+}
+
+@foreach (category c in Model)
+{
+    <tr>
+        <td>@c.id</td>
+        <td>@c.name</td>
+        <td>@c.CreatedByUser.UserName</td>
+        <td>@c.created_at</td>
+        @if ((bool)c.is_active & !c.is_deleted)
+        {
+            <td><span class="status-badge status-active ">Active</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary deactivate-btn" data-id="@c.id">
+                        <i class="fas fa-ban"></i> Inactive
+                    </button>
+                    <button class="btn btn-info" data-id="@c.id">
+                        <i class="fas fa-eye"></i> Details
+                    </button>
+                </div>
+            </td>
+        }
+        else if ((bool)!c.is_active & !c.is_deleted)
+        {
+            <td><span class="status-badge status-inactive">Inactive</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-success activate-btn" data-id="@c.id">
+                        <i class="fas fa-check-circle"></i> Activate
+                    </button>
+                    <button class="btn btn-danger delete-btn" data-id="@c.id">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </td>
+        }
+
+    </tr>
+}
+            }
+<!-- Pagination -->
+@if (totalPages > 1)
+{
+    <tr>
+        <td colspan="6">
+            <div class="pagination">
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <button class="pagination-btn @(i == page ? "active" : "")" data-page="@i">@i</button>
+                }
+            </div>
+        </td>
+    </tr>
+}

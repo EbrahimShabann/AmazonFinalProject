@@ -70,7 +70,10 @@ namespace Final_project.Controllers
         {
             var sellers = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
             if (sellers == null) return Json(new { success = false });
-
+            foreach(product p in _context.products.Where(p => p.seller_id == id).ToList())
+            {
+                p.is_active = false;
+            }
             sellers.is_active = false;
             sellers.is_deleted = false;
             _context.SaveChanges();
