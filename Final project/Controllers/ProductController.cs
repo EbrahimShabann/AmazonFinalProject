@@ -3,6 +3,7 @@ using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Stripe.Checkout;
@@ -23,11 +24,7 @@ namespace Final_project.Controllers
 
         }
 
-        public IActionResult Index(int page = 1, int size = 10)
-        {
-            var products = uof.ProductRepository.getProductsWithImagesAndRating().ToPagedResult(page, size);
-            return View(products);
-        }
+        
         public IActionResult Details(string id)
         {
             var product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
@@ -40,7 +37,8 @@ namespace Final_project.Controllers
             product.RecommendedProducts = uof.ProductRepository.getProductsWithImagesAndRating().Where(p => p.category_id == product.category_id).ToList();
             return View(product);
         }
-
+        
+        [Authorize]
         public IActionResult addReview(product_review reviewVM)
         {
             if (ModelState.IsValid)
@@ -57,7 +55,7 @@ namespace Final_project.Controllers
                     title = reviewVM.title,
                     comment = reviewVM.comment,
                     rating = reviewVM.rating,
-                    //user_id = User.FindFirst(ClaimTypes.NameIdentifier).Value, // Assuming you have user authentication
+                    user_id = User.FindFirst(ClaimTypes.NameIdentifier).Value, // Assuming you have user authentication
                     created_at = DateTime.Now,
 
                 };
@@ -83,16 +81,17 @@ namespace Final_project.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
-            var userId = "c1"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    TempData["error"] = "You must be logged in to checkout.";
-            //    return RedirectToAction("Login", "Account", new { area = "Customer" });
-            //}
-            var userName = "customer1"; //User.Identity.Name;
-            var userPhone = "1234567800";//User.FindFirstValue(ClaimTypes.MobilePhone);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["error"] = "You must be logged in to checkout.";
+                return RedirectToAction("Login", "Account");
+            }
+            var userName = User.Identity.Name;
+            var userPhone = uof.UserRepository.getById(userId).PhoneNumber;
 
 
             var newOrder = new CheckOutVM
@@ -184,31 +183,32 @@ namespace Final_project.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         [ActionName("CheckOut")]
         public IActionResult SubmitCheckOut(CheckOutVM model)
         {
 
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //if(string.IsNullOrEmpty(userId))
-            //{
-            //    TempData["error"] = "You must be logged in to checkout.";
-            //    return RedirectToAction("Login", "Account", new { area = "Customer" });
-            //}
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["error"] = "You must be logged in to checkout.";
+                return RedirectToAction("Login", "Account");
+            }
 
-          
+
             decimal totalAmount = model.TotalPrice + model.ShippingTax;  //total price after tax
 
             //create new order
             var order = new order
             {
                 id = Guid.NewGuid().ToString(),
-                buyer_id = "c1",//userId,
+                buyer_id = userId,
                 shipping_address = model.shipping_address,
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
                 order_date = DateTime.Now,
-                delivered_at = DateTime.Now + TimeSpan.FromDays(2), //assuming delivery in 7 days
+                estimated_delivery_date =DateOnly.FromDateTime(DateTime.Now).AddDays(2), //assuming delivery in 7 days
                 status = "Pending",
             };
 
@@ -222,7 +222,7 @@ namespace Final_project.Controllers
                 status = "Pending",
                 notes = "Order has been created",
                 changed_at = DateTime.Now,
-                changed_by = "c4" //User.FindFirstValue(ClaimTypes.NameIdentifier)
+                changed_by = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };
             uof.OrderRepo.AddOrderHistory(newOrderHistory);
 
@@ -238,6 +238,7 @@ namespace Final_project.Controllers
                     quantity = cart.Quantity,
                     discount_applied = cart.originalPrice - cart.price, //price is originalPrice or DiscountPrice
                     unit_price = cart.originalPrice ?? 0,
+                    status="Pending",
 
                 };
                 uof.OrderRepo.addOrderItem(orderItem);

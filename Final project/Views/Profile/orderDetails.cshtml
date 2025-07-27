@@ -178,7 +178,11 @@
                                         }
                                         else
                                         {
-                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on 
+                                                @(Model.Order.estimated_delivery_date?.ToString("dd MMMM yyyy") 
+                                                ?? 
+                                                Model.Order.delivered_at?.ToString("dd MMMM yyyy"))
+                                            </p>
 
                                         }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
@@ -186,7 +190,7 @@
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <a href="/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
-                                        @if ( Model.Order.status.ToLower() == "delivered")
+                                        @if (Model.Order.status.ToLower() == "delivered" && item.status?.ToLower() != "return")
                                         {
                                             <button class="btn btn-outline-secondary mb-2 returnItem" data-id="@item.id">Return or replace items</button>
 
@@ -208,13 +212,13 @@
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
                          <div>
-                        @if (Model.Order.status.ToLower() != "cancelled" || Model.Order.status.ToLower() != "delivered")
+                        @if (Model.Order.status.ToLower() == "cancelled" || Model.Order.status.ToLower() == "delivered")
                         {
-                            <button id="cancelOrder" class="btn btn-outline-danger">Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
                         }
                         else
                         {
-                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger" >Cancel Order</button>
 
                         }
 
