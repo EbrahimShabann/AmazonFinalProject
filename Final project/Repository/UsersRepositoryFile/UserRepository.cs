@@ -45,7 +45,7 @@ namespace Final_project.Repository
 
         public ApplicationUser getById(string id)
         {
-            throw new NotImplementedException();
+           return _context.Users.SingleOrDefault(u=>u.Id==id);
         }
 
 

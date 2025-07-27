@@ -17,7 +17,7 @@ namespace Final_project.Controllers.Cart
         }
         public IActionResult Index()
         {
-            string userId = "c1";
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
 
             if (cart == null)

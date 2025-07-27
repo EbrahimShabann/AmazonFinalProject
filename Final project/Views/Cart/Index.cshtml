@@ -347,25 +347,36 @@
                 </div>
             }
 
+
             <div class="cart-header" style="justify-content: flex-end;">
                 <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
             </div>
         }
     </div>
-
-    @if (Model.Any())
-    {
-        <div class="cart-summary">
-            <h4 class="summary-title">Order Summary</h4>
-            <div class="summary-subtotal">
-                Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
-            </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
-            <div class="secure-checkout">
-                <i class="fas fa-lock"></i> Secure checkout
-            </div>
-        </div>
-    }
+     <form method="get"  asp-controller="Product" asp-action="CheckOut">
+            @for(int i=0; i < Model.Count; i++)
+            {
+                <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+                <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+                <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+                <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+                <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
+            
+            }
+            @if (Model.Any())
+            {
+                <div class="cart-summary">
+                    <h4 class="summary-title">Order Summary</h4>
+                    <div class="summary-subtotal">
+                        Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
+                    </div>
+                    <button class="checkout-btn">Proceed to Checkout</button>
+                    <div class="secure-checkout">
+                        <i class="fas fa-lock"></i> Secure checkout
+                    </div>
+                </div>
+            }
+    </form>
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

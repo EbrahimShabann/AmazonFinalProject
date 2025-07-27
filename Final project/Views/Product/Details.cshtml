@@ -132,12 +132,12 @@
                         <button class="btn btn-warning flex-grow-1" id="buyProduct">
                             <i class="fas fa-bolt"></i> Buy Now
                         </button>
-                        <button class="btn btn-outline-secondary flex-grow-1 product-btn-cart" >
+                        <button class="btn btn-outline-secondary flex-grow-1 product-btn-cart" data-id="@Model.id">
                             <i class="fas fa-shopping-cart"></i> Add to Cart
                         </button>
                     </div>
                     
-                    <button class="btn btn-outline-danger wishlist-btn" >
+                    <button class="btn btn-outline-danger wishlist-btn" data-id="@Model.id">
                         <i class="far fa-heart"></i> Add to Wishlist
                     </button>
                 </div>
@@ -302,11 +302,13 @@
                                             <!-- Wishlist and Cart Icons -->
                                             <div class="position-absolute end-0 top-0 p-2" style="z-index: 1;">
                                                 <button class="btn btn-sm btn-outline-secondary rounded-circle me-1 wishlist-btn"
-                                                        title="Add to wishlist">
+                                                        title="Add to wishlist"
+                                                        data-id="@product.id">
                                                     <i class="far fa-heart"></i>
                                                 </button>
                                                 <button class="btn btn-sm btn-warning rounded-circle product-btn-cart"
-                                                        title="Add to cart">
+                                                        title="Add to cart"
+                                                        data-id="@product.id">
                                                     <i class="fas fa-shopping-cart"></i>
                                                 </button>
                                             </div>
@@ -410,11 +412,12 @@
            // Add to cart button
     $('.product-btn-cart').each(function(){
              $(this).click(function () {
+                 const productId= $(this).data("id");
             $.ajax({
-                        url: '/Cart/AddToCart?productId=@Model.id',
+                url: `/Cart/AddToCart?productId=${productId}`,
+                type: "POST",
                 success: function (response) {
-                   
-                        toastr.success('Item added to cart successfully');
+                     toastr.success('Item added to cart successfully');
                   
                 },
                 error: function () {
@@ -428,8 +431,9 @@
           // Add to WishList
     $('.wishlist-btn').each(function(){
              $(this).click(function () {
+                  const productId= $(this).data("id");
             $.ajax({
-                url: '/Wishlist/AddToWishlist?productId=@Model.id',
+                url: `/Wishlist/AddToWishlist?productId=${productId}`,
                 success: function (response) {
                     toastr.success('Item added to wishlist successfully');
                 },
