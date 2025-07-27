@@ -5,22 +5,273 @@
     var selectedProducts = ViewBag.SelectedProducts as List<string>;
     var categories = ViewBag.Categories as List<Final_project.Models.category>;
 }
-<div class="card shadow-sm" style="max-width:100%;margin:auto;">
-    <div class="card-header bg-primary text-white">
-        <h2 class="mb-0" style="font-weight:800;letter-spacing:0.5px;">Edit Discount</h2>
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Form Panel */
+    .form-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .form-panel:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Glass Input Styling */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .glass-input:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .glass-input option {
+        background: var(--amazon-dark);
+        color: white;
+    }
+
+    /* Glass Label */
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .floating-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .floating-btn:hover::before {
+        left: 100%;
+    }
+
+    .floating-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+
+    .floating-btn.primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .floating-btn.success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .form-panel {
+            padding: 1.5rem;
+        }
+        
+        .row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="container">
+    <div class="dashboard-hero">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title">
+                    <i class="fas fa-edit me-3"></i>
+                    Edit Discount
+                </h1>
+                <p class="hero-subtitle">
+                    Update your discount details and product associations
+                </p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="floating-actions">
+                    <a href="@Url.Action("Discounts")" class="floating-btn">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Discounts
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
+</div>
+
+<div class="container">
+    <div class="form-panel fade-in">
         <form asp-action="EditDiscount" method="post">
             <input type="hidden" asp-for="id" />
             <div class="row g-3">
                 <div class="col-md-12">
-                    <label asp-for="description" class="form-label"></label>
-                    <input asp-for="description" class="form-control" />
+                    <label asp-for="description" class="glass-label">Description</label>
+                    <input asp-for="description" class="glass-input" placeholder="Enter discount description" />
                     <span asp-validation-for="description" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="discount_type" class="form-label"></label>
-                    <select asp-for="discount_type" class="form-select" id="discount_type">
+                    <label asp-for="discount_type" class="glass-label">Discount Type</label>
+                    <select asp-for="discount_type" class="glass-input" id="discount_type">
                         @if (Model.discount_type == "percentage") {
                             <option value="percentage" selected>Percentage</option>
                         } else {
@@ -35,32 +286,32 @@
                     <span asp-validation-for="discount_type" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="value" id="valueLabel" class="form-label">Value</label>
-                    <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" />
-                    <small class="form-text text-muted" id="valueHelp">Select discount type first</small>
+                    <label asp-for="value" id="valueLabel" class="glass-label">Value</label>
+                    <input asp-for="value" class="glass-input" type="number" step="0.01" id="valueInput" placeholder="Enter value" />
+                    <small class="form-text text-muted" id="valueHelp" style="color: rgba(255, 255, 255, 0.7);">Select discount type first</small>
                     <span asp-validation-for="value" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="start_date" class="form-label"></label>
-                    <input asp-for="start_date" class="form-control" type="date" />
+                    <label asp-for="start_date" class="glass-label">Start Date</label>
+                    <input asp-for="start_date" class="glass-input" type="date" />
                     <span asp-validation-for="start_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="end_date" class="form-label"></label>
-                    <input asp-for="end_date" class="form-control" type="date" />
+                    <label asp-for="end_date" class="glass-label">End Date</label>
+                    <input asp-for="end_date" class="glass-input" type="date" />
                     <span asp-validation-for="end_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="is_active" class="form-label"></label>
+                    <label asp-for="is_active" class="glass-label">Status</label>
                     <div class="form-check">
                         @Html.CheckBoxFor(m => m.is_active, new { @class = "form-check-input", id = "is_active" })
-                        <label class="form-check-label" for="is_active">Active</label>
+                        <label class="form-check-label" for="is_active" style="color: rgba(255, 255, 255, 0.9);">Active</label>
                     </div>
                     <span asp-validation-for="is_active" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Category</label>
-                    <select id="categorySelect" class="form-select">
+                    <label class="glass-label">Category</label>
+                    <select id="categorySelect" class="glass-input">
                         <option value="">-- Select Category --</option>
                         @foreach (var cat in categories)
                         {
@@ -69,12 +320,12 @@
                     </select>
                     <div class="form-check mt-2">
                         <input class="form-check-input" type="checkbox" id="applyToCategory" />
-                        <label class="form-check-label" for="applyToCategory">Apply discount to all products in this category</label>
+                        <label class="form-check-label" for="applyToCategory" style="color: rgba(255, 255, 255, 0.9);">Apply discount to all products in this category</label>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label">Products</label>
-                    <select name="productIds" id="productsSelect" class="form-select" multiple size="6">
+                    <label class="glass-label">Products</label>
+                    <select name="productIds" id="productsSelect" class="glass-input" multiple size="6" required>
                         @foreach (var p in products)
                         {
                             if (selectedProducts != null && selectedProducts.Contains(p.id)) {
@@ -88,93 +339,65 @@
                 </div>
             </div>
             <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-primary px-4 py-2">Save Changes</button>
+                <button type="submit" class="floating-btn primary">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
             </div>
         </form>
     </div>
 </div>
-@section Styles {
-    <style>
-        label.form-label {
-            color: #0d6efd;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-        }
-    </style>
-}
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
     <script>
-        $(document).ready(function() {
-            function updateValueField() {
-                var discountType = $('#discount_type').val();
-                var valueLabel = $('#valueLabel');
-                var valueInput = $('#valueInput');
-                var valueHelp = $('#valueHelp');
-                
-                if (discountType === 'percentage') {
-                    valueLabel.text('Percentage (%)');
-                    valueInput.attr('placeholder', 'Enter percentage (e.g., 15 for 15%)');
-                    valueHelp.text('Enter a number between 0 and 100');
-                    valueInput.attr('min', '0');
-                    valueInput.attr('max', '100');
-                } else if (discountType === 'fixed') {
-                    valueLabel.text('Fixed Amount (£)');
-                    valueInput.attr('placeholder', 'Enter fixed amount (e.g., 10.50)');
-                    valueHelp.text('Enter the fixed discount amount');
-                    valueInput.attr('min', '0');
-                    valueInput.removeAttr('max');
-                } else {
-                    valueLabel.text('Value');
-                    valueInput.attr('placeholder', 'Select discount type first');
-                    valueHelp.text('Select discount type first');
-                    valueInput.removeAttr('min');
-                    valueInput.removeAttr('max');
-                }
+        // Your existing JavaScript for discount type handling
+        document.getElementById('discount_type').addEventListener('change', function() {
+            const discountType = this.value;
+            const valueLabel = document.getElementById('valueLabel');
+            const valueInput = document.getElementById('valueInput');
+            const valueHelp = document.getElementById('valueHelp');
+            
+            if (discountType === 'percentage') {
+                valueLabel.textContent = 'Percentage (%)';
+                valueInput.placeholder = 'Enter percentage (e.g., 15)';
+                valueHelp.textContent = 'Enter a value between 1 and 100';
+                valueInput.max = 100;
+                valueInput.min = 1;
+            } else if (discountType === 'fixed') {
+                valueLabel.textContent = 'Fixed Amount (£)';
+                valueInput.placeholder = 'Enter amount (e.g., 10.50)';
+                valueHelp.textContent = 'Enter the fixed discount amount';
+                valueInput.max = '';
+                valueInput.min = 0;
             }
+        });
+
+        // Category filter functionality
+        document.getElementById('categorySelect').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            const productsSelect = document.getElementById('productsSelect');
+            const applyToCategory = document.getElementById('applyToCategory');
             
+            if (selectedCategory && applyToCategory.checked) {
+                // Clear current selection
+                Array.from(productsSelect.options).forEach(option => {
+                    option.selected = false;
+                });
+                
+                // Select all products in the category
+                Array.from(productsSelect.options).forEach(option => {
+                    if (option.dataset.category === selectedCategory) {
+                        option.selected = true;
+                    }
+                });
+            }
+        });
 
-            updateValueField();
-            
-
-            $('#discount_type').change(function() {
-                updateValueField();
-            });
-
-
-           $('#categorySelect').change(function() {
-               var selectedCat = $(this).val();
-               if (selectedCat) {
-                   $('#productsSelect option').hide();
-                   $('#productsSelect option[data-category="' + selectedCat + '"]').show();
-               } else {
-                   $('#productsSelect option').show();
-               }
-               $('#productsSelect').val([]);
-               $('#applyToCategory').prop('checked', false);
-           });
-
-
-           $('#applyToCategory').change(function() {
-               var selectedCat = $('#categorySelect').val();
-               if ($(this).is(':checked') && selectedCat) {
-                   var options = $('#productsSelect option[data-category="' + selectedCat + '"]');
-                   options.prop('selected', true);
-               } else {
-                   $('#productsSelect option').prop('selected', false);
-               }
-           });
-
-           $('form').submit(function(e) {
-               var selectedProducts = $('select[name="productIds"]').val();
-               if (!selectedProducts || selectedProducts.length === 0) {
-                   e.preventDefault();
-                   $('#product-error').text('You must select at least one product.');
-               } else {
-                   $('#product-error').text('');
-               }
-           });
+        // Trigger initial discount type setup
+        document.addEventListener('DOMContentLoaded', function() {
+            const discountTypeSelect = document.getElementById('discount_type');
+            if (discountTypeSelect) {
+                discountTypeSelect.dispatchEvent(new Event('change'));
+            }
         });
     </script>
 } 

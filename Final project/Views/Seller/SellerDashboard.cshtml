@@ -1,310 +1,875 @@
 @{
     ViewData["Title"] = "Seller Dashboard";
 }
-<h2>Seller Dashboard</h2>
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <div></div>
-    <div>
-        <a href="@Url.Action("CreateTestOrders")" class="btn btn-success mr-2">
-            <i class="fas fa-database"></i> Create Test Data
-        </a>
-        <form asp-action="SeedSellerTestData" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-warning mr-2">
-                <i class="fas fa-seedling"></i> Seed Seller Test Data
-            </button>
-        </form>
-    <button id="refreshStats" class="btn btn-outline-primary">
-        <i class="fas fa-sync-alt"></i> Refresh Statistics
-    </button>
-</div>
-</div>
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+    /* Glass Morphism Dashboard Header */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 3rem 2.5rem;
+        margin: 2rem auto 3rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2rem;
+        font-weight: 400;
+    }
+
+    /* Floating Action Buttons */
+    .floating-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 15px 30px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .floating-btn:hover::before {
+            left: 100%;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
+
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
+
+    /* Neumorphic Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .neumorphic-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .neumorphic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--amazon-orange), #ff7700);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .neumorphic-card:hover::before {
+            opacity: 1;
+        }
+
+        .neumorphic-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+    .card-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Modern Chart Containers */
+    .chart-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .chart-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .chart-header {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chart-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .chart-body {
+        padding: 2rem;
+    }
+
+    /* Glassmorphism Filter Forms */
+    .filter-panel {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
+
+    /* Status Pills */
+    .status-overview {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 0;
+        margin-bottom: 3rem;
+        overflow: hidden;
+    }
+
+    .status-item {
+        flex: 1;
+        text-align: center;
+        padding: 2rem 1rem;
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .status-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+    .status-number {
+        font-size: 2.8rem;
+        font-weight: 800;
+        display: block;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .status-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Sidebar Glass Cards */
+    .sidebar-glass-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-item, .stock-item {
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        padding: 1.2rem;
+        border-left: 4px solid var(--amazon-orange);
+        transition: all 0.3s ease;
+    }
+
+        .order-item:hover, .stock-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .item-name {
+        font-weight: 700;
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .item-details {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-badge {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .item-link {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+        .item-link:hover {
+            transform: scale(1.05);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+        }
+
+    /* Quick Stats Grid */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .quick-stat {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .quick-stat:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+    .quick-stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .quick-stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 كروت في الصف */
+            gap: 2rem;
+            margin-bottom: 3rem;
+            justify-content: center; /* علشان تتوسطن */
+            max-width: 900px; /* عرض أقصى للـ grid */
+            margin-left: auto;
+            margin-right: auto; /* يخليها في النص */
+        }
 
 
-<!-- الإحصائيات الأساسية -->
-<div class="row mb-4">
-    <div class="col-md-2">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Products</h6>
-                <p class="card-text" style="font-size:1.5em" id="productsCount">@ViewBag.ProductsCount</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Total Orders</h6>
-                <p class="card-text" style="font-size:1.5em" id="ordersCount">@ViewBag.OrdersCount</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="card text-white bg-info mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Total Sales</h6>
-                <p class="card-text" style="font-size:1.5em" id="totalSales">£ @ViewBag.TotalSales.ToString("N2")</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Active Discounts</h6>
-                <p class="card-text" style="font-size:1.5em" id="activeDiscounts">@ViewBag.ActiveDiscounts</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="card text-white bg-secondary mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Monthly Sales</h6>
-                <p class="card-text" style="font-size:1.5em" id="monthlySales">£ @ViewBag.MonthlySales.ToString("N2")</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="card text-white bg-dark mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Monthly Orders</h6>
-                <p class="card-text" style="font-size:1.5em" id="monthlyOrders">@ViewBag.MonthlyOrders</p>
-            </div>
-        </div>
-    </div>
-</div>
+        .status-item {
+            padding: 1.5rem 0.5rem;
+        }
 
-<!-- حالة الطلبات -->
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Orders Status</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <h4 class="text-warning" id="pendingOrders">@ViewBag.PendingOrders</h4>
-                            <p>Pending</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <h4 class="text-info" id="processingOrders">@ViewBag.ProcessingOrders</h4>
-                            <p>Processing</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <h4 class="text-primary" id="shippedOrders">@ViewBag.ShippedOrders</h4>
-                            <p>Shipped</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <h4 class="text-success" id="deliveredOrders">@ViewBag.DeliveredOrders</h4>
-                            <p>Delivered</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        .chart-body {
+            padding: 1rem;
+        }
+    }
 
-<div class="row">
-    <!-- الرسوم البيانية -->
-    <div class="col-md-8">
-        <!-- رسم بياني ديناميكي للمبيعات -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Dynamic Sales Chart</h5>
+    /* Animation for loading */
+    .loading-animation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+    }
+
+    .spinner {
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Form Labels */
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Button Hover Effects */
+    .glass-btn {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
+
+    .year-select {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        font-weight: 600;
+        outline: none;
+    }
+
+        .year-select option {
+            background: var(--amazon-dark);
+            color: white;
+        }
+</style>
+
+<!-- Dashboard Hero Section -->
+<div class="container">
+    <div class="dashboard-hero">
+        <div class="row align-items-center" style="margin:auto">
+            <div class="col-lg-6 text-center" style="margin:auto">
+                <h1 class="hero-title">
+                    <i class="fas fa-store me-3"></i>
+                    Seller Dashboard
+                </h1>
+                <p class="hero-subtitle">
+                    Welcome back! Monitor your performance and grow your business with powerful analytics.
+                </p>
             </div>
-            <div class="card-body">
-                <form id="salesChartFilter" class="mb-3">
-                    <div class="row align-items-end">
-                        <div class="col-md-4">
-                            <label for="salesCategory" class="form-label text-primary fw-semibold mb-2">
-                                <i class="fas fa-tags me-1"></i>Category
-                            </label>
-                            <select id="salesCategory" name="categoryId" class="form-control border-primary">
-                                <option value="">All Categories</option>
-                                @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
-                                {
-                                    <option value="@cat.id">@cat.name</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="salesProduct" class="form-label text-primary fw-semibold mb-2">
-                                <i class="fas fa-box me-1"></i>Product
-                            </label>
-                            <select id="salesProduct" name="productId" class="form-control border-primary">
-                                <option value="">All Products</option>
-                                @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
-                                {
-                                    <option value="@p.id">@p.name</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-filter me-1"></i>Apply Filter
-                            </button>
-                        </div>
-                    </div>
+            
+        </div>
+        <div class="col-lg-6" style="margin:auto">
+            <div class="floating-actions">
+                <a href="@Url.Action("CreateTestOrders")" class="floating-btn success">
+                    <i class="fas fa-database me-2"></i>Create Test Data
+                </a>
+                <form asp-action="SeedSellerTestData" method="post" style="display:inline;">
+                    <button type="submit" class="floating-btn primary">
+                        <i class="fas fa-seedling me-2"></i>Seed Data
+                    </button>
                 </form>
-                <canvas id="dynamicSalesChart" width="600" height="250"></canvas>
+                <button id="refreshStats" class="floating-btn glass-btn">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- رسم بياني للمبيعات -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Sales (Last 7 Days)</h5>
+<div class="container">
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-box"></i>
             </div>
-            <div class="card-body">
-                <canvas id="salesChart" width="600" height="250"></canvas>
+            <div class="card-title">Total Products</div>
+            <div class="card-value" id="productsCount">@ViewBag.ProductsCount</div>
+        </div>
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="card-title">Total Orders</div>
+            <div class="card-value" id="ordersCount">@ViewBag.OrdersCount</div>
+        </div>
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-pound-sign"></i>
+            </div>
+            <div class="card-title">Total Revenue</div>
+            <div class="card-value" id="totalSales">£ @ViewBag.TotalSales.ToString("N2")</div>
+        </div>
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="card-title">Active Discounts</div>
+            <div class="card-value" id="activeDiscounts">@ViewBag.ActiveDiscounts</div>
+        </div>
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-calendar-month"></i>
+            </div>
+            <div class="card-title">Monthly Sales</div>
+            <div class="card-value" id="monthlySales">£ @ViewBag.MonthlySales.ToString("N2")</div>
+        </div>
+        <div class="neumorphic-card">
+            <div class="card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="card-title">Monthly Orders</div>
+            <div class="card-value" id="monthlyOrders">@ViewBag.MonthlyOrders</div>
+        </div>
+    </div>
+
+    <!-- Order Status Overview -->
+    <div class="status-overview">
+        <div class="d-flex">
+            <div class="status-item">
+                <span class="status-number text-warning" id="pendingOrders">@ViewBag.PendingOrders</span>
+                <div class="status-label">Pending Orders</div>
+            </div>
+            <div class="status-item">
+                <span class="status-number text-info" id="processingOrders">@ViewBag.ProcessingOrders</span>
+                <div class="status-label">Processing</div>
+            </div>
+            <div class="status-item">
+                <span class="status-number text-primary" id="shippedOrders">@ViewBag.ShippedOrders</span>
+                <div class="status-label">Shipped</div>
+            </div>
+            <div class="status-item">
+                <span class="status-number text-success" id="deliveredOrders">@ViewBag.DeliveredOrders</span>
+                <div class="status-label">Delivered</div>
             </div>
         </div>
+    </div>
 
-        <!-- رسم بياني لحالة الطلبات -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Orders Status Distribution</h5>
-            </div>
-            <div class="card-body d-flex justify-content-center" style="padding: 10px 0;">
-                <div style="width: 720px; height: 360px;">
-                    <canvas id="ordersStatusChart" width="720" height="360"></canvas>
+    <div class="row">
+        <!-- Charts Section -->
+        <div class="col-lg-8">
+            <!-- Dynamic Sales Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-chart-area"></i>
+                        Dynamic Sales Analytics
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <form id="salesChartFilter" class="filter-panel">
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <label class="glass-label me-2">Category Filter:</label>
+                                    <select id="salesCategory" name="categoryId" class="form-control glass-input d-inline-block" style="width: auto;">
+                                        <option value="">All Categories</option>
+                                        @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
+                                        {
+                                            <option value="@cat.id">@cat.name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="glass-label me-2">Product Filter:</label>
+                                    <select id="salesProduct" name="productId" class="form-control glass-input d-inline-block" style="width: auto;">
+                                        <option value="">All Products</option>
+                                        @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
+                                        {
+                                            <option value="@p.id">@p.name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn glass-btn">
+                                    <i class="fas fa-filter me-1"></i>Apply Filters
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <canvas id="dynamicSalesChart" width="600" height="250"></canvas>
                 </div>
             </div>
-        </div>
 
-        <!-- رسم بياني للإيرادات الشهرية -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Monthly Revenue</h5>
-                <select id="yearSelector" class="form-control-sm float-right">
-                    @{
-                        int currentYear = DateTime.Now.Year;
-                        for (int year = currentYear; year >= currentYear - 5; year--)
-                        {
-                            if (year == currentYear)
+            <!-- Sales Chart (Last 7 Days) -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Weekly Sales Performance
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <canvas id="salesChart" width="600" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Orders Status Distribution -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Order Status Distribution
+                    </h5>
+                </div>
+                <div class="chart-body text-center">
+                    <div style="width: 400px; height: 400px; margin: 0 auto;">
+                        <canvas id="ordersStatusChart" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Revenue -->
+            <div class="chart-container">
+                <div class="chart-header d-flex justify-content-between align-items-center">
+                    <h5 class="chart-title">
+                        <i class="fas fa-chart-line"></i>
+                        Monthly Revenue Trends
+                    </h5>
+                    <select id="yearSelector" class="year-select">
+                        @{
+                            int currentYear = DateTime.Now.Year;
+                            for (int year = currentYear; year >= currentYear - 5; year--)
                             {
-                                <option value="@year" selected="selected">@year</option>
-                            }
-                            else
-                            {
-                                <option value="@year">@year</option>
+                                if (year == currentYear)
+                                {
+                                    <option value="@year" selected="selected">@year</option>
+                                }
+                                else
+                                {
+                                    <option value="@year">@year</option>
+                                }
                             }
                         }
-                    }
-                </select>
+                    </select>
+                </div>
+                <div class="chart-body">
+                    <canvas id="monthlyRevenueChart" width="600" height="250"></canvas>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="monthlyRevenueChart" width="600" height="250"></canvas>
-            </div>
-        </div>
 
-        <!-- أفضل المنتجات مبيعاً -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Top Selling Products</h5>
-            </div>
-            <div class="card-body">
-<form id="topProductsFilter" class="mb-3">
-    <div class="row align-items-end">
-        <div class="col-md-2">
-            <label class="form-label text-primary fw-semibold mb-2">
-                <i class="fas fa-calendar-start me-1"></i>Start Date
-            </label>
-            <input type="date" name="startDate" class="form-control border-primary" />
-        </div>
-        <div class="col-md-2">
-            <label class="form-label text-primary fw-semibold mb-2">
-                <i class="fas fa-calendar-end me-1"></i>End Date
-            </label>
-            <input type="date" name="endDate" class="form-control border-primary" />
-        </div>
-        <div class="col-md-3">
-            <label class="form-label text-primary fw-semibold mb-2">
-                <i class="fas fa-tags me-1"></i>Category
-            </label>
-            <select name="categoryId" class="form-control border-primary">
-                <option value="">All Categories</option>
-                @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
-                {
-                    <option value="@cat.id">@cat.name</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label text-primary fw-semibold mb-2">
-                <i class="fas fa-box me-1"></i>Product
-            </label>
-            <select name="productId" class="form-control border-primary">
-                <option value="">All Products</option>
-                @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
-                {
-                    <option value="@p.id">@p.name</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">
-                <i class="fas fa-search me-1"></i>Show
-            </button>
-        </div>
-    </div>
-</form>
-<canvas id="topProductsChart" width="600" height="250"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right Side   -->
-    <div class="col-md-4">
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Latest Orders</h5>
-            </div>
-            <div class="card-body">
-                <div id="recentOrdersList">
-                    <div class="text-center">
-                        <i class="fas fa-spinner fa-spin"></i> Loading...
-                    </div>
+            <!-- Top Selling Products -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-trophy"></i>
+                        Top Performing Products
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <form id="topProductsFilter" class="filter-panel">
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex flex-column gap-2">
+                                    <div>
+                                        <label class="glass-label me-2">Start Date:</label>
+                                        <input type="date" name="startDate" class="form-control glass-input d-inline-block" style="width: auto;">
+                                    </div>
+                                    <div>
+                                        <label class="glass-label me-2">End Date:</label>
+                                        <input type="date" name="endDate" class="form-control glass-input d-inline-block" style="width: auto;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="glass-label me-2">Category:</label>
+                                    <select name="categoryId" class="form-control glass-input d-inline-block" style="width: auto;">
+                                        <option value="">All Categories</option>
+                                        @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
+                                        {
+                                            <option value="@cat.id">@cat.name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="glass-label me-2">Product:</label>
+                                    <select name="productId" class="form-control glass-input d-inline-block" style="width: auto;">
+                                        <option value="">All Products</option>
+                                        @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
+                                        {
+                                            <option value="@p.id">@p.name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn glass-btn">
+                                    <i class="fas fa-search me-1"></i>Analyze
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <canvas id="topProductsChart" width="600" height="250"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Low Stock Products   -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Low Stock Products</h5>
-            </div>
-            <div class="card-body">
-                <div id="lowStockProductsList">
-                    <div class="text-center">
-                        <i class="fas fa-spinner fa-spin"></i> Loading...
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Latest Orders -->
+            <div class="sidebar-glass-card">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-clock"></i>
+                        Recent Orders
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <div id="recentOrdersList">
+                        <div class="loading-animation">
+                            <div class="spinner">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            Loading recent orders...
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Quick Stats  -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-primary fw-bold">Quick Stats</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-6">
-                        <h6>Avg Order Value</h6>
-                        <p id="avgOrderValue">-</p>
+            <!-- Low Stock Products -->
+            <div class="sidebar-glass-card">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Low Stock Alert
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <div id="lowStockProductsList">
+                        <div class="loading-animation">
+                            <div class="spinner">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            Loading low stock products...
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <h6>Conversion Rate</h6>
-                        <p id="conversionRate">-</p>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="sidebar-glass-card">
+                <div class="chart-header">
+                    <h5 class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Quick Stats
+                    </h5>
+                </div>
+                <div class="chart-body">
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-stat-label">Avg Order Value</div>
+                            <div class="quick-stat-value" id="avgOrderValue">-</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-label">Conversion Rate</div>
+                            <div class="quick-stat-value" id="conversionRate">-</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -313,8 +878,8 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-
         function refreshStatistics() {
             fetch('@Url.Action("GetDashboardStatistics")')
                 .then(response => response.json())
@@ -329,58 +894,72 @@
                     document.getElementById('deliveredOrders').textContent = data.deliveredOrders;
                     document.getElementById('monthlySales').textContent = '£ ' + (data.monthlySales !== undefined && data.monthlySales !== null ? data.monthlySales.toFixed(2) : '0.00');
                     document.getElementById('monthlyOrders').textContent = data.monthlyOrders;
-                    
-
                     const avgOrderValue = data.ordersCount > 0 && data.totalSales !== undefined && data.totalSales !== null ? (data.totalSales / data.ordersCount).toFixed(2) : '0.00';
                     document.getElementById('avgOrderValue').textContent = '£ ' + avgOrderValue;
-                    
                     const conversionRate = data.productsCount > 0 ? ((data.ordersCount / data.productsCount) * 100).toFixed(1) : '0.0';
                     document.getElementById('conversionRate').textContent = conversionRate + '%';
                 });
         }
 
-
         function loadSalesChart() {
-        fetch('@Url.Action("GetSalesChartData")')
-            .then(response => response.json())
-            .then(data => {
-                if (!Array.isArray(data)) {
-                    console.error('API did not return array:', data);
-                    return;
-                }
-                const labels = data.map(x => x.date);
-                const totals = data.map(x => x.total);
+            fetch('@Url.Action("GetSalesChartData")')
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.date);
+                    const totals = data.map(x => x.total);
                     const ctx = document.getElementById('salesChart');
                     if (window.salesChart && typeof window.salesChart.destroy === 'function') window.salesChart.destroy();
                     window.salesChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Sales',
-                            data: totals,
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sales',
+                                data: totals,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }
                             }
                         }
-                    }
+                    });
                 });
-            });
         }
-
-
 
         function loadOrdersStatusChart() {
             fetch('@Url.Action("GetOrdersStatusChartData")')
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Orders Status Data:', data);
                     if (!Array.isArray(data) || data.length === 0 || data.every(x => !x.status || x.status === 'Unknown')) {
                         const ctx = document.getElementById('ordersStatusChart').getContext('2d');
                         ctx.clearRect(0, 0, 600, 75);
@@ -393,8 +972,6 @@
                     const filtered = data.filter(x => x.status && x.status !== 'Unknown');
                     const labels = filtered.map(x => x.status);
                     const counts = filtered.map(x => x.count);
-                    console.log('Labels:', labels);
-                    console.log('Counts:', counts);
                     const colors = ['#ffc107', '#17a2b8', '#007bff', '#28a745', '#dc3545'];
                     const ctx = document.getElementById('ordersStatusChart');
                     if (window.ordersStatusChart && typeof window.ordersStatusChart.destroy === 'function') window.ordersStatusChart.destroy();
@@ -411,41 +988,27 @@
                             responsive: false,
                             cutout: '75%',
                             plugins: {
-                                legend: { display: true }
+                                legend: { 
+                                    display: true,
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
                             }
                         }
                     });
-                    console.log('Orders Status Chart drawn!');
                 });
         }
-
 
         function loadMonthlyRevenueChart(year) {
             fetch(`@Url.Action("GetMonthlyRevenueData")?year=${year}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Monthly Revenue Data:', data);
-                    
-                    // Check if data has error property (from try-catch)
-                    if (data && data.error) {
-                        console.error('API Error:', data.error);
-                        console.error('Stack:', data.stack);
-                        return;
-                    }
-                    
-                    // Check if data has the new structure with 'data' property
                     let chartData = data;
                     if (data && data.data && Array.isArray(data.data)) {
                         chartData = data.data;
-                        console.log('Debug info:', data.debug);
-                        console.log('Product count:', data.productCount);
-                        console.log('Order items count:', data.orderItemsCount);
-                        console.log('Monthly data count:', data.monthlyDataCount);
                     }
-                    
                     if (!Array.isArray(chartData)) {
-                        console.error('API did not return array:', chartData);
-
                         const ctx = document.getElementById('monthlyRevenueChart');
                         if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
                         ctx.clearRect(0, 0, 600, 250);
@@ -455,15 +1018,10 @@
                         ctx.fillText('No Revenue Data Available', 300, 125);
                         return;
                     }
-                    
-                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                     const labels = chartData.map(x => months[x.month - 1]);
                     const revenues = chartData.map(x => (x.revenue !== undefined && x.revenue !== null) ? Number(x.revenue).toFixed(2) : '0.00');
                     const orders = chartData.map(x => (x.orders !== undefined && x.orders !== null) ? x.orders : 0);
-                    console.log('Labels:', labels);
-                    console.log('Revenues:', revenues);
-                    console.log('Orders:', orders);
                     const ctx = document.getElementById('monthlyRevenueChart');
                     if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
                     window.monthlyRevenueChart = new Chart(ctx, {
@@ -486,29 +1044,52 @@
                         },
                         options: {
                             responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
+                            },
                             scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
                                 y: {
                                     type: 'linear',
                                     display: true,
                                     position: 'left',
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
                                 },
                                 y1: {
                                     type: 'linear',
                                     display: true,
                                     position: 'right',
                                     beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
                                     grid: {
                                         drawOnChartArea: false,
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     },
                                 }
                             }
                         }
                     });
-                    console.log('Monthly Revenue Chart drawn!');
                 })
                 .catch(error => {
-                    console.error('Fetch error:', error);
                     const ctx = document.getElementById('monthlyRevenueChart');
                     if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
                     ctx.clearRect(0, 0, 600, 250);
@@ -519,30 +1100,17 @@
                 });
         }
 
-
         function loadRecentOrders() {
             fetch('@Url.Action("GetRecentOrders")?count=5')
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Recent Orders Data:', data);
-                    
-                    // Check if data has error property
-                    if (data && data.error) {
-                        console.error('API Error:', data.error);
-                        console.error('Stack:', data.stack);
-                        return;
-                    }
-                    
-                    // Check if data has the new structure with 'data' property
                     let ordersData = data;
                     if (data && data.data && Array.isArray(data.data)) {
                         ordersData = data.data;
-                        console.log('Debug info:', data.debug);
                     }
-                    
                     const container = document.getElementById('recentOrdersList');
                     if (!Array.isArray(ordersData) || ordersData.length === 0) {
-                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:#888;">No Orders Yet</div>';
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Orders Yet</div>';
                         return;
                     }
                     container.innerHTML = ordersData.map(order => {
@@ -558,7 +1126,6 @@
                                 }
                             } catch { dateStr = ''; timeStr = ''; }
                         }
-                        // اختر أيقونة حسب الحالة
                         let statusIcon = '';
                         switch(status.toLowerCase()) {
                             case 'pending': statusIcon = '<i class="fas fa-hourglass-half text-warning mr-1"></i>'; break;
@@ -569,72 +1136,48 @@
                             default: statusIcon = '<i class="fas fa-question-circle text-secondary mr-1"></i>';
                         }
                         return `
-                            <div class="recent-order-card mb-2 px-3 py-2 bg-white d-flex flex-column align-items-start shadow-sm rounded" style="gap:6px; transition:box-shadow 0.2s;">
-                                <div class="d-flex align-items-center w-100" style="gap:12px;">
-                                    <div class="font-weight-bold" style="min-width:90px; font-size:1.08em;">${name}</div>
-                                    <span class="badge badge-${getStatusColor(status)} text-dark d-flex align-items-center" style="font-weight:600; min-width:70px; text-align:center;">${statusIcon}${status}</span>
+                            <div class="order-item mb-2">
+                                <div class="item-name">${name}</div>
+                                <div class="item-details">
+                                    <span class="status-badge">${statusIcon}${status}</span>
+                                    <span style="color: rgba(255,255,255,0.7);">
+                                        <i class="far fa-calendar-alt me-1"></i>${dateStr}
+                                        <i class="far fa-clock ms-2 me-1"></i>${timeStr}
+                                    </span>
                                 </div>
-                                <div class="d-flex flex-row align-items-center w-100" style="gap:18px;">
-                                    <div class="d-flex align-items-center text-muted" style="gap:3px;">
-                                        <i class="far fa-calendar-alt"></i>
-                                        <span>${dateStr}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center text-muted" style="gap:3px;">
-                                        <i class="far fa-clock"></i>
-                                        <span>${timeStr}</span>
-                                    </div>
-                                </div>
-                                <a href="/Seller/OrderDetails/${order.id}" class="btn btn-outline-primary btn-sm mt-1 px-2 py-0 w-100" style="font-size:0.85em;">Details</a>
+                                <a href="/Seller/OrderDetails/${order.id}" class="item-link">View Details</a>
                             </div>
                         `;
                     }).join('');
                 });
         }
 
-
         function loadLowStockProducts() {
             fetch('@Url.Action("GetLowStockProducts")?threshold=10')
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Low Stock Products Data:', data);
-                    
-                    // Check if data has error property
-                    if (data && data.error) {
-                        console.error('API Error:', data.error);
-                        console.error('Stack:', data.stack);
-                        return;
-                    }
-                    
-                    // Check if data has the new structure with 'data' property
                     let productsData = data;
                     if (data && data.data && Array.isArray(data.data)) {
                         productsData = data.data;
-                        console.log('Debug info:', data.debug);
                     }
-                    
                     const container = document.getElementById('lowStockProductsList');
                     if (!Array.isArray(productsData) || productsData.length === 0) {
-                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:#888;">No Low Stock Products</div>';
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Low Stock Products</div>';
                         return;
                     }
                     container.innerHTML = productsData.map(product => `
-                        <div class="low-stock-card mb-2 px-3 py-2 bg-white d-flex flex-column align-items-start shadow-sm rounded" style="gap:6px; transition:box-shadow 0.2s;">
-                            <div class="d-flex align-items-center w-100" style="gap:12px;">
-                                <div class="font-weight-bold" style="min-width:120px; font-size:1.08em;">${product.name}</div>
+                        <div class="stock-item mb-2">
+                            <div class="item-name">${product.name}</div>
+                            <div class="item-details">
+                                <span class="status-badge">
+                                    <i class="fas fa-box me-1"></i>${product.stockQuantity} in stock
+                                </span>
                             </div>
-                            <div class="d-flex flex-column align-items-start w-100" style="gap:2px;">
-                                <div class="d-flex align-items-center" style="gap:4px;">
-                                    <i class="fas fa-box"></i>
-                                    <span class="badge badge-${product.stockQuantity <= 5 ? 'danger' : 'warning'} text-dark ml-1" style="font-weight:600; min-width:40px; text-align:center; font-size:1em;">${product.stockQuantity}</span>
-                                </div>
-                                <span class="text-muted" style="font-size:0.93em; margin-left:24px;">in stock</span>
-                            </div>
-                            <a href="/Seller/ProductDetails/${product.id}" class="btn btn-outline-primary btn-sm mt-1 px-2 py-0 w-100" style="font-size:0.85em;">Details</a>
+                            <a href="/Seller/ProductDetails/${product.id}" class="item-link">View Details</a>
                         </div>
                     `).join('');
                 });
         }
-
 
         function getStatusColor(status) {
             if (!status) return 'secondary';
@@ -648,7 +1191,6 @@
             }
         }
 
-
         function loadTopProductsChart(params = {}) {
             const url = new URL('@Url.Action("GetTopSellingProductsChartData")', window.location.origin);
             Object.keys(params).forEach(key => {
@@ -657,15 +1199,12 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Top Products Data:', data);
                     if (!Array.isArray(data)) {
                         console.error('API did not return array:', data);
                         return;
                     }
                     const labels = data.map(x => x.product);
                     const quantities = data.map(x => x.quantity);
-                    console.log('Labels:', labels);
-                    console.log('Quantities:', quantities);
                     const ctx = document.getElementById('topProductsChart');
                     if (window.topProductsChart && typeof window.topProductsChart.destroy === 'function') window.topProductsChart.destroy();
                     window.topProductsChart = new Chart(ctx, {
@@ -680,23 +1219,41 @@
                         },
                         options: {
                             responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
+                            },
                             scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
                                 y: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
                                 }
                             }
                         }
                     });
-                    console.log('Top Products Chart drawn!');
                 });
         }
-
 
         function loadDynamicSalesChart(categoryId = '', productId = '') {
             const url = new URL('@Url.Action("GetSalesChartData")', window.location.origin);
             if (categoryId) url.searchParams.append('categoryId', categoryId);
             if (productId) url.searchParams.append('productId', productId);
-            
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -722,16 +1279,36 @@
                         },
                         options: {
                             responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
+                            },
                             scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
                                 y: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
                                 }
                             }
                         }
                     });
                 });
         }
-
 
         document.getElementById('refreshStats').addEventListener('click', function() {
             refreshStatistics();
@@ -755,7 +1332,6 @@
             loadMonthlyRevenueChart(this.value);
         });
 
-
         document.getElementById('salesChartFilter').addEventListener('submit', function(e) {
             e.preventDefault();
             const categoryId = document.getElementById('salesCategory').value;
@@ -763,28 +1339,19 @@
             loadDynamicSalesChart(categoryId, productId);
         });
 
-
-        // Function to initialize charts after ensuring Chart.js is loaded
         function initializeCharts() {
-            console.log('DOM loaded, checking Chart.js...');
             if (typeof Chart === 'undefined') {
-                console.error('Chart.js is not loaded!');
-                // Try to load Chart.js dynamically if not available
                 var script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
                 script.onload = function() {
-                    console.log('Chart.js loaded dynamically');
                     initializeCharts();
                 };
                 script.onerror = function() {
-                    console.error('Failed to load Chart.js');
                     alert('Chart.js library is not loaded. Please refresh the page.');
                 };
                 document.head.appendChild(script);
                 return;
             }
-            console.log('Chart.js is loaded successfully');
-            
             refreshStatistics();
             loadSalesChart();
             loadOrdersStatusChart();
@@ -795,14 +1362,11 @@
             loadDynamicSalesChart();
         }
 
-        // Wait for both DOM and Chart.js to be ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeCharts);
         } else {
-            // DOM is already loaded, check if Chart.js is available
             setTimeout(initializeCharts, 100);
         }
-
 
         setInterval(function() {
             refreshStatistics();

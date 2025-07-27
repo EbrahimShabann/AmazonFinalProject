@@ -2,21 +2,378 @@
 @{
     ViewData["Title"] = "Chat with " + Model.Customer?.UserName;
 }
-<h2>Chat with @Model.Customer?.UserName</h2>
-<div class="chat-container" style="height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-    @foreach (var message in Model.ChatMessages.OrderBy(m => m.sent_at))
-    {
-        <div class="message @(message.sender_id == User.Identity.Name ? "text-right" : "text-left")">
-            <strong>@message.Sender?.UserName:</strong>
-            <p>@message.message</p>
-            <small>@message.sent_at?.ToString("HH:mm")</small>
-        </div>
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
     }
-</div>
-<form asp-action="SendMessage" method="post">
-    <input type="hidden" name="sessionId" value="@Model.Id" />
-    <div class="form-group">
-        <textarea name="message" class="form-control" rows="3" placeholder="Type your message..."></textarea>
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Chat Panel */
+    .chat-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .chat-panel:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Chat Container */
+    .chat-container {
+        height: 400px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .chat-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+        background: var(--amazon-orange);
+        border-radius: 4px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+        background: #ff7700;
+    }
+
+    /* Message Styling */
+    .message {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        position: relative;
+        animation: fadeInUp 0.3s ease-out;
+    }
+
+    .message.sent {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        color: white;
+        margin-left: 20%;
+        text-align: right;
+    }
+
+    .message.received {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.9);
+        margin-right: 20%;
+        text-align: left;
+    }
+
+    .message strong {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .message p {
+        margin: 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .message small {
+        opacity: 0.7;
+        font-size: 0.8rem;
+    }
+
+    /* Form Controls */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        resize: vertical;
+    }
+
+    .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .glass-input:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .floating-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .floating-btn:hover::before {
+        left: 100%;
+    }
+
+    .floating-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+
+    .floating-btn.primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .floating-btn.success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    /* Utility Classes */
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .chat-panel {
+            padding: 1.5rem;
+        }
+        
+        .message.sent {
+            margin-left: 10%;
+        }
+        
+        .message.received {
+            margin-right: 10%;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-comments me-3"></i>
+                Chat with @Model.Customer?.UserName
+            </h1>
+            <p class="hero-subtitle">
+                Communicate with your customer
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/ChatSessions" class="floating-btn success">
+                <i class="fas fa-arrow-left me-2"></i>Back to Chat Sessions
+            </a>
+            <a href="/Seller/MyProducts" class="floating-btn primary">
+                <i class="fas fa-cube me-2"></i>My Products
+            </a>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Send Message</button>
-</form> 
+
+    <!-- Chat Panel -->
+    <div class="chat-panel fade-in">
+        <div class="chat-container">
+            @foreach (var message in Model.ChatMessages.OrderBy(m => m.sent_at))
+            {
+                <div class="message @(message.sender_id == User.Identity.Name ? "sent" : "received")">
+                    <strong>@message.Sender?.UserName:</strong>
+                    <p>@message.message</p>
+                    <small>@message.sent_at?.ToString("HH:mm")</small>
+                </div>
+            }
+        </div>
+        
+        <form asp-action="SendMessage" method="post">
+            <input type="hidden" name="sessionId" value="@Model.Id" />
+            <div class="form-group">
+                <textarea name="message" class="glass-input" rows="3" placeholder="Type your message..." required></textarea>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="floating-btn primary">
+                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                </button>
+            </div>
+        </form>
+    </div>
+</div> 

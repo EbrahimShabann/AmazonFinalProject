@@ -10,6 +10,49 @@
 
     <link rel="stylesheet" href="~/css/LandingPageCSS.css" asp-append-version="true" />
 
+    <style>
+        /* Center align all table content */
+        .table th,
+        .table td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Keep left alignment for specific columns that need it */
+        .table th.text-left,
+        .table td.text-left {
+            text-align: left !important;
+        }
+        
+        /* Keep right alignment for specific columns that need it */
+        .table th.text-right,
+        .table td.text-right {
+            text-align: right !important;
+        }
+        
+        /* Special styling for product names and descriptions */
+        .table td .product-name,
+        .table td .product-description {
+            text-align: left !important;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Center align buttons in table cells */
+        .table td .btn {
+            margin: 2px;
+        }
+        
+        /* Center align badges and status indicators */
+        .table td .badge {
+            display: inline-block;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
 

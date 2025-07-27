@@ -8,12 +8,497 @@
     var selectedInactive = ViewBag.IsActive != null && ViewBag.IsActive.ToString() == "False" ? "selected" : "";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-fluid, .container {
+        background: transparent;
+        padding: 2rem;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        background: transparent;
+        backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        padding: 2rem;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
+        border: none;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+    }
+
+    .btn-info {
+        background: linear-gradient(135deg, var(--info-blue) 0%, #0056b3 100%);
+        border: none;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .form-control option {
+        background: var(--amazon-dark);
+        color: white;
+    }
+
+    .form-label {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .card-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+    }
+
+    .card-body {
+        color: white;
+    }
+
+    /* Table Styling */
+    .discounts-table-container {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .discounts-table-container:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .table {
+        margin: 0;
+        background: transparent;
+        border: none;
+        width: 100%;
+    }
+
+    .table thead {
+        background: #131921; /* Same dark color as buttons */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+    }
+
+    .table th {
+        color: #0073bb !important; /* Same blue color as edit button background */
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px 16px;
+        text-align: center;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        position: relative;
+        background: transparent;
+    }
+
+    /* Override any existing table header styles */
+    .table thead th,
+    .table thead tr th {
+        color: #0073bb !important;
+    }
+
+    .table th::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .table th:hover::after {
+        opacity: 1;
+    }
+
+    .table td {
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 12px 16px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 0.9rem;
+        border-left: none;
+        border-right: none;
+        position: relative;
+        background: transparent;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: transparent;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        transform: scale(1.01);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Category name styling */
+    .category-name {
+        color: var(--amazon-orange) !important; /* Primary orange color */
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-header td {
+        color: var(--amazon-orange) !important; /* Primary orange color */
+        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
+        padding: 12px 16px;
+        position: relative;
+        background: transparent;
+    }
+
+    /* Action Buttons in Table */
+    .action-btn {
+        background: #131921; /* Dark navbar color */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        margin: 0.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-btn:hover {
+        background: #232f3e; /* Slightly lighter on hover */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+    }
+
+    .action-btn.edit {
+        color: #0073bb !important; /* Professional blue for edit */
+    }
+
+    .action-btn.edit:hover {
+        color: #005a8b !important; /* Darker blue on hover */
+        background: #1a2532;
+    }
+
+    .action-btn.delete {
+        color: #dc3545 !important; /* Professional red for delete */
+    }
+
+    .action-btn.delete:hover {
+        color: #c82333 !important; /* Darker red on hover */
+        background: #1a2532;
+    }
+
+    .badge {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .badge.bg-success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    .badge.bg-warning {
+        background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
+        border: none;
+    }
+
+    .badge.bg-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+    }
+
+    .alert {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .alert-success {
+        border-left: 4px solid var(--success-green);
+    }
+
+    .alert-danger {
+        border-left: 4px solid #dc3545;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: white;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    strong {
+        color: white !important;
+    }
+
+    span {
+        color: white;
+    }
+
+    div {
+        color: white;
+    }
+
+    p {
+        color: white;
+    }
+
+    td {
+        color: white !important;
+    }
+
+    th {
+        color: white !important;
+    }
+
+    tr {
+        color: white;
+    }
+
+    a {
+        color: white;
+    }
+
+    label {
+        color: white;
+    }
+
+    small {
+        color: white;
+    }
+
+    i {
+        color: white;
+    }
+
+    img {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    hr {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    input {
+        color: white;
+    }
+
+    select {
+        color: white;
+    }
+
+    textarea {
+        color: white;
+    }
+
+    button {
+        color: white;
+    }
+
+    option {
+        color: white;
+    }
+
+    li {
+        color: white;
+    }
+
+    ul {
+        color: white;
+    }
+
+    ol {
+        color: white;
+    }
+
+    b {
+        color: white;
+    }
+
+    em {
+        color: white;
+    }
+
+    mark {
+        color: white;
+    }
+
+    code {
+        color: white;
+    }
+
+    pre {
+        color: white;
+    }
+
+    kbd {
+        color: white;
+    }
+
+    samp {
+        color: white;
+    }
+
+    .table-dark {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .table-dark th {
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 style="font-weight:800;letter-spacing:0.5px;margin-bottom:0;">My Discounts</h2>
         @if (!string.IsNullOrEmpty((string)ViewBag.CurrentSellerId))
         {
-            <div class="mt-1 mb-2">
+            <div class="mt-3 mb-2">
                 <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
                 <span class="badge bg-primary" style="font-size:1em;">@ViewBag.CurrentSellerId</span>
             </div>
@@ -23,6 +508,25 @@
         <a asp-action="AddDiscount" class="btn btn-success" style="font-size:1.1em; padding:10px 24px;">Add New Discount</a>
     </div>
 </div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 @Html.AntiForgeryToken()
 <form method="get" class="mb-4">
     <div class="card">
@@ -246,6 +750,15 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
+            // Handle alert close button
+            $('.alert .btn-close').on('click', function() {
+                $(this).closest('.alert').fadeOut('slow');
+            });
 
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -253,34 +766,23 @@
             });
 
 
-            $(document).on('click', '.delete-discount-btn', function() {
+            $('.delete-discount-btn').click(function(e) {
+                e.preventDefault();
                 var discountId = $(this).data('discount-id');
                 $('#confirmDeleteModal').data('discount-id', discountId).modal('show');
             });
             $('#confirmDeleteBtn').click(function() {
                 var discountId = $('#confirmDeleteModal').data('discount-id');
-                var token = $('input[name="__RequestVerificationToken"]').val();
-                $.ajax({
-                    url: '/Seller/DeleteDiscount',
-                    type: 'POST',
-                    data: { id: discountId },
-                    headers: {
-                        'RequestVerificationToken': token
-                    },
-                    success: function() {
-                        // احذف الصف من الجدول أو أعد تحميل الصفحة
-                        $('button[data-discount-id="' + discountId + '"]').closest('tr').remove();
-                        showNotification('Discount deleted successfully!', 'success');
-                    },
-                    error: function() {
-                        showNotification('Error deleting discount!', 'error');
-                    }
-                });
-                $('#confirmDeleteModal').modal('hide');
+                var form = $('<form method="post" action="/Seller/DeleteDiscount">' +
+                    '<input type="hidden" name="id" value="' + discountId + '">' +
+                    '<input type="hidden" name="__RequestVerificationToken" value="' + $('input[name="__RequestVerificationToken"]').val() + '">' +
+                    '</form>');
+                $('body').append(form);
+                form.submit();
             });
 
 
-            $(document).on('click', '.toggle-discount-btn', function(e) {
+            $('.toggle-discount-btn').click(function(e) {
                 e.preventDefault();
                 var button = $(this);
                 var discountId = button.data('discount-id');
