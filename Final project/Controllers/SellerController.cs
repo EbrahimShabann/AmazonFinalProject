@@ -336,6 +336,8 @@ namespace Final_project.Controllers
                 image.is_primary = false;
             }
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             return RedirectToAction("EditProduct", new { id = productId });
         }
         #endregion
@@ -350,6 +352,8 @@ namespace Final_project.Controllers
             if (image == null) return NotFound();
             _unitOfWork.ProductImageRepository.Delete(image);
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             return RedirectToAction("EditProduct", new { id = productId });
         }
         #endregion
@@ -428,12 +432,16 @@ namespace Final_project.Controllers
             var products = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).ToListAsync();
             if (!products.Any())
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                    return Json(new { success = false, message = "No products found for this seller. Please add products first." });
                 TempData["ErrorMessage"] = "No products found for this seller. Please add products first.";
                 return RedirectToAction("Orders");
             }
             var buyer = await _unitOfWork.UserRepository.GetAsync(u => u.Id != sellerId);
             if (buyer == null)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                    return Json(new { success = false, message = "No buyer found. Please add a buyer user first." });
                 TempData["ErrorMessage"] = "No buyer found. Please add a buyer user first.";
                 return RedirectToAction("Orders");
             }
@@ -471,6 +479,8 @@ namespace Final_project.Controllers
                 }
             }
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             TempData["SuccessMessage"] = "Test orders created successfully!";
             return RedirectToAction("Orders");
         }
@@ -504,14 +514,13 @@ namespace Final_project.Controllers
         {
             var order = await _unitOfWork.OrderRepository.GetAsync(o => o.id == id, o => o.OrderItems);
             if (order == null) return NotFound();
-
-
             if (order.status == "Delivered" || order.status == "Cancelled")
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                    return Json(new { success = false, message = "Cannot change status of delivered or cancelled orders." });
                 TempData["ErrorMessage"] = "Cannot change status of delivered or cancelled orders.";
                 return RedirectToAction("OrderDetails", new { id = id });
             }
-
             var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
             bool canChange = false;
             switch (newStatus)
@@ -535,15 +544,17 @@ namespace Final_project.Controllers
                     canChange = false;
                     break;
             }
-
             if (!canChange)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                    return Json(new { success = false, message = "Cannot change order status to '" + newStatus + "' because not all products have the required status." });
                 TempData["ErrorMessage"] = "Cannot change order status to '" + newStatus + "' because not all products have the required status.";
                 return RedirectToAction("OrderDetails", new { id = id });
             }
-
             order.status = newStatus;
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             TempData["SuccessMessage"] = "Order status updated successfully.";
             return RedirectToAction("OrderDetails", new { id = id });
         }
@@ -560,19 +571,17 @@ namespace Final_project.Controllers
             var orderItem = await _unitOfWork.OrderItemRepository.GetAsync(oi => oi.id == orderItemId, oi => oi.product, oi => oi.order);
             if (orderItem == null || orderItem.product.seller_id != sellerId)
                 return Forbid();
-
             var order = orderItem.order;
             if (order.status == "Delivered" || order.status == "Cancelled" || order.status == "Deleted")
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                    return Json(new { success = false, message = "Cannot change product status because the order is delivered, cancelled, or deleted." });
                 TempData["ErrorMessage"] = "Cannot change product status because the order is delivered, cancelled, or deleted.";
                 return RedirectToAction("OrderDetails", new { id = order.id });
             }
-
             orderItem.status = newStatus;
             await _unitOfWork.SaveAsync();
-
             var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
-
             if (itemStatuses.All(s => s == "Pending"))
                 order.status = "Pending";
             else if (itemStatuses.All(s => s == "Delivered"))
@@ -585,8 +594,9 @@ namespace Final_project.Controllers
                 order.status = "Partially Delivered";
             else
                 order.status = "Processing";
-
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             TempData["SuccessMessage"] = "Product status updated successfully.";
             return RedirectToAction("OrderDetails", new { id = order.id });
         }
@@ -612,6 +622,8 @@ namespace Final_project.Controllers
             if (order == null) return NotFound();
             order.status = "Deleted";
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             return RedirectToAction("Orders");
         }
         #endregion
@@ -798,9 +810,6 @@ namespace Final_project.Controllers
 
         #region DeleteDiscount
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteDiscount(string id)
         {
             if (id == null) return NotFound();
@@ -810,13 +819,25 @@ namespace Final_project.Controllers
             var sellerId = GetCurrentSellerId();
             if (discount.seller_id != sellerId) return Forbid();
 
-            _unitOfWork.DiscountRepository.Delete(discount);
-
-            await _unitOfWork.SaveAsync();
-            return RedirectToAction("Discounts");
+            return View(discount);
         }
-        #endregion   
-        //m4 mst5dmha
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDiscountAjax(string id)
+        {
+            if (id == null) return Json(new { success = false, message = "Invalid discount id." });
+            var discount = await _unitOfWork.DiscountRepository.GetAsync(d => d.id == id, d => d.ProductDiscounts);
+            if (discount == null) return Json(new { success = false, message = "Discount not found." });
+
+            var sellerId = GetCurrentSellerId();
+            if (discount.seller_id != sellerId) return Json(new { success = false, message = "Forbidden." });
+
+            _unitOfWork.DiscountRepository.Delete(discount);
+            await _unitOfWork.SaveAsync();
+            return Json(new { success = true });
+        }
+        #endregion
 
         #region Toggle Discount Active
 
@@ -1554,9 +1575,13 @@ namespace Final_project.Controllers
                 }
             }
             await _unitOfWork.SaveAsync();
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest" || Request.ContentType == "application/json")
+                return Json(new { success = true });
             TempData["SuccessMessage"] = "Test data seeded successfully!";
             return RedirectToAction("SellerDashboard");
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -503,8 +503,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Sizes" class="glass-label">Sizes</label>
-                <select asp-for="Sizes" class="glass-input">
-                    <option value="">Select Size</option>
+                <select id="SizesSelect" class="glass-input" multiple>
                     <option value="XS">XS</option>
                     <option value="S">S</option>
                     <option value="M">M</option>
@@ -527,6 +526,7 @@
                     <option value="48">48</option>
                     <option value="One Size">One Size</option>
                 </select>
+                <input type="hidden" name="Sizes" id="SizesInput" />
                 <span asp-validation-for="Sizes" class="text-danger"></span>
             </div>
 
@@ -575,6 +575,20 @@
             colorsInput.value = selectedColors.join(',');
             selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
         });
+    });
+
+    // Multi-select Sizes logic
+    const sizesSelect = document.getElementById('SizesSelect');
+    const sizesInput = document.getElementById('SizesInput');
+    // Pre-select sizes from Model.Sizes
+    const selectedSizes = '@Model.Sizes'.split(',').map(s => s.trim()).filter(s => s);
+    Array.from(sizesSelect.options).forEach(opt => {
+        if (selectedSizes.includes(opt.value)) opt.selected = true;
+    });
+    sizesInput.value = selectedSizes.join(',');
+    sizesSelect.addEventListener('change', function() {
+        const selected = Array.from(this.selectedOptions).map(opt => opt.value);
+        sizesInput.value = selected.join(',');
     });
     </script>
 } 

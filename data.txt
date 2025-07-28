@@ -1,0 +1,783 @@
+-- Insert sample data for Users table (500 rows)
+INSERT INTO [Users] (Id, profile_picture_url, google_id, date_of_birth, created_at, last_login, is_active, is_deleted, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount)
+VALUES 
+('user001', 'https://images.amazon.com/profiles/user001.jpg', 'google_001', '1985-03-15', '2023-01-01 08:00:00', '2025-07-27 14:30:00', 1, 0, 'john.smith', 'JOHN.SMITH', 'john.smith@email.com', 'JOHN.SMITH@EMAIL.COM', 1, 'AQAAAAEAACcQAAAAEJ8k...', 'STAMP001', 'CONCUR001', '+1234567890', 1, 0, 1, 0),
+('user002', 'https://images.amazon.com/profiles/user002.jpg', 'google_002', '1990-07-22', '2023-01-02 09:15:00', '2025-07-27 16:45:00', 1, 0, 'sarah.johnson', 'SARAH.JOHNSON', 'sarah.johnson@email.com', 'SARAH.JOHNSON@EMAIL.COM', 1, 'AQAAAAEAACcQAAAAEK9l...', 'STAMP002', 'CONCUR002', '+1234567891', 1, 0, 1, 0),
+('user003', 'https://images.amazon.com/profiles/user003.jpg', 'google_003', '1988-12-10', '2023-01-03 10:30:00', '2025-07-27 12:20:00', 1, 0, 'mike.wilson', 'MIKE.WILSON', 'mike.wilson@email.com', 'MIKE.WILSON@EMAIL.COM', 1, 'AQAAAAEAACcQAAAAEM2n...', 'STAMP003', 'CONCUR003', '+1234567892', 1, 0, 1, 0),
+('user004', 'https://images.amazon.com/profiles/user004.jpg', 'google_004', '1992-05-18', '2023-01-04 11:45:00', '2025-07-27 09:10:00', 1, 0, 'emily.davis', 'EMILY.DAVIS', 'emily.davis@email.com', 'EMILY.DAVIS@EMAIL.COM', 1, 'AQAAAAEAACcQAAAAEN3o...', 'STAMP004', 'CONCUR004', '+1234567893', 1, 0, 1, 0),
+('user005', 'https://images.amazon.com/profiles/user005.jpg', 'google_005', '1987-09-03', '2023-01-05 13:00:00', '2025-07-27 18:30:00', 1, 0, 'david.brown', 'DAVID.BROWN', 'david.brown@email.com', 'DAVID.BROWN@EMAIL.COM', 1, 'AQAAAAEAACcQAAAAEO4p...', 'STAMP005', 'CONCUR005', '+1234567894', 1, 0, 1, 0);
+
+-- Continue inserting users... (adding 495 more rows with realistic data)
+DECLARE @counter INT = 6;
+WHILE @counter <= 500
+BEGIN
+    INSERT INTO [Users] (Id, profile_picture_url, google_id, date_of_birth, created_at, last_login, is_active, is_deleted, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount)
+    VALUES 
+    (
+        'user' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        'https://images.amazon.com/profiles/user' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3) + '.jpg',
+        'google_' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        DATEADD(YEAR, -(((@counter % 40) + 18)), GETDATE()),
+        DATEADD(DAY, @counter, '2023-01-01'),
+        DATEADD(HOUR, (@counter % 24), '2025-07-27'),
+        1,
+        0,
+        'user' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        'USER' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3) + '@email.com',
+        'USER' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3) + '@EMAIL.COM',
+        1,
+        'AQAAAAEAACcQAAAAE' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3) + '...',
+        'STAMP' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        'CONCUR' + RIGHT('000' + CAST(@counter AS VARCHAR(3)), 3),
+        '+123456' + RIGHT('0000' + CAST(@counter AS VARCHAR(4)), 4),
+        1,
+        0,
+        1,
+        0
+    );
+    SET @counter = @counter + 1;
+END;
+GO
+
+-- Insert sample data for Roles table (500 rows)
+INSERT INTO [Roles] (Id, Name, NormalizedName, ConcurrencyStamp)
+VALUES 
+('role001', 'Admin', 'ADMIN', 'CONCUR_ROLE001'),
+('role002', 'Seller', 'SELLER', 'CONCUR_ROLE002'),
+('role003', 'Customer', 'CUSTOMER', 'CONCUR_ROLE003'),
+('role004', 'Moderator', 'MODERATOR', 'CONCUR_ROLE004'),
+('role005', 'Support', 'SUPPORT', 'CONCUR_ROLE005');
+
+DECLARE @roleCounter INT = 6;
+WHILE @roleCounter <= 500
+BEGIN
+    INSERT INTO [Roles] (Id, Name, NormalizedName, ConcurrencyStamp)
+    VALUES 
+    (
+        'role' + RIGHT('000' + CAST(@roleCounter AS VARCHAR(3)), 3),
+        'Role' + RIGHT('000' + CAST(@roleCounter AS VARCHAR(3)), 3),
+        'ROLE' + RIGHT('000' + CAST(@roleCounter AS VARCHAR(3)), 3),
+        'CONCUR_ROLE' + RIGHT('000' + CAST(@roleCounter AS VARCHAR(3)), 3)
+    );
+    SET @roleCounter = @roleCounter + 1;
+END;
+GO
+
+-- Insert sample data for Categories table (500 rows)
+INSERT INTO [categories] (id, name, description, image_url, parent_category_id, created_by, created_at, last_modified_by, last_modified_at, is_active, is_deleted, deleted_by)
+VALUES 
+('cat001', 'Electronics', 'All electronic devices and accessories', 'https://images.amazon.com/categories/electronics.jpg', NULL, 'user001', '2023-01-01', 'user001', '2023-01-01', 1, 0, NULL),
+('cat002', 'Smartphones', 'Mobile phones and accessories', 'https://images.amazon.com/categories/smartphones.jpg', 'cat001', 'user001', '2023-01-01', 'user001', '2023-01-01', 1, 0, NULL),
+('cat003', 'Laptops', 'Portable computers and accessories', 'https://images.amazon.com/categories/laptops.jpg', 'cat001', 'user001', '2023-01-01', 'user001', '2023-01-01', 1, 0, NULL),
+('cat004', 'Clothing', 'Fashion and apparel', 'https://images.amazon.com/categories/clothing.jpg', NULL, 'user001', '2023-01-01', 'user001', '2023-01-01', 1, 0, NULL),
+('cat005', 'Mens Clothing', 'Clothing for men', 'https://images.amazon.com/categories/mens-clothing.jpg', 'cat004', 'user001', '2023-01-01', 'user001', '2023-01-01', 1, 0, NULL);
+
+DECLARE @catCounter INT = 6;
+WHILE @catCounter <= 500
+BEGIN
+    INSERT INTO [categories] (id, name, description, image_url, parent_category_id, created_by, created_at, last_modified_by, last_modified_at, is_active, is_deleted, deleted_by)
+    VALUES 
+    (
+        'cat' + RIGHT('000' + CAST(@catCounter AS VARCHAR(3)), 3),
+        'Category ' + CAST(@catCounter AS VARCHAR(3)),
+        'Description for category ' + CAST(@catCounter AS VARCHAR(3)),
+        'https://images.amazon.com/categories/cat' + RIGHT('000' + CAST(@catCounter AS VARCHAR(3)), 3) + '.jpg',
+        CASE WHEN @catCounter % 3 = 0 THEN 'cat' + RIGHT('000' + CAST((@catCounter % 5) + 1 AS VARCHAR(3)), 3) ELSE NULL END,
+        'user' + RIGHT('000' + CAST((@catCounter % 50) + 1 AS VARCHAR(3)), 3),
+        DATEADD(DAY, @catCounter, '2023-01-01'),
+        'user' + RIGHT('000' + CAST((@catCounter % 50) + 1 AS VARCHAR(3)), 3),
+        DATEADD(DAY, @catCounter, '2023-01-01'),
+        1,
+        0,
+        NULL
+    );
+    SET @catCounter = @catCounter + 1;
+END;
+GO
+
+-- Insert sample data for Products table (500 rows)
+INSERT INTO [products] (id, name, description, price, Brand, Colors, Sizes, discount_price, stock_quantity, sku, category_id, seller_id, created_at, last_modified_at, is_active, is_approved, approved_by, approved_at, is_deleted, SelectedColorsRaw, SelectedSizesRaw)
+VALUES 
+('prod001', 'iPhone 15 Pro', 'Latest Apple iPhone with advanced features', 999.99, 'Apple', 'Black,White,Gold', 'N/A', 899.99, 150, 'SKU-IPHONE15PRO-001', 'cat002', 'user010', '2024-01-01', '2024-01-01', 1, 1, 'user001', '2024-01-01', 0, '["Black","White","Gold"]', '["N/A"]'),
+('prod002', 'Samsung Galaxy S24', 'Premium Android smartphone', 849.99, 'Samsung', 'Black,Silver,Purple', 'N/A', 799.99, 200, 'SKU-GALAXY-S24-002', 'cat002', 'user011', '2024-01-02', '2024-01-02', 1, 1, 'user001', '2024-01-02', 0, '["Black","Silver","Purple"]', '["N/A"]'),
+('prod003', 'MacBook Pro 16"', 'Professional laptop for creative work', 2499.99, 'Apple', 'Space Gray,Silver', 'N/A', 2399.99, 75, 'SKU-MACBOOK-PRO16-003', 'cat003', 'user012', '2024-01-03', '2024-01-03', 1, 1, 'user001', '2024-01-03', 0, '["Space Gray","Silver"]', '["N/A"]'),
+('prod004', 'Nike Air Max 270', 'Comfortable running shoes', 129.99, 'Nike', 'Black,White,Red', 'US 7,US 8,US 9,US 10,US 11', 119.99, 300, 'SKU-NIKE-AIRMAX270-004', 'cat005', 'user013', '2024-01-04', '2024-01-04', 1, 1, 'user001', '2024-01-04', 0, '["Black","White","Red"]', '["US 7","US 8","US 9","US 10","US 11"]'),
+('prod005', 'Sony WH-1000XM5', 'Noise-canceling wireless headphones', 399.99, 'Sony', 'Black,Silver', 'N/A', 349.99, 120, 'SKU-SONY-WH1000XM5-005', 'cat001', 'user014', '2024-01-05', '2024-01-05', 1, 1, 'user001', '2024-01-05', 0, '["Black","Silver"]', '["N/A"]');
+
+DECLARE @prodCounter INT = 6;
+DECLARE @brands TABLE (brand VARCHAR(50));
+INSERT INTO @brands VALUES ('Apple'), ('Samsung'), ('Nike'), ('Adidas'), ('Sony'), ('LG'), ('Dell'), ('HP'), ('Lenovo'), ('Canon');
+
+WHILE @prodCounter <= 500
+BEGIN
+    DECLARE @randomBrand VARCHAR(50) = (SELECT TOP 1 brand FROM @brands ORDER BY NEWID());
+    DECLARE @randomPrice DECIMAL(18,2) = CAST((RAND() * 1000 + 10) AS DECIMAL(18,2));
+    DECLARE @randomDiscountPrice DECIMAL(18,2) = CAST((@randomPrice * 0.9) AS DECIMAL(18,2));
+    
+    INSERT INTO [products] (id, name, description, price, Brand, Colors, Sizes, discount_price, stock_quantity, sku, category_id, seller_id, created_at, last_modified_at, is_active, is_approved, approved_by, approved_at, is_deleted, SelectedColorsRaw, SelectedSizesRaw)
+    VALUES 
+    (
+        'prod' + RIGHT('000' + CAST(@prodCounter AS VARCHAR(3)), 3),
+        @randomBrand + ' Product ' + CAST(@prodCounter AS VARCHAR(3)),
+        'High-quality product from ' + @randomBrand + ' with excellent features',
+        @randomPrice,
+        @randomBrand,
+        'Black,White,Blue,Red',
+        'S,M,L,XL',
+        @randomDiscountPrice,
+        ((@prodCounter * 7) % 500) + 10,
+        'SKU-' + @randomBrand + '-' + RIGHT('000' + CAST(@prodCounter AS VARCHAR(3)), 3),
+        'cat' + RIGHT('000' + CAST((@prodCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@prodCounter % 50) + 10 AS VARCHAR(3)), 3),
+        DATEADD(DAY, @prodCounter, '2024-01-01'),
+        DATEADD(DAY, @prodCounter, '2024-01-01'),
+        1,
+        1,
+        'user001',
+        DATEADD(DAY, @prodCounter, '2024-01-01'),
+        0,
+        '["Black","White","Blue","Red"]',
+        '["S","M","L","XL"]'
+    );
+    SET @prodCounter = @prodCounter + 1;
+END;
+GO
+
+-- Insert sample data for Product Images table (500 rows)
+DECLARE @imgCounter INT = 1;
+WHILE @imgCounter <= 500
+BEGIN
+    INSERT INTO [product_images] (id, product_id, image_url, image_type, is_primary, uploaded_at)
+    VALUES 
+    (
+        'img' + RIGHT('000' + CAST(@imgCounter AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST(@imgCounter AS VARCHAR(3)), 3),
+        'https://images.amazon.com/products/prod' + RIGHT('000' + CAST(@imgCounter AS VARCHAR(3)), 3) + '_main.jpg',
+        'product_image',
+        1,
+        DATEADD(DAY, @imgCounter, '2024-01-01')
+    );
+    SET @imgCounter = @imgCounter + 1;
+END;
+GO
+
+-- Insert sample data for Shopping Carts table (500 rows)
+DECLARE @cartCounter INT = 1;
+WHILE @cartCounter <= 500
+BEGIN
+    INSERT INTO [shopping_carts] (id, user_id, created_at, last_updated_at)
+    VALUES 
+    (
+        'cart' + RIGHT('000' + CAST(@cartCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST(@cartCounter AS VARCHAR(3)), 3),
+        DATEADD(DAY, @cartCounter, '2024-01-01'),
+        DATEADD(HOUR, (@cartCounter % 24), '2025-07-27')
+    );
+    SET @cartCounter = @cartCounter + 1;
+END;
+GO
+
+-- Insert sample data for Cart Items table (500 rows)
+DECLARE @cartItemCounter INT = 1;
+WHILE @cartItemCounter <= 500
+BEGIN
+    INSERT INTO [cart_items] (id, cart_id, product_id, quantity, added_at)
+    VALUES 
+    (
+        'cartitem' + RIGHT('000' + CAST(@cartItemCounter AS VARCHAR(3)), 3),
+        'cart' + RIGHT('000' + CAST((@cartItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST((@cartItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        (@cartItemCounter % 5) + 1,
+        DATEADD(HOUR, @cartItemCounter, '2025-07-25')
+    );
+    SET @cartItemCounter = @cartItemCounter + 1;
+END;
+GO
+
+-- Insert sample data for Orders table (500 rows)
+DECLARE @orderCounter INT = 1;
+WHILE @orderCounter <= 500
+BEGIN
+    DECLARE @totalAmount DECIMAL(18,2) = CAST((RAND() * 2000 + 50) AS DECIMAL(18,2));
+    INSERT INTO [orders] (id, buyer_id, order_date, total_amount, shipping_address, billing_address, status, payment_method, payment_status, tracking_number, estimated_delivery_date, delivered_at, is_deleted)
+    VALUES 
+    (
+        'order' + RIGHT('000' + CAST(@orderCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@orderCounter % 500) + 1 AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@orderCounter % 30), GETDATE()),
+        @totalAmount,
+        '123 Main St, City ' + CAST(@orderCounter AS VARCHAR(3)) + ', State, 12345',
+        '123 Main St, City ' + CAST(@orderCounter AS VARCHAR(3)) + ', State, 12345',
+        CASE (@orderCounter % 5) 
+            WHEN 0 THEN 'Pending'
+            WHEN 1 THEN 'Processing'
+            WHEN 2 THEN 'Shipped'
+            WHEN 3 THEN 'Delivered'
+            ELSE 'Cancelled'
+        END,
+        CASE (@orderCounter % 3)
+            WHEN 0 THEN 'Credit Card'
+            WHEN 1 THEN 'PayPal'
+            ELSE 'Debit Card'
+        END,
+        CASE (@orderCounter % 4)
+            WHEN 0 THEN 'Paid'
+            WHEN 1 THEN 'Pending'
+            WHEN 2 THEN 'Failed'
+            ELSE 'Refunded'
+        END,
+        'TRK' + RIGHT('000000' + CAST(@orderCounter AS VARCHAR(6)), 6),
+        DATEADD(DAY, 7, DATEADD(DAY, -(@orderCounter % 30), GETDATE())),
+        CASE WHEN (@orderCounter % 5) = 3 THEN DATEADD(DAY, 5, DATEADD(DAY, -(@orderCounter % 30), GETDATE())) ELSE NULL END,
+        0
+    );
+    SET @orderCounter = @orderCounter + 1;
+END;
+GO
+
+-- Insert sample data for Order Items table (500 rows)
+DECLARE @orderItemCounter INT = 1;
+WHILE @orderItemCounter <= 500
+BEGIN
+    DECLARE @unitPrice DECIMAL(18,2) = CAST((RAND() * 500 + 10) AS DECIMAL(18,2));
+    DECLARE @discountApplied DECIMAL(18,2) = CAST((@unitPrice * 0.1) AS DECIMAL(18,2));
+    INSERT INTO [order_items] (id, order_id, seller_id, product_id, quantity, unit_price, discount_applied, status)
+    VALUES 
+    (
+        'orderitem' + RIGHT('000' + CAST(@orderItemCounter AS VARCHAR(3)), 3),
+        'order' + RIGHT('000' + CAST((@orderItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@orderItemCounter % 50) + 10 AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST((@orderItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        (@orderItemCounter % 3) + 1,
+        @unitPrice,
+        @discountApplied,
+        CASE (@orderItemCounter % 4)
+            WHEN 0 THEN 'Pending'
+            WHEN 1 THEN 'Processing'
+            WHEN 2 THEN 'Shipped'
+            ELSE 'Delivered'
+        END
+    );
+    SET @orderItemCounter = @orderItemCounter + 1;
+END;
+GO
+
+-- Insert sample data for Product Reviews table (500 rows)
+DECLARE @reviewCounter INT = 1;
+WHILE @reviewCounter <= 500
+BEGIN
+    INSERT INTO [product_reviews] (id, product_id, user_id, rating, title, comment, created_at, is_verified_purchase)
+    VALUES 
+    (
+        'review' + RIGHT('000' + CAST(@reviewCounter AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST((@reviewCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@reviewCounter % 500) + 1 AS VARCHAR(3)), 3),
+        (@reviewCounter % 5) + 1,
+        CASE (@reviewCounter % 5)
+            WHEN 0 THEN 'Excellent product!'
+            WHEN 1 THEN 'Good value for money'
+            WHEN 2 THEN 'Average quality'
+            WHEN 3 THEN 'Great purchase'
+            ELSE 'Highly recommended'
+        END,
+        'This product exceeded my expectations. The quality is excellent and delivery was fast. Review #' + CAST(@reviewCounter AS VARCHAR(3)),
+        DATEADD(DAY, -(@reviewCounter % 60), GETDATE()),
+        CASE WHEN (@reviewCounter % 3) = 0 THEN 1 ELSE 0 END
+    );
+    SET @reviewCounter = @reviewCounter + 1;
+END;
+GO
+
+-- Insert sample data for Discounts table (500 rows)
+DECLARE @discountCounter INT = 1;
+WHILE @discountCounter <= 500
+BEGIN
+    DECLARE @discountValue DECIMAL(18,2) = CAST((RAND() * 50 + 5) AS DECIMAL(18,2));
+    INSERT INTO [discounts] (id, description, discount_type, value, start_date, end_date, minimum_order_amount, max_uses, current_uses, is_active, is_deleted, seller_id, created_at)
+    VALUES 
+    (
+        'discount' + RIGHT('000' + CAST(@discountCounter AS VARCHAR(3)), 3),
+        'Special discount offer #' + CAST(@discountCounter AS VARCHAR(3)),
+        CASE (@discountCounter % 2) WHEN 0 THEN 'Percentage' ELSE 'Fixed' END,
+        @discountValue,
+        DATEADD(DAY, -30, GETDATE()),
+        DATEADD(DAY, 30, GETDATE()),
+        CAST((RAND() * 100 + 20) AS DECIMAL(18,2)),
+        (@discountCounter % 100) + 50,
+        (@discountCounter % 50),
+        1,
+        0,
+        'user' + RIGHT('000' + CAST((@discountCounter % 50) + 10 AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@discountCounter % 30), GETDATE())
+    );
+    SET @discountCounter = @discountCounter + 1;
+END;
+GO
+
+-- Insert sample data for Product Discounts table (500 rows)
+DECLARE @prodDiscountCounter INT = 1;
+WHILE @prodDiscountCounter <= 500
+BEGIN
+    INSERT INTO [product_discounts] (id, product_id, discount_id)
+    VALUES 
+    (
+        'proddiscount' + RIGHT('000' + CAST(@prodDiscountCounter AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST((@prodDiscountCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'discount' + RIGHT('000' + CAST((@prodDiscountCounter % 500) + 1 AS VARCHAR(3)), 3)
+    );
+    SET @prodDiscountCounter = @prodDiscountCounter + 1;
+END;
+GO
+
+-- Insert sample data for Wishlists table (500 rows)
+DECLARE @wishlistCounter INT = 1;
+WHILE @wishlistCounter <= 500
+BEGIN
+    INSERT INTO [wishlists] (id, user_id, created_at)
+    VALUES 
+    (
+        'wishlist' + RIGHT('000' + CAST(@wishlistCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST(@wishlistCounter AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@wishlistCounter % 90), GETDATE())
+    );
+    SET @wishlistCounter = @wishlistCounter + 1;
+END;
+GO
+
+-- Insert sample data for Wishlist Items table (500 rows)
+DECLARE @wishlistItemCounter INT = 1;
+WHILE @wishlistItemCounter <= 500
+BEGIN
+    INSERT INTO [wishlist_items] (id, wishlist_id, product_id, added_at)
+    VALUES 
+    (
+        'wishlistitem' + RIGHT('000' + CAST(@wishlistItemCounter AS VARCHAR(3)), 3),
+        'wishlist' + RIGHT('000' + CAST((@wishlistItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'prod' + RIGHT('000' + CAST((@wishlistItemCounter % 500) + 1 AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@wishlistItemCounter % 60), GETDATE())
+    );
+    SET @wishlistItemCounter = @wishlistItemCounter + 1;
+END;
+GO
+
+-- Insert sample data for Support Tickets table (500 rows)
+DECLARE @ticketCounter INT = 1;
+WHILE @ticketCounter <= 500
+BEGIN
+    INSERT INTO [support_tickets] (id, user_id, subject, description, status, priority, created_at, resolved_at, resolved_by, is_deleted)
+    VALUES 
+    (
+        'ticket' + RIGHT('000' + CAST(@ticketCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@ticketCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@ticketCounter % 5)
+            WHEN 0 THEN 'Order Issue'
+            WHEN 1 THEN 'Product Defect'
+            WHEN 2 THEN 'Shipping Delay'
+            WHEN 3 THEN 'Refund Request'
+            ELSE 'General Inquiry'
+        END,
+        'Customer support ticket #' + CAST(@ticketCounter AS VARCHAR(3)) + ' regarding various issues and inquiries.',
+        CASE (@ticketCounter % 4)
+            WHEN 0 THEN 'Open'
+            WHEN 1 THEN 'In Progress'
+            WHEN 2 THEN 'Resolved'
+            ELSE 'Closed'
+        END,
+        CASE (@ticketCounter % 3)
+            WHEN 0 THEN 'High'
+            WHEN 1 THEN 'Medium'
+            ELSE 'Low'
+        END,
+        DATEADD(DAY, -(@ticketCounter % 30), GETDATE()),
+        CASE WHEN (@ticketCounter % 4) >= 2 THEN DATEADD(DAY, -(@ticketCounter % 15), GETDATE()) ELSE NULL END,
+        CASE WHEN (@ticketCounter % 4) >= 2 THEN 'user' + RIGHT('000' + CAST((@ticketCounter % 10) + 1 AS VARCHAR(3)), 3) ELSE NULL END,
+        0
+    );
+    SET @ticketCounter = @ticketCounter + 1;
+END;
+GO
+
+-- Insert sample data for Chat Sessions table (500 rows)
+DECLARE @chatSessionCounter INT = 1;
+WHILE @chatSessionCounter <= 500
+BEGIN
+    INSERT INTO [chat_sessions] (Id, CustomerId, SellerId, CreatedAt, LastMessageAt, Status, ClosedAt, IsDeleted)
+    VALUES 
+    (
+        'chatsession' + RIGHT('000' + CAST(@chatSessionCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@chatSessionCounter % 400) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@chatSessionCounter % 50) + 10 AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@chatSessionCounter % 15), GETDATE()),
+        DATEADD(HOUR, -(@chatSessionCounter % 48), GETDATE()),
+        CASE (@chatSessionCounter % 3)
+            WHEN 0 THEN 'Active'
+            WHEN 1 THEN 'Closed'
+            ELSE 'Paused'
+        END,
+        CASE WHEN (@chatSessionCounter % 3) = 1 THEN DATEADD(HOUR, -(@chatSessionCounter % 24), GETDATE()) ELSE NULL END,
+        0
+    );
+    SET @chatSessionCounter = @chatSessionCounter + 1;
+END;
+GO
+
+-- Insert sample data for Chat Messages table (500 rows)
+DECLARE @chatMessageCounter INT = 1;
+WHILE @chatMessageCounter <= 500
+BEGIN
+    INSERT INTO [chat_messages] (id, session_id, sender_id, message, sent_at, is_read, chat_sessionId, is_deleted)
+    VALUES 
+    (
+        'chatmsg' + RIGHT('000' + CAST(@chatMessageCounter AS VARCHAR(3)), 3),
+        'chatsession' + RIGHT('000' + CAST((@chatMessageCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@chatMessageCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@chatMessageCounter % 10)
+            WHEN 0 THEN 'Hello, I have a question about this product.'
+            WHEN 1 THEN 'Is this item still available?'
+            WHEN 2 THEN 'What is the shipping time?'
+            WHEN 3 THEN 'Can you provide more details about the warranty?'
+            WHEN 4 THEN 'I would like to return this item.'
+            WHEN 5 THEN 'Thank you for your help!'
+            WHEN 6 THEN 'Is there a discount available?'
+            WHEN 7 THEN 'When will this be back in stock?'
+            WHEN 8 THEN 'Can you help me with my order?'
+            ELSE 'I am interested in bulk purchasing.'
+        END,
+        DATEADD(MINUTE, -(@chatMessageCounter * 15), GETDATE()),
+        CASE WHEN (@chatMessageCounter % 3) = 0 THEN 1 ELSE 0 END,
+        'chatsession' + RIGHT('000' + CAST((@chatMessageCounter % 500) + 1 AS VARCHAR(3)), 3),
+        0
+    );
+    SET @chatMessageCounter = @chatMessageCounter + 1;
+END;
+GO
+
+-- Insert sample data for Order History table (500 rows)
+DECLARE @orderHistoryCounter INT = 1;
+WHILE @orderHistoryCounter <= 500
+BEGIN
+    INSERT INTO [order_history] (id, order_id, status, changed_by, changed_at, notes)
+    VALUES 
+    (
+        'orderhistory' + RIGHT('000' + CAST(@orderHistoryCounter AS VARCHAR(3)), 3),
+        'order' + RIGHT('000' + CAST((@orderHistoryCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@orderHistoryCounter % 5)
+            WHEN 0 THEN 'Order Placed'
+            WHEN 1 THEN 'Payment Confirmed'
+            WHEN 2 THEN 'Processing'
+            WHEN 3 THEN 'Shipped'
+            ELSE 'Delivered'
+        END,
+        'user' + RIGHT('000' + CAST((@orderHistoryCounter % 50) + 1 AS VARCHAR(3)), 3),
+        DATEADD(HOUR, -(@orderHistoryCounter * 2), GETDATE()),
+        'Order status updated automatically by system or admin user #' + CAST(@orderHistoryCounter AS VARCHAR(3))
+    );
+    SET @orderHistoryCounter = @orderHistoryCounter + 1;
+END;
+GO
+
+-- Insert sample data for Orders Reverted table (500 rows)
+DECLARE @orderRevertedCounter INT = 1;
+WHILE @orderRevertedCounter <= 500
+BEGIN
+    INSERT INTO [Orders_Reverted] (id, orderId, order_itemId, RevertDate, Reason, Notes)
+    VALUES 
+    (
+        'orderreverted' + RIGHT('000' + CAST(@orderRevertedCounter AS VARCHAR(3)), 3),
+        'order' + RIGHT('000' + CAST((@orderRevertedCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'orderitem' + RIGHT('000' + CAST((@orderRevertedCounter % 500) + 1 AS VARCHAR(3)), 3),
+        DATEADD(DAY, -(@orderRevertedCounter % 30), GETDATE()),
+        CASE (@orderRevertedCounter % 5)
+            WHEN 0 THEN 'Customer Request'
+            WHEN 1 THEN 'Product Defect'
+            WHEN 2 THEN 'Wrong Item Shipped'
+            WHEN 3 THEN 'Payment Issue'
+            ELSE 'Quality Control'
+        END,
+        'Order reverted due to various reasons. Case #' + CAST(@orderRevertedCounter AS VARCHAR(3))
+    );
+    SET @orderRevertedCounter = @orderRevertedCounter + 1;
+END;
+GO
+
+-- Insert sample data for Review Reply table (500 rows)
+DECLARE @reviewReplyCounter INT = 1;
+WHILE @reviewReplyCounter <= 500
+BEGIN
+    INSERT INTO [review_reply] (id, review_id, replier_id, reply_text, created_at, is_seller_reply, is_deleted)
+    VALUES 
+    (
+        'reviewreply' + RIGHT('000' + CAST(@reviewReplyCounter AS VARCHAR(3)), 3),
+        'review' + RIGHT('000' + CAST((@reviewReplyCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@reviewReplyCounter % 100) + 1 AS VARCHAR(3)), 3),
+        CASE (@reviewReplyCounter % 6)
+            WHEN 0 THEN 'Thank you for your positive feedback!'
+            WHEN 1 THEN 'We appreciate your review and will work to improve.'
+            WHEN 2 THEN 'Sorry to hear about your experience. Please contact us.'
+            WHEN 3 THEN 'We are glad you enjoyed our product!'
+            WHEN 4 THEN 'Thank you for choosing our brand.'
+            ELSE 'Your feedback helps us improve our services.'
+        END,
+        DATEADD(DAY, -(@reviewReplyCounter % 45), GETDATE()),
+        CASE WHEN (@reviewReplyCounter % 3) = 0 THEN 1 ELSE 0 END,
+        0
+    );
+    SET @reviewReplyCounter = @reviewReplyCounter + 1;
+END;
+GO
+
+-- Insert sample data for Ticket Messages table (500 rows)
+DECLARE @ticketMessageCounter INT = 1;
+WHILE @ticketMessageCounter <= 500
+BEGIN
+    INSERT INTO [ticket_messages] (id, ticket_id, sender_id, message, sent_at, is_read)
+    VALUES 
+    (
+        'ticketmsg' + RIGHT('000' + CAST(@ticketMessageCounter AS VARCHAR(3)), 3),
+        'ticket' + RIGHT('000' + CAST((@ticketMessageCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@ticketMessageCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@ticketMessageCounter % 8)
+            WHEN 0 THEN 'I need help with my recent order.'
+            WHEN 1 THEN 'The product I received is damaged.'
+            WHEN 2 THEN 'I want to request a refund.'
+            WHEN 3 THEN 'Thank you for resolving my issue.'
+            WHEN 4 THEN 'Can you provide an update on my case?'
+            WHEN 5 THEN 'I am not satisfied with the product quality.'
+            WHEN 6 THEN 'The delivery was delayed significantly.'
+            ELSE 'I have additional questions about my order.'
+        END,
+        DATEADD(HOUR, -(@ticketMessageCounter * 3), GETDATE()),
+        CASE WHEN (@ticketMessageCounter % 4) = 0 THEN 1 ELSE 0 END
+    );
+    SET @ticketMessageCounter = @ticketMessageCounter + 1;
+END;
+GO
+
+-- Insert sample data for Ticket History table (500 rows)
+DECLARE @ticketHistoryCounter INT = 1;
+WHILE @ticketHistoryCounter <= 500
+BEGIN
+    INSERT INTO [ticket_history] (id, ticket_id, changed_by, changed_at, field_changed, old_value, new_value)
+    VALUES 
+    (
+        'tickethistory' + RIGHT('000' + CAST(@ticketHistoryCounter AS VARCHAR(3)), 3),
+        'ticket' + RIGHT('000' + CAST((@ticketHistoryCounter % 500) + 1 AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@ticketHistoryCounter % 50) + 1 AS VARCHAR(3)), 3),
+        DATEADD(HOUR, -(@ticketHistoryCounter * 2), GETDATE()),
+        CASE (@ticketHistoryCounter % 4)
+            WHEN 0 THEN 'Status'
+            WHEN 1 THEN 'Priority'
+            WHEN 2 THEN 'Assigned To'
+            ELSE 'Category'
+        END,
+        CASE (@ticketHistoryCounter % 4)
+            WHEN 0 THEN 'Open'
+            WHEN 1 THEN 'Low'
+            WHEN 2 THEN 'Unassigned'
+            ELSE 'General'
+        END,
+        CASE (@ticketHistoryCounter % 4)
+            WHEN 0 THEN 'In Progress'
+            WHEN 1 THEN 'High'
+            WHEN 2 THEN 'user001'
+            ELSE 'Technical'
+        END
+    );
+    SET @ticketHistoryCounter = @ticketHistoryCounter + 1;
+END;
+GO
+
+-- Insert sample data for UserRoles table (500 rows)
+DECLARE @userRoleCounter INT = 1;
+WHILE @userRoleCounter <= 500
+BEGIN
+    INSERT INTO [UserRoles] (UserId, RoleId)
+    VALUES 
+    (
+        'user' + RIGHT('000' + CAST(@userRoleCounter AS VARCHAR(3)), 3),
+        'role' + RIGHT('000' + CAST((@userRoleCounter % 5) + 1 AS VARCHAR(3)), 3)
+    );
+    SET @userRoleCounter = @userRoleCounter + 1;
+END;
+GO
+
+-- Insert sample data for UserClaims table (500 rows)
+DECLARE @userClaimCounter INT = 1;
+WHILE @userClaimCounter <= 500
+BEGIN
+    INSERT INTO [UserClaims] (UserId, ClaimType, ClaimValue)
+    VALUES 
+    (
+        'user' + RIGHT('000' + CAST(@userClaimCounter AS VARCHAR(3)), 3),
+        CASE (@userClaimCounter % 5)
+            WHEN 0 THEN 'Permission'
+            WHEN 1 THEN 'Role'
+            WHEN 2 THEN 'Department'
+            WHEN 3 THEN 'Location'
+            ELSE 'Level'
+        END,
+        CASE (@userClaimCounter % 5)
+            WHEN 0 THEN 'CanEdit'
+            WHEN 1 THEN 'Admin'
+            WHEN 2 THEN 'Sales'
+            WHEN 3 THEN 'US-East'
+            ELSE 'Senior'
+        END
+    );
+    SET @userClaimCounter = @userClaimCounter + 1;
+END;
+GO
+
+-- Insert sample data for UserLogins table (500 rows)
+DECLARE @userLoginCounter INT = 1;
+WHILE @userLoginCounter <= 500
+BEGIN
+    INSERT INTO [UserLogins] (LoginProvider, ProviderKey, ProviderDisplayName, UserId)
+    VALUES 
+    (
+        CASE (@userLoginCounter % 3)
+            WHEN 0 THEN 'Google'
+            WHEN 1 THEN 'Facebook'
+            ELSE 'Microsoft'
+        END,
+        'providerkey' + RIGHT('000' + CAST(@userLoginCounter AS VARCHAR(3)), 3),
+        CASE (@userLoginCounter % 3)
+            WHEN 0 THEN 'Google Account'
+            WHEN 1 THEN 'Facebook Account'
+            ELSE 'Microsoft Account'
+        END,
+        'user' + RIGHT('000' + CAST(@userLoginCounter AS VARCHAR(3)), 3)
+    );
+    SET @userLoginCounter = @userLoginCounter + 1;
+END;
+GO
+
+-- Insert sample data for UserTokens table (500 rows)
+DECLARE @userTokenCounter INT = 1;
+WHILE @userTokenCounter <= 500
+BEGIN
+    INSERT INTO [UserTokens] (UserId, LoginProvider, Name, Value)
+    VALUES 
+    (
+        'user' + RIGHT('000' + CAST(@userTokenCounter AS VARCHAR(3)), 3),
+        CASE (@userTokenCounter % 3)
+            WHEN 0 THEN 'Google'
+            WHEN 1 THEN 'Facebook'
+            ELSE 'Local'
+        END,
+        CASE (@userTokenCounter % 4)
+            WHEN 0 THEN 'RefreshToken'
+            WHEN 1 THEN 'AccessToken'
+            WHEN 2 THEN 'LoginToken'
+            ELSE 'AuthenticationToken'
+        END,
+        'token_value_' + RIGHT('000000' + CAST(@userTokenCounter AS VARCHAR(6)), 6) + '_encrypted'
+    );
+    SET @userTokenCounter = @userTokenCounter + 1;
+END;
+GO
+
+-- Insert sample data for AspNetRoleClaims table (500 rows)
+DECLARE @roleClaimCounter INT = 1;
+WHILE @roleClaimCounter <= 500
+BEGIN
+    INSERT INTO [AspNetRoleClaims] (RoleId, ClaimType, ClaimValue)
+    VALUES 
+    (
+        'role' + RIGHT('000' + CAST((@roleClaimCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@roleClaimCounter % 6)
+            WHEN 0 THEN 'Permission'
+            WHEN 1 THEN 'Action'
+            WHEN 2 THEN 'Resource'
+            WHEN 3 THEN 'Scope'
+            WHEN 4 THEN 'Level'
+            ELSE 'Access'
+        END,
+        CASE (@roleClaimCounter % 6)
+            WHEN 0 THEN 'CanManageUsers'
+            WHEN 1 THEN 'CanViewReports'
+            WHEN 2 THEN 'CanEditProducts'
+            WHEN 3 THEN 'Global'
+            WHEN 4 THEN 'Administrator'
+            ELSE 'Full'
+        END
+    );
+    SET @roleClaimCounter = @roleClaimCounter + 1;
+END;
+GO
+
+-- Insert sample data for AccountLog table (500 rows)
+DECLARE @accountLogCounter INT = 1;
+WHILE @accountLogCounter <= 500
+BEGIN
+    INSERT INTO [AccountLog] (UserID, ActionType, TimeStamp, AdditionalInfo)
+    VALUES 
+    (
+        'user' + RIGHT('000' + CAST(@accountLogCounter AS VARCHAR(3)), 3),
+        CASE (@accountLogCounter % 6)
+            WHEN 0 THEN 'Login'
+            WHEN 1 THEN 'Logout'
+            WHEN 2 THEN 'PasswordChange'
+            WHEN 3 THEN 'ProfileUpdate'
+            WHEN 4 THEN 'Purchase'
+            ELSE 'Support'
+        END,
+        DATEADD(MINUTE, -(@accountLogCounter * 5), GETDATE()),
+        'Account activity log entry #' + CAST(@accountLogCounter AS VARCHAR(3)) + ' - automated system tracking'
+    );
+    SET @accountLogCounter = @accountLogCounter + 1;
+END;
+GO
+
+-- Insert sample data for Audit Logs table (500 rows)
+DECLARE @auditLogCounter INT = 1;
+WHILE @auditLogCounter <= 500
+BEGIN
+    INSERT INTO [audit_logs] (id, user_id, action, entity_type, entity_id, old_values, new_values, ip_address, user_agent, timestamp)
+    VALUES 
+    (
+        'auditlog' + RIGHT('000' + CAST(@auditLogCounter AS VARCHAR(3)), 3),
+        'user' + RIGHT('000' + CAST((@auditLogCounter % 500) + 1 AS VARCHAR(3)), 3),
+        CASE (@auditLogCounter % 5)
+            WHEN 0 THEN 'CREATE'
+            WHEN 1 THEN 'UPDATE'
+            WHEN 2 THEN 'DELETE'
+            WHEN 3 THEN 'READ'
+            ELSE 'LOGIN'
+        END,
+        CASE (@auditLogCounter % 4)
+            WHEN 0 THEN 'Product'
+            WHEN 1 THEN 'Order'
+            WHEN 2 THEN 'User'
+            ELSE 'Category'
+        END,
+        CASE (@auditLogCounter % 4)
+            WHEN 0 THEN 'prod' + RIGHT('000' + CAST((@auditLogCounter % 500) + 1 AS VARCHAR(3)), 3)
+            WHEN 1 THEN 'order' + RIGHT('000' + CAST((@auditLogCounter % 500) + 1 AS VARCHAR(3)), 3)
+            WHEN 2 THEN 'user' + RIGHT('000' + CAST((@auditLogCounter % 500) + 1 AS VARCHAR(3)), 3)
+            ELSE 'cat' + RIGHT('000' + CAST((@auditLogCounter % 500) + 1 AS VARCHAR(3)), 3)
+        END,
+        '{"old_field":"old_value_' + CAST(@auditLogCounter AS VARCHAR(3)) + '"}',
+        '{"new_field":"new_value_' + CAST(@auditLogCounter AS VARCHAR(3)) + '"}',
+        '192.168.1.' + CAST((@auditLogCounter % 254) + 1 AS VARCHAR(3)),
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        DATEADD(MINUTE, -(@auditLogCounter * 10), GETDATE())
+    );
+    SET @auditLogCounter = @auditLogCounter + 1;
+END;
+GO
+
+-- Insert sample data for __EFMigrationsHistory table (500 rows)
+DECLARE @migrationCounter INT = 1;
+WHILE @migrationCounter <= 500
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] (MigrationId, ProductVersion)
+    VALUES 
+    (
+        '2024' + RIGHT('00' + CAST((@migrationCounter % 12) + 1 AS VARCHAR(2)), 2) + RIGHT('00' + CAST((@migrationCounter % 28) + 1 AS VARCHAR(2)), 2) + '_Migration' + RIGHT('000' + CAST(@migrationCounter AS VARCHAR(3)), 3),
+        '7.0.' + CAST((@migrationCounter % 10) AS VARCHAR(1))
+    );
+    SET @migrationCounter = @migrationCounter + 1;
+END;
+GO

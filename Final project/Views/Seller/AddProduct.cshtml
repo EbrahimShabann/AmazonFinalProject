@@ -112,15 +112,17 @@
 
     /* Form Controls */
     .glass-input {
-        background: rgba(255, 255, 255, 0.1);
+        /* background: rgba(255, 255, 255, 0.1); */
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 12px;
-        padding: 12px 16px;
-        color: white;
+        /* padding: 12px 16px; */
+        color: #E2E2E2;
         font-weight: 500;
         transition: all 0.3s ease;
         width: 100%;
+        text-align: center;
+        margin: auto;
     }
 
     .glass-input::placeholder {
@@ -464,8 +466,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Sizes" class="glass-label">Sizes</label>
-                <select asp-for="Sizes" class="glass-input" required>
-                    <option value="">Select Size</option>
+                <select id="SizesSelect" class="glass-input" multiple required>
                     <option value="XS">XS</option>
                     <option value="S">S</option>
                     <option value="M">M</option>
@@ -486,8 +487,9 @@
                     <option value="46">46</option>
                     <option value="47">47</option>
                     <option value="48">48</option>
-                    <option value="One Size">One Size</option>
+                    @* <option value="One Size">One Size</option> *@
                 </select>
+                <input type="hidden" name="Sizes" id="SizesInput" />
                 <span asp-validation-for="Sizes" class="text-danger"></span>
             </div>
 
@@ -600,23 +602,30 @@
         });
     });
 
+    // Multi-select Sizes logic
+    const sizesSelect = document.getElementById('SizesSelect');
+    const sizesInput = document.getElementById('SizesInput');
+    sizesSelect.addEventListener('change', function() {
+        const selected = Array.from(this.selectedOptions).map(opt => opt.value);
+        sizesInput.value = selected.join(',');
+    });
+    // Initialize on page load
+    sizesInput.value = Array.from(sizesSelect.selectedOptions).map(opt => opt.value).join(',');
+
 
     document.getElementById('addProductForm').addEventListener('submit', function(e) {
         const fileInput = document.getElementById('imageFilesInput');
         const files = fileInput.files;
-        let mainCount = 0, subCount = 0;
+        let mainCount = 0;
         const imageTypes = document.getElementsByName('imageTypes');
         for (let i = 0; i < imageTypes.length; i++) {
             if (imageTypes[i].value === 'main') mainCount++;
-            if (imageTypes[i].value === 'sub') subCount++;
         }
         let errorMsg = '';
         if (files.length === 0) {
-            errorMsg = 'You must add at least one main image and one sub image.';
+            errorMsg = 'You must add at least one main image.';
         } else if (mainCount !== 1) {
             errorMsg = 'You must select one main image.';
-        } else if (subCount < 1) {
-            errorMsg = 'You must add at least one sub image.';
         }
         if (errorMsg) {
             document.getElementById('imageValidationMsg').textContent = errorMsg;
