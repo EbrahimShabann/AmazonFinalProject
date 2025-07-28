@@ -1,33 +1,37 @@
 ﻿using Final_project.Models;
+using Final_project.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
     public class AdminProductsController : Controller
     {
-        private readonly AmazonDBContext _context;
+        private readonly UnitOfWork unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminProductsController(AmazonDBContext context)
+        public AdminProductsController(UnitOfWork unitOfWork, UserManager<ApplicationUser> _userManager)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
+            this._userManager = _userManager;
         }
 
-        public IActionResult pendingProduct()
+        public async Task<IActionResult> pendingProduct()
         {
-            var CountPendingProducts = _context.products.Count(p => (bool)!p.is_approved && (bool)p.is_active && !p.is_deleted);
-            var CountAcceptedProducts = _context.products.Count(p => (bool)p.is_approved && (bool)p.is_active);
-            var CountRegectedProducts = _context.products.Count(p => (bool)!p.is_approved && (bool)!p.is_active && !p.is_deleted);
-            var PendingProducts = _context.products.Where(p => (bool)!p.is_approved && (bool)p.is_active).OrderByDescending(t => t.created_at).ToList();
-            List<product_image> ProductImages = _context.product_images.ToList();
-            List<ApplicationUser> seller = _context.Users.ToList();
-            List<category> category = _context.categories.ToList();
+            var CountPendingProducts =  unitOfWork.ProductRepository.GetAll(p => (bool)!p.is_approved && (bool)p.is_active && !p.is_deleted).Count();
+            var CountAcceptedProducts = unitOfWork.ProductRepository.GetAll(p => (bool)p.is_approved && (bool)p.is_active).Count();
+            var CountRegectedProducts = unitOfWork.ProductRepository.GetAll(p => (bool)!p.is_approved && (bool)!p.is_active && !p.is_deleted).Count();
+            var PendingProducts = unitOfWork.ProductRepository.GetAll(p => (bool)!p.is_approved && (bool)p.is_active).OrderByDescending(t => t.created_at).ToList();
+            List<product_image> ProductImages = unitOfWork.ProductImageRepository.GetAll().ToList();
+            List<category> category = unitOfWork.CategoryRepository.GetAll().ToList();
             foreach (product p in PendingProducts)
             {
                 p.category = category.FirstOrDefault(c => c.id == p.category_id);
-                p.Seller = _context.Users.FirstOrDefault(u => u.Id == p.seller_id);
-                p.product_images = _context.product_images.Where(img => img.product_id == p.id).ToList();
+                p.Seller = await unitOfWork.UserRepository.GetByIdAsync(p.seller_id);
+                p.product_images = unitOfWork.ProductImageRepository.GetAll(img=>img.product_id==p.id).ToList();
             }
 
             ViewBag.CountPendingProducts = CountPendingProducts;
@@ -38,22 +42,21 @@ namespace Final_project.Controllers
 
             return View();
         }
-        public IActionResult AllProducts()
+        public async Task<IActionResult> AllProductsAsync()
         {
-            var CountActiveProducts = _context.products.Count(p => (bool)p.is_approved && (bool)p.is_active && !p.is_deleted);
-            var CountInactiveProducts = _context.products.Count(p => (bool)p.is_approved && (bool)!p.is_active && !p.is_deleted);
-            var CountDeletedProducts = _context.products.Count(p => p.is_deleted);
+            var CountActiveProducts =   unitOfWork.ProductRepository.GetAll(p => (bool)p.is_approved && (bool)p.is_active && !p.is_deleted).Count();
+            var CountInactiveProducts = unitOfWork.ProductRepository.GetAll(p => (bool)p.is_approved && (bool)!p.is_active && !p.is_deleted).Count();
+            var CountDeletedProducts =  unitOfWork.ProductRepository.GetAll(p => p.is_deleted).Count();
             ViewBag.CountActiveProducts = CountActiveProducts;
             ViewBag.CountInactiveProducts = CountInactiveProducts;
             ViewBag.CountDeletedProducts = CountDeletedProducts;
-            var sellerRoleId = _context.Roles.Where(r => r.Name == "Seller").Select(r => r.Id).FirstOrDefault();
-            var Sellers = _context.Users.Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == sellerRoleId) && u.is_active).ToList();
-            var ActiveSellers = _context.Users.Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == sellerRoleId) && u.is_active).Select(ur => ur.Id)
+            var Sellers =(await _userManager.GetUsersInRoleAsync("Seller")).ToList();
+            var ActiveSellers = Sellers.Where(u => u.is_active).Select(ur => ur.Id)
                 .Distinct()
                 .ToList();
-            var categories = _context.categories.ToList();
+            var categories = unitOfWork.CategoryRepository.GetAll().ToList();
             ViewBag.Categories = categories;
-            List<product> products = _context.products.Where(p => !p.is_deleted)
+            List<product> products = unitOfWork.ProductRepository.GetAll(p => !p.is_deleted)
                 .OrderByDescending(p => !p.is_approved& p.is_active& !p.is_deleted).ThenByDescending(p=> p.is_approved & p.is_active & !p.is_deleted).ThenByDescending(p=> p.is_approved & !p.is_active & !p.is_deleted)
                 .ThenByDescending(p => p.created_at) 
                 .ToList();
@@ -68,8 +71,7 @@ namespace Final_project.Controllers
         }
         public JsonResult GetSuggestions(string term)
         {
-            var suggestions = _context.products
-                .Where(p => p.name.Contains(term))
+            var suggestions = unitOfWork.ProductRepository.GetAll(p => p.name.Contains(term))
                 .Select(p => new { name = p.name })
                 .Distinct()
                 .ToList();
@@ -79,8 +81,7 @@ namespace Final_project.Controllers
         [HttpGet]
         public JsonResult GetSellerSuggestions(string term)
         {
-            var sellers = _context.products
-                .Where(p => p.Seller.UserName.Contains(term))
+            var sellers = unitOfWork.ProductRepository.GetAll(p => p.Seller.UserName.Contains(term))
                 .Select(p => new { name = p.Seller.UserName })
                 .Distinct()
                 .ToList();
@@ -91,7 +92,7 @@ namespace Final_project.Controllers
         public JsonResult FilterProducts(string name, string seller, string? categoryId, string status, bool approvedByMe, DateTime? approvedFrom, DateTime? approvedTo, int page = 1, int pageSize = 10)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var products = _context.products.Where(p => !p.is_deleted)
+            var products = unitOfWork.ProductRepository.GetAll(p => !p.is_deleted)
                 .OrderByDescending(p => !p.is_approved & p.is_active & !p.is_deleted).ThenByDescending(p => p.is_approved & p.is_active & !p.is_deleted).ThenByDescending(p => p.is_approved & !p.is_active & !p.is_deleted)
                 .ThenByDescending(p => p.created_at)   
                 .AsQueryable();
@@ -151,9 +152,9 @@ namespace Final_project.Controllers
             return Json(new {data=data,totalPages = totalPages });
         }
         [HttpPost]
-        public JsonResult ApproveProduct(string id)
+        public async Task<JsonResult> ApproveProduct(string id)
         {
-            var product = _context.products.FirstOrDefault(p => p.id == id);
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
             if (product == null) return Json(new { success = false });
 
             product.is_approved = true;
@@ -161,56 +162,56 @@ namespace Final_project.Controllers
             product.is_deleted = false;
             product.approved_at = DateTime.Now;
             product.approved_by = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
         [HttpPost]
-        public JsonResult RejectProduct(string id)
+        public async Task<JsonResult> RejectProduct(string id)
         {
-            var product = _context.products.FirstOrDefault(p => p.id == id);
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
             if (product == null) return Json(new { success = false });
 
             product.is_approved = false;
             product.is_active = false;
             product.is_deleted = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
-        public JsonResult deleteProduct(string id)
+        public async Task<JsonResult> deleteProduct(string id)
         {
-            var product = _context.products.FirstOrDefault(p => p.id == id);
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
             if (product == null) return Json(new { success = false });
 
             product.is_approved = false;
             product.is_active = false;
             product.is_deleted = true;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
-        public JsonResult activeProduct(string id)
+        public async Task<JsonResult> activeProduct(string id)
         {
-            var product = _context.products.FirstOrDefault(p => p.id == id);
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
             if (product == null) return Json(new { success = false });
 
             product.is_approved = true;
             product.is_active = true;
             product.is_deleted = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
-        public JsonResult inactiveProduct(string id)
+        public async Task<JsonResult> inactiveProduct(string id)
         {
-            var product = _context.products.FirstOrDefault(p => p.id == id);
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
             if (product == null) return Json(new { success = false });
 
             product.is_approved = true;
             product.is_active = false;
             product.is_deleted = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }

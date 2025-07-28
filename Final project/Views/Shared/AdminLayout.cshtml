@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +21,7 @@
     <header class="amazon-header">
         <div class="logo-section">
             <div class="logo">
-                <i class="fas fa-cube"></i> Admin<span>Pro</span>
+                <i class="fas fa-cube"></i> Admin<span>Amazon</span>
             </div>
         </div>
 
@@ -51,38 +54,35 @@
     <div class="main-container">
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
-            <a class="sidebar-item @(ViewBag.ActivePage == "Dashboard" ? "active" : "")" asp-action="Index" asp-controller="AdminDashboard">
+            <a class="sidebar-item @(currentController == "AdminDashboard" ? "active" : "")" asp-controller="AdminDashboard" asp-action="Index">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
-                <i class="fas fa-users"></i>
-                <span>Customers</span>
-            </div>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
+            <a class="sidebar-item @(currentController == "AdminSellers" ? "active" : "")" asp-action="pendingSeller" asp-controller="AdminSellers">
                 <i class="fas fa-store"></i>
                 <span>Sellers</span>
-            </div>
-            <a class="sidebar-item @(ViewBag.ActivePage == "Products" ? "active" : "")" asp-action="pendingProduct" asp-controller="AdminProducts">
+            </a>
+
+            <a class="sidebar-item @(currentController == "AdminCategory" ? "active" : "")" asp-controller="AdminCategory" asp-action="Index">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </a>
+            <a class="sidebar-item @(currentController == "AdminProducts" ? "active" : "")" asp-action="pendingProduct" asp-controller="AdminProducts">
                 <i class="fas fa-box"></i>
                 <span>Products</span>
             </a>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
-                <i class="fas fa-chart-line"></i>
-                <span>Analytics</span>
-            </div>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
-                <i class="fas fa-ticket-alt"></i>
-                <span>Support Tickets</span>
-            </div>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </div>
-            <div class="sidebar-item @(ViewBag.ActivePage == "SupportTickets" ? "active" : "")">
+            <a class="sidebar-item @(currentController == "AdminCustomerService" ? "active" : "")" asp-action="pendingCustomerService" asp-controller="AdminCustomerService">
+                <i class="fas fa-solid fa-user-tie"></i>
+                <span>Customer Service</span>
+            </a>
+            <a class="sidebar-item @(currentController == "AdminRecycleBin" ? "active" : "")" asp-controller="AdminRecycleBin" asp-action="Index">
+                <i class="fas fa-trash-alt" ></i>
+                <span>Recycle Bin</span>
+            </a>
+            <a class="sidebar-item" asp-controller="Account" asp-action="SignOut">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
-            </div>
+            </a>
         </nav>
 
         <!-- Main Content -->

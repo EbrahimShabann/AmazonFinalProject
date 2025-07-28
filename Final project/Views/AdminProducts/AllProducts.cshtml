@@ -77,6 +77,10 @@
         position: relative;
     }
 
+    .status-inactive {
+        background-color: rgba(231, 76, 60, 0.15);
+        color: var(--amazon-danger);
+    }
     .input-wrapper i {
         position: absolute;
         left: 12px;
@@ -539,19 +543,19 @@
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
-            <div class="filter-select form-control">
-                <label for="dateFilter" class="filter-label">
+            <div class="filter-group ">
+                <label for="filter-label" class="filter-label">
                      Approved From
                 </label>
-                <div class="date-input-wrapper">
+                <div class=" form-control">
                     <input type="date" id="approvedFrom" class="styled-date-input">
                 </div>
             </div>
-            <div class="filter-select form-control">
-                <label for="dateFilter" class="filter-label">
+            <div class="filter-group">
+                <label for="filter-label" class="filter-label">
                     Approved To
                 </label>
-                <div class="date-input-wrapper">
+                <div class=" form-control">
                     <input type="date" id="approvedTo" class="styled-date-input">
                 </div>
             </div>
@@ -587,7 +591,6 @@
         <table class="products-table" id="productsTable">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Product Name</th>
                     <th>Price</th>
                     <th>Seller</th>
@@ -597,72 +600,82 @@
                 </tr>
             </thead>
             <tbody id="productRows">
-                @foreach(product p in Model)
+                @if (Model == null || !Model.Any())
                 {
                     <tr>
-                        <td>@p.id</td>
-                        <td>@p.name</td>
-                        <td>@p.price</td>
-                        <td>@p.Seller.UserName</td>
-                        <td>@p.category.name</td>
-                        <td>
-                            @if ((bool)p.is_active & (bool)p.is_approved& !p.is_deleted)
-                            {
-                                <span class="status-badge status-approved">Active</span>
-                            }
-                            else if((bool)p.is_active & (bool)!p.is_approved & !p.is_deleted)
-                            {
-                                <span class="status-badge status-pending">Pending</span>
-                            }else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
-                            {
-                                <span class="status-badge status-pending">Rejected</span>
-                            }
-                            else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
-                            {
-                                <span class="status-badge status-pending">Inactive</span>
-                            }
-
-                        </td>
-                        <td>
-                            @if ((bool)p.is_active & (bool)!p.is_approved && !p.is_deleted)
-                            {
-                                <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
-                                    <i class="fas fa-check"></i> Approve
-                                </button>
-                                <button id="reject-btn" class="action-btn btn-reject" data-id="@p.id">
-                                    <i class="fas fa-times"></i> Reject
-                                </button>
-                            }
-                            else if ((bool)p.is_active & (bool)p.is_approved & !p.is_deleted)
-                            {
-                                <button id="inactive-btn" class="action-btn btn-reject" data-id="@p.id">
-                                    <i class="fas fa-ban"></i> Inactive
-                                </button>
-
-                            }
-                            else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
-                            {
-                                <button id="active-btn" class="action-btn btn-approve" data-id="@p.id">
-                                    <i class="fas fa-check"></i> Activate
-                                </button>
-                                <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            }
-                            else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
-                            {
-                                <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
-                                    <i class="fas fa-check"></i> Approved
-                                </button>
-                                <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            }
-                            <button id="details-btn" class="action-btn btn-details" data-id="@p.id">
-                                <i class="fas fa-info-circle"></i> Details
-                            </button>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-folder-open fa-2x d-block mb-2"></i>
+                            <span style="font-size: 1.2rem;">No Products found matching the filters.</span>
                         </td>
                     </tr>
+                }
+                else{
+                    @foreach(product p in Model)
+                    {
+                        <tr>
+                            <td>@p.name</td>
+                            <td>@p.price</td>
+                            <td>@p.Seller.UserName</td>
+                            <td>@p.category.name</td>
+                            <td>
+                                @if ((bool)p.is_active & (bool)p.is_approved& !p.is_deleted)
+                                {
+                                    <span class="status-badge status-approved">Active</span>
+                                }
+                                else if((bool)p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                                {
+                                    <span class="status-badge status-pending">Pending</span>
+                                }else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                                {
+                                    <span class="status-badge status-pending">Rejected</span>
+                                }
+                                else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
+                                {
+                                    <span class="status-badge status-inactive">Inactive</span>
+                                }
+
+                            </td>
+                            <td>
+                                @if ((bool)p.is_active & (bool)!p.is_approved && !p.is_deleted)
+                                {
+                                    <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button id="reject-btn" class="action-btn btn-reject" data-id="@p.id">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                }
+                                else if ((bool)p.is_active & (bool)p.is_approved & !p.is_deleted)
+                                {
+                                    <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@p.id">
+                                        <i class="fas fa-ban"></i> Inactive
+                                    </button>
+
+                                }
+                                else if((bool)!p.is_active & (bool)p.is_approved & !p.is_deleted)
+                                {
+                                    <button id="active-btn" class="action-btn btn-approve" data-id="@p.id">
+                                        <i class="fas fa-check"></i> Activate
+                                    </button>
+                                    <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                }
+                                else if((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
+                                {
+                                    <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
+                                        <i class="fas fa-check"></i> Approved
+                                    </button>
+                                    <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                }
+                                <a id="details-btn" class="action-btn btn-details" href="Seller" data-id="@p.id">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
@@ -700,6 +713,17 @@
         $.get('/AdminProducts/FilterProducts',{ name, seller, categoryId, status, approvedByMe, approvedFrom, approvedTo,page: currentPage, pageSize: pageSize} ,
                     function (response) {
                     let rows = '';
+                    if(response.data.length === 0) {
+                        rows = `<tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="fas fa-folder-open fa-2x d-block mb-2"></i>
+                                        <span style="font-size: 1.2rem;">No Products found matching the filters.</span>
+                                    </td>
+                                </tr>`;
+                        $("#productRows").html(rows);
+                        $("#pagination").empty();
+                        return;
+                    }
                     response.data.forEach(p => {
                         let statusHtml = (p.approved)
                         ? `<span class="status-badge status-approved">Active</span>`
@@ -732,8 +756,8 @@
                                     <i class="fas fa-trash"></i> Delete
                                 </button>`: '';
                         rows += `
+
                         <tr>
-                            <td>${p.id}</td>
                             <td>${p.name}</td>
                             <td>${p.price}</td>
                             <td>${p.sellerName}</td>
@@ -754,7 +778,7 @@
     function renderPagination(totalPages) {
         let html = '';
         for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="pagination-btn  ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} page-btn" data-page="${i}">${i}</button>`;
+            html += `<button class="pagination-btn  ${i == currentPage ? 'active' : 'btn-outline-primary'} btn-outline-primary" data-page="${i}">${i}</button>`;
         }
         $("#pagination").html(html);
     }

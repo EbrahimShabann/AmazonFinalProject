@@ -7,6 +7,10 @@
 
 
 <style>
+    .status-inactive {
+        background-color: rgba(231, 76, 60, 0.15);
+        color: var(--amazon-danger);
+    }
     .filter-section {
         background: var(--amazon-card);
         border-radius: 12px;
@@ -487,7 +491,6 @@
         <table class="products-table" id="sellersTable">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>seller Name</th>
                     <th>Created at</th>
                     <th>Status</th>
@@ -499,7 +502,6 @@
                 @foreach (ApplicationUser u in Model)
                 {
                     <tr>
-                        <td>@u.Id</td>
                         <td>@u.UserName</td>
                         <td>@u.created_at</td>
                         <td>
@@ -509,13 +511,13 @@
                             }
                             else if (!u.is_active & !u.is_deleted)
                             {
-                                <span class="status-badge deactivate-btn">Inactive</span>
+                                <span class="status-badge status-inactive">Inactive</span>
                             }
                         </td>
                         <td>
                             @if (u.is_active & !u.is_deleted)
                             {
-                                <button id="inactive-btn" class="action-btn btn-reject" data-id="@u.Id">
+                                <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@u.Id">
                                     <i class="fas fa-ban"></i> Inactivate
                                 </button>
                             }
@@ -535,6 +537,7 @@
                         </td>
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>

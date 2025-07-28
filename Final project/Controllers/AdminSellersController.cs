@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using Final_project.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -8,75 +9,68 @@ namespace Final_project.Controllers
 {
     public class AdminSellersController : Controller
     {
-       
-        private readonly AmazonDBContext _context;
+
+        private readonly UnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminSellersController(AmazonDBContext context, UserManager<ApplicationUser> _userManager)
+        public AdminSellersController(UnitOfWork unitOfWork, UserManager<ApplicationUser> _userManager)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
             this._userManager = _userManager;
+
         }
 
-
-        public async Task<IActionResult> pendingSellers()
+        public async Task<IActionResult> pendingseller()
         {
-            var sellers = (await _userManager.GetUsersInRoleAsync("Seller")); 
-            ViewBag.CountPendingSellers = sellers.Where( u=>   !u.is_deleted & !u.is_active).Count();
-            ViewBag.CountAcceptedSellers = sellers.Where(u => !u.is_deleted & u.is_active).Count();
-            ViewBag.CountRegectedSellers = sellers.Where(u => u.is_deleted & !u.is_active).Count();
-            ViewBag.PendeingSellers = sellers.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
-            ViewBag.ActivePage = "Products";
+            var seller = (await _userManager.GetUsersInRoleAsync("Seller"));
+            ViewBag.CountPendingsellers = seller.Where(u => !u.is_deleted & !u.is_active).Count();
+            ViewBag.CountAcceptedsellers = seller.Where(u => !u.is_deleted & u.is_active).Count();
+            ViewBag.CountRegectedsellers = seller.Where(u => u.is_deleted & !u.is_active).Count();
+            ViewBag.Pendeingsellers = seller.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
 
             return View();
         }
-        public async Task<IActionResult> AllSellers()
+        public async Task<IActionResult> Allsellers()
         {
-            var sellers = (await _userManager.GetUsersInRoleAsync("Seller"));
-            ViewBag.CountAllSellers = sellers.Where(u=>!u.is_deleted).Count();
-            ViewBag.CountActiveSellers = sellers.Where(u => !u.is_deleted & u.is_active).Count();
-            ViewBag.CountInactiveSellers = sellers.Where(u => !u.is_deleted & !u.is_active).Count();
+            var seller = (await _userManager.GetUsersInRoleAsync("Seller"));
+            ViewBag.CountAllsellers = seller.Where(u => !u.is_deleted).Count();
+            ViewBag.CountActivesellers = seller.Where(u => !u.is_deleted & u.is_active).Count();
+            ViewBag.CountInactivesellers = seller.Where(u => !u.is_deleted & !u.is_active).Count();
 
-            return View(sellers.Where(u=>!u.is_deleted).ToList());
-        }
-
-
-        [HttpPost]
-        public async Task<JsonResult> ApproveSeller(string id)
-        {
-            var sellers = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
-            if (sellers == null) return Json(new { success = false });
-
-            sellers.is_active = true;
-            sellers.is_deleted = false;
-            _context.SaveChanges();
-
-            return Json(new { success = true });
+            return View(seller.Where(u => !u.is_deleted).ToList());
         }
 
         [HttpPost]
-        public async Task<JsonResult> RejectSeller(string id)
+        public async Task<JsonResult> Approveseller(string id)
         {
-            var sellers = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u=>u.Id==id);
-            if (sellers == null) return Json(new { success = false });
+            var seller = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
+            if (seller == null) return Json(new { success = false });
 
-            sellers.is_active = false;
-            sellers.is_deleted = true;
-            _context.SaveChanges();
+            seller.is_active = true;
+            seller.is_deleted = false;
+            unitOfWork.save();
+            return Json(new { success = true });
+        }
+        [HttpPost]
+        public async Task<JsonResult> Rejectseller(string id)
+        {
+            var seller = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
+            if (seller == null) return Json(new { success = false });
+
+            seller.is_active = false;
+            seller.is_deleted = true;
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
-        public async Task<JsonResult> inactiveSeller(string id)
+        public async Task<JsonResult> inactiveseller(string id)
         {
-            var sellers = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
-            if (sellers == null) return Json(new { success = false });
-            foreach(product p in _context.products.Where(p => p.seller_id == id).ToList())
-            {
-                p.is_active = false;
-            }
-            sellers.is_active = false;
-            sellers.is_deleted = false;
-            _context.SaveChanges();
+            var seller = (await _userManager.GetUsersInRoleAsync("Seller")).FirstOrDefault(u => u.Id == id);
+            if (seller == null) return Json(new { success = false });
+
+            seller.is_active = false;
+            seller.is_deleted = false;
+            unitOfWork.save();
 
             return Json(new { success = true });
         }

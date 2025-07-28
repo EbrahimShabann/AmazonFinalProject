@@ -41,17 +41,17 @@
         </div>
 
         <div class="ticket-list">
-            @if (ViewBag.PendeingCustomerService.Count != 0)
+            @if (ViewBag.PendingCustomerService.Count != 0)
             {
                 @for (int i = 0; i < 5; i++)
                 {
-                    <div class="product-card" id="seller-@ViewBag.PendeingCustomerService[i].Id">
-                        <img src="@ViewBag.PendeingCustomerService[i].profile_picture_url" class="product-image">
+                    <div class="product-card" id="seller-@ViewBag.PendingCustomerService[i].Id">
+                        <img src="@ViewBag.PendingCustomerService[i].profile_picture_url" class="product-image">
                         <div class="product-info">
-                            <div class="product-title">@ViewBag.PendeingCustomerService[i].UserName</div>
+                            <div class="product-title">@ViewBag.PendingCustomerService[i].UserName</div>
                             <div class="product-meta">
                                 <div class="meta-item">
-                                    <i class="fas fa-tag"></i> @ViewBag.PendeingSellersCustomerService[i].created_at
+                                    <i class="fas fa-tag"></i> @ViewBag.PendingCustomerService[i].created_at
                                 </div>
                                 <div class="meta-item">
                                     <span class="status-badge status-pending">Pending Review</span>
@@ -60,11 +60,11 @@
                         </div>
                         <div class="product-actions">
                             <!-- Use buttons with data attributes instead of links -->
-                            <button class="action-btn btn-approve" data-id="@ViewBag.PendeingCustomerService[i].Id">Approve</button>
-                            <button class="action-btn btn-reject" data-id="@ViewBag.PendeingCustomerService[i].Id">Reject</button>
+                            <button class="action-btn btn-approve" data-id="@ViewBag.PendingCustomerService[i].Id">Approve</button>
+                            <button class="action-btn btn-reject" data-id="@ViewBag.PendingCustomerService[i].Id">Reject</button>
                         </div>
                     </div>
-                    if (i == ViewBag.PendeingCustomerService.Count - 1) { break; }
+                    if (i == ViewBag.PendingCustomerService.Count - 1) { break; }
                 }
             }
             else
@@ -94,7 +94,7 @@
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert("Failed to approve seller.");
+                    alert("Failed to approve CustomerService.");
                 }
             });
         });

@@ -1,31 +1,33 @@
 ﻿using Final_project.Models;
+using Final_project.Repository;
 using Final_project.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
     public class AdminCategoryController : Controller
     {
 
-        private readonly AmazonDBContext _context;
+        private readonly UnitOfWork unitOfWork;
 
-        public AdminCategoryController(AmazonDBContext context)
+        public AdminCategoryController(UnitOfWork unitOfWork)
         {
-            _context = context;
-            
+            this.unitOfWork = unitOfWork;
+
         }
 
         // GET: /Category
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             int page = 1, pageSize = 10;
-            var categories = _context.categories.Where(c => !c.is_deleted).ToList();
+            var categories = unitOfWork.CategoryRepository.GetAll(c=>!c.is_deleted).ToList();
             foreach (category category in categories)
             {
-                category.CreatedByUser = _context.Users.FirstOrDefault(u => u.Id == category.created_by);
+                category.CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(category.created_by);
 
             }
             
@@ -42,46 +44,46 @@ namespace Final_project.Controllers
             return View(categories);
         }
         [HttpPost]
-        public IActionResult ActivateCategory(string id)
+        public async Task<IActionResult> ActivateCategory(string id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.id == id);
+            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category == null)
                 return Json(new { success = false, message = "Category not found" });
-            foreach (product p in _context.products.Where(p=>p.category_id==id).ToList())
+            foreach (product p in unitOfWork.ProductRepository.GetAll(p=>p.category_id==id).ToList())
             {
                 p.is_active= true;
                
             }
             category.is_active = true;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true, message = "Category activated successfully" });
         }
 
         [HttpPost]
-        public IActionResult DeactivateCategory(string id)
+        public async Task<IActionResult> DeactivateCategory(string id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.id == id);
+            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category == null)
                 return Json(new { success = false, message = "Category not found" });
-            foreach (product p in _context.products.Where(p => p.category_id == id).ToList())
+            foreach (product p in unitOfWork.ProductRepository.GetAll(p => p.category_id == id).ToList())
             {
                 p.is_active = false;
 
             }
             category.is_active = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true, message = "Category deactivated successfully" });
         }
 
         [HttpPost]
-        public IActionResult DeleteCategory(string id)
+        public async Task<IActionResult> DeleteCategory(string id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.id == id);
+            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category == null)
                 return Json(new { success = false, message = "Category not found" });
-            foreach (product p in _context.products.Where(p => p.category_id == id).ToList())
+            foreach (product p in unitOfWork.ProductRepository.GetAll(p => p.category_id == id).ToList())
             {
                 p.is_active = false;
                 p.is_deleted = true;
@@ -89,30 +91,28 @@ namespace Final_project.Controllers
             }
             category.is_deleted = true;
             category.is_active = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true, message = "Category deleted successfully" });
         }
-        public IActionResult CategoryListPartial()
+        public async Task<IActionResult> CategoryListPartial()
         {
-            var categories = _context.categories
-                .Where(c => !c.is_deleted).OrderByDescending(c=> c.is_active)
-                .ToList();
+            var categories = unitOfWork.CategoryRepository.GetAll(c => !c.is_deleted).OrderByDescending(c=> c.is_active).ToList();
             foreach (category category in categories)
             {
-                category.CreatedByUser = _context.Users.FirstOrDefault(u => u.Id == category.created_by);
+                category.CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(category.created_by);
 
             }
             return PartialView(categories);
         }
 
         [HttpGet]
-        public IActionResult FilterCategories(string name, string createdBy, string status, DateTime? dateFrom, DateTime? dateTo, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> FilterCategories(string name, string createdBy, string status, DateTime? dateFrom, DateTime? dateTo, int page = 1, int pageSize = 10)
         {
-            var query = _context.categories.Where(c=>!c.is_deleted).ToList(); // executes the query now
+            var query = unitOfWork.CategoryRepository.GetAll(c=>!c.is_deleted).ToList(); // executes the query now
             foreach (category category in query)
             {
-                category.CreatedByUser = _context.Users.FirstOrDefault(u => u.Id == category.created_by);
+                category.CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(category.created_by);
             }
             if (!string.IsNullOrEmpty(name))
                 query = query.Where(c => c.name.Contains(name)).ToList();
@@ -160,8 +160,7 @@ namespace Final_project.Controllers
         [HttpGet]
         public IActionResult SuggestCategoryNames(string term)
         {
-            var suggestions = _context.categories
-                .Where(c => c.name.Contains(term))
+            var suggestions = unitOfWork.CategoryRepository.GetAll(c => c.name.Contains(term))
                 .Select(c => c.name)
                 .Distinct()
                 .Take(5)
@@ -173,8 +172,7 @@ namespace Final_project.Controllers
         [HttpGet]
         public IActionResult SuggestCreators(string term)
         {
-            var suggestions = _context.Users
-                .Where(u => u.UserName.Contains(term))
+            var suggestions =unitOfWork.UserRepository.GetAll(u => u.UserName.Contains(term))
                 .Select(u => u.UserName)
                 .Distinct()
                 .Take(5)
@@ -203,10 +201,11 @@ namespace Final_project.Controllers
                 await imgFile.CopyToAsync(stream);
 
                 // Point your model at the saved path
-                model.image_url = "/uploads/" + fileName;
+                model.image_url = "/Category/" + fileName;
             }
 
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var newCategory = new category
             {
@@ -215,19 +214,19 @@ namespace Final_project.Controllers
                 description = model.description,
                 parent_category_id = model.parent_category_id,
                 image_url = model.image_url,
-                created_by = _context.Users.FirstOrDefault(u=>u.UserName=="Admin1").Id, // Replace with your logic
+                created_by = currentUserId, // Replace with your logic
                 created_at = DateTime.Now,
-                ParentCategory = _context.categories.FirstOrDefault(c => c.id == model.parent_category_id),
-                CreatedByUser = _context.Users.FirstOrDefault(u => u.UserName == "Admin1"), // Replace with your logic
-                last_modified_by = _context.Users.FirstOrDefault(u => u.UserName == "Admin1").Id, // Replace with your logic
+                ParentCategory = await unitOfWork.CategoryRepository.GetByIdAsync(model.parent_category_id),
+                CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
+                last_modified_by = currentUserId, // Replace with your logic
                 last_modified_at = DateTime.Now,
-                LastModifiedByUser= _context.Users.FirstOrDefault(u => u.UserName == "Admin1"), // Replace with your logic
+                LastModifiedByUser= await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
                 deleted_by = null, // Set to null if not deleted
 
             };
 
-            _context.categories.Add(newCategory);
-            await _context.SaveChangesAsync();
+            unitOfWork.CategoryRepository.add(newCategory);
+            unitOfWork.save();
             return Json(new { success = true, message = "Category added successfully!" });
         }
 
@@ -235,17 +234,12 @@ namespace Final_project.Controllers
         {
             if (string.IsNullOrEmpty(id)) return NotFound();
 
-            var category = await _context.categories
-                .Include(c => c.ParentCategory)
-                .Include(c => c.CreatedByUser)
-                .Include(c => c.LastModifiedByUser)
-                .Include(c => c.DeletedByUser)
-                .FirstOrDefaultAsync(c => c.id == id);
+            var category = await unitOfWork.CategoryRepository.GetByIdAsync(id);
 
             if (category == null) return NotFound();
 
-            var subcategoriesCount = await _context.categories.CountAsync(c => c.parent_category_id == id);
-            var productCount = await _context.products.CountAsync(p => p.category_id == id);
+            var subcategoriesCount = unitOfWork.CategoryRepository.GetAll(c => c.parent_category_id == id).Count();
+            var productCount =unitOfWork.ProductRepository.GetAll(p => p.category_id == id).Count();
 
             ViewBag.SubcategoryCount = subcategoriesCount;
             ViewBag.ProductCount = productCount;

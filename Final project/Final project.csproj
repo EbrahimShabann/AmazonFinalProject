@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Repository\DiscountsRepositoryFile\" />
     <Folder Include="Repository\OrderRepositoryFile\" />
     <Folder Include="Repository\ProductDiscountsRepositoryFile\" />
