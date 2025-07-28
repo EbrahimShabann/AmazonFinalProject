@@ -372,6 +372,67 @@
         color: white;
     }
 
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-top: 1rem;
+        animation: fadeIn 0.6s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+    }
+
+        .empty-state.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #e0e0e0;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .empty-state h3 {
+            color: #555;
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .empty-state p {
+            color: #777;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+
+        .empty-state .action-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+    /* Add this to existing animations */
+    @@keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
     /* Animations */
     @@keyframes slideDown {
         from
@@ -520,197 +581,247 @@
 
     <!-- Products Tab Content -->
     <div class="tab-content active" id="products-tab">
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-
-                        <th>Product</th>
-                        <th>Category</th>
-                        <th>Seller</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Product 1 -->
-                    @foreach (var p in Model.DeletedProducts)
-                    {
+        @if (Model.DeletedProducts.Any())
+        {
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="item-info">
-                                    <img src="@p.product_images" alt="Smartphone" class="item-image">
-                                    <div class="item-details">
-                                        <div class="item-name"></div>
-                                        <div class="item-id">ID: @p.id</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>@p.category.name</td>
-                            <td>
-                                <div class="deleted-by">
-                                    <img src="@Model.Users.FirstOrDefault(s=>s.Id==p.seller_id).profile_picture_url" alt="Admin">
-                                    <span>@Model.Users.FirstOrDefault(s=>s.Id==p.seller_id).UserName</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-restore">
-                                        <i class="fas fa-undo"></i> Restore
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
+
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Seller</th>
+                            <th>Actions</th>
                         </tr>
-                    }
- 
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        <!-- Product 1 -->
+                        @foreach (var p in Model.DeletedProducts)
+                        {
+                                <tr data-id="@p.id" data-type="product">
+                                    <td>
+                                        <div class="item-info">
+                                            <img src="@p.img_Url" alt="Smartphone" class="item-image">
+                                            <div class="item-details">
+                                                <div class="item-name"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@p.categoryName</td>
+                                    <td>
+                                        <div class="deleted-by">
+                                            <img src="@p.sellerImg" alt="Admin">
+                                            <span>@p.sellerName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-restore">
+                                                <i class="fas fa-undo"></i> Restore
+                                            </button>
+                                            <button class="action-btn btn-delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
+
+                    </tbody>
+                </table>
+                </div>
+        }
+        else
+        {
+                <div class="empty-state">
+                    <i class="fas fa-box-open" style="animation: float 3s ease-in-out infinite;"></i>
+                    <h3>No Deleted Products</h3>
+                    <p>The recycle bin for products is currently empty. Deleted products will appear here.</p>
+                    <button class="action-btn btn-restore" onclick="location.href='@Url.Action("Products", "Admin")'">
+                        <i class="fas fa-arrow-left"></i> Back to Products
+                    </button>
+                </div>
+        }
     </div>
 
     <!-- Categories Tab Content -->
     <div class="tab-content" id="categories-tab">
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-
-                        <th>Category</th>
-                        <th>Parent Category</th>
-                        <th>Deleted By</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var c in Model.DeletedCategories)
-                    {
+        @if (Model.DeletedCategories.Any())
+        {
+                <div class="table-container">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="item-info">
-                                    <img src="@c.image_url" alt="Electronics" class="item-image">
-                                    <div class="item-details">
-                                        <div class="item-name">@c.name</div>
-                                        <div class="item-id">ID: @c.id</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>@c.ParentCategory.name</td>
-                            <td>
-                                <div class="deleted-by">
-                                    <img src="@Model.Users.FirstOrDefault(a=>a.Id==c.deleted_by).profile_picture_url" alt="Admin">
-                                    <span>@Model.Users.FirstOrDefault(a => a.Id == c.deleted_by).UserName</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-restore">
-                                        <i class="fas fa-undo"></i> Restore
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
 
-                </tbody>
-            </table>
-        </div>
+                            <th>Category</th>
+                            <th>Parent Category</th>
+                            <th>Deleted By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model.DeletedCategories)
+                        {
+                                <tr data-id="c.id" data-type="category">
+                                    <td>
+                                        <div class="item-info">
+                                            <img src="@c.img_Url" alt="Electronics" class="item-image">
+                                            <div class="item-details">
+                                                <div class="item-name">@c.name</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                        <td>@c.ParentCategory</td>
+                                    <td>
+                                        <div class="deleted-by">
+                                            <img src="@c.deletedByImg" alt="Admin">
+                                            <span>@c.DeletedByUser</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-restore">
+                                                <i class="fas fa-undo"></i> Restore
+                                            </button>
+                                            <button class="action-btn btn-delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+                <div class="empty-state">
+                    <i class="fas fa-tag" style="animation: float 3s ease-in-out infinite 0.2s;"></i>
+                    <h3>No Deleted Categories</h3>
+                    <p>There are currently no categories in the recycle bin. Deleted categories will appear here.</p>
+                    <button class="action-btn btn-restore" onclick="location.href='@Url.Action("Categories", "Admin")'">
+                        <i class="fas fa-arrow-left"></i> Manage Categories
+                    </button>
+                </div>
+        }
     </div>
 
     <!-- Sellers Tab Content -->
     <div class="tab-content" id="sellers-tab">
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        
-                        <th>Seller</th>
-                        <th>Deleted At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Seller 1 -->
-                    @foreach (var s in Model.DeletedSellers)
-                    {
+        @if (Model.DeletedSellers.Any())
+        {
+                <div class="table-container">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="item-info">
-                                    <img src="@s.profile_picture_url" alt="John Smith" class="item-image">
-                                    <div class="item-details">
-                                        <div class="item-name">@s.UserName</div>
-                                        <div class="item-id">ID: @s.Id</div>
-                                    </div>
-                                </div>
-                            </td>
 
-                            <td>@s.deleted_at</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-restore">
-                                        <i class="fas fa-undo"></i> Restore
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
+                            <th>Seller</th>
+                            <th>Deleted At</th>
+                            <th>Actions</th>
                         </tr>
-                    }
- 
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        <!-- Seller 1 -->
+                        @foreach (var s in Model.DeletedSellers)
+                        {
+                                <tr data-id="@s.id" data-type="seller">
+                                    <td>
+                                        <div class="item-info">
+                                            <img src="@s.img_url" alt="John Smith" class="item-image">
+                                            <div class="item-details">
+                                                <div class="item-name">@s.name</div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>@s.deleted_at</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-restore">
+                                                <i class="fas fa-undo"></i> Restore
+                                            </button>
+                                            <button class="action-btn btn-delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+                <div class="empty-state">
+                    <i class="fas fa-store-slash" style="animation: float 3s ease-in-out infinite 0.4s;"></i>
+                    <h3>No Deleted Sellers</h3>
+                    <p>The seller recycle bin is empty. Any deleted seller accounts will appear here.</p>
+                    <button class="action-btn btn-restore" onclick="location.href='@Url.Action("Sellers", "Admin")'">
+                        <i class="fas fa-arrow-left"></i> View Sellers
+                    </button>
+                </div>
+        }
     </div>
 
     <!-- support Tab Content -->
     <div class="tab-content" id="support-tab">
-        <div class="table-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">
-                        </th>
-                        <th>Customer Service</th>
-                        <th>Deleted At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var s in Model.DeletedCustomerService)
-                    {
+        @if (Model.DeletedCustomerService.Any())
+        {
+                <div class="table-container">
+                <table class="data-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <div class="item-info">
-                                    <img src="@s.profile_picture_url" alt="John Smith" class="item-image">
-                                    <div class="item-details">
-                                        <div class="item-name">@s.UserName</div>
-                                        <div class="item-id">ID: @s.Id</div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td>@s.deleted_at</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-restore">
-                                        <i class="fas fa-undo"></i> Restore
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
+                            <th>Customer Service</th>
+                            <th>Deleted At</th>
+                            <th>Actions</th>
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.DeletedCustomerService)
+                        {
+                                <tr data-id="@s.id" data-type="customerService">
+                                    <td>
+                                        <div class="item-info">
+                                            <img src="@s.img_url" alt="John Smith" class="item-image">
+                                            <div class="item-details">
+                                                <div class="item-name">@s.name</div>
+                                            </div>
+                                        </div>
+                                    </td>
 
-                </tbody>
-            </table>
-        </div>
+                                    <td>@s.deleted_at</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-restore">
+                                                <i class="fas fa-undo"></i> Restore
+                                            </button>
+                                            <button class="action-btn btn-delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+                <div class="empty-state">
+                    <i class="fas fa-user-slash" style="animation: float 3s ease-in-out infinite 0.6s;"></i>
+                    <h3>No Deleted Customer Service</h3>
+                    <p>There are currently no deleted customer service accounts.</p>
+                    <button class="action-btn btn-restore" onclick="location.href='@Url.Action("CustomerService", "Admin")'">
+                        <i class="fas fa-arrow-left"></i> Manage Support
+                    </button>
+                </div>
+        }
     </div>
 </main>
 <script>
@@ -758,5 +869,114 @@
                 document.getElementById(`${tabId}-tab`).classList.add('active');
             });
         });
+
+
+        setTimeout(() => {
+            document.querySelectorAll('.empty-state').forEach(state => {
+                state.classList.add('show');
+            });
+        }, 300);
+
+        // Add floating animation to icons
+        const floatIcons = document.querySelectorAll('.empty-state i');
+        floatIcons.forEach(icon => {
+            icon.style.animation = `float 3s ease-in-out infinite ${Math.random() * 0.5}s`;
+        });
+
     });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        // Handle restore actions
+        document.querySelectorAll('.btn-restore').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const id = row.dataset.id;
+                const type = row.dataset.type;
+
+                let url;
+                switch(type) {
+                    case 'product':
+                        url = '@Url.Action("RestoreProduct", "AdminRecycleBin")';
+                        break;
+                    case 'category':
+                        url = '@Url.Action("RestoreCategory", "AdminRecycleBin")';
+                        break;
+                    case 'seller':
+                        url = '@Url.Action("RestoreSeller", "AdminRecycleBin")';
+                        break;
+                    case 'customerService':
+                        url = '@Url.Action("RestoreCastomerService", "AdminRecycleBin")';
+                        break;
+                }
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({ id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.remove();
+                        checkEmptyState(row.closest('.tab-content'));
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+        });
+
+        // Handle permanent delete actions
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!confirm('Are you sure? This will permanently delete the item!')) return;
+
+                const row = this.closest('tr');
+                const id = row.dataset.id;
+                const type = row.dataset.type;
+
+                let url;
+                switch(type) {
+                    case 'product':
+                        url = '@Url.Action("HardDeleteProduct", "AdminRecycleBin")';
+                        break;
+                    case 'category':
+                        url = '@Url.Action("HardDeleteCategory", "AdminRecycleBin")';
+                        break;
+                    case 'seller':
+                        url = '@Url.Action("HardDeleteSeller", "AdminRecycleBin")';
+                        break;
+                    case 'customerService':
+                        url = '@Url.Action("HardDeleteCustomerService", "AdminRecycleBin")';
+                        break;
+                }
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({ id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.remove();
+                        checkEmptyState(row.closest('.tab-content'));
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+        });
+
+        // Show empty state if no items remain
+
+    });
+
+
 </script>

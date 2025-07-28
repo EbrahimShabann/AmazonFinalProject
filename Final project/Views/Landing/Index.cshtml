@@ -26,7 +26,7 @@
                 <div class="product-card" data-product-id="@item.ProductId">
                     <div class="discount-badge">-@item.DiscountPercentage%</div>
                     <div class="product-image">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                        <img src="./images/products/@item.ImageUrl" alt="@item.ProductName" />
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -85,7 +85,7 @@
             {
                 <div class="product-card" data-product-id="@item.ProductId">
                     <div class="product-image">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                        <img src="./images/products/@item.ImageUrl" alt="@item.ProductName" />
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -144,7 +144,7 @@
             {
                 <div class="product-card" data-product-id="@item.ProductId">
                     <div class="product-image">
-                        <img src="@item.ImageUrl" alt="@item.ProductName" style="width:100%; height:100%" />
+                        <img src="./images/products/@item.ImageUrl" alt="@item.ProductName" style="width:100%; height:100%" />
                     </div>
                     <div class="product-title">
                         @item.ProductName
@@ -183,6 +183,7 @@
     </div>
 </section>
 
+<partial name="_WhyShopWithUs" />
 
 @section Scripts {
     <script>

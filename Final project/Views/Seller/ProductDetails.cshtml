@@ -5,239 +5,569 @@
     var subImages = Model.product_images?.Where(pi => pi.image_type == "sub" && pi.is_primary != true).ToList() ?? new List<product_image>();
 }
 
-<h2>Product Details</h2>
-<div class="card mb-4">
-    <div class="row g-0">
-        <div class="col-md-4">
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
 
-            <div class="main-image-container mb-3">
-                @if (mainImage != null)
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Product Details Panel */
+    .product-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .product-panel:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Product Image */
+    .main-image-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .main-image-container img {
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .main-image-container img:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Thumbnail Images */
+    .thumbnail-container {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .thumbnail-image {
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .thumbnail-image:hover {
+        border-color: var(--amazon-orange);
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+    }
+
+    /* Product Info */
+    .product-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .product-description {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1.5rem;
+    }
+
+    .product-info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .product-info-list li {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+    }
+
+    .product-info-list li:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateX(5px);
+    }
+
+    .product-info-list strong {
+        color: var(--amazon-orange);
+        font-weight: 600;
+    }
+
+    /* Color Swatches */
+    .color-swatch {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        margin-right: 6px;
+        vertical-align: middle;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .color-swatch:hover {
+        transform: scale(1.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .floating-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .floating-btn:hover::before {
+        left: 100%;
+    }
+
+    .floating-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+
+    .floating-btn.primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .floating-btn.success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    .floating-btn.warning {
+        background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
+        border: none;
+    }
+
+    .floating-btn.danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+    }
+
+    /* Seller Info Section */
+    .seller-info-section {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .seller-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 3px solid var(--amazon-orange);
+        box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+    }
+
+    /* Utility Classes */
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.5rem;
+        margin-left: -0.5rem;
+    }
+
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 33.333333%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .col-md-8 {
+        flex: 0 0 auto;
+        width: 66.666667%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .col-4 {
+        flex: 0 0 auto;
+        width: 33.333333%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .my-4 {
+        margin-top: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .text-success {
+        color: var(--success-green) !important;
+    }
+
+    .fw-bold {
+        font-weight: 700 !important;
+    }
+
+    .list-unstyled {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .align-items-center {
+        align-items: center !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .bg-light {
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .col-md-4, .col-md-8 {
+            width: 100%;
+        }
+
+        .product-panel {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-cube me-3"></i>
+                Product Details
+            </h1>
+            <p class="hero-subtitle">
+                View and manage product information
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/MyProducts" class="floating-btn primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to My Products
+            </a>
+            <a href="/Seller/AllProducts" class="floating-btn success">
+                <i class="fas fa-database me-2"></i>View All Products
+            </a>
+        </div>
+    </div>
+
+    <!-- Product Details Panel -->
+    <div class="product-panel fade-in">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <div class="main-image-container mb-3">
+                    @if (mainImage != null)
+                    {
+                            <img id="mainImage" src="@mainImage.image_url" class="img-fluid rounded" alt="Main Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
+                    }
+                    else if (Model.product_images != null && Model.product_images.Any())
+                    {
+                            <img id="mainImage" src="@Model.product_images.First().image_url" class="img-fluid rounded" alt="Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
+                    }
+                    else
+                    {
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width:400px;height:400px;margin:auto;">
+                                <span class="text-muted">No Image</span>
+                            </div>
+                    }
+                </div>
+
+                @if (Model.product_images != null && Model.product_images.Count() > 1)
                 {
-                    <img id="mainImage" src="@mainImage.image_url" class="img-fluid rounded" alt="Main Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
-                }
-                else if (Model.product_images != null && Model.product_images.Any())
-                {
-                    <img id="mainImage" src="@Model.product_images.First().image_url" class="img-fluid rounded" alt="Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
-                }
-                else
-                {
-                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width:400px;height:400px;margin:auto;">
-                        <span class="text-muted">No Image</span>
-                    </div>
+                        <div class="thumbnail-container">
+                            <div class="row">
+                            @{
+                                var subImgs = Model.product_images.ToList();
+                                int colCount = 0;
+                            }
+                            @foreach (var image in subImgs)
+                            {
+                                if (colCount % 3 == 0 && colCount != 0)
+                                {
+                                    @:</div><div class="row">
+                                }
+                                        <div class="col-4 mb-2">
+                                            <img src="@image.image_url"
+                                                 class="img-thumbnail thumbnail-image"
+                                                 style="height: 60px; width: 100%; object-fit: cover; cursor: pointer;"
+                                                 onclick="changeMainImage('@image.image_url')"
+                                                 alt="Product Thumbnail" />
+                                        </div>
+                                colCount++;
+                            }
+                            </div>
+                        </div>
                 }
             </div>
-            
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h2 class="product-title">
+                        <i class="fas fa-cube me-2" style="color:var(--amazon-orange);"></i>@Model.name
+                    </h2>
+                    <div class="product-description">
+                        <strong>Description:</strong><br />
+                        @Model.description
+                    </div>
+                    <ul class="product-info-list">
+                        <li><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
+                        @if (Model.discount_price.HasValue)
+                        {
+                                <li><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
+                        }
+                        <li><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
+                        <li><strong>Brand:</strong> @Model.Brand</li>
+                        <li><strong>SKU:</strong> @Model.sku</li>
+                        <li><strong>Category:</strong> @Model.category_id</li>
+                        <li><strong>Colors:</strong>
+                            @if (!string.IsNullOrEmpty(Model.Colors))
+                            {
+                                var colors = Model.Colors.Split(',');
+                                foreach (var color in colors)
+                                {
+                                            <span class="color-swatch" style="background:@color.Trim();" title="@color.Trim()"></span>
+                                }
+                            }
+                            else
+                            {
+                                    <span class="text-muted">No Colors</span>
+                            }
+                        </li>
+                        <li><strong>Sizes:</strong> @Model.Sizes</li>
+                        <li><strong>Created At:</strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
+                        <li><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
+                        <li><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
+                    </ul>
 
-            @if (Model.product_images != null && Model.product_images.Count() > 1)
-            {
-                <div class="thumbnail-container">
-                    <div class="row">
-                        @{
-                            var subImgs = Model.product_images.ToList();
-                            int colCount = 0;
-                        }
-                        @foreach (var image in subImgs)
-                        {
-                            if (colCount % 3 == 0 && colCount != 0)
-                            {
-                                @:</div><div class="row">
-                            }
-                            <div class="col-4 mb-2">
-                                <img src="@image.image_url"
-                                     class="img-thumbnail thumbnail-image"
-                                     style="height: 60px; width: 100%; object-fit: cover; cursor: pointer;"
-                                     onclick="changeMainImage('@image.image_url')"
-                                     alt="Product Thumbnail" />
-                            </div>
-                            colCount++;
-                        }
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h2 class="card-title mb-3" style="font-size:2.2rem;font-weight:800;letter-spacing:1px;color:#1a237e;text-shadow:0 2px 8px #0001,0 1px 0 #fff;">
-                    <i class="fas fa-cube me-2" style="color:#ff9800;"></i>@Model.name
-                </h2>
-                <div class="mb-3">
-                    <strong>Description:</strong>
-                    <div class="border rounded p-2 bg-light">@Model.description</div>
-                </div>
-                <ul class="list-unstyled" style="margin-bottom:0;">
-                    <li style="margin-bottom:12px;"><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
-                    @if (Model.discount_price.HasValue)
-                    {
-                        <li style="margin-bottom:12px;"><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
-                    }
-                    <li style="margin-bottom:12px;"><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
-                    <li style="margin-bottom:12px;"><strong>Brand:</strong> @Model.Brand</li>
-                    <li style="margin-bottom:12px;"><strong>SKU:</strong> @Model.sku</li>
-                    <li style="margin-bottom:12px;"><strong>Category:</strong> @Model.category_id</li>
-                    <li style="margin-bottom:12px;"><strong>Colors:</strong>
-                        @if (!string.IsNullOrEmpty(Model.Colors))
-                        {
-                            var colors = Model.Colors.Split(',');
-                            foreach (var color in colors)
-                            {
-                                <span style="display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid #eee;margin-right:6px;vertical-align:middle;background:@color.Trim();box-shadow:0 1px 4px #0002;" title="@color.Trim()"></span>
-                            }
-                        }
-                        else
-                        {
-                            <span class="text-muted">No Colors</span>
-                        }
-                    </li>
-                    <li style="margin-bottom:12px;"><strong>Sizes:</strong> @Model.Sizes</li>
-                    <li style="margin-bottom:12px;"><strong>Created At:</strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
-                    <li style="margin-bottom:12px;"><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
-                    <li style="margin-bottom:12px;"><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
-                </ul>
-                <hr class="my-4" />
-                
-                <!-- Seller Info Section -->
-                <div class="seller-info-section">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="seller-icon me-3">
-                            <i class="fas fa-store text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <h5 class="text-primary fw-bold mb-0">Seller Information</h5>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="seller-info-card mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="info-icon me-3">
-                                        <i class="fas fa-id-badge text-info"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Seller ID</small>
-                                        <strong class="text-dark">@Model.seller_id</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="seller-info-card mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="info-icon me-3">
-                                        <i class="fas fa-user text-success"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-muted d-block">Seller Name</small>
-                                        <strong class="text-dark">@Model.Seller?.UserName ?? "Unknown"</strong>
-                                    </div>
-                                </div>
+                    <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.2);" />
+
+                    <!-- Seller Info Section -->
+                    <div class="seller-info-section">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://via.placeholder.com/50" alt="Seller Avatar" class="seller-avatar me-3" />
+                            <div>
+                                <h5 class="mb-0" style="color: rgba(255, 255, 255, 0.9);">Seller Information</h5>
+                                <small class="text-muted">Product Owner</small>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="seller-status-badge mt-3">
-                        <span class="badge bg-primary">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Verified Seller
-                        </span>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a asp-action="EditProduct" asp-route-id="@Model.id" class="floating-btn warning">
+                            <i class="fas fa-edit me-2"></i>Edit Product
+                        </a>
+                        <a asp-action="ProductReviews" asp-route-id="@Model.id" class="floating-btn success">
+                            <i class="fas fa-star me-2"></i>View Reviews
+                        </a>
+                        <a asp-action="DeleteProduct" asp-route-id="@Model.id" class="floating-btn danger" 
+                           onclick="return confirm('Are you sure you want to delete this product?')">
+                            <i class="fas fa-trash me-2"></i>Delete Product
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="mt-3">
-    <a asp-action="EditProduct" asp-route-id="@Model.id" class="btn btn-warning">
-        <i class="fas fa-edit"></i> Edit
-    </a>
-    <a asp-action="MyProducts" class="btn btn-secondary">Back to My Products</a>
-</div>
 
 <script>
-function changeMainImage(imageUrl) {
-    document.getElementById('mainImage').src = imageUrl;
-}
+    function changeMainImage(imageUrl) {
+        document.getElementById('mainImage').src = imageUrl;
+    }
 </script> 
-@section Scripts {
-    <style>
-    .card-body ul.list-unstyled li strong {
-        color: #1976d2; /* أزرق داكن متناسق */
-        font-weight: 700;
-        letter-spacing: 0.5px;
-    }
-    .card-body ul.list-unstyled li {
-        color: #333;
-        font-size: 1.08rem;
-    }
-    
-    /* Seller Info Section Styles */
-    .seller-info-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 12px;
-        padding: 1.5rem;
-        border: 1px solid #dee2e6;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .seller-info-card {
-        background: white;
-        border-radius: 8px;
-        padding: 1rem;
-        border: 1px solid #e9ecef;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .seller-info-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border-color: #007bff;
-    }
-    
-    .info-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0,123,255,0.1);
-        font-size: 1.2rem;
-    }
-    
-    .seller-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        color: white;
-        box-shadow: 0 2px 8px rgba(0,123,255,0.3);
-    }
-    
-    .seller-status-badge .badge {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .seller-info-section h5 {
-        font-size: 1.3rem;
-        margin-bottom: 0;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    
-    .seller-info-card strong {
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-    
-    .seller-info-card small {
-        font-size: 0.85rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    </style>
-} 

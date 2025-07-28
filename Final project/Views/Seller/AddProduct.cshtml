@@ -4,251 +4,626 @@
     ViewData["Title"] = "Add Product";
 }
 
-<h2>Add Product</h2>
-<form asp-action="AddProduct" method="post" enctype="multipart/form-data" id="addProductForm">
-    <div class="form-group">
-        <label asp-for="name"></label>
-        <input asp-for="name" class="form-control" required />
-        <span asp-validation-for="name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="description"></label>
-        <textarea asp-for="description" class="form-control" required></textarea>
-        <span asp-validation-for="description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="price"></label>
-        <input asp-for="price" class="form-control" type="number" step="0.01" required />
-        <span asp-validation-for="price" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="stock_quantity"></label>
-        <input asp-for="stock_quantity" class="form-control" type="number" required />
-        <span asp-validation-for="stock_quantity" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Brand"></label>
-        <input asp-for="Brand" class="form-control" required />
-        <span asp-validation-for="Brand" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="sku"></label>
-        <input asp-for="sku" class="form-control" required />
-        <span asp-validation-for="sku" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="category_id">Category</label>
-        <select asp-for="category_id" class="form-control" required>
-            <option value="">Select Category</option>
-            @if (ViewBag.Categories != null)
-            {
-                @foreach (var category in ViewBag.Categories)
-                {
-                    <option value="@category.id">@category.name</option>
-                }
-            }
-        </select>
-        <span asp-validation-for="category_id" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label>Colors</label>
-        <div id="colorSwatchContainer" class="mb-2">
-            <span class="color-swatch" data-color="Red" style="background:red;"></span>
-            <span class="color-swatch" data-color="Blue" style="background:blue;"></span>
-            <span class="color-swatch" data-color="Green" style="background:green;"></span>
-            <span class="color-swatch" data-color="Black" style="background:black;"></span>
-            <span class="color-swatch" data-color="White" style="background:white; border:1px solid #ccc;"></span>
-            <span class="color-swatch" data-color="Yellow" style="background:yellow;"></span>
-            <span class="color-swatch" data-color="Orange" style="background:orange;"></span>
-            <span class="color-swatch" data-color="Purple" style="background:purple;"></span>
-            <span class="color-swatch" data-color="Gray" style="background:gray;"></span>
-            <span class="color-swatch" data-color="Brown" style="background:brown;"></span>
-            <span class="color-swatch" data-color="Pink" style="background:pink;"></span>
-            <span class="color-swatch" data-color="Cyan" style="background:cyan;"></span>
-            <span class="color-swatch" data-color="Gold" style="background:gold;"></span>
-            <span class="color-swatch" data-color="Silver" style="background:silver;"></span>
-        </div>
-        <input type="hidden" name="Colors" id="ColorsInput" required />
-        <small class="form-text text-muted">Select one or more colors.</small>
-        <div id="selectedColorsText" class="mt-1 text-secondary small"></div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Sizes">Sizes</label>
-        <select asp-for="Sizes" class="form-control" required>
-            <option value="">Select Size</option>
-            <option value="XS">XS</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="XXL">XXL</option>
-            <option value="XXXL">XXXL</option>
-            <option value="36">36</option>
-            <option value="37">37</option>
-            <option value="38">38</option>
-            <option value="39">39</option>
-            <option value="40">40</option>
-            <option value="41">41</option>
-            <option value="42">42</option>
-            <option value="43">43</option>
-            <option value="44">44</option>
-            <option value="45">45</option>
-            <option value="46">46</option>
-            <option value="47">47</option>
-            <option value="48">48</option>
-            <option value="One Size">One Size</option>
-        </select>
-        <span asp-validation-for="Sizes" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label>Product Images</label>
-        <div id="dropArea" class="border border-primary rounded p-4 text-center mb-2" style="cursor:pointer; background:#f8f9fa;">
-            <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br />
-            <span>Drag & Drop images here or <b>Click to Select</b></span>
-            <input type="file" id="imageFilesInput" name="imageFiles" class="d-none" multiple accept="image/*" required />
-        </div>
-        <small class="form-text text-muted">You can select multiple images. Choose one as Main, others as Sub. You can remove any before saving.</small>
-        <div id="imagePreviewContainer" class="row mt-2"></div>
-        <div id="imageValidationMsg" class="text-danger"></div>
-    </div>
-    <button type="submit" class="btn btn-primary">Add Product</button>
-    <a asp-action="AllProducts" class="btn btn-secondary">Back</a>
-</form>
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
 
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
 
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <style>
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Form Panel */
+    .form-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .form-panel:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Form Controls */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .glass-input:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .glass-input option {
+        background: var(--amazon-dark);
+        color: white;
+    }
+
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .floating-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .floating-btn:hover::before {
+        left: 100%;
+    }
+
+    .floating-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+
+    .floating-btn.primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .floating-btn.success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    /* Color Swatches */
     .color-swatch {
         display: inline-block;
-        width: 28px;
-        height: 28px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        border: 2px solid #eee;
-        margin: 0 4px 4px 0;
+        margin: 5px;
         cursor: pointer;
-        transition: border 0.2s, box-shadow 0.2s;
-        vertical-align: middle;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
+
+    .color-swatch:hover {
+        transform: scale(1.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
     .color-swatch.selected {
-        border: 3px solid #007bff;
-        box-shadow: 0 0 0 2px #007bff33;
+        border-color: var(--amazon-orange);
+        transform: scale(1.1);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
     }
-    </style>
-    <script>
-    const dropArea = document.getElementById('dropArea');
-    const fileInput = document.getElementById('imageFilesInput');
-    dropArea.addEventListener('click', () => fileInput.click());
-    dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('bg-light'); });
-    dropArea.addEventListener('dragleave', e => { e.preventDefault(); dropArea.classList.remove('bg-light'); });
-    dropArea.addEventListener('drop', e => {
-        e.preventDefault();
-        dropArea.classList.remove('bg-light');
-        fileInput.files = e.dataTransfer.files;
-        previewImages({ target: fileInput });
-    });
-    fileInput.addEventListener('change', previewImages);
 
-    function previewImages(event) {
-        const files = event.target.files;
-        const container = document.getElementById('imagePreviewContainer');
-        container.innerHTML = '';
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const col = document.createElement('div');
-                col.className = 'col-md-3 mb-2';
-                col.innerHTML = `
-                    <div class='card position-relative'>
-                        <img src='${e.target.result}' class='card-img-top' style='height:120px;object-fit:cover;' />
-                        <div class='card-body p-2'>
-                            <div class='form-check form-check-inline'>
-                                <input class='form-check-input main-radio' type='radio' name='mainImageRadio' value='${i}' ${i === 0 ? 'checked' : ''} onchange='updateImageTypes()'>
-                                <label class='form-check-label'>Main</label>
-                            </div>
-                            <div class='form-check form-check-inline'>
-                                <input class='form-check-input sub-radio' type='radio' name='subImageRadio${i}' value='${i}' ${i !== 0 ? 'checked' : ''} onchange='updateImageTypes()'>
-                                <label class='form-check-label'>Sub</label>
-                            </div>
-                            <input type='hidden' name='imageTypes' value='${i === 0 ? 'main' : 'sub'}' />
-                        </div>
-                        <button type='button' class='btn btn-sm btn-danger position-absolute top-0 end-0 m-1' onclick='removeImage(${i})'><i class='fas fa-times'></i></button>
+    /* Image Preview */
+    .image-preview-container {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .image-preview-container .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    /* Utility Classes */
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.5rem;
+        margin-left: -0.5rem;
+    }
+
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .col-md-12 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .text-danger {
+        color: #ff6b6b !important;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .text-secondary {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .small {
+        font-size: 0.875rem !important;
+    }
+
+    .form-text {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .col-md-6 {
+            width: 100%;
+        }
+
+        .form-panel {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-plus me-3"></i>
+                Add New Product
+            </h1>
+            <p class="hero-subtitle">
+                Create and add a new product to your inventory
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/MyProducts" class="floating-btn primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to My Products
+            </a>
+            <a href="/Seller/AllProducts" class="floating-btn success">
+                <i class="fas fa-database me-2"></i>View All Products
+            </a>
+        </div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="form-panel fade-in">
+        <form asp-action="AddProduct" method="post" enctype="multipart/form-data" id="addProductForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="name" class="glass-label">Product Name</label>
+                        <input asp-for="name" class="glass-input" required />
+                        <span asp-validation-for="name" class="text-danger"></span>
                     </div>
-                `;
-                container.appendChild(col);
-            };
-            reader.readAsDataURL(file);
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="price" class="glass-label">Price</label>
+                        <input asp-for="price" class="glass-input" type="number" step="0.01" required />
+                        <span asp-validation-for="price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Brand" class="glass-label">Brand</label>
+                        <input asp-for="Brand" class="glass-input" required />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="sku" class="glass-label">SKU</label>
+                        <input asp-for="sku" class="glass-input" required />
+                        <span asp-validation-for="sku" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="stock_quantity" class="glass-label">Stock Quantity</label>
+                        <input asp-for="stock_quantity" class="glass-input" type="number" required />
+                        <span asp-validation-for="stock_quantity" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="category_id" class="glass-label">Category</label>
+                        <select asp-for="category_id" class="glass-input" required>
+                            <option value="">Select Category</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                            <option value="@category.id">@category.name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="category_id" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="description" class="glass-label">Description</label>
+                <textarea asp-for="description" class="glass-input" rows="4" required></textarea>
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="glass-label">Colors</label>
+                <div id="colorSwatchContainer" class="mb-2">
+                    <span class="color-swatch" data-color="Red" style="background:red;"></span>
+                    <span class="color-swatch" data-color="Blue" style="background:blue;"></span>
+                    <span class="color-swatch" data-color="Green" style="background:green;"></span>
+                    <span class="color-swatch" data-color="Black" style="background:black;"></span>
+                    <span class="color-swatch" data-color="White" style="background:white; border:1px solid #ccc;"></span>
+                    <span class="color-swatch" data-color="Yellow" style="background:yellow;"></span>
+                    <span class="color-swatch" data-color="Orange" style="background:orange;"></span>
+                    <span class="color-swatch" data-color="Purple" style="background:purple;"></span>
+                    <span class="color-swatch" data-color="Gray" style="background:gray;"></span>
+                    <span class="color-swatch" data-color="Brown" style="background:brown;"></span>
+                    <span class="color-swatch" data-color="Pink" style="background:pink;"></span>
+                    <span class="color-swatch" data-color="Cyan" style="background:cyan;"></span>
+                    <span class="color-swatch" data-color="Gold" style="background:gold;"></span>
+                    <span class="color-swatch" data-color="Silver" style="background:silver;"></span>
+                </div>
+                <input type="hidden" name="Colors" id="ColorsInput" required />
+                <small class="form-text">Select one or more colors.</small>
+                <div id="selectedColorsText" class="mt-1 text-secondary small"></div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Sizes" class="glass-label">Sizes</label>
+                <select asp-for="Sizes" class="glass-input" required>
+                    <option value="">Select Size</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                    <option value="XXXL">XXXL</option>
+                    <option value="36">36</option>
+                    <option value="37">37</option>
+                    <option value="38">38</option>
+                    <option value="39">39</option>
+                    <option value="40">40</option>
+                    <option value="41">41</option>
+                    <option value="42">42</option>
+                    <option value="43">43</option>
+                    <option value="44">44</option>
+                    <option value="45">45</option>
+                    <option value="46">46</option>
+                    <option value="47">47</option>
+                    <option value="48">48</option>
+                    <option value="One Size">One Size</option>
+                </select>
+                <span asp-validation-for="Sizes" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="glass-label">Product Images</label>
+                <input type="file" id="imageFilesInput" name="imageFiles" multiple accept="image/*" class="glass-input" required />
+                <small class="form-text">Upload at least one main image and one sub image.</small>
+                <div id="imageValidationMsg" class="text-danger"></div>
+            </div>
+
+            <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
+                <h5 class="text-center mb-3">Image Preview</h5>
+                <div class="row" id="imagePreviewRow"></div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="floating-btn primary">
+                    <i class="fas fa-save me-2"></i>Add Product
+                </button>
+                <button type="reset" class="floating-btn">
+                    <i class="fas fa-undo me-2"></i>Reset Form
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+        document.getElementById('imageFilesInput').addEventListener('change', previewImages);
+
+        function previewImages(event) {
+            const files = event.target.files;
+            if (files.length === 0) {
+                document.getElementById('imagePreviewContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('imagePreviewContainer').style.display = 'block';
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 mb-2';
+                    col.innerHTML = `
+                        <div class='card position-relative'>
+                            <img src='${e.target.result}' class='card-img-top' style='height:120px;object-fit:cover;' />
+                            <div class='card-body p-2'>
+                                <div class='form-check form-check-inline'>
+                                    <input class='form-check-input main-radio' type='radio' name='mainImageRadio' value='${i}' ${i === 0 ? 'checked' : ''} onchange='updateImageTypes()'>
+                                    <label class='form-check-label'>Main</label>
+                                </div>
+                                <div class='form-check form-check-inline'>
+                                    <input class='form-check-input sub-radio' type='radio' name='subImageRadio${i}' value='${i}' ${i !== 0 ? 'checked' : ''} onchange='updateImageTypes()'>
+                                    <label class='form-check-label'>Sub</label>
+                                </div>
+                                <input type='hidden' name='imageTypes' value='${i === 0 ? 'main' : 'sub'}' />
+                            </div>
+                            <button type='button' class='btn btn-sm btn-danger position-absolute top-0 end-0 m-1' onclick='removeImage(${i})'><i class='fas fa-times'></i></button>
+                        </div>
+                    `;
+                    container.appendChild(col);
+                };
+                reader.readAsDataURL(file);
+            }
         }
-    }
-    function updateImageTypes() {
-        const mainRadios = document.querySelectorAll('.main-radio');
-        const containers = document.querySelectorAll('#imagePreviewContainer .card');
-        mainRadios.forEach((radio, idx) => {
-            const hidden = containers[idx].querySelector("input[type='hidden'][name='imageTypes']");
-            if (radio.checked) {
-                hidden.value = 'main';
+        function updateImageTypes() {
+            const mainRadios = document.querySelectorAll('.main-radio');
+            const containers = document.querySelectorAll('#imagePreviewContainer .card');
+            mainRadios.forEach((radio, idx) => {
+                const hidden = containers[idx].querySelector("input[type='hidden'][name='imageTypes']");
+                if (radio.checked) {
+                    hidden.value = 'main';
+                } else {
+                    hidden.value = 'sub';
+                }
+            });
+        }
+        function removeImage(index) {
+            const fileInput = document.getElementById('imageFilesInput');
+            const dt = new DataTransfer();
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                if (i !== index) dt.items.add(files[i]);
+            }
+            fileInput.files = dt.files;
+            previewImages({ target: fileInput });
+        }
+
+
+        const swatches = document.querySelectorAll('.color-swatch');
+        const colorsInput = document.getElementById('ColorsInput');
+        const selectedColorsText = document.getElementById('selectedColorsText');
+        let selectedColors = [];
+        swatches.forEach(swatch => {
+            swatch.addEventListener('click', function() {
+                const color = this.getAttribute('data-color');
+                if (selectedColors.includes(color)) {
+                    selectedColors = selectedColors.filter(c => c !== color);
+                    this.classList.remove('selected');
+                } else {
+                    selectedColors.push(color);
+                    this.classList.add('selected');
+                }
+                colorsInput.value = selectedColors.join(',');
+                selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+            });
+        });
+
+
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('imageFilesInput');
+            const files = fileInput.files;
+            let mainCount = 0, subCount = 0;
+            const imageTypes = document.getElementsByName('imageTypes');
+            for (let i = 0; i < imageTypes.length; i++) {
+                if (imageTypes[i].value === 'main') mainCount++;
+                if (imageTypes[i].value === 'sub') subCount++;
+            }
+            let errorMsg = '';
+            if (files.length === 0) {
+                errorMsg = 'You must add at least one main image and one sub image.';
+            } else if (mainCount !== 1) {
+                errorMsg = 'You must select one main image.';
+            } else if (subCount < 1) {
+                errorMsg = 'You must add at least one sub image.';
+            }
+            if (errorMsg) {
+                document.getElementById('imageValidationMsg').textContent = errorMsg;
+                e.preventDefault();
             } else {
-                hidden.value = 'sub';
+                document.getElementById('imageValidationMsg').textContent = '';
             }
         });
-    }
-    function removeImage(index) {
-        const fileInput = document.getElementById('imageFilesInput');
-        const dt = new DataTransfer();
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-            if (i !== index) dt.items.add(files[i]);
-        }
-        fileInput.files = dt.files;
-        previewImages({ target: fileInput });
-    }
-
-
-    const swatches = document.querySelectorAll('.color-swatch');
-    const colorsInput = document.getElementById('ColorsInput');
-    const selectedColorsText = document.getElementById('selectedColorsText');
-    let selectedColors = [];
-    swatches.forEach(swatch => {
-        swatch.addEventListener('click', function() {
-            const color = this.getAttribute('data-color');
-            if (selectedColors.includes(color)) {
-                selectedColors = selectedColors.filter(c => c !== color);
-                this.classList.remove('selected');
-            } else {
-                selectedColors.push(color);
-                this.classList.add('selected');
-            }
-            colorsInput.value = selectedColors.join(',');
-            selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
-        });
-    });
-
-
-    document.getElementById('addProductForm').addEventListener('submit', function(e) {
-        const fileInput = document.getElementById('imageFilesInput');
-        const files = fileInput.files;
-        let mainCount = 0, subCount = 0;
-        const imageTypes = document.getElementsByName('imageTypes');
-        for (let i = 0; i < imageTypes.length; i++) {
-            if (imageTypes[i].value === 'main') mainCount++;
-            if (imageTypes[i].value === 'sub') subCount++;
-        }
-        let errorMsg = '';
-        if (files.length === 0) {
-            errorMsg = 'You must add at least one main image and one sub image.';
-        } else if (mainCount !== 1) {
-            errorMsg = 'You must select one main image.';
-        } else if (subCount < 1) {
-            errorMsg = 'You must add at least one sub image.';
-        }
-        if (errorMsg) {
-            document.getElementById('imageValidationMsg').textContent = errorMsg;
-            e.preventDefault();
-        } else {
-            document.getElementById('imageValidationMsg').textContent = '';
-        }
-    });
-    </script>
+        </script>
 } 

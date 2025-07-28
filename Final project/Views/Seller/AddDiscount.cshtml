@@ -4,6 +4,287 @@
     var products = ViewBag.Products as List<Final_project.Models.product>;
     var categories = ViewBag.Categories as List<Final_project.Models.category>;
 }
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-fluid, .container {
+        background: transparent;
+        padding: 2rem;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        background: transparent;
+        backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        padding: 2rem;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin: 2rem auto;
+        max-width: 800px;
+    }
+
+    .card-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+    }
+
+    .card-body {
+        color: white;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    .form-control, .form-select {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-control:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .form-control option, .form-select option {
+        background: var(--amazon-dark);
+        color: white;
+    }
+
+    .form-label {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-check-label {
+        color: white;
+    }
+
+    .form-check-input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--amazon-orange);
+        border-color: var(--amazon-orange);
+    }
+
+    .text-danger {
+        color: #ff6b6b !important;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: white;
+    }
+
+    strong {
+        color: white !important;
+    }
+
+    span {
+        color: white;
+    }
+
+    div {
+        color: white;
+    }
+
+    p {
+        color: white;
+    }
+
+    td {
+        color: white !important;
+    }
+
+    th {
+        color: white !important;
+    }
+
+    tr {
+        color: white;
+    }
+
+    a {
+        color: white;
+    }
+
+    label {
+        color: white;
+    }
+
+    small {
+        color: white;
+    }
+
+    i {
+        color: white;
+    }
+
+    img {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    hr {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    input {
+        color: white;
+    }
+
+    select {
+        color: white;
+    }
+
+    textarea {
+        color: white;
+    }
+
+    button {
+        color: white;
+    }
+
+    option {
+        color: white;
+    }
+
+    li {
+        color: white;
+    }
+
+    ul {
+        color: white;
+    }
+
+    ol {
+        color: white;
+    }
+
+    b {
+        color: white;
+    }
+
+    em {
+        color: white;
+    }
+
+    mark {
+        color: white;
+    }
+
+    code {
+        color: white;
+    }
+
+    pre {
+        color: white;
+    }
+
+    kbd {
+        color: white;
+    }
+
+    samp {
+        color: white;
+    }
+
+    .table-dark {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .table-dark th {
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+
 <div class="card shadow-sm" style="max-width:100%;margin:auto;">
     <div class="card-header bg-primary text-white">
         <h2 class="mb-0" style="font-weight:800;letter-spacing:0.5px;">Add Discount</h2>
@@ -13,12 +294,13 @@
             <div class="row g-3">
                 <div class="col-md-12">
                     <label asp-for="description" class="form-label"></label>
-                    <input asp-for="description" class="form-control" />
+                    <input asp-for="description" class="form-control" required />
                     <span asp-validation-for="description" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
                     <label asp-for="discount_type" class="form-label"></label>
-                    <select asp-for="discount_type" class="form-select" id="discount_type">
+                    <select asp-for="discount_type" class="form-select" id="discount_type" required>
+                        <option value="">-- Select Discount Type --</option>
                         <option value="percentage">Percentage</option>
                         <option value="fixed">Fixed Amount</option>
                     </select>
@@ -26,18 +308,18 @@
                 </div>
                 <div class="col-md-6">
                     <label asp-for="value" id="valueLabel" class="form-label">Value</label>
-                    <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" />
+                    <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" required />
                     <small class="form-text text-muted" id="valueHelp">Select discount type first</small>
                     <span asp-validation-for="value" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
                     <label asp-for="start_date" class="form-label"></label>
-                    <input asp-for="start_date" class="form-control" type="date" />
+                    <input asp-for="start_date" class="form-control" type="date" required />
                     <span asp-validation-for="start_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
                     <label asp-for="end_date" class="form-label"></label>
-                    <input asp-for="end_date" class="form-control" type="date" />
+                    <input asp-for="end_date" class="form-control" type="date" required />
                     <span asp-validation-for="end_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
@@ -54,7 +336,7 @@
                         <option value="">-- Select Category --</option>
                         @foreach (var cat in categories)
                         {
-                            <option value="@cat.id">@cat.name</option>
+                                <option value="@cat.id">@cat.name</option>
                         }
                     </select>
                     <div class="form-check mt-2">
@@ -64,10 +346,10 @@
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Products</label>
-                    <select name="productIds" id="productsSelect" class="form-select" multiple size="6">
+                    <select name="productIds" id="productsSelect" class="form-select" multiple size="6" required>
                         @foreach (var p in products)
                         {
-                            <option value="@p.id" data-category="@p.category_id">@p.name</option>
+                                <option value="@p.id" data-category="@p.category_id">@p.name</option>
                         }
                     </select>
                     <span id="product-error" class="text-danger"></span>
@@ -80,85 +362,108 @@
     </div>
 </div>
 @section Styles {
-    <style>
-        label.form-label {
-            color: #0d6efd;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-        }
-    </style>
+        <style>
+            label.form-label {
+                color: #0d6efd;
+                font-weight: 600;
+                letter-spacing: 0.2px;
+            }
+
+            /* Center the products select */
+            #productsSelect {
+                text-align: center;
+            }
+
+            #productsSelect option {
+                text-align: center;
+                padding: 8px;
+            }
+
+            /* Style for required fields */
+            .form-control:required,
+            .form-select:required {
+                border-left: 3px solid #dc3545;
+            }
+
+            .form-control:required:valid,
+            .form-select:required:valid {
+                border-left: 3px solid #198754;
+            }
+        </style>
 }
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
-    <script>
-        $(document).ready(function() {
-            function updateValueField() {
-                var discountType = $('#discount_type').val();
-                var valueLabel = $('#valueLabel');
-                var valueInput = $('#valueInput');
-                var valueHelp = $('#valueHelp');
-                
-                if (discountType === 'percentage') {
-                    valueLabel.text('Percentage (%)');
-                    valueInput.attr('placeholder', 'Enter percentage (e.g., 15 for 15%)');
-                    valueHelp.text('Enter a number between 0 and 100');
-                    valueInput.attr('min', '0');
-                    valueInput.attr('max', '100');
-                } else if (discountType === 'fixed') {
-                    valueLabel.text('Fixed Amount (£)');
-                    valueInput.attr('placeholder', 'Enter fixed amount (e.g., 10.50)');
-                    valueHelp.text('Enter the fixed discount amount');
-                    valueInput.attr('min', '0');
-                    valueInput.removeAttr('max');
-                } else {
-                    valueLabel.text('Value');
-                    valueInput.attr('placeholder', 'Select discount type first');
-                    valueHelp.text('Select discount type first');
-                    valueInput.removeAttr('min');
-                    valueInput.removeAttr('max');
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+        <script>
+            $(document).ready(function() {
+                function updateValueField() {
+                    var discountType = $('#discount_type').val();
+                    var valueLabel = $('#valueLabel');
+                    var valueInput = $('#valueInput');
+                    var valueHelp = $('#valueHelp');
+
+                    if (discountType === 'percentage') {
+                        valueLabel.text('Percentage (%)');
+                        valueInput.attr('placeholder', 'Enter percentage (e.g., 15 for 15%)');
+                        valueHelp.text('Enter a number between 0 and 100');
+                        valueInput.attr('min', '0');
+                        valueInput.attr('max', '100');
+                    } else if (discountType === 'fixed') {
+                        valueLabel.text('Fixed Amount (£)');
+                        valueInput.attr('placeholder', 'Enter fixed amount (e.g., 10.50)');
+                        valueHelp.text('Enter the fixed discount amount');
+                        valueInput.attr('min', '0');
+                        valueInput.removeAttr('max');
+                    } else {
+                        valueLabel.text('Value');
+                        valueInput.attr('placeholder', 'Select discount type first');
+                        valueHelp.text('Select discount type first');
+                        valueInput.removeAttr('min');
+                        valueInput.removeAttr('max');
+                    }
                 }
-            }
-            
-            updateValueField();
-            
-            $('#discount_type').change(function() {
+
                 updateValueField();
+
+                $('#discount_type').change(function() {
+                    updateValueField();
+                });
+
+
+                $('#categorySelect').change(function() {
+                    var selectedCat = $(this).val();
+                    if (selectedCat) {
+                        $('#productsSelect option').hide();
+                        $('#productsSelect option[data-category="' + selectedCat + '"]').show();
+                    } else {
+                        $('#productsSelect option').show();
+                    }
+                    $('#productsSelect').val([]);
+                    $('#applyToCategory').prop('checked', false);
+                });
+
+
+                $('#applyToCategory').change(function() {
+                    var selectedCat = $('#categorySelect').val();
+                    if ($(this).is(':checked') && selectedCat) {
+                        var options = $('#productsSelect option[data-category="' + selectedCat + '"]');
+                        options.prop('selected', true);
+                    } else {
+                        $('#productsSelect option').prop('selected', false);
+                    }
+                });
+
+                $('form').submit(function(e) {
+                    var selectedProducts = $('select[name="productIds"]').val();
+                    if (!selectedProducts || selectedProducts.length === 0) {
+                        e.preventDefault();
+                        $('#product-error').text('You must select at least one product.');
+                    } else {
+                        $('#product-error').text('');
+                    }
+                });
             });
-
-
-            $('#categorySelect').change(function() {
-                var selectedCat = $(this).val();
-                if (selectedCat) {
-                    $('#productsSelect option').hide();
-                    $('#productsSelect option[data-category="' + selectedCat + '"]').show();
-                } else {
-                    $('#productsSelect option').show();
-                }
-                $('#productsSelect').val([]);
-                $('#applyToCategory').prop('checked', false);
-            });
-
-
-            $('#applyToCategory').change(function() {
-                var selectedCat = $('#categorySelect').val();
-                if ($(this).is(':checked') && selectedCat) {
-                    var options = $('#productsSelect option[data-category="' + selectedCat + '"]');
-                    options.prop('selected', true);
-                } else {
-                    $('#productsSelect option').prop('selected', false);
-                }
-            });
-
-            $('form').submit(function(e) {
-                var selectedProducts = $('select[name="productIds"]').val();
-                if (!selectedProducts || selectedProducts.length === 0) {
-                    e.preventDefault();
-                    $('#product-error').text('You must select at least one product.');
-                } else {
-                    $('#product-error').text('');
-                }
-            });
-        });
-    </script>
+        </script>
 } 

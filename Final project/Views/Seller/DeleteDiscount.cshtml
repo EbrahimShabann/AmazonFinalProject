@@ -2,26 +2,341 @@
 @{
     ViewData["Title"] = "Delete Discount";
 }
-<h2>Delete Discount</h2>
-<div class="alert alert-warning">
-    <strong>Are you sure you want to delete this discount?</strong>
-</div>
-<div>
-    <h4>@Model.description</h4>
-    <p>Type: @Model.discount_type</p>
-    <p>Value: @Model.value</p>
-    <p>Start: @Model.start_date?.ToString("yyyy-MM-dd")</p>
-    <p>End: @Model.end_date?.ToString("yyyy-MM-dd")</p>
-    <p>Active: @(Model.is_active == true ? "Yes" : "No")</p>
-    <ul>
-    @foreach (var pd in Model.ProductDiscounts)
-    {
-        <li>@pd.product?.name</li>
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
     }
-    </ul>
-</div>
-<form asp-action="DeleteDiscount" method="post">
-    <input type="hidden" asp-for="id" />
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a asp-action="Discounts" class="btn btn-secondary">Cancel</a>
-</form> 
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Delete Panel */
+    .delete-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .delete-panel:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Alert Styling */
+    .alert {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
+    }
+
+    .alert-warning {
+        background: rgba(255, 193, 7, 0.2);
+        border-color: rgba(255, 193, 7, 0.3);
+        color: #ffc107;
+    }
+
+    /* Discount Info */
+    .discount-info {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .discount-name {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .discount-details {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+    }
+
+    .discount-products {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .discount-products h5 {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .discount-products ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .discount-products li {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.25rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .discount-products li:last-child {
+        border-bottom: none;
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+        margin-right: 1rem;
+    }
+
+    .floating-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .floating-btn:hover::before {
+        left: 100%;
+    }
+
+    .floating-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        color: white;
+        text-decoration: none;
+    }
+
+    .floating-btn.danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+    }
+
+    .floating-btn.secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        border: none;
+    }
+
+    /* Utility Classes */
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .delete-panel {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-trash me-3"></i>
+                Delete Discount
+            </h1>
+            <p class="hero-subtitle">
+                Confirm discount deletion
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/Discounts" class="floating-btn secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Discounts
+            </a>
+        </div>
+    </div>
+
+    <!-- Delete Panel -->
+    <div class="delete-panel fade-in">
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Are you sure you want to delete this discount?</strong>
+        </div>
+
+        <div class="discount-info">
+            <h4 class="discount-name">@Model.description</h4>
+            <p class="discount-details"><strong>Type:</strong> @Model.discount_type</p>
+            <p class="discount-details"><strong>Value:</strong> @Model.value</p>
+            <p class="discount-details"><strong>Start Date:</strong> @Model.start_date?.ToString("yyyy-MM-dd")</p>
+            <p class="discount-details"><strong>End Date:</strong> @Model.end_date?.ToString("yyyy-MM-dd")</p>
+            <p class="discount-details"><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</p>
+
+            @if (Model.ProductDiscounts != null && Model.ProductDiscounts.Any())
+            {
+                    <div class="discount-products">
+                        <h5>Affected Products:</h5>
+                        <ul>
+                        @foreach (var pd in Model.ProductDiscounts)
+                        {
+                                    <li>@pd.product?.name</li>
+                        }
+                        </ul>
+                    </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <form asp-action="DeleteDiscount" method="post" style="display: inline;">
+                <input type="hidden" asp-for="id" />
+                <button type="submit" class="floating-btn danger">
+                    <i class="fas fa-trash me-2"></i>Yes, Delete
+                </button>
+            </form>
+            <a asp-action="Discounts" class="floating-btn secondary">
+                <i class="fas fa-times me-2"></i>Cancel
+            </a>
+        </div>
+    </div>
+</div> 

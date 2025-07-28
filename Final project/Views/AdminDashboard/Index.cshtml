@@ -111,43 +111,6 @@
     </div>
 
 
-    <!-- Tickets Section -->
-    <div class="tickets-container">
-        <div class="section-header">
-            <h2 class="section-title">Latest Support Tickets</h2>
-        </div>
-
-        <div class="ticket-list">
-                @foreach (support_ticket ticket in ViewBag.SupportTickets){
-                <div class="ticket-card">
-                    <div class="ticket-icon">
-                        <i class="fas fa-key"></i>
-                    </div>
-                    <div class="ticket-info">
-                        <div class="ticket-title">Password reset not working</div>
-                        <div class="ticket-meta">#TKT-7841 • John Smith • 2 hours ago</div>
-                    </div>
-                    @if (ticket.status == "Open")
-                    {
-                        <div class="ticket-status status-open">Open</div>
-                    }
-                    @if (ticket.status == "Resolved")
-                    {
-                        <div class="ticket-status status-resolved">Resolved</div>
-                    }
-                    @if (ticket.status == "In Progress")
-                    {
-                        <div class="ticket-status status-pending">In Progress</div>
-                    }
-                </div>
-                }
-           
-        </div>
-
-        <a href="#" class="view-all-btn">
-            <i class="fas fa-list me-2"></i>View All Tickets
-        </a>
-    </div>
 </main>
 
 

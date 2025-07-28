@@ -9,12 +9,450 @@
     var sellerId = ViewBag.CurrentSellerId as string;
 }
 
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-fluid, .container {
+        background: transparent;
+        padding: 2rem;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .container {
+        background: transparent;
+        backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        padding: 2rem;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .orders-section {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+        border: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .btn-info {
+        background: linear-gradient(135deg, var(--info-blue) 0%, #0056b3 100%);
+        border: none;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--amazon-orange);
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+
+    .form-control option {
+        background: var(--amazon-dark);
+        color: white;
+    }
+
+    /* Table Styling */
+    .orders-table-container {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .orders-table-container:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .table {
+        margin: 0;
+        background: transparent;
+        border: none;
+        width: 100%;
+    }
+
+    .table thead {
+        background: #131921; /* Same dark color as buttons */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+    }
+
+    .table th {
+        color: #0073bb !important; /* Same blue color as edit button background */
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px 16px;
+        text-align: center;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        position: relative;
+        background: transparent;
+    }
+
+    /* Override any existing table header styles */
+    .table thead th,
+    .table thead tr th {
+        color: #0073bb !important;
+    }
+
+    .table th::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .table th:hover::after {
+        opacity: 1;
+    }
+
+    .table td {
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 12px 16px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 0.9rem;
+        border-left: none;
+        border-right: none;
+        position: relative;
+        background: transparent;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: transparent;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        transform: scale(1.01);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Category name styling */
+    .category-name {
+        color: var(--amazon-orange) !important; /* Primary orange color */
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-header td {
+        color: var(--amazon-orange) !important; /* Primary orange color */
+        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
+        padding: 12px 16px;
+        position: relative;
+        background: transparent;
+    }
+
+    /* Action Buttons in Table */
+    .action-btn {
+        background: #131921; /* Dark navbar color */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        margin: 0.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-btn:hover {
+        background: #232f3e; /* Slightly lighter on hover */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+    }
+
+    .action-btn.edit {
+        color: #0073bb !important; /* Professional blue for edit */
+    }
+
+    .action-btn.edit:hover {
+        color: #005a8b !important; /* Darker blue on hover */
+        background: #1a2532;
+    }
+
+    .action-btn.delete {
+        color: #dc3545 !important; /* Professional red for delete */
+    }
+
+    .action-btn.delete:hover {
+        color: #c82333 !important; /* Darker red on hover */
+        background: #1a2532;
+    }
+
+    .badge {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+        border: none;
+    }
+
+    .badge.bg-secondary {
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: white;
+    }
+
+    .mb-2, .mb-3 {
+        color: white;
+    }
+
+    .mb-2 span {
+        color: white;
+    }
+
+    strong {
+        color: white !important;
+    }
+
+    span {
+        color: white;
+    }
+
+    div {
+        color: white;
+    }
+
+    p {
+        color: white;
+    }
+
+    td {
+        color: white !important;
+    }
+
+    th {
+        color: white !important;
+    }
+
+    tr {
+        color: white;
+    }
+
+    a {
+        color: white;
+    }
+
+    label {
+        color: white;
+    }
+
+    small {
+        color: white;
+    }
+
+    i {
+        color: white;
+    }
+
+    img {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    hr {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    input {
+        color: white;
+    }
+
+    select {
+        color: white;
+    }
+
+    textarea {
+        color: white;
+    }
+
+    button {
+        color: white;
+    }
+
+    option {
+        color: white;
+    }
+
+    li {
+        color: white;
+    }
+
+    ul {
+        color: white;
+    }
+
+    ol {
+        color: white;
+    }
+
+    b {
+        color: white;
+    }
+
+    em {
+        color: white;
+    }
+
+    mark {
+        color: white;
+    }
+
+    code {
+        color: white;
+    }
+
+    pre {
+        color: white;
+    }
+
+    kbd {
+        color: white;
+    }
+
+    samp {
+        color: white;
+    }
+
+    .table-dark {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .table-dark th {
+        color: white !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+
 @if (!string.IsNullOrEmpty(sellerId))
 {
-    <div class="mb-2">
-        <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
-        <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
-    </div>
+        <div class="mb-2">
+            <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
+            <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
+        </div>
 }
 <div class="mb-3">
     <a href="/Seller/CreateTestOrders" class="btn btn-success">Create Test Orders</a>
@@ -30,11 +468,46 @@
         <div class="col-md-3">
             <select name="status" class="form-control">
                 <option value="">All Statuses</option>
-                @if (ViewBag.Status == "Pending") { <option value="Pending" selected>Pending</option> } else { <option value="Pending">Pending</option> }
-                @if (ViewBag.Status == "Processing") { <option value="Processing" selected>Processing</option> } else { <option value="Processing">Processing</option> }
-                @if (ViewBag.Status == "Shipped") { <option value="Shipped" selected>Shipped</option> } else { <option value="Shipped">Shipped</option> }
-                @if (ViewBag.Status == "Delivered") { <option value="Delivered" selected>Delivered</option> } else { <option value="Delivered">Delivered</option> }
-                @if (ViewBag.Status == "Cancelled") { <option value="Cancelled" selected>Cancelled</option> } else { <option value="Cancelled">Cancelled</option> }
+                @if (ViewBag.Status == "Pending")
+                {
+                    <option value="Pending" selected>Pending</option>
+                }
+                else
+                {
+                    <option value="Pending">Pending</option>
+                }
+                @if (ViewBag.Status == "Processing")
+                {
+                    <option value="Processing" selected>Processing</option>
+                }
+                else
+                {
+                    <option value="Processing">Processing</option>
+                }
+                @if (ViewBag.Status == "Shipped")
+                {
+                    <option value="Shipped" selected>Shipped</option>
+                }
+                else
+                {
+                    <option value="Shipped">Shipped</option>
+                }
+                @if (ViewBag.Status == "Delivered")
+                {
+                    <option value="Delivered" selected>Delivered</option>
+                }
+                else
+                {
+                    <option value="Delivered">Delivered</option>
+                }
+                @if (ViewBag.Status == "Cancelled")
+                {
+                    <option value="Cancelled" selected>Cancelled</option>
+                }
+                else
+                {
+                    <option value="Cancelled">Cancelled</option>
+                }
             </select>
         </div>
         <div class="col-md-2">
@@ -45,65 +518,63 @@
 <table class="table table-bordered table-hover align-middle">
     <thead class="table-dark">
         <tr>
-            <th style="text-align:center;">Order ID</th>
-            <th style="text-align:center; white-space:nowrap;">Seller Name</th>
-            <th style="text-align:center;">Date</th>
-            <th style="text-align:center;">Customer</th>
-            <th style="text-align:center;">Status</th>
-            <th style="text-align:center; white-space:nowrap;">Total Amount</th>
-            <th style="text-align:center;">My Products</th>
-            <th style="text-align:center;">Actions</th>
+            <th style="text-align:center;color:#131921 !important">Order ID</th>
+            <th style="text-align:center;color:#131921 !important">Date</th>
+            <th style="text-align:center;color:#131921 !important">Customer</th>
+            <th style="text-align:center;color:#131921 !important">Status</th>
+            <th style="text-align:center; white-space:nowrap;color:#131921 !important">Total Amount</th>
+            <th style="text-align:center;color:#131921 !important">My Products</th>
+            <th style="text-align:center;color:#131921 !important">Actions</th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var order in Model)
-    {
-        <tr>
-            <td><span class="badge bg-primary">@order.id</span></td>
-            <td>@(order.OrderItems.FirstOrDefault()?.product?.Seller?.UserName ?? "-")</td>
-            <td>
-                <span style="white-space:nowrap;font-size:0.98em;letter-spacing:0.2px;">
-                    @order.order_date?.ToString("yyyy-MM-dd HH:mm")
-                </span>
-            </td>
-            <td>@order.Buyer?.UserName</td>
-            <td>
-                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td><span class="badge bg-primary">@order.id</span></td>
+                <td>
+                    <span style="white-space:nowrap;font-size:0.98em;letter-spacing:0.2px;">
+                        @order.order_date?.ToString("yyyy-MM-dd HH:mm")
+                    </span>
+                </td>
+                <td>@order.Buyer?.UserName</td>
+                <td>
+                    <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
                     background:@(order.status == "Pending" ? "#ffc107" : order.status == "Processing" ? "#0dcaf0" : order.status == "Shipped" ? "#0d6efd" : order.status == "Delivered" ? "#198754" : order.status == "Cancelled" ? "#dc3545" : "#adb5bd");
                     color:@(order.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
-                    @order.status
-                </span>
-            </td>
-            <td><strong>@order.total_amount</strong></td>
-                <td>
+                        @order.status
+                    </span>
+                </td>
+                <td><strong>@order.total_amount</strong></td>
+                    <td>
                     @foreach (var item in order.OrderItems.Where(oi => oi.product != null && oi.product.seller_id == sellerId))
                     {
-                        <div style="background:#f8f9fa;border-radius:10px;padding:10px 14px;min-width:140px;box-shadow:0 1px 4px #0001;border:1px solid #dee2e6;display:block;margin-bottom:10px;">
-                            <div style="font-weight:600;font-size:1.05em; margin-bottom:7px;">Product: <span style="color:#0d6efd;">@item.product?.name</span></div>
-                            <div style="margin-bottom:7px;font-size:0.98em;">Quantity: <span class="badge bg-secondary">@item.quantity</span></div>
-                            <div style="font-size:0.98em;">
-                                Status:
-                                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                                <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:10px;padding:10px 14px;min-width:140px;box-shadow:0 1px 4px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.2);display:block;margin-bottom:10px;">
+                                    <div style="font-weight:600;font-size:1.05em; margin-bottom:7px;color:white;">Product: <span style="color:var(--amazon-orange);">@item.product?.name</span></div>
+                                    <div style="margin-bottom:7px;font-size:0.98em;color:white;">Quantity: <span class="badge bg-secondary">@item.quantity</span></div>
+                                    <div style="font-size:0.98em;color:white;">
+                                        Status:
+                                        <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
                             background:@(item.status == "Pending" ? "#ffc107" : item.status == "Processing" ? "#0dcaf0" : item.status == "Shipped" ? "#0d6efd" : item.status == "Delivered" ? "#198754" : item.status == "Cancelled" ? "#dc3545" : "#adb5bd");
                             color:@(item.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
                                     @item.status
-                                </span>
-                            </div>
-                        </div>
+                                        </span>
+                                    </div>
+                                </div>
+                    }
+                    </td>
+                <td>
+                    <a asp-action="OrderDetails" asp-route-id="@order.id" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                    @if (isAdmin)
+                    {
+                            <a asp-action="DeleteOrder" asp-route-id="@order.id" class="btn btn-danger btn-sm ml-1">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
                     }
                 </td>
-            <td>
-                <a asp-action="OrderDetails" asp-route-id="@order.id" class="btn btn-info btn-sm">
-                    <i class="fas fa-eye"></i> View Details
-                </a>
-                @if (isAdmin)
-                {
-                    <a asp-action="DeleteOrder" asp-route-id="@order.id" class="btn btn-danger btn-sm ml-1">
-                        <i class="fas fa-trash"></i> Delete
-                    </a>
-                }
-            </td>
-        </tr>
-    }
+            </tr>
+        }
     </tbody>
 </table> 

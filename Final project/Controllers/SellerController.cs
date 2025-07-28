@@ -486,6 +486,7 @@ namespace Final_project.Controllers
                 .Include(o => o.Buyer)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.product)
+                .ThenInclude(p => p.Seller)
                 .FirstOrDefaultAsync();
 
             if (order == null) return NotFound();
@@ -567,10 +568,8 @@ namespace Final_project.Controllers
                 return RedirectToAction("OrderDetails", new { id = order.id });
             }
 
-
             orderItem.status = newStatus;
             await _unitOfWork.SaveAsync();
-
 
             var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
 
@@ -623,13 +622,11 @@ namespace Final_project.Controllers
         {
             var sellerId = GetCurrentSellerId();
 
-            var productIds = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).Select(p => p.id).ToListAsync();
-
+            // Get all discounts for the current seller
             IQueryable<discount> query = _context.discounts
-                .Where(d => d.ProductDiscounts.Any(pd => productIds.Contains(pd.product_id)))
+                .Where(d => d.seller_id == sellerId)
                 .Include(d => d.ProductDiscounts)
                 .ThenInclude(pd => pd.product);
-
 
             if (!string.IsNullOrEmpty(searchDescription))
                 query = query.Where(d => d.description.Contains(searchDescription));
@@ -696,6 +693,8 @@ namespace Final_project.Controllers
                     }
                     await _unitOfWork.SaveAsync();
                 }
+
+                TempData["SuccessMessage"] = "Discount added successfully!";
                 return RedirectToAction("Discounts");
             }
 
@@ -1557,6 +1556,28 @@ namespace Final_project.Controllers
             await _unitOfWork.SaveAsync();
             TempData["SuccessMessage"] = "Test data seeded successfully!";
             return RedirectToAction("SellerDashboard");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductAjax(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return Json(new { success = false, message = "Invalid product id." });
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
+            if (product == null)
+                return Json(new { success = false, message = "Product not found." });
+            product.is_deleted = true;
+            product.is_active = false;
+            if (product.product_images != null)
+            {
+                foreach (var img in product.product_images)
+                {
+                    img.is_primary = false;
+                }
+            }
+            await _unitOfWork.SaveAsync();
+            return Json(new { success = true });
         }
 
 

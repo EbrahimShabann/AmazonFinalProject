@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using Final_project.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,13 +7,14 @@ namespace Final_project.Controllers
 {
     public class AdminCustomerServiceController : Controller
     {
-        private readonly AmazonDBContext _context;
+        private readonly UnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminCustomerServiceController(AmazonDBContext context, UserManager<ApplicationUser> _userManager)
+        public AdminCustomerServiceController(UnitOfWork unitOfWork, UserManager<ApplicationUser> _userManager)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
             this._userManager = _userManager;
+
         }
 
 
@@ -22,7 +24,7 @@ namespace Final_project.Controllers
             ViewBag.CountPendingCustomerService = CustomerService.Where(u => !u.is_deleted & !u.is_active).Count();
             ViewBag.CountAcceptedCustomerService = CustomerService.Where(u => !u.is_deleted & u.is_active).Count();
             ViewBag.CountRegectedCustomerService = CustomerService.Where(u => u.is_deleted & !u.is_active).Count();
-            ViewBag.PendeingCustomerService = CustomerService.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
+            ViewBag.PendingCustomerService = CustomerService.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
 
             return View();
         }
@@ -36,7 +38,6 @@ namespace Final_project.Controllers
             return View(CustomerService.Where(u => !u.is_deleted).ToList());
         }
 
-
         [HttpPost]
         public async Task<JsonResult> ApproveCustomerService(string id)
         {
@@ -45,11 +46,9 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = true;
             CustomerService.is_deleted = false;
-            _context.SaveChanges();
-
+            unitOfWork.save();
             return Json(new { success = true });
         }
-
         [HttpPost]
         public async Task<JsonResult> RejectCustomerService(string id)
         {
@@ -58,7 +57,7 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = false;
             CustomerService.is_deleted = true;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }
@@ -69,7 +68,7 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = false;
             CustomerService.is_deleted = false;
-            _context.SaveChanges();
+            unitOfWork.save();
 
             return Json(new { success = true });
         }

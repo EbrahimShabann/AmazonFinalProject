@@ -550,11 +550,11 @@
                         <div class="property-value">
                             @if (Model.ParentCategory != null)
                             {
-                                <a href="#" class="property-link">@Model.ParentCategory.name</a>
+                                    <a href="#" class="property-link">@Model.ParentCategory.name</a>
                             }
                             else
                             {
-                                <span class="property-link empty-value">No parent</span>
+                                    <span class="property-link empty-value">No parent</span>
                             }
                         </div>
                     </div>
@@ -609,11 +609,11 @@
                         <div class="property-value">
                             @if (!string.IsNullOrEmpty(Model.deleted_by))
                             {
-                                <a href="#" class="property-link">@Model.DeletedByUser?.Email</a>
+                                    <a href="#" class="property-link">@Model.DeletedByUser?.Email</a>
                             }
                             else
                             {
-                                <span class="empty-value">Not deleted</span>
+                                    <span class="empty-value">Not deleted</span>
                             }
                         </div>
                     </div>
