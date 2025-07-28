@@ -143,5 +143,9 @@ namespace Final_project.Repository.ProductRepositoryFile
             db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }
 
+        public List<product_review> getAllReviews()
+        {
+            return db.product_reviews.ToList();
+        }
     }
 }
