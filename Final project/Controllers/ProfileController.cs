@@ -153,7 +153,7 @@ namespace Final_project.Areas.Customer.Controllers
 
         public IActionResult Messages(string filter, string search, int page = 1, int size = 5)
         {
-            var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
                 return NotFound();

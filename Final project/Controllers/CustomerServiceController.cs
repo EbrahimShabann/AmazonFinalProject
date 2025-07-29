@@ -144,9 +144,11 @@ namespace Final_project.Controllers.CustomerService
         [ValidateAntiForgeryToken]
         public IActionResult SendTicketMessage(SendTicketMessageDTO dto)
         {
+            ModelState.Remove(nameof(dto.SenderId));
             if (ModelState.IsValid)
             {
                 dto.SenderId = GetCurrentUserId();
+                Console.WriteLine(dto.SenderId);
                 _customerService.SendTicketMessage(dto.TicketId, dto.SenderId, dto.Message);
                 TempData["Success"] = "Message sent successfully!";
             }

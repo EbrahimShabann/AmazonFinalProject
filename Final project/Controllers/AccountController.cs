@@ -79,7 +79,7 @@ namespace Final_project.Controllers
                 IdentityResult created = await userManager.CreateAsync(user, registerData.Password);
                 if (created.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "customer");
+                    await userManager.AddToRoleAsync(user, "support");
                     unitOfWork.AccountRepository.UpdateUserLogs(user, "Register");
                     await signInManager.SignInAsync(user, false);
                 
