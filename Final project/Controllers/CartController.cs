@@ -33,8 +33,10 @@ namespace Final_project.Controllers.Cart
                 CartItemId = item.id,
                 ProductId = item.product_id,
                 ProductName = item.Product?.name ?? "Unknown",
-                ImageUrl = "/images/m.png",
+                ImageUrl = unitOfWork.ProductRepository.GetProduct_Images(item.product_id).SingleOrDefault(i=>i.is_primary==true).image_url,
                 Quantity = item.quantity ?? 1,
+                Color = item.color,
+                Size = item.size,
                 Price = item.Product?.discount_price ?? item.Product?.price ?? 0,
                 InStock = item.Product?.stock_quantity > 0,
                 Badge = item.Product?.stock_quantity > 50 ? "#1 Best Seller" : null
@@ -83,11 +85,10 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
-        public IActionResult AddToCart(string productId)
+        public IActionResult AddToCart(string productId, string color, string size)
         {
             var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
             string userId = IdClaim.Value;
-            // Get or create cart
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
             if (cart == null)
             {
@@ -102,7 +103,6 @@ namespace Final_project.Controllers.Cart
                 unitOfWork.save();
             }
 
-            // Check if product already exists in cart
             var existingItem = unitOfWork.CartItemRepository.GetCartItemsByCartId(cart.id)
                                 .FirstOrDefault(ci => ci.product_id == productId);
 
@@ -119,6 +119,8 @@ namespace Final_project.Controllers.Cart
                     cart_id = cart.id,
                     product_id = productId,
                     quantity = 1,
+                    color = color ,
+                    size = size,
                     added_at = DateTime.UtcNow
                 };
                 unitOfWork.CartItemRepository.add(newItem);
@@ -127,6 +129,47 @@ namespace Final_project.Controllers.Cart
             unitOfWork.save();
             var val =unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
             return Json(val);
+        }
+
+        [HttpPost]
+        public IActionResult SaveCurrentCart(string cartName)
+        {
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
+
+            var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
+            if (cart == null)
+                return BadRequest("No cart to save.");
+
+            var cartItems = unitOfWork.CartItemRepository.GetCartItemsByCartId(cart.id);
+            if (!cartItems.Any())
+                return BadRequest("Cart is empty.");
+
+            var savedCart = new saved_cart
+            {
+                id = Guid.NewGuid().ToString(),
+                user_id = userId,
+                name = cartName,
+                created_at = DateTime.UtcNow
+            };
+
+            unitOfWork.SavedCartRepository.add(savedCart);
+
+            foreach (var item in cartItems)
+            {
+                var savedItem = new saved_cart_item
+                {
+                    id = Guid.NewGuid().ToString(),
+                    saved_cart_id = savedCart.id,
+                    product_id = item.product_id,
+                    quantity = item.quantity ?? 1
+                };
+
+                unitOfWork.SavedCartItemRepository.add(savedItem);
+            }
+
+            unitOfWork.save();
+            return RedirectToAction("Index");
         }
     }
 }

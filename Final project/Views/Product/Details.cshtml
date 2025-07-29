@@ -470,8 +470,10 @@
     $('.product-btn-cart').each(function(){
              $(this).click(function () {
                  const productId= $(this).data("id");
+                  const size = document.getElementById('selectedSize')?.value;
+                 const color = document.getElementById('selectedColor')?.value;
             $.ajax({
-                url: `/Cart/AddToCart?productId=${productId}`,
+                url: `/Cart/AddToCart?productId=${productId}&color=${color}&size=${size}`,
                 type: "POST",
                 success: function (response) {
                      toastr.success('Item added to cart successfully');
@@ -488,7 +490,8 @@
           // Add to WishList
     $('.wishlist-btn').each(function(){
              $(this).click(function () {
-                  const productId= $(this).data("id");
+                 const productId= $(this).data("id");
+               
             $.ajax({
                 url: `/Wishlist/AddToWishlist?productId=${productId}`,
                 success: function (response) {

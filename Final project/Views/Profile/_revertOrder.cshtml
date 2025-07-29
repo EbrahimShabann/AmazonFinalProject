@@ -41,6 +41,23 @@
                             <label class="form-label">Order Item</label>
                             <input type="text" class="form-control" asp-for="@Model.Order_Item.product.name" value="@Model.Order_Item.product.name" readonly>
                         </div>
+
+                        <div class="row">
+                            @if(Model.Order_Item.Color != null)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"> Item Color</label>
+                                    <input type="text" class="form-control" asp-for="@Model.Order_Item.Color" value="@Model.Order_Item.Color" readonly>
+                                </div>
+                            }
+                            @if (Model.Order_Item.Size != null)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"> Item Size</label>
+                                    <input type="text" class="form-control" asp-for="@Model.Order_Item.Size" value="@Model.Order_Item.Size" readonly>
+                                </div>
+                            }
+                        </div>
                         <!-- Return Options -->
                         <div class="mb-4">
                             <h3 class="h5 mb-3">Request Options</h3>

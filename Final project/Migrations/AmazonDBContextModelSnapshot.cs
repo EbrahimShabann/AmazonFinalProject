@@ -206,12 +206,18 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("color")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("product_id")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -573,12 +579,6 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("SelectedColorsRaw")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedSizesRaw")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Sizes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -765,6 +765,56 @@ namespace Final_project.Migrations
                     b.HasIndex("review_id");
 
                     b.ToTable("review_reply");
+                });
+
+            modelBuilder.Entity("Final_project.Models.saved_cart", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("last_updated_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("user_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("saved_carts");
+                });
+
+            modelBuilder.Entity("Final_project.Models.saved_cart_item", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("added_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("product_id")
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("saved_cart_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("product_id");
+
+                    b.HasIndex("saved_cart_id");
+
+                    b.ToTable("saved_cart_items");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -1292,6 +1342,30 @@ namespace Final_project.Migrations
                     b.Navigation("review");
                 });
 
+            modelBuilder.Entity("Final_project.Models.saved_cart", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_project.Models.saved_cart_item", b =>
+                {
+                    b.HasOne("Final_project.Models.product", "Product")
+                        .WithMany()
+                        .HasForeignKey("product_id");
+
+                    b.HasOne("Final_project.Models.saved_cart", "SavedCart")
+                        .WithMany("SavedCartItems")
+                        .HasForeignKey("saved_cart_id");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SavedCart");
+                });
+
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "User")
@@ -1455,6 +1529,11 @@ namespace Final_project.Migrations
             modelBuilder.Entity("Final_project.Models.product_review", b =>
                 {
                     b.Navigation("replies");
+                });
+
+            modelBuilder.Entity("Final_project.Models.saved_cart", b =>
+                {
+                    b.Navigation("SavedCartItems");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>

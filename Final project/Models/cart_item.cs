@@ -25,6 +25,8 @@ public partial class cart_item
     public virtual product Product { get; set; }
 
     public int? quantity { get; set; } = 1;
+    public string? size { get; set; }
+    public string? color { get; set; }
 
     public DateTime? added_at { get; set; } =DateTime.Now;
 }

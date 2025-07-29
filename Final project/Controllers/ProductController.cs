@@ -117,6 +117,7 @@ namespace Final_project.Controllers
                 foreach (var cart in cartVM)
                 {
                     var product = uof.ProductRepository.getById(cart.ProductId);
+                   
                     if (product == null)
                     {
                         TempData["error"] = "Product not found.";
@@ -127,6 +128,8 @@ namespace Final_project.Controllers
                         TempData["error"] = "Quantity must be greater than zero.";
                         return RedirectToAction("Index", "Cart");
                     }
+                    if (string.IsNullOrEmpty(cart.ProductColor)) cart.ProductColor = product.SelectedColors[0];
+                    if (string.IsNullOrEmpty(cart.ProductSize)) cart.ProductSize = product.SelectedSizes[0];
                     newOrder.Carts.Add(new CartVM
                     {
                         ProductId = product.id,

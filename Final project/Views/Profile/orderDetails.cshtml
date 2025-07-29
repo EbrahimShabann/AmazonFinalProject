@@ -187,6 +187,8 @@
                                         }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
                                         <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
+                                        <p class="mb-2"><strong>Color:</strong> @item.Color</p>
+                                        <p class="mb-2"><strong>Size:</strong> @item.Size</p>
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <a href="/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>

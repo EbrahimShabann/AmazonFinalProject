@@ -8,6 +8,7 @@ using Final_project.Repository.NewFolder;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
+using Final_project.Repository.SavedCartRepositoryFile;
 using Final_project.Repository.WishlistRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,8 @@ namespace Final_project.Repository
         private IMessagesRepo _messageRepo;
         private IWishlistItemRepository _wishlistItemRepository;
         private IWishlistRepository _wishlistRepository;
+        private ISavedCartRepository _savedCartRepository;
+        private ISavedCartItemRepository _savedCartItemRepository;
 
 
 
@@ -188,9 +191,27 @@ namespace Final_project.Repository
             }
         }
 
+        public ISavedCartRepository SavedCartRepository
+        {
+            get
+            {
+                if (_savedCartRepository == null)
+                    _savedCartRepository = new SavedCartRepository(db);
+                return _savedCartRepository;
+            }
+        }
 
-        //private IWishlistItemRepository _wishlistItemRepository;
-        //private IWishlistRepository _wishlistRepository;
+        public ISavedCartItemRepository SavedCartItemRepository
+        {
+            get
+            {
+                if (_savedCartItemRepository == null)
+                    _savedCartItemRepository = new SavedCartItemRepository(db);
+                return _savedCartItemRepository;
+            }
+        }
+
+
         public void save()
         {
             db.SaveChanges();
