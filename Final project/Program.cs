@@ -30,6 +30,8 @@ namespace Final_project
             //Stripe payment
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
+            //==================HttpClient====================
+            builder.Services.AddHttpClient();
             //==================SessionnConfiguration====================
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
