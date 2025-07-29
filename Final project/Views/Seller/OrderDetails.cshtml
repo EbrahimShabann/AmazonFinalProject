@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var sellerId = Context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 }
 
@@ -295,16 +296,16 @@
     }
 
     /* span {
-        color: white;
-    } */
+            color: white;
+        } */
 
     div {
         color: white;
     }
 
     /* p {
-        color: white;
-    } */
+            color: white;
+        } */
 
     td {
         color: white !important;
@@ -432,46 +433,46 @@
 </style>
 
 @section Styles {
-        <style>
-            .order-details-section p strong {
-                color: #1976d2;
-                font-weight: 700;
-                letter-spacing: 0.5px;
-            }
+    <style>
+        .order-details-section p strong {
+            color: #1976d2;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
 
-            .order-details-section p {
-                color: #333;
-                font-size: 1.08rem;
-            }
+        .order-details-section p {
+            color: #333;
+            font-size: 1.08rem;
+        }
 
-            .seller-info-box {
-                transition: box-shadow 0.2s;
-            }
+        .seller-info-box {
+            transition: box-shadow 0.2s;
+        }
 
-                .seller-info-box:hover {
-                    box-shadow: 0 4px 18px #1976d222, 0 1.5px 4px #0001;
-                }
-        </style>
+            .seller-info-box:hover {
+                box-shadow: 0 4px 18px #1976d222, 0 1.5px 4px #0001;
+            }
+    </style>
 }
 
 <h2 style="text-align:center; color:var(--amazon-orange); font-weight:bold; letter-spacing:1px; margin: 2rem 0 1.5rem 0; text-shadow:0 2px 12px #0004;">Order Details</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
         @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 
 @if (TempData["ErrorMessage"] != null)
 {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
         @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 <div class="card mb-3 order-details-section">
     <div class="card-body">
@@ -519,18 +520,18 @@
     <tbody>
         @foreach (var item in Model.OrderItems)
         {
-                <tr>
-                    <td>@item.product?.name</td>
-                    <td>@item.quantity</td>
-                    <td>@item.unit_price</td>
-                    <td>
-                        <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+            <tr>
+                <td>@item.product?.name</td>
+                <td>@item.quantity</td>
+                <td>@item.unit_price</td>
+                <td>
+                    <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
                         background:@(item.status == "Pending" ? "#ffc107" : item.status == "Processing" ? "#0dcaf0" : item.status == "Shipped" ? "#0d6efd" : item.status == "Delivered" ? "#198754" : item.status == "Cancelled" ? "#dc3545" : "#adb5bd");
                         color:@(item.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
                         @item.status
-                        </span>
-                    </td>
-                </tr>
+                    </span>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -550,51 +551,51 @@
                     <select name="newStatus" id="newStatus" class="form-select">
                         @if (Model.status == "Pending")
                         {
-                                <option value="Pending" selected="selected">Pending</option>
+                            <option value="Pending" selected="selected">Pending</option>
                         }
                         else
                         {
-                                <option value="Pending">Pending</option>
+                            <option value="Pending">Pending</option>
                         }
                         @if (Model.status == "Processing")
                         {
-                                <option value="Processing" selected="selected">Processing</option>
+                            <option value="Processing" selected="selected">Processing</option>
                         }
                         else
                         {
-                                <option value="Processing">Processing</option>
+                            <option value="Processing">Processing</option>
                         }
                         @if (Model.status == "Shipped")
                         {
-                                <option value="Shipped" selected="selected">Shipped</option>
+                            <option value="Shipped" selected="selected">Shipped</option>
                         }
                         else
                         {
-                                <option value="Shipped">Shipped</option>
+                            <option value="Shipped">Shipped</option>
                         }
                         @if (Model.status == "Delivered")
                         {
-                                <option value="Delivered" selected="selected">Delivered</option>
+                            <option value="Delivered" selected="selected">Delivered</option>
                         }
                         else
                         {
-                                <option value="Delivered">Delivered</option>
+                            <option value="Delivered">Delivered</option>
                         }
                         @if (Model.status == "Cancelled")
                         {
-                                <option value="Cancelled" selected="selected">Cancelled</option>
+                            <option value="Cancelled" selected="selected">Cancelled</option>
                         }
                         else
                         {
-                                <option value="Cancelled">Cancelled</option>
+                            <option value="Cancelled">Cancelled</option>
                         }
                         @if (Model.status == "Partially Delivered")
                         {
-                                <option value="Partially Delivered" selected="selected">Partially Delivered</option>
+                            <option value="Partially Delivered" selected="selected">Partially Delivered</option>
                         }
                         else
                         {
-                                <option value="Partially Delivered">Partially Delivered</option>
+                            <option value="Partially Delivered">Partially Delivered</option>
                         }
                     </select>
                 </div>
@@ -613,14 +614,14 @@
 </div>
 
 @section Scripts {
-        <script>
-            $(document).ready(function() {
-                setTimeout(function() {
-                    $('.alert').fadeOut('slow');
-                }, 5000);
-                $('.alert .btn-close').on('click', function() {
-                    $(this).closest('.alert').fadeOut('slow');
-                });
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+            $('.alert .btn-close').on('click', function() {
+                $(this).closest('.alert').fadeOut('slow');
             });
-        </script>
+        });
+    </script>
 }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Add Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -27,19 +28,17 @@
         padding: 0;
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
         padding: 2rem;
@@ -59,20 +58,25 @@
         overflow: hidden;
     }
 
-    .dashboard-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
-    }
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
 
     @@keyframes shimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .hero-title {
@@ -105,10 +109,10 @@
         transition: all 0.3s ease;
     }
 
-    .form-panel:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .form-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     /* Form Controls */
     .glass-input {
@@ -123,22 +127,22 @@
         width: 100%;
     }
 
-    .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .glass-input:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .glass-input option {
-        background: var(--amazon-dark);
-        color: white;
-    }
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
 
     .glass-label {
         color: rgba(255, 255, 255, 0.9);
@@ -167,37 +171,37 @@
         font-size: 0.9rem;
     }
 
-    .floating-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .floating-btn:hover::before {
-        left: 100%;
-    }
+        .floating-btn:hover::before {
+            left: 100%;
+        }
 
-    .floating-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-    }
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
 
-    .floating-btn.primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .floating-btn.success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
 
     /* Color Swatches */
     .color-swatch {
@@ -212,16 +216,16 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .color-swatch:hover {
-        transform: scale(1.2);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
+        .color-swatch:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
 
-    .color-swatch.selected {
-        border-color: var(--amazon-orange);
-        transform: scale(1.1);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
-    }
+        .color-swatch.selected {
+            border-color: var(--amazon-orange);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
+        }
 
     /* Image Preview */
     .image-preview-container {
@@ -233,13 +237,13 @@
         margin-top: 1rem;
     }
 
-    .image-preview-container .card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        overflow: hidden;
-    }
+        .image-preview-container .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+        }
 
     /* Utility Classes */
     .text-center {
@@ -326,6 +330,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -424,7 +429,7 @@
                             {
                                 @foreach (var category in ViewBag.Categories)
                                 {
-                                            <option value="@category.id">@category.name</option>
+                                    <option value="@category.id">@category.name</option>
                                 }
                             }
                         </select>
@@ -516,7 +521,7 @@
 </div>
 
 @section Scripts {
-        <script>
+    <script>
         document.getElementById('imageFilesInput').addEventListener('change', previewImages);
 
         function previewImages(event) {
@@ -625,5 +630,5 @@
                 document.getElementById('imageValidationMsg').textContent = '';
             }
         });
-        </script>
+    </script>
 } 

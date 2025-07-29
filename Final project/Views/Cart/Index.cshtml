@@ -139,6 +139,19 @@
         margin: 5px 0;
     }
 
+    .item-variants {
+        font-size: 14px;
+        color: var(--amazon-dark-gray);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .label-variants {
+        font-weight: 600;
+        color: var(--amazon-dark);
+        margin-right: 4px;
+    }
+
     .item-delivery {
         color: var(--amazon-dark-gray);
         font-size: 14px;
@@ -312,14 +325,36 @@
                     <div class="item-select">
                         <input type="checkbox" class="form-check-input" checked />
                     </div>
-                    <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+
+                    <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
+                        <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                    </a>
+
                     <div class="item-details">
-                        <h4 class="item-title">@item.ProductName</h4>
+                        <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" style="text-decoration: none;">
+                            <h4 class="item-title">@item.ProductName</h4>
+                        </a>
+
                         @if (!string.IsNullOrEmpty(item.Badge))
                         {
                             <span class="item-badge">@item.Badge</span>
                         }
                         <div class="item-stock">@(item.InStock ? "In Stock" : "Currently unavailable")</div>
+                        @if (!string.IsNullOrEmpty(item.Color) || !string.IsNullOrEmpty(item.Size))
+                        {
+                            <div class="item-variants">
+                                @if (!string.IsNullOrEmpty(item.Color))
+                                {
+                                    <span><span class="label-variants">Color:</span> @item.Color</span>
+
+                                    <br />
+                                }
+                                @if (!string.IsNullOrEmpty(item.Size))
+                                {
+                                    <span><span class="label-variants">Size:</span> @item.Size</span>
+                                }
+                            </div>
+                        }
                         <div class="item-delivery">Eligible for FREE delivery</div>
 
                         <div class="item-actions">
@@ -347,25 +382,36 @@
                 </div>
             }
 
+
             <div class="cart-header" style="justify-content: flex-end;">
                 <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
             </div>
         }
     </div>
+    <form method="get" asp-controller="Product" asp-action="CheckOut">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+            <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+            <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+            <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+            <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
 
-    @if (Model.Any())
-    {
-        <div class="cart-summary">
-            <h4 class="summary-title">Order Summary</h4>
-            <div class="summary-subtotal">
-                Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
+        }
+        @if (Model.Any())
+        {
+            <div class="cart-summary">
+                <h4 class="summary-title">Order Summary</h4>
+                <div class="summary-subtotal">
+                    Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
+                </div>
+                <button class="checkout-btn">Proceed to Checkout</button>
+                <div class="secure-checkout">
+                    <i class="fas fa-lock"></i> Secure checkout
+                </div>
             </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
-            <div class="secure-checkout">
-                <i class="fas fa-lock"></i> Secure checkout
-            </div>
-        </div>
-    }
+        }
+    </form>
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

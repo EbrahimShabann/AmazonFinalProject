@@ -1,6 +1,7 @@
 @model IEnumerable<Final_project.Models.product_review>
 @{
     ViewData["Title"] = "Product Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var avgRatings = ViewBag.AvgRatings as Dictionary<string, double>;
 }
 
@@ -27,19 +28,17 @@
         padding: 0;
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
         padding: 2rem;
@@ -59,20 +58,25 @@
         overflow: hidden;
     }
 
-    .dashboard-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
-    }
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
 
     @@keyframes shimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .hero-title {
@@ -105,10 +109,10 @@
         transition: all 0.3s ease;
     }
 
-    .filter-panel:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .filter-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     /* Form Controls */
     .glass-input {
@@ -123,22 +127,22 @@
         width: 100%;
     }
 
-    .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .glass-input:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .glass-input option {
-        background: var(--amazon-dark);
-        color: white;
-    }
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
 
     .glass-label {
         color: rgba(255, 255, 255, 0.9);
@@ -167,42 +171,42 @@
         font-size: 0.9rem;
     }
 
-    .floating-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .floating-btn:hover::before {
-        left: 100%;
-    }
+        .floating-btn:hover::before {
+            left: 100%;
+        }
 
-    .floating-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-    }
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
 
-    .floating-btn.primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .floating-btn.success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
 
-    .floating-btn.danger {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        border: none;
-    }
+        .floating-btn.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+        }
 
     /* Table Styling */
     .reviews-table-container {
@@ -222,71 +226,71 @@
         width: 100%;
     }
 
-    .table thead {
-        background: #131921; /* Same dark color as buttons */
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-    }
+        .table thead {
+            background: #131921; /* Same dark color as buttons */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
 
-    .table th {
-        color: #0073bb !important; /* Same blue color as edit button background */
-        font-weight: 600;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 12px 16px;
-        text-align: center;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: none;
-        position: relative;
-        background: transparent;
-    }
+        .table th {
+            color: #0073bb !important; /* Same blue color as edit button background */
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+            background: transparent;
+        }
 
-    /* Override any existing table header styles */
-    .table thead th,
-    .table thead tr th {
-        color: #0073bb !important;
-    }
+        /* Override any existing table header styles */
+        .table thead th,
+        .table thead tr th {
+            color: #0073bb !important;
+        }
 
-    .table th::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 20%;
-        right: 20%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
+        .table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-    .table th:hover::after {
-        opacity: 1;
-    }
+        .table th:hover::after {
+            opacity: 1;
+        }
 
-    .table td {
-        color: white !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 1.2rem 1rem;
-        vertical-align: middle;
-        text-align: center;
-        font-size: 0.9rem;
-        border-left: none;
-        border-right: none;
-        position: relative;
-    }
+        .table td {
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9rem;
+            border-left: none;
+            border-right: none;
+            position: relative;
+        }
 
-    .table tbody tr {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: none;
-    }
+        .table tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+        }
 
-    .table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: scale(1.02);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
+            .table tbody tr:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: scale(1.02);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            }
 
     /* Category name styling */
     .category-name {
@@ -317,20 +321,20 @@
         transition: all 0.3s ease;
     }
 
-    .reply-item:hover {
-        background: rgba(255, 255, 255, 0.12);
-        transform: translateX(5px);
-    }
+        .reply-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
 
-    .reply-item strong {
-        color: var(--amazon-orange);
-        font-weight: 600;
-    }
+        .reply-item strong {
+            color: var(--amazon-orange);
+            font-weight: 600;
+        }
 
-    .reply-item p {
-        margin: 0.5rem 0;
-        color: rgba(255, 255, 255, 0.8);
-    }
+        .reply-item p {
+            margin: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
 
     /* Rating Stars */
     .rating-stars {
@@ -434,6 +438,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -490,11 +495,11 @@
                         {
                             if (ViewBag.ProductId == p.id)
                             {
-                                        <option value="@p.id" selected>@p.name</option>
+                                <option value="@p.id" selected>@p.name</option>
                             }
                             else
                             {
-                                        <option value="@p.id">@p.name</option>
+                                <option value="@p.id">@p.name</option>
                             }
                         }
                     </select>
@@ -587,11 +592,11 @@
                                 {
                                     if (i <= review.rating)
                                     {
-                                                <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
                                     }
                                     else
                                     {
-                                                <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
                                     }
                                 }
                             </div>
@@ -604,28 +609,28 @@
                         <td>
                             @if (review.replies != null && review.replies.Any())
                             {
-                                    <div class="replies-container">
+                                <div class="replies-container">
                                     @foreach (var reply in review.replies)
                                     {
-                                                <div class="reply-item">
-                                                    <strong>@reply.Replier?.UserName:</strong>
-                                                    <p>@reply.reply_text</p>
-                                                    <small class="text-muted">@reply.created_at?.ToString("yyyy-MM-dd HH:mm")</small>
+                                        <div class="reply-item">
+                                            <strong>@reply.Replier?.UserName:</strong>
+                                            <p>@reply.reply_text</p>
+                                            <small class="text-muted">@reply.created_at?.ToString("yyyy-MM-dd HH:mm")</small>
                                             @if (reply.is_seller_reply == true)
                                             {
-                                                            <form asp-action="DeleteReviewReply" method="post" style="display: inline;">
+                                                <form asp-action="DeleteReviewReply" method="post" style="display: inline;">
                                                     @Html.AntiForgeryToken()
-                                                                <input type="hidden" name="replyId" value="@reply.id" />
-                                                                <button type="submit" class="floating-btn danger btn-sm ml-2" onclick="return confirm('Delete this reply?')">Delete</button>
-                                                            </form>
+                                                    <input type="hidden" name="replyId" value="@reply.id" />
+                                                    <button type="submit" class="floating-btn danger btn-sm ml-2" onclick="return confirm('Delete this reply?')">Delete</button>
+                                                </form>
                                             }
-                                                </div>
+                                        </div>
                                     }
-                                    </div>
+                                </div>
                             }
                             else
                             {
-                                    <span class="text-muted">No replies</span>
+                                <span class="text-muted">No replies</span>
                             }
                         </td>
                         <td>

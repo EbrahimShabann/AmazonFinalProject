@@ -1,0 +1,77 @@
+﻿@model ordersReverted
+
+<partial name="_ValidationScriptsPartial"/>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="h4 mb-0">Return or Replace Items</h2>
+                </div>
+                <div class="card-body">
+                    <form  
+                          id="upsertForm"
+                          asp-controller="Profile"
+                          asp-action="CreateReturn"
+                          data-ajax="true"
+                          data-ajax-method="post"
+                          data-ajax-mode="replace"
+                          data-ajax-update="#modalBody">
+                        <!-- Order Information -->
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <input type="hidden" asp-for="order_itemId"/>
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Order Information</h3>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="orderId" class="form-label">Order ID</label>
+                                    <input asp-for="orderId" class="form-control" readonly>
+                               
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Order Date</label>
+                                    <input type="text" class="form-control" value="@Model.Order?.order_date?.ToString("MMMM d, yyyy")" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item selected -->
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Order Item</label>
+                            <input type="text" class="form-control" asp-for="@Model.Order_Item.product.name" value="@Model.Order_Item.product.name" readonly>
+                        </div>
+                        <!-- Return Options -->
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Request Options</h3>
+                            <select asp-for="Reason" class="form-select">
+                                <option value="">Select your request</option>
+                                <option value="return">Return Order</option>
+                                <option value="replace">Replace Order</option>
+                               
+                            </select>
+                            <span asp-validation-for="Reason" class="text-danger"></span>
+                        </div>
+
+                       
+
+                        <!-- Additional Notes -->
+                        <div class="mb-4">
+                            <h3 class="h5 mb-3">Additional Notes</h3>
+                            <textarea asp-for="Notes" class="form-control" rows="3"
+                                      placeholder="Please provide any additional information about your return"></textarea>
+                        </div>
+
+                        
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">Continue with Return</button>
+                            <button type="button" class="btn btn-outline-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

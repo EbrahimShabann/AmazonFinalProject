@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Final_project.Models;
-using Final_project.Models;
 using Final_project.ViewModel.Customer;
 
 namespace Final_project.Repository.Product
@@ -19,6 +18,7 @@ namespace Final_project.Repository.Product
         List<ProductsVM> getProductsWithImagesAndRating();
         List<product_image> GetProduct_Images(string productId);
         List<product_review> getProductReviews(string productId);
+        List<product_review> getAllReviews();
         void addReview(product_review review);
 
     }

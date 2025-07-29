@@ -37,6 +37,10 @@
       "PackagePath": "staticwebassets\\Image\\78fe8eb7-ea62-42e1-a8aa-2cf441cbb4ec_oar2.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg",
+      "PackagePath": "staticwebassets\\Image\\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg",
       "PackagePath": "staticwebassets\\Image\\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg"
     },
@@ -131,6 +135,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\_ErrorLayoutJS.js",
       "PackagePath": "staticwebassets\\js\\_ErrorLayoutJS.js"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\index.js",
+      "PackagePath": "staticwebassets\\js\\index.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\site.js",

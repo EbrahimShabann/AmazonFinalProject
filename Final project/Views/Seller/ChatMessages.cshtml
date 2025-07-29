@@ -1,6 +1,7 @@
 @model Final_project.Models.chat_session
 @{
     ViewData["Title"] = "Chat with " + Model.Customer?.UserName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -26,19 +27,17 @@
         padding: 0;
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
         padding: 2rem;
@@ -58,20 +57,25 @@
         overflow: hidden;
     }
 
-    .dashboard-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
-    }
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
 
     @@keyframes shimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .hero-title {
@@ -104,10 +108,10 @@
         transition: all 0.3s ease;
     }
 
-    .chat-panel:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .chat-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     /* Chat Container */
     .chat-container {
@@ -121,23 +125,23 @@
         margin-bottom: 1.5rem;
     }
 
-    .chat-container::-webkit-scrollbar {
-        width: 8px;
-    }
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
 
-    .chat-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
 
-    .chat-container::-webkit-scrollbar-thumb {
-        background: var(--amazon-orange);
-        border-radius: 4px;
-    }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--amazon-orange);
+            border-radius: 4px;
+        }
 
-    .chat-container::-webkit-scrollbar-thumb:hover {
-        background: #ff7700;
-    }
+            .chat-container::-webkit-scrollbar-thumb:hover {
+                background: #ff7700;
+            }
 
     /* Message Styling */
     .message {
@@ -148,37 +152,37 @@
         animation: fadeInUp 0.3s ease-out;
     }
 
-    .message.sent {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        color: white;
-        margin-left: 20%;
-        text-align: right;
-    }
+        .message.sent {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            color: white;
+            margin-left: 20%;
+            text-align: right;
+        }
 
-    .message.received {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: rgba(255, 255, 255, 0.9);
-        margin-right: 20%;
-        text-align: left;
-    }
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            margin-right: 20%;
+            text-align: left;
+        }
 
-    .message strong {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
+        .message strong {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
 
-    .message p {
-        margin: 0.5rem 0;
-        line-height: 1.4;
-    }
+        .message p {
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
 
-    .message small {
-        opacity: 0.7;
-        font-size: 0.8rem;
-    }
+        .message small {
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
 
     /* Form Controls */
     .glass-input {
@@ -194,17 +198,17 @@
         resize: vertical;
     }
 
-    .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .glass-input:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
     /* Action Buttons */
     .floating-btn {
@@ -225,37 +229,37 @@
         font-size: 0.9rem;
     }
 
-    .floating-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .floating-btn:hover::before {
-        left: 100%;
-    }
+        .floating-btn:hover::before {
+            left: 100%;
+        }
 
-    .floating-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-    }
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
 
-    .floating-btn.primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .floating-btn.success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
 
     /* Utility Classes */
     .text-center {
@@ -292,6 +296,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -303,6 +308,7 @@
             opacity: 0;
             transform: translateY(10px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -356,11 +362,11 @@
         <div class="chat-container">
             @foreach (var message in Model.ChatMessages.OrderBy(m => m.sent_at))
             {
-                    <div class="message @(message.sender_id == User.Identity.Name ? "sent" : "received")">
-                        <strong>@message.Sender?.UserName:</strong>
-                        <p>@message.message</p>
-                        <small>@message.sent_at?.ToString("HH:mm")</small>
-                    </div>
+                <div class="message @(message.sender_id == User.Identity.Name ? "sent" : "received")">
+                    <strong>@message.Sender?.UserName:</strong>
+                    <p>@message.message</p>
+                    <small>@message.sent_at?.ToString("HH:mm")</small>
+                </div>
             }
         </div>
 

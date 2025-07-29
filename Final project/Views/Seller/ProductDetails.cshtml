@@ -1,8 +1,10 @@
 @model Final_project.Models.product
 @{
     ViewData["Title"] = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var mainImage = Model.product_images?.FirstOrDefault(pi => pi.image_type == "main" || pi.is_primary == true);
     var subImages = Model.product_images?.Where(pi => pi.image_type == "sub" && pi.is_primary != true).ToList() ?? new List<product_image>();
+    var currentSellerId = ViewBag.CurrentSellerId as string;
 }
 
 <style>
@@ -414,11 +416,11 @@
         .hero-title {
             font-size: 2rem;
         }
-
+        
         .col-md-4, .col-md-8 {
             width: 100%;
         }
-
+        
         .product-panel {
             padding: 1.5rem;
         }
@@ -454,24 +456,24 @@
                 <div class="main-image-container mb-3">
                     @if (mainImage != null)
                     {
-                            <img id="mainImage" src="@mainImage.image_url" class="img-fluid rounded" alt="Main Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
+                        <img id="mainImage" src="@mainImage.image_url" class="img-fluid rounded" alt="Main Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
                     }
                     else if (Model.product_images != null && Model.product_images.Any())
                     {
-                            <img id="mainImage" src="@Model.product_images.First().image_url" class="img-fluid rounded" alt="Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
+                        <img id="mainImage" src="@Model.product_images.First().image_url" class="img-fluid rounded" alt="Product Image" style="width:400px;height:400px;object-fit:cover;border-radius:12px;display:block;margin:auto;" />
                     }
                     else
                     {
-                            <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width:400px;height:400px;margin:auto;">
-                                <span class="text-muted">No Image</span>
-                            </div>
+                        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width:400px;height:400px;margin:auto;">
+                            <span class="text-muted">No Image</span>
+                        </div>
                     }
                 </div>
 
                 @if (Model.product_images != null && Model.product_images.Count() > 1)
                 {
-                        <div class="thumbnail-container">
-                            <div class="row">
+                    <div class="thumbnail-container">
+                        <div class="row">
                             @{
                                 var subImgs = Model.product_images.ToList();
                                 int colCount = 0;
@@ -482,17 +484,17 @@
                                 {
                                     @:</div><div class="row">
                                 }
-                                        <div class="col-4 mb-2">
-                                            <img src="@image.image_url"
-                                                 class="img-thumbnail thumbnail-image"
-                                                 style="height: 60px; width: 100%; object-fit: cover; cursor: pointer;"
-                                                 onclick="changeMainImage('@image.image_url')"
-                                                 alt="Product Thumbnail" />
-                                        </div>
+                                <div class="col-4 mb-2">
+                                    <img src="@image.image_url"
+                                         class="img-thumbnail thumbnail-image"
+                                         style="height: 60px; width: 100%; object-fit: cover; cursor: pointer;"
+                                         onclick="changeMainImage('@image.image_url')"
+                                         alt="Product Thumbnail" />
+                                </div>
                                 colCount++;
                             }
-                            </div>
                         </div>
+                    </div>
                 }
             </div>
             <div class="col-md-8">
@@ -508,7 +510,7 @@
                         <li><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
                         @if (Model.discount_price.HasValue)
                         {
-                                <li><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
+                            <li><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
                         }
                         <li><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
                         <li><strong>Brand:</strong> @Model.Brand</li>
@@ -520,12 +522,12 @@
                                 var colors = Model.Colors.Split(',');
                                 foreach (var color in colors)
                                 {
-                                            <span class="color-swatch" style="background:@color.Trim();" title="@color.Trim()"></span>
+                                    <span class="color-swatch" style="background:@color.Trim();" title="@color.Trim()"></span>
                                 }
                             }
                             else
                             {
-                                    <span class="text-muted">No Colors</span>
+                                <span class="text-muted">No Colors</span>
                             }
                         </li>
                         <li><strong>Sizes:</strong> @Model.Sizes</li>
@@ -533,41 +535,71 @@
                         <li><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
                         <li><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
                     </ul>
-
+                    
                     <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.2);" />
-
+                    
                     <!-- Seller Info Section -->
                     <div class="seller-info-section">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="https://via.placeholder.com/50" alt="Seller Avatar" class="seller-avatar me-3" />
+                            <img src="data:image/png;base64,..." alt="Seller Avatar" class="seller-avatar me-3" />
                             <div>
-                                <h5 class="mb-0" style="color: rgba(255, 255, 255, 0.9);">Seller Information</h5>
-                                <small class="text-muted">Product Owner</small>
+                                <h5 class="mb-0" style="color: rgba(255, 255, 255, 0.9);">
+                                  @Model.Seller?.UserName
+                                </h5>
+                                <small class="text-muted">@Model.Seller?.Email</small>
                             </div>
                         </div>
                     </div>
-
+                        
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
-                        <a asp-action="EditProduct" asp-route-id="@Model.id" class="floating-btn warning">
-                            <i class="fas fa-edit me-2"></i>Edit Product
-                        </a>
+                        @if (Model.seller_id == currentSellerId)
+                        {
+                            <a asp-action="EditProduct" asp-route-id="@Model.id" class="floating-btn warning">
+                                <i class="fas fa-edit me-2"></i>Edit Product
+                            </a>
+
+                            <!-- Trigger Delete Modal -->
+                            <button class="floating-btn danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash me-2"></i>Delete Product
+                            </button>
+                        }
+
                         <a asp-action="ProductReviews" asp-route-id="@Model.id" class="floating-btn success">
                             <i class="fas fa-star me-2"></i>View Reviews
                         </a>
-                        <a asp-action="DeleteProduct" asp-route-id="@Model.id" class="floating-btn danger" 
-                           onclick="return confirm('Are you sure you want to delete this product?')">
-                            <i class="fas fa-trash me-2"></i>Delete Product
-                        </a>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:rgba(30,49,80,0.98); border-radius:18px; border:2px solid var(--amazon-orange);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="deleteModalLabel" style="color:var(--amazon-orange); font-weight:700;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter:invert(1);"></button>
+            </div>
+            <div class="modal-body text-center" style="color:white;">
+                <p style="font-size:1.15rem;">Are you sure you want to delete this product?</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width:100px;">Cancel</button>
+                <a asp-action="DeleteProduct" asp-route-id="@Model.id" class="btn btn-danger" style="min-width:100px;">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     function changeMainImage(imageUrl) {
         document.getElementById('mainImage').src = imageUrl;
     }
-</script> 
+</script>

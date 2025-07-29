@@ -1,8 +1,8 @@
 ﻿@using Final_project.ViewModel.Customer
 @model OrderDetailsVM
 <link href="/css/CustomerProfile.css" rel="stylesheet"/>
-    <!-- Header (simplified) -->
-<partial name="_Header" />
+
+
 
     <div class="container my-4">
         <div class="row">
@@ -178,23 +178,27 @@
                                         }
                                         else
                                         {
-                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on @Model.Order.delivered_at?.ToString("dd MMMM yyyy")</p>
+                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on 
+                                                @(Model.Order.estimated_delivery_date?.ToString("dd MMMM yyyy") 
+                                                ?? 
+                                                Model.Order.delivered_at?.ToString("dd MMMM yyyy"))
+                                            </p>
 
                                         }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
                                         <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
                                     </div>
                                     <div class="col-md-4 text-end">
-                                        <a href="/Customer/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
-                                        @if ( Model.Order.status.ToLower() == "delivered")
+                                        <a href="/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
+                                        @if (Model.Order.status.ToLower() == "delivered" && item.status?.ToLower() != "return")
                                         {
                                             <button class="btn btn-outline-secondary mb-2 returnItem" data-id="@item.id">Return or replace items</button>
 
                                         }
-                                        <a href="/Customer/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
+                                        <a href="/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
                                         <div>
                                           
-                                            <a href="/Customer/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
+                                            <a href="/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
                                         </div>
                                     </div>
                                 </div>
@@ -206,15 +210,15 @@
                    
                     <!-- Order Actions -->
                     <div class="d-flex justify-content-between mt-4">
-                        <a href="/Customer/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
+                        <a href="/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
                          <div>
-                        @if (Model.Order.status.ToLower() != "cancelled" || Model.Order.status.ToLower() != "delivered")
+                        @if (Model.Order.status.ToLower() == "cancelled" || Model.Order.status.ToLower() == "delivered")
                         {
-                            <button id="cancelOrder" class="btn btn-outline-danger">Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
                         }
                         else
                         {
-                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger" >Cancel Order</button>
 
                         }
 
@@ -248,7 +252,7 @@
                         }).then((result) => {
                           if (result.isConfirmed) {
                                      $.ajax({
-                                         url: `/Customer/Profile/CancelOrder?orderId=@Model.Order.id`,
+                                         url: `/Profile/CancelOrder?orderId=@Model.Order.id`,
                                           success:function(){
                                                    Swal.fire({
                                                     title: "Cancelled!",
@@ -269,7 +273,7 @@
         //revert order
              $(".returnItem").click(function(){
           const id = $(this).data('id')
-            $("#modalBody").load(`/Customer/Profile/CreateReturn?id=${id}`,function(response,status,xhr){
+            $("#modalBody").load(`/Profile/CreateReturn?id=${id}`,function(response,status,xhr){
               if(status=="error"){
                   alert(response);
               }
