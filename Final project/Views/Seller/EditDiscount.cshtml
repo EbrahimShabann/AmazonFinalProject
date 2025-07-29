@@ -1,6 +1,7 @@
 @model Final_project.Models.discount
 @{
     ViewData["Title"] = "Edit Discount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var products = ViewBag.Products as List<Final_project.Models.product>;
     var selectedProducts = ViewBag.SelectedProducts as List<string>;
     var categories = ViewBag.Categories as List<Final_project.Models.category>;

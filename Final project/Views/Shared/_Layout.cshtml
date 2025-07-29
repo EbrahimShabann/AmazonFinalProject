@@ -4,27 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Final_project</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Custom styles -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Final_project.styles.css" asp-append-version="true" />
+
+    <!-- تأكد إن Final_project.styles.css موجود داخل wwwroot -->
+    <link rel="stylesheet" href="~/css/Final_project.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg shadow" style="backdrop-filter: blur(10px); background-color: rgba(30, 30, 30, 0.6); min-height: 70px;">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Final_project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "SellerDashboard" ? "active-link" : "")" href="@Url.Action("SellerDashboard", "Seller")">Dashboard</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "AllProducts" ? "active-link" : "")" href="@Url.Action("AllProducts", "Seller")">All Products</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "MyProducts" ? "active-link" : "")" href="@Url.Action("MyProducts", "Seller")">My Products</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active-link" : "")" href="@Url.Action("Orders", "Seller")">My Orders</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Discounts" ? "active-link" : "")" href="@Url.Action("Discounts", "Seller")">Discounts</a>
                         </li>
                     </ul>
                 </div>
@@ -32,20 +51,48 @@
         </nav>
     </header>
 
+    <style>
+        .nav-custom {
+            color: white !important;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+        }
 
-    <div class="container">
+            .nav-custom:hover {
+                color: #FFC107 !important;
+            }
+
+        .active-link {
+            color: #FF8300 !important;
+            font-weight: bold;
+            border-bottom: 2px solid #FF8300;
+        }
+
+        .nav-item {
+            transition: margin 0.3s ease;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+    </style>
+
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-5">
         <div class="container">
             &copy; 2025 - Final_project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

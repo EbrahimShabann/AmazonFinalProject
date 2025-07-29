@@ -4,25 +4,19 @@ wwwroot\css\site.css
 wwwroot\css\_ErrorLayoutCSS.css
 wwwroot\favicon.ico
 wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
-wwwroot\images\products\1858a581-235d-46cb-baf6-832db6c9995a.jpeg
 wwwroot\images\products\456bc650-d94d-4bf1-a681-984d39ecd92c.jpg
 wwwroot\images\products\46ac7fc9-c930-4a9f-bec5-60d115c1f361.jpg
 wwwroot\images\products\51ac8b24-e355-4eb0-8924-244452d75aa5.jpg
 wwwroot\images\products\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg
-wwwroot\images\products\6734c2ca-3a21-48e2-a90d-e2f01513a04e.jpg
-wwwroot\images\products\75b00968-0c63-4192-aaa1-6a03beef2077.jpg
 wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
-wwwroot\images\products\94898ed7-dd72-4d33-af2a-e79ebd131fc2.jpeg
 wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
 wwwroot\images\products\e35b83e2-d9cb-441d-a41f-d71aa759ca05.jpg
 wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
-wwwroot\images\products\e89543c9-9c7c-44d8-9708-d4aa9fa7558f.jpg
 wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
 wwwroot\js\LandingPageJS.js
 wwwroot\js\LandingPageLayoutJS.js
-wwwroot\js\site.js
 wwwroot\js\_ErrorLayoutJS.js
 wwwroot\lib\bootstrap-icons\bootstrap-icons.svg
 wwwroot\lib\bootstrap-icons\font\bootstrap-icons.css
@@ -8910,7 +8904,6 @@ E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\lib\bo
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\lib\bootstrap-icons\font\bootstrap-icons.css
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\lib\bootstrap-icons\bootstrap-icons.svg
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\js\_ErrorLayoutJS.js
-E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\js\site.js
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\js\LandingPageLayoutJS.js
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\js\LandingPageJS.js
 E:\Final Project\newest branch 1\AmazonFinalProject\Final project\wwwroot\js\CategoryJS.js

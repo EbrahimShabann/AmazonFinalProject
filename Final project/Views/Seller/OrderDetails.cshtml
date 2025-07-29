@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var sellerId = Context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 }
 
@@ -429,7 +430,6 @@
             color: white !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-
 </style>
 
 @section Styles {
@@ -455,27 +455,26 @@
     </style>
 }
 
+<h2 style="text-align:center; color:var(--amazon-orange); font-weight:bold; letter-spacing:1px; margin: 2rem 0 1.5rem 0; text-shadow:0 2px 12px #0004;">Order Details</h2>
 
- <h2 style="text-align:center; color:var(--amazon-orange); font-weight:bold; letter-spacing:1px; margin: 2rem 0 1.5rem 0; text-shadow:0 2px 12px #0004;">Order Details</h2>
-
- @if (TempData["SuccessMessage"] != null)
- {
+@if (TempData["SuccessMessage"] != null)
+{
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle me-2"></i>
         @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
- }
+}
 
- @if (TempData["ErrorMessage"] != null)
- {
+@if (TempData["ErrorMessage"] != null)
+{
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fas fa-exclamation-circle me-2"></i>
         @TempData["ErrorMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
- }
- <div class="card mb-3 order-details-section">
+}
+<div class="card mb-3 order-details-section">
     <div class="card-body">
         <h5>Order ID: <span class="badge bg-primary">@Model.id</span></h5>
         <p><strong style="color:#3498DB !important">Date :</strong> @Model.order_date?.ToString("yyyy-MM-dd")</p>
@@ -491,7 +490,7 @@
         <p><strong style="color:#3498DB !important">Total Amount : </strong> <span class="fw-bold">@Model.total_amount</span></p>
         <p><strong style="color:#3498DB !important">Shipping Address :</strong> @Model.shipping_address</p>
         <hr />
-        @* <div class="seller-info-box mt-4 p-3 rounded shadow-sm" style="background:#f5f7fa;border:1.5px solid #e3e6ed;max-width:400px;">
+        <div class="seller-info-box mt-4 p-3 rounded shadow-sm" style="background:#f5f7fa;border:1.5px solid #e3e6ed;max-width:400px;">
             <div class="d-flex align-items-center mb-2">
                 <i class="fas fa-store me-2" style="color:#1976d2;font-size:1.3em;"></i>
                 <span style="font-size:1.15em;font-weight:700;color:#FF9900;letter-spacing:0.5px;">Seller Info</span>
@@ -504,19 +503,18 @@
                 <i class="fas fa-user me-2" style="color:#607d8b;"></i>
                 <strong style="color:#3498DB !important">Seller Name : </strong> <span class="text-muted">@(Model.OrderItems.FirstOrDefault()?.product?.Seller?.UserName ?? "-")</span>
             </div>
-        </div> *@
+        </div>
     </div>
- </div>
+</div>
 
- <h4 style="text-align:center; color:wheat; font-weight:bold; font-size:1.7rem; letter-spacing:1px; margin-top:2.5rem; margin-bottom:1.2rem; text-shadow:0 2px 12px #0004;">Products</h4>
- <table class="table table-bordered">
+<h4 style="text-align:center; color:wheat; font-weight:bold; font-size:1.7rem; letter-spacing:1px; margin-top:2.5rem; margin-bottom:1.2rem; text-shadow:0 2px 12px #0004;">Products</h4>
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>Product</th>
             <th>Quantity</th>
             <th>Unit Price</th>
             <th>Status</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -533,101 +531,97 @@
                         @item.status
                     </span>
                 </td>
-                <td>
-                    <form asp-action="ChangeOrderItemStatus" method="post" style="display:inline;">
-                         @Html.AntiForgeryToken()
-                         <input type="hidden" name="orderItemId" value="@item.id" />
-                         <select name="newStatus" class="form-select form-select-sm" style="margin-bottom: 5px;">
-                             <option value="Pending" @@(item.status == "Pending" ? "selected" : "")>Pending</option>
-                             <option value="Processing" @@(item.status == "Processing" ? "selected" : "")>Processing</option>
-                             <option value="Shipped" @@(item.status == "Shipped" ? "selected" : "")>Shipped</option>
-                             <option value="Delivered" @@(item.status == "Delivered" ? "selected" : "")>Delivered</option>
-                             <option value="Cancelled" @@(item.status == "Cancelled" ? "selected" : "")>Cancelled</option>
-                         </select>
-                         <button type="submit" class="btn btn-sm btn-success">
-                              <i class="fas fa-sync-alt"></i> Update
-                         </button>
-                    </form>
-                </td>
-                
             </tr>
         }
     </tbody>
-  </table>
+</table>
 
+<!-- Change Order Status Section -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-cog" style="color:#F5DEB3"></i> Change Order Status</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="ChangeOrderStatus" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.id" />
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    @* <label for="newStatus" class="form-label">New Status</label> *@
+                    <select name="newStatus" id="newStatus" class="form-select">
+                        @if (Model.status == "Pending")
+                        {
+                            <option value="Pending" selected="selected">Pending</option>
+                        }
+                        else
+                        {
+                            <option value="Pending">Pending</option>
+                        }
+                        @if (Model.status == "Processing")
+                        {
+                            <option value="Processing" selected="selected">Processing</option>
+                        }
+                        else
+                        {
+                            <option value="Processing">Processing</option>
+                        }
+                        @if (Model.status == "Shipped")
+                        {
+                            <option value="Shipped" selected="selected">Shipped</option>
+                        }
+                        else
+                        {
+                            <option value="Shipped">Shipped</option>
+                        }
+                        @if (Model.status == "Delivered")
+                        {
+                            <option value="Delivered" selected="selected">Delivered</option>
+                        }
+                        else
+                        {
+                            <option value="Delivered">Delivered</option>
+                        }
+                        @if (Model.status == "Cancelled")
+                        {
+                            <option value="Cancelled" selected="selected">Cancelled</option>
+                        }
+                        else
+                        {
+                            <option value="Cancelled">Cancelled</option>
+                        }
+                        @if (Model.status == "Partially Delivered")
+                        {
+                            <option value="Partially Delivered" selected="selected">Partially Delivered</option>
+                        }
+                        else
+                        {
+                            <option value="Partially Delivered">Partially Delivered</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Update Order Status
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-
- <div class="mt-3">
+<div class="mt-3">
     <a asp-action="Orders" class="btn btn-secondary">Back to Orders</a>
- </div>
- @section Scripts {
+</div>
+
+@section Scripts {
     <script>
         $(document).ready(function() {
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
-            }, 4000);
+            }, 5000);
             $('.alert .btn-close').on('click', function() {
                 $(this).closest('.alert').fadeOut('slow');
             });
         });
-
-                $('.change-status-form').on('submit', function (e) {
-            e.preventDefault();
-
-            var $form = $(this);
-            var formData = $form.serialize();
-
-            $.ajax({
-                type: 'POST',
-                url: $form.attr('action'),
-                data: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function (response) {
-                    if (response.success) {
-
-                        $('#statusMessage')
-                            .removeClass('d-none alert-danger')
-                            .addClass('alert-success')
-                            .text('✅ Product status updated successfully.')
-                            .fadeIn();
-
-                        setTimeout(() => {
-                            $('#statusMessage').fadeOut(() => {
-                                $('#statusMessage').addClass('d-none').text('');
-                            });
-                        }, 3000);
-                    } else {
-
-                        $('#statusMessage')
-                            .removeClass('d-none alert-success')
-                            .addClass('alert-danger')
-                            .text('❌ ' + response.message)
-                            .fadeIn();
-
-                        setTimeout(() => {
-                            $('#statusMessage').fadeOut(() => {
-                                $('#statusMessage').addClass('d-none').text('');
-                            });
-                        }, 3000);
-                    }
-                },
-                error: function () {
-                    $('#statusMessage')
-                        .removeClass('d-none alert-success')
-                        .addClass('alert-danger')
-                        .text('⚠️ An error occurred while updating the product status.')
-                        .fadeIn();
-
-                    setTimeout(() => {
-                        $('#statusMessage').fadeOut(() => {
-                            $('#statusMessage').addClass('d-none').text('');
-                        });
-                    }, 3000);
-                }
-            });
-        });
-
     </script>
 }

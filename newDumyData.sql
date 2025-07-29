@@ -1,4 +1,4 @@
-use AmazonDBNew
+use newAmazonDB
 GO
 
 -- Insert Roles

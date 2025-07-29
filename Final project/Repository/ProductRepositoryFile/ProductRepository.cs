@@ -1,5 +1,6 @@
 ﻿using Final_project.Models;
 using Final_project.Repository.Product;
+using Final_project.ViewModel.Customer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository.ProductRepositoryFile
@@ -13,20 +14,9 @@ namespace Final_project.Repository.ProductRepositoryFile
             this.db = db;
         }
 
-        public List<product> getAll()
-        {
-            return db.products.ToList();
-        }
 
-        public product getById(string id)
-        {
-            return db.products.FirstOrDefault(p => p.id == id);
-        }
 
-        public void Update(product entity)
-        {
-            db.Entry(entity).State = EntityState.Modified;
-        }
+
 
         public void add(product entity)
         {
@@ -73,6 +63,89 @@ namespace Final_project.Repository.ProductRepositoryFile
                 }
             }
             return query;
+        }
+
+
+
+        public void addReview(product_review entity)
+        {
+            //add review
+            db.product_reviews.Add(entity);
+        }
+
+        public void delete(product entity)
+        {
+            //SoftDelete
+            var product = getById(entity.id);
+            if (product != null)
+            {
+                product.is_deleted = true;
+                Update(product);
+            }
+        }
+        //get all exipt the deleted ones
+        public List<product> getAll()
+        {
+            return db.Set<product>().Where(e => e.is_deleted != true).ToList();
+        }
+        //get product and it's not deleted
+        public product getById(string id)
+        {
+            return db.Set<product>()
+                  .Where(e => e.is_deleted != true)
+                  .FirstOrDefault(e => e.id == id);
+        }
+
+        public List<product_review> getProductReviews(string productId)
+        {
+            return
+                  db.product_reviews.Where(p => p.product_id == productId).ToList();
+        }
+
+        public List<ProductsVM> getProductsWithImagesAndRating()
+        {
+            var products = from p in db.products
+                           where p.is_deleted != true
+                           join img in db.product_images on p.id equals img.product_id
+                           join r in db.product_reviews on p.id equals r.product_id into reviews
+                           where img.is_primary == true
+                           select new ProductsVM
+                           {
+                               id = p.id,
+                               name = p.name,
+                               price = p.price,
+                               discount_price = p.discount_price,
+                               description = p.description,
+                               SelectedColors = p.SelectedColors,
+                               SelectedSizes = p.SelectedSizes,
+                               Brand = p.Brand,
+                               approved_by = p.approved_by,
+                               created_at = p.created_at,
+                               category_id = p.category_id,
+                               Category = p.category,
+                               seller_id = p.seller_id,
+                               Seller = p.Seller,
+                               stock_quantity = p.stock_quantity,
+                               image_url = img.image_url,
+                               rating = reviews.Any() ? (int)reviews.Average(r => r.rating) : 0,
+                               ReviewsCount = reviews.Count(),
+                           };
+            return products.ToList();
+        }
+
+        public List<product_image> GetProduct_Images(string productId)
+        {
+            return db.product_images.Where(i => i.product_id == productId).ToList();
+        }
+
+        public void Update(product entity)
+        {
+            db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        }
+
+        public List<product_review> getAllReviews()
+        {
+            return db.product_reviews.ToList();
         }
     }
 }

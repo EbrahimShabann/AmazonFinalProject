@@ -1,5 +1,6 @@
 @model IEnumerable<Final_project.Models.product>
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var categoriesDict = ViewBag.CategoriesDict as Dictionary<string, string>;
 }
 
@@ -682,6 +683,39 @@
         color: white !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
+
+    /* //pagination */
+    .pagination {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .page-item .page-link {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        margin: 0 5px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .page-item .page-link:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .page-item.active .page-link {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: black;
+        font-weight: bold;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.4;
+    }
 </style>
 
 <!-- Center My Products title and move buttons below -->
@@ -762,7 +796,7 @@
     var groupedProducts = Model.GroupBy(item => !string.IsNullOrEmpty(item.category_id) && categoriesDict != null && categoriesDict.ContainsKey(item.category_id) ? categoriesDict[item.category_id] : "No Category");
 }
 <div class="products-table-container">
-    <table class="table table-striped table-bordered table-hover align-middle">
+  <table class="table table-striped table-bordered table-hover align-middle">
         <thead>
             <tr>
                 <th><i class="fas fa-image me-2"></i>Image</th>
@@ -893,7 +927,57 @@
         </tr>
     }
     </tbody>
-</table>
+  </table>
+  @* -----------------pagination---------------- *@
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+
+        @* ? Always visible, but disabled if no previous page *@
+        <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" href="@(
+                ViewBag.CurrentPage > 1
+                    ? Url.Action("MyProducts", new {
+                        page = ViewBag.CurrentPage - 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">&#x276E;
+            </a> 
+        </li>
+
+        @* Page numbers *@
+        @for (int i = 1; i <= ViewBag.totalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("MyProducts", new {
+                    page = i,
+                    searchName = ViewBag.SearchName,
+                    minPrice = ViewBag.MinPrice,
+                    maxPrice = ViewBag.MaxPrice,
+                    categoryId = ViewBag.SelectedCategoryId
+                })">@i</a>
+            </li>
+        }
+
+        @* ? Always visible, but disabled if no next page *@
+        <li class="page-item @(ViewBag.CurrentPage >= ViewBag.totalPages ? "disabled" : "")">
+            <a class="page-link" href="@(
+                ViewBag.CurrentPage < ViewBag.totalPages
+                    ? Url.Action("MyProducts", new {
+                        page = ViewBag.CurrentPage + 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">&#x276F;</a> @* ? *@
+        </li>
+
+    </ul>
+ </nav>
+
 </div>
 
 <!-- Toast Success Message -->

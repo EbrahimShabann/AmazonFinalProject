@@ -1,6 +1,7 @@
 @model IEnumerable<Final_project.Models.product_review>
 @{
     ViewData["Title"] = "Product Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var avgRatings = ViewBag.AvgRatings as Dictionary<string, double>;
 }
 
