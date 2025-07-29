@@ -3,6 +3,7 @@ using Final_project.Repository;
 using Final_project.Repository.CartRepository;
 using Final_project.ViewModel.Wishlist;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Final_project.Controllers.Wishlist
 {
@@ -17,7 +18,8 @@ namespace Final_project.Controllers.Wishlist
 
         public IActionResult Index()
         {
-            string userId = "c1";
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
             var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(userId);
 
             var items = wishlist != null ? unitOfWork.WishlistItemRepository.GetItemsByWishlistId(wishlist.id) : new List<wishlist_item>();
@@ -36,15 +38,16 @@ namespace Final_project.Controllers.Wishlist
 
         public IActionResult AddToWishlist(string productId)
         {
-            string user_id = "c1";
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
 
-            var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(user_id);
+            var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(userId);
             if (wishlist == null)
             {
                 wishlist = new wishlist()
                 {
                     id = Guid.NewGuid().ToString(),
-                    user_id = user_id,
+                    user_id = userId,
                     created_at = DateTime.UtcNow
                 };
                 unitOfWork.WishlistRepository.add(wishlist);
@@ -83,19 +86,20 @@ namespace Final_project.Controllers.Wishlist
         [HttpPost]
         public IActionResult MoveToCart(string id)
         {
-            string user_id = "c1";
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
             wishlist_item item = unitOfWork.WishlistItemRepository.getById(id);
 
             if (item == null)
                 return RedirectToAction("Index");
 
-            shopping_cart cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(user_id);
+            shopping_cart cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
 
             if (cart == null)
             {
                 cart = new shopping_cart()
                 {
-                    user_id = user_id,
+                    user_id = userId,
                     id = Guid.NewGuid().ToString(),
                     created_at = DateTime.UtcNow,
                     last_updated_at = DateTime.UtcNow

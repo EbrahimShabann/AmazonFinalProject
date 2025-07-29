@@ -139,6 +139,19 @@
         margin: 5px 0;
     }
 
+    .item-variants {
+        font-size: 14px;
+        color: var(--amazon-dark-gray);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .label-variants {
+        font-weight: 600;
+        color: var(--amazon-dark);
+        margin-right: 4px;
+    }
+
     .item-delivery {
         color: var(--amazon-dark-gray);
         font-size: 14px;
@@ -312,14 +325,36 @@
                     <div class="item-select">
                         <input type="checkbox" class="form-check-input" checked />
                     </div>
-                    <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+
+                    <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
+                        <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                    </a>
+
                     <div class="item-details">
-                        <h4 class="item-title">@item.ProductName</h4>
+                        <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" style="text-decoration: none;">
+                            <h4 class="item-title">@item.ProductName</h4>
+                        </a>
+
                         @if (!string.IsNullOrEmpty(item.Badge))
                         {
                             <span class="item-badge">@item.Badge</span>
                         }
                         <div class="item-stock">@(item.InStock ? "In Stock" : "Currently unavailable")</div>
+                        @if (!string.IsNullOrEmpty(item.Color) || !string.IsNullOrEmpty(item.Size))
+                        {
+                            <div class="item-variants">
+                                @if (!string.IsNullOrEmpty(item.Color))
+                                {
+                                    <span><span class="label-variants">Color:</span> @item.Color</span>
+
+                                    <br />
+                                }
+                                @if (!string.IsNullOrEmpty(item.Size))
+                                {
+                                    <span><span class="label-variants">Size:</span> @item.Size</span>
+                                }
+                            </div>
+                        }
                         <div class="item-delivery">Eligible for FREE delivery</div>
 
                         <div class="item-actions">
