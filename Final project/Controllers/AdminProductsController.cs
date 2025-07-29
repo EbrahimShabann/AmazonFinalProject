@@ -1,5 +1,6 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
+    [Authorize(Roles = "admin")]
+
     public class AdminProductsController : Controller
     {
         private readonly UnitOfWork unitOfWork;
@@ -181,12 +184,13 @@ namespace Final_project.Controllers
         }
         public async Task<JsonResult> deleteProduct(string id)
         {
-            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
-            if (product == null) return Json(new { success = false });
+            var Product = await unitOfWork.ProductRepository.GetByIdAsync(id);
+            if (Product == null) return Json(new { success = false });
 
-            product.is_approved = false;
-            product.is_active = false;
-            product.is_deleted = true;
+            Product.is_approved = false;
+            Product.is_active = false;
+            Product.is_deleted = true;
+            
             unitOfWork.save();
 
             return Json(new { success = true });

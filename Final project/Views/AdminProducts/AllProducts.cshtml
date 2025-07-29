@@ -5,7 +5,6 @@
 
 }
 
-
 <style>
     .filter-section {
         background: var(--amazon-card);
@@ -774,13 +773,17 @@
                     });
                     $("#productRows").html(rows);
                     renderPagination(response.totalPages);
+                    $(document).on("click", ".pagination-btn", function () {
+                        currentPage = $(this).data("page"); // Get selected page number
+                        loadProducts(); // Reload products with new page
+                    });
 
                 });
     }
     function renderPagination(totalPages) {
         let html = '';
         for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="pagination-btn  ${i == currentPage ? 'active' : 'btn-outline-primary'} btn-outline-primary" data-page="${i}">${i}</button>`;
+            html += `<button class="pagination-btn  ${i == currentPage ? 'active' : 'btn-outline-primary'}" data-page="${i}">${i}</button>`;
         }
         $("#pagination").html(html);
     }

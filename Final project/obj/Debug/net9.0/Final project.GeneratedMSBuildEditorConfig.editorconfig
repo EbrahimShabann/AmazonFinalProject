@@ -17,313 +17,313 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Final_project
 build_property.RootNamespace = Final_project
-build_property.ProjectDir = C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\
+build_property.ProjectDir = E:\ITI\FinalProject1.2\Final project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project
+build_property.MSBuildProjectDirectory = E:\ITI\FinalProject1.2\Final project
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Account/Login.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Account/Register.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Account/SetProfilePic.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Account/SetProfilePic.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxTZXRQcm9maWxlUGljLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminCategory/CategoryDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminCategory/CategoryDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVxDYXRlZ29yeURldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminCategory/CategoryListPartial.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminCategory/CategoryListPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVxDYXRlZ29yeUxpc3RQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminCategory/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminCategory/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminCustomerService/AllCustomerService.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminCustomerService/AllCustomerService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DdXN0b21lclNlcnZpY2VcQWxsQ3VzdG9tZXJTZXJ2aWNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminCustomerService/pendingCustomerService.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminCustomerService/pendingCustomerService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DdXN0b21lclNlcnZpY2VccGVuZGluZ0N1c3RvbWVyU2VydmljZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminDashboard/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminDashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminProducts/AllProducts.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminProducts/AllProducts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9kdWN0c1xBbGxQcm9kdWN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminProducts/pendingProduct.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminProducts/pendingProduct.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9kdWN0c1xwZW5kaW5nUHJvZHVjdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminRecycleBin/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminRecycleBin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5SZWN5Y2xlQmluXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminSellers/AllSellers.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/AdminSellers/AllSellers.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXEFsbFNlbGxlcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AdminSellers/pendingSellers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXJzLmNzaHRtbA==
+[E:/ITI/FinalProject1.2/Final project/Views/AdminSellers/pendingSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Cart/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Cart/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Category/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Category/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/ChatDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/ChatDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXENoYXREZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/Chats.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/Chats.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXENoYXRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/CreateTicket.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/CreateTicket.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXENyZWF0ZVRpY2tldC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/Dashboard.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXERhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/CustomerService/TicketDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/CustomerService/TicketDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJTZXJ2aWNlXFRpY2tldERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Home/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Home/Privacy.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Landing/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Landing/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGluZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Landing/_HeroSection.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Landing/_HeroSection.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGluZ1xfSGVyb1NlY3Rpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Landing/_WhyShopWithUs.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Landing/_WhyShopWithUs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGluZ1xfV2h5U2hvcFdpdGhVcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/CheckOut.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Product/CheckOut.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxDaGVja091dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/Details.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Product/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Product/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/_revertOrder.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Product/_revertOrder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfcmV2ZXJ0T3JkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/AmazonApp.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/AmazonApp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxBbWF6b25BcHAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/ContactUs.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/ContactUs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDb250YWN0VXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/FAQ.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/FAQ.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxGQVEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/Messages.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/Messages.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxNZXNzYWdlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/orderDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/orderDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxvcmRlckRldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/orders.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/orders.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxvcmRlcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_FormPagination.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_FormPagination.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfRm9ybVBhZ2luYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_Header.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_Header.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfSGVhZGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_MessagesList.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_MessagesList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfTWVzc2FnZXNMaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_OrdersList.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_OrdersList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfT3JkZXJzTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_Pagination.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_Pagination.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfUGFnaW5hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_SideBar.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Profile/_SideBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfU2lkZUJhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/AddDiscount.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/AddDiscount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEFkZERpc2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/AddProduct.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/AddProduct.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEFkZFByb2R1Y3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/AllProducts.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/AllProducts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEFsbFByb2R1Y3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/ChatMessages.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/ChatMessages.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXENoYXRNZXNzYWdlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/ChatSessions.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/ChatSessions.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXENoYXRTZXNzaW9ucy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/DeleteDiscount.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/DeleteDiscount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERlbGV0ZURpc2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/DeleteOrder.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/DeleteOrder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERlbGV0ZU9yZGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/DeleteProduct.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/DeleteProduct.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERlbGV0ZVByb2R1Y3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/Discounts.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/Discounts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXERpc2NvdW50cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/EditDiscount.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/EditDiscount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEVkaXREaXNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/EditProduct.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/EditProduct.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEVkaXRQcm9kdWN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/MyProducts.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/MyProducts.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE15UHJvZHVjdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/Notifications.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/Notifications.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE5vdGlmaWNhdGlvbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/OrderDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/OrderDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE9yZGVyRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/Orders.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/Orders.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE9yZGVycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/ProductDetails.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/ProductDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFByb2R1Y3REZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/ProductReviews.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/ProductReviews.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFByb2R1Y3RSZXZpZXdzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Seller/SellerDashboard.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Seller/SellerDashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFNlbGxlckRhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/AdminLayout.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/AdminLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEFkbWluTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/Error.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/Tostar.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/Tostar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFRvc3Rhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_AccountPageLayout.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_AccountPageLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BY2NvdW50UGFnZUxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_BackToTopBtn.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_BackToTopBtn.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CYWNrVG9Ub3BCdG4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_ErrorLayout.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_ErrorLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9FcnJvckxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_LandingAmazonPage.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_LandingAmazonPage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYW5kaW5nQW1hem9uUGFnZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_SideBarMenu.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_SideBarMenu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TaWRlQmFyTWVudS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_ValidationScriptsPartial.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Wishlist/Index.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Wishlist/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2lzaGxpc3RcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/_ViewImports.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/_ViewStart.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Shared/_Layout.cshtml]
+[E:/ITI/FinalProject1.2/Final project/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-z5e1tk2uw4

@@ -38,7 +38,7 @@ namespace Final_project.Models
                     var result = await userManager.CreateAsync(adminUser, "Admin1234");
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(adminUser, "admin");
+                        await userManager.AddToRoleAsync(adminUser, "Admin");
                     }
                 }
             }
