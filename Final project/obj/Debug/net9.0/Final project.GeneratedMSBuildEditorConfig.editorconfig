@@ -84,6 +84,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/AIChatbot/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQUlDaGF0Ym90XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Cart/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -144,10 +148,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/_revertOrder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfcmV2ZXJ0T3JkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -156,8 +156,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxBbWF6b25BcHAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/ContactUs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDb250YWN0VXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/EditEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxFZGl0RW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/EditName.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxFZGl0TmFtZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/EditPhone.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxFZGl0UGhvbmUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/FAQ.cshtml]
@@ -166,6 +182,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/LoginAndSecurity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxMb2dpbkFuZFNlY3VyaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/Messages.cshtml]
@@ -198,6 +218,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_Pagination.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfUGFnaW5hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_revertOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfcmV2ZXJ0T3JkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_SideBar.cshtml]

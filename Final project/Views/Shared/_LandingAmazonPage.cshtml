@@ -21,9 +21,9 @@
             <a class="navbar-brand" asp-action="Index" asp-controller="Landing"><i class="fab fa-amazon"></i> Amazon</a>
             <div class="search-container">
                 <input type="text"
-                       id="searchInput"
-                       class="search-input"
-                       placeholder="Search for products..." />
+                id="searchInput"
+                class="search-input"
+                placeholder="Search for products..." />
                 <button class="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <!-- Add this line -->
@@ -42,22 +42,39 @@
                 <!-- User Dropdown -->
                 <div class="dropdown">
                     <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
                         <i class="fas fa-user text-white fs-4"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Your Account</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"><i class="fas fa-box me-2"></i>Your Orders</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Your Wish List</a>
-                        </li>
-                        <li><hr class="dropdown-divider" /></li>
+                        @if(User.IsInRole("customer"))
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Profile"><i class="fas fa-user me-2"></i>Your Account</a>
+                            </li>
+                            <li>
+
+                                <a class="dropdown-item" asp-action="Orders" asp-controller="Profile"><i class="fas fa-box me-2"></i>Your Orders</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Wishlist"><i class="fas fa-heart me-2"></i>Your Wish List</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
+                        }
+                        else if (User.IsInRole("seller") || User.IsInRole("customer service") || User.IsInRole("admin"))
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Switch"><i class="fas fa-user me-2"></i>Dashboard</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
+                        }
+
+
+
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li>

@@ -1,13 +1,14 @@
-using System.Threading.Tasks;
 using Final_project.Filter;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
-using Final_project.Services.CustomerService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Stripe;
+using System.Threading.Tasks;
 
 namespace Final_project
 {
@@ -25,6 +26,12 @@ namespace Final_project
             {
                 options.Filters.Add(new HandelAnyErrorAttribute());
             });
+
+            //Stripe payment
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
+
+            //==================HttpClient====================
+            builder.Services.AddHttpClient();
             //==================SessionnConfiguration====================
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -43,11 +50,12 @@ namespace Final_project
 
             //======================Injection============================
             builder.Services.AddScoped<UnitOfWork>();
-            builder.Services.AddScoped<ICustomerServiceService, CustomerServiceService>();
             //======================SQLInjection=========================
 
             builder.Services.AddDbContext<AmazonDBContext>(
-                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options => options
+                .UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //====================UserManagerInjection===================
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -60,7 +68,7 @@ namespace Final_project
             //======================EndInjection=========================
 
             //======================Automapper===========================
-            builder.Services.AddAutoMapper(typeof(mapperConfig));
+            //builder.Services.AddAutoMapper(typeof(mapperConfig));
             //=================Google Authentication=====================
 
             builder.Services.AddAuthentication(option =>
@@ -83,7 +91,7 @@ namespace Final_project
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-     
+
 
             app.UseHttpsRedirection();
             app.UseRouting();

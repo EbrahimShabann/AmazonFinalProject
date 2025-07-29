@@ -291,81 +291,92 @@
 
         @if (!Model.Any())
         {
-            <div class="empty-cart">
-                <div class="empty-cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3 class="empty-cart-text">Your Amazon Cart is empty</h3>
+                    <a href="/" class="btn btn-warning">Shop today's deals</a>
                 </div>
-                <h3 class="empty-cart-text">Your Amazon Cart is empty</h3>
-                <a href="/" class="btn btn-warning">Shop today's deals</a>
-            </div>
         }
         else
         {
-            <div class="cart-header" style="justify-content: flex-start;">
-                <input type="checkbox" class="form-check-input me-2" checked />
-                <span style="font-size: 14px;">Deselect all items</span>
-            </div>
+                <div class="cart-header" style="justify-content: flex-start;">
+                    <input type="checkbox" class="form-check-input me-2" checked />
+                    <span style="font-size: 14px;">Deselect all items</span>
+                </div>
 
             @foreach (var item in Model)
             {
-                <div class="cart-item">
-                    <div class="item-select">
-                        <input type="checkbox" class="form-check-input" checked />
-                    </div>
-                    <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
-                    <div class="item-details">
-                        <h4 class="item-title">@item.ProductName</h4>
+                        <div class="cart-item">
+                            <div class="item-select">
+                                <input type="checkbox" class="form-check-input" checked />
+                            </div>
+                            <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                            <div class="item-details">
+                                <h4 class="item-title">@item.ProductName</h4>
                         @if (!string.IsNullOrEmpty(item.Badge))
                         {
-                            <span class="item-badge">@item.Badge</span>
+                                        <span class="item-badge">@item.Badge</span>
                         }
-                        <div class="item-stock">@(item.InStock ? "In Stock" : "Currently unavailable")</div>
-                        <div class="item-delivery">Eligible for FREE delivery</div>
+                                <div class="item-stock">@(item.InStock ? "In Stock" : "Currently unavailable")</div>
+                                <div class="item-delivery">Eligible for FREE delivery</div>
 
-                        <div class="item-actions">
-                            <div class="quantity-control">
-                                <form asp-action="Decrease" method="post">
-                                    <input type="hidden" name="id" value="@item.CartItemId" />
-                                    <button type="submit" class="quantity-btn">-</button>
-                                </form>
-                                <input type="text" class="quantity-display" value="@item.Quantity" readonly />
-                                <form asp-action="Increase" method="post">
-                                    <input type="hidden" name="id" value="@item.CartItemId" />
-                                    <button type="submit" class="quantity-btn">+</button>
-                                </form>
+                                <div class="item-actions">
+                                    <div class="quantity-control">
+                                        <form asp-action="Decrease" method="post">
+                                            <input type="hidden" name="id" value="@item.CartItemId" />
+                                            <button type="submit" class="quantity-btn">-</button>
+                                        </form>
+                                        <input type="text" class="quantity-display" value="@item.Quantity" readonly />
+                                        <form asp-action="Increase" method="post">
+                                            <input type="hidden" name="id" value="@item.CartItemId" />
+                                            <button type="submit" class="quantity-btn">+</button>
+                                        </form>
+                                    </div>
+
+                                    <form asp-action="Delete" method="post" style="display: inline;">
+                                        <input type="hidden" name="id" value="@item.CartItemId" />
+                                        <button type="submit" class="action-link">Delete</button>
+                                    </form>
+                                    <div class="action-link">Save for later</div>
+                                </div>
+
+                                <div class="item-price">EGP @item.Price.ToString("N2")</div>
                             </div>
-
-                            <form asp-action="Delete" method="post" style="display: inline;">
-                                <input type="hidden" name="id" value="@item.CartItemId" />
-                                <button type="submit" class="action-link">Delete</button>
-                            </form>
-                            <div class="action-link">Save for later</div>
                         </div>
-
-                        <div class="item-price">EGP @item.Price.ToString("N2")</div>
-                    </div>
-                </div>
             }
 
-            <div class="cart-header" style="justify-content: flex-end;">
-                <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
-            </div>
+
+                <div class="cart-header" style="justify-content: flex-end;">
+                    <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
+                </div>
         }
     </div>
+     <form method="get"  asp-controller="Product" asp-action="CheckOut">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+                    <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+                    <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+                    <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+                    <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+                    <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
 
-    @if (Model.Any())
-    {
-        <div class="cart-summary">
-            <h4 class="summary-title">Order Summary</h4>
-            <div class="summary-subtotal">
-                Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
-            </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
-            <div class="secure-checkout">
-                <i class="fas fa-lock"></i> Secure checkout
-            </div>
-        </div>
-    }
+        }
+        @if (Model.Any())
+        {
+                    <div class="cart-summary">
+                        <h4 class="summary-title">Order Summary</h4>
+                        <div class="summary-subtotal">
+                            Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
+                        </div>
+                        <button class="checkout-btn">Proceed to Checkout</button>
+                        <div class="secure-checkout">
+                            <i class="fas fa-lock"></i> Secure checkout
+                        </div>
+                    </div>
+        }
+    </form>
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

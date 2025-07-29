@@ -27,8 +27,8 @@ namespace Final_project.ViewModel.Customer
         public decimal? originalPrice { get; set; }
         public string CategoryName { get; set; }
         public int Quantity { get; set; }
-        public string ProductColor{ get; set; }
-        public string ProductSize{ get; set; }
+        public string ProductColor { get; set; }
+        public string ProductSize { get; set; }
 
         // Helper property to calculate item total
         public decimal ItemTotal => (price ?? 0) * Quantity;

@@ -498,6 +498,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawes
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\swatchbook.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\layout-sidebar.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\house-down.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\js\index.js
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\database-add.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\bar-chart-line.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\bridge-water.svg
@@ -4428,6 +4429,7 @@ wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
 wwwroot\js\_ErrorLayoutJS.js
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
+wwwroot\js\index.js
 wwwroot\js\LandingPageJS.js
 wwwroot\js\LandingPageLayoutJS.js
 wwwroot\js\site.js

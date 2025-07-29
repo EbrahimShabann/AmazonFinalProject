@@ -14,7 +14,6 @@
     <Folder Include="Repository\OrderItemsRepositoryFile\" />
     <Folder Include="Repository\ProductImageRepositoryFile\" />
     <Folder Include="Repository\UsersRepositoryFile\" />
-    <Folder Include="ViewModel\Zeyad\" />
   </ItemGroup>
 
   <ItemGroup>

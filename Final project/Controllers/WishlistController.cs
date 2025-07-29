@@ -2,10 +2,13 @@
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;
 using Final_project.ViewModel.Wishlist;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Final_project.Controllers.Wishlist
 {
+    [Authorize]
     public class WishlistController : Controller
     {
         private readonly UnitOfWork unitOfWork;
@@ -17,7 +20,7 @@ namespace Final_project.Controllers.Wishlist
 
         public IActionResult Index()
         {
-            string userId = "c1";
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(userId);
 
             var items = wishlist != null ? unitOfWork.WishlistItemRepository.GetItemsByWishlistId(wishlist.id) : new List<wishlist_item>();
@@ -36,7 +39,7 @@ namespace Final_project.Controllers.Wishlist
 
         public IActionResult AddToWishlist(string productId)
         {
-            string user_id = "c1";
+            string user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(user_id);
             if (wishlist == null)
@@ -83,7 +86,7 @@ namespace Final_project.Controllers.Wishlist
         [HttpPost]
         public IActionResult MoveToCart(string id)
         {
-            string user_id = "c1";
+            string user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             wishlist_item item = unitOfWork.WishlistItemRepository.getById(id);
 
             if (item == null)

@@ -62,7 +62,7 @@ namespace Final_project.Controllers
         {
             return View();
         }
-     
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDataVM registerData)
@@ -82,8 +82,8 @@ namespace Final_project.Controllers
                     await userManager.AddToRoleAsync(user, "customer");
                     unitOfWork.AccountRepository.UpdateUserLogs(user, "Register");
                     await signInManager.SignInAsync(user, false);
-                
-                    return RedirectToAction("SetProfilePic", "Account", new { userId =user.Id});
+
+                    return RedirectToAction("SetProfilePic", "Account", new { userId = user.Id });
 
                 }
                 foreach (var item in created.Errors)
@@ -152,7 +152,7 @@ namespace Final_project.Controllers
                             UserName = email.Split('@')[0],
                             Email = email,
                             google_id = info.ProviderKey,
-                            PasswordHash="Google API"
+                            PasswordHash = "Google API"
                         };
 
                         var createResult = await userManager.CreateAsync(user);
@@ -172,7 +172,7 @@ namespace Final_project.Controllers
 
                     if (user != null)
                     {
-  
+
                         // Clear any existing external cookie
                         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -181,7 +181,7 @@ namespace Final_project.Controllers
                         unitOfWork.AccountRepository.UpdateUserLogs(user, "Google  Login");
                         unitOfWork.AccountRepository.UpdateLastLog(user.Id);
 
-                        return RedirectToAction("Index" ,"Switch");   ///////////////////////////////////////////
+                        return RedirectToAction("Index", "Switch");   ///////////////////////////////////////////
                     }
                 }
                 return RedirectToAction(nameof(Login));
@@ -228,9 +228,9 @@ namespace Final_project.Controllers
 
 
         [HttpGet]
-        public IActionResult SetProfilePic( string userId)
+        public IActionResult SetProfilePic(string userId)
         {
-            return View(new ProfilePic_DateOfBirth() { UserID = userId});
+            return View(new ProfilePic_DateOfBirth() { UserID = userId });
         }
 
         [HttpPost]
@@ -239,15 +239,15 @@ namespace Final_project.Controllers
         {
             if (ModelState.IsValid)
             {
-              var condition= await unitOfWork.AccountRepository.SetProfileAndBirthday(data);
-                if(condition)
+                var condition = await unitOfWork.AccountRepository.SetProfileAndBirthday(data);
+                if (condition)
                 {
-                return RedirectToAction("Index" , "Switch");
+                    return RedirectToAction("Index", "Switch");
                 }
             }
 
             return View(data);
         }
-        
+
     }
 }

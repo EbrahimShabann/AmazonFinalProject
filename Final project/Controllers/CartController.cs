@@ -17,8 +17,7 @@ namespace Final_project.Controllers.Cart
         }
         public IActionResult Index()
         {
-            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            string userId = IdClaim.Value;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
 
             if (cart == null)
@@ -86,7 +85,7 @@ namespace Final_project.Controllers.Cart
         [HttpPost]
         public IActionResult AddToCart(string productId)
         {
-            var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             string userId = IdClaim.Value;
             // Get or create cart
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
@@ -126,7 +125,7 @@ namespace Final_project.Controllers.Cart
             }
 
             unitOfWork.save();
-            var val =unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
+            var val = unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
             return Json(val);
         }
     }
