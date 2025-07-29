@@ -34,4 +34,6 @@ public partial class order_item
     public decimal? discount_applied { get; set; }
     [Column(TypeName = "nvarchar(32)")]
     public string status { get; set; }
+    public string Color{ get; set; }
+    public string Size{ get; set; }
 }

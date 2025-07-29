@@ -48,6 +48,8 @@
                                         <th scope="col" style="width: 60%">Item</th>
                                         <th scope="col" class="text-end">Price</th>
                                         <th scope="col" class="text-end">Qty</th>
+                                        <th scope="col" class="text-end">Color</th>
+                                        <th scope="col" class="text-end">Size</th>
                                         <th scope="col" class="text-end">Total</th>
                                     </tr>
                                 </thead>
@@ -67,6 +69,8 @@
                                         </td>
                                         <td class="text-end align-middle">@item.unit_price?.ToString("C")</td>
                                         <td class="text-end align-middle">@item.quantity</td>
+                                        <td class="text-end align-middle">@item.Color</td>
+                                        <td class="text-end align-middle">@item.Size</td>
                                         <td class="text-end align-middle">$@(item.unit_price* item.quantity)</td>
                                     </tr>
                           

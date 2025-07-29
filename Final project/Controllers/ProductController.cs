@@ -6,6 +6,7 @@ using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
 using System.Security.Claims;
@@ -27,7 +28,7 @@ namespace Final_project.Controllers
         
         public IActionResult Details(string id)
         {
-            var product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
+            ProductsVM product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
             if (product == null)
             {
                 return NotFound();
@@ -135,8 +136,8 @@ namespace Final_project.Controllers
                         originalPrice = product.price,
                         CategoryName = product.category?.name ?? "Unknown Category",
                         Quantity = cart.Quantity,
-                        //ProductColor=cart.ProductColor,
-                        //ProductSize=cart.ProductSize,
+                        ProductColor = cart.ProductColor,
+                        ProductSize = cart.ProductSize,
                         imageUrl = cart.imageUrl//uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
                     });
                 }
@@ -145,10 +146,14 @@ namespace Final_project.Controllers
             {
                 //Coming from buy now button with single product
                 var productId = Request.Query["productId"].ToString();
-                var quantity = int.Parse(Request.Query["quantity"]);
-                string productColor = Request.Query["color"].ToString();
-                string productSize = Request.Query["size"].ToString();
+                var quantity = int.Parse(Request.Query["quantity"]);              
                 var product = uof.ProductRepository.getById(productId);
+                string productColor = Request.Query["color"].ToString();
+                if(string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
+                string productSize = Request.Query["size"].ToString();
+                if (string.IsNullOrEmpty(productSize)) productSize = product.SelectedSizes[0];
+
+
                 if (product == null)
                 {
                     TempData["error"] = "Product not found.";
@@ -168,6 +173,8 @@ namespace Final_project.Controllers
                     originalPrice = product.price,
                     CategoryName = product.category?.name ?? "Unknown Category",
                     Quantity = quantity,
+                    ProductColor=productColor,
+                    ProductSize=productSize,
                     imageUrl = uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
 
                 });
@@ -236,6 +243,8 @@ namespace Final_project.Controllers
                     seller_id = cart.seller_id,
                     product_id = cart.ProductId,
                     quantity = cart.Quantity,
+                    Color=cart.ProductColor,
+                    Size=cart.ProductSize,
                     discount_applied = cart.originalPrice - cart.price, //price is originalPrice or DiscountPrice
                     unit_price = cart.originalPrice ?? 0,
                     status="Pending",

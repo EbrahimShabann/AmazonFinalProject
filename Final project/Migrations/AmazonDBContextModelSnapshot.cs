@@ -34,13 +34,11 @@ namespace Final_project.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"));
 
                     b.Property<string>("ActionType")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("TimeStamp")
@@ -49,14 +47,13 @@ namespace Final_project.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("UserID")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
                     b.HasKey("LogID")
                         .HasName("PK__AccountLog__5E5499A8A33FBCA4");
 
-                    b.ToTable("AccountLog", (string)null);
+                    b.ToTable("AccountLog");
                 });
 
             modelBuilder.Entity("Final_project.Models.ApplicationUser", b =>
@@ -193,7 +190,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("audit_logs", (string)null);
+                    b.ToTable("audit_logs");
                 });
 
             modelBuilder.Entity("Final_project.Models.cart_item", b =>
@@ -222,7 +219,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("product_id");
 
-                    b.ToTable("cart_items", (string)null);
+                    b.ToTable("cart_items");
                 });
 
             modelBuilder.Entity("Final_project.Models.category", b =>
@@ -280,7 +277,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("parent_category_id");
 
-                    b.ToTable("categories", (string)null);
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("Final_project.Models.chat_message", b =>
@@ -317,7 +314,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("sender_id");
 
-                    b.ToTable("chat_messages", (string)null);
+                    b.ToTable("chat_messages");
                 });
 
             modelBuilder.Entity("Final_project.Models.chat_session", b =>
@@ -353,7 +350,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("chat_sessions", (string)null);
+                    b.ToTable("chat_sessions");
                 });
 
             modelBuilder.Entity("Final_project.Models.discount", b =>
@@ -403,7 +400,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("seller_id");
 
-                    b.ToTable("discounts", (string)null);
+                    b.ToTable("discounts");
                 });
 
             modelBuilder.Entity("Final_project.Models.order", b =>
@@ -455,7 +452,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("buyer_id");
 
-                    b.ToTable("orders", (string)null);
+                    b.ToTable("orders");
                 });
 
             modelBuilder.Entity("Final_project.Models.order_history", b =>
@@ -486,13 +483,19 @@ namespace Final_project.Migrations
 
                     b.HasIndex("order_id");
 
-                    b.ToTable("order_history", (string)null);
+                    b.ToTable("order_history");
                 });
 
             modelBuilder.Entity("Final_project.Models.order_item", b =>
                 {
                     b.Property<string>("id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("discount_applied")
                         .HasColumnType("decimal(18, 2)");
@@ -523,7 +526,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("seller_id");
 
-                    b.ToTable("order_items", (string)null);
+                    b.ToTable("order_items");
                 });
 
             modelBuilder.Entity("Final_project.Models.ordersReverted", b =>
@@ -532,7 +535,6 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reason")
@@ -543,11 +545,9 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("orderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("order_itemId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -556,7 +556,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("order_itemId");
 
-                    b.ToTable("Orders_Reverted", (string)null);
+                    b.ToTable("Orders_Reverted");
                 });
 
             modelBuilder.Entity("Final_project.Models.product", b =>
@@ -638,7 +638,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("seller_id");
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("products");
                 });
 
             modelBuilder.Entity("Final_project.Models.product_discount", b =>
@@ -661,7 +661,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("product_id");
 
-                    b.ToTable("product_discounts", (string)null);
+                    b.ToTable("product_discounts");
                 });
 
             modelBuilder.Entity("Final_project.Models.product_image", b =>
@@ -691,7 +691,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("product_id");
 
-                    b.ToTable("product_images", (string)null);
+                    b.ToTable("product_images");
                 });
 
             modelBuilder.Entity("Final_project.Models.product_review", b =>
@@ -729,7 +729,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("product_reviews", (string)null);
+                    b.ToTable("product_reviews");
                 });
 
             modelBuilder.Entity("Final_project.Models.review_reply", b =>
@@ -764,7 +764,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("review_id");
 
-                    b.ToTable("review_reply", (string)null);
+                    b.ToTable("review_reply");
                 });
 
             modelBuilder.Entity("Final_project.Models.shopping_cart", b =>
@@ -786,7 +786,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("shopping_carts", (string)null);
+                    b.ToTable("shopping_carts");
                 });
 
             modelBuilder.Entity("Final_project.Models.support_ticket", b =>
@@ -830,7 +830,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("support_tickets", (string)null);
+                    b.ToTable("support_tickets");
                 });
 
             modelBuilder.Entity("Final_project.Models.ticket_history", b =>
@@ -864,7 +864,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("ticket_id");
 
-                    b.ToTable("ticket_history", (string)null);
+                    b.ToTable("ticket_history");
                 });
 
             modelBuilder.Entity("Final_project.Models.ticket_message", b =>
@@ -893,7 +893,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("sender_id");
 
-                    b.ToTable("ticket_messages", (string)null);
+                    b.ToTable("ticket_messages");
                 });
 
             modelBuilder.Entity("Final_project.Models.wishlist", b =>
@@ -912,7 +912,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("wishlists", (string)null);
+                    b.ToTable("wishlists");
                 });
 
             modelBuilder.Entity("Final_project.Models.wishlist_item", b =>
@@ -937,7 +937,7 @@ namespace Final_project.Migrations
 
                     b.HasIndex("wishlist_id");
 
-                    b.ToTable("wishlist_items", (string)null);
+                    b.ToTable("wishlist_items");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1211,15 +1211,11 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.order", "Order")
                         .WithMany()
-                        .HasForeignKey("orderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("orderId");
 
                     b.HasOne("Final_project.Models.order_item", "Order_Item")
                         .WithMany()
-                        .HasForeignKey("order_itemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("order_itemId");
 
                     b.Navigation("Order");
 
