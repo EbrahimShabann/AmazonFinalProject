@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -27,19 +28,17 @@
         padding: 0;
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
         padding: 2rem;
@@ -59,20 +58,25 @@
         overflow: hidden;
     }
 
-    .dashboard-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
-    }
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
 
     @@keyframes shimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .hero-title {
@@ -105,10 +109,10 @@
         transition: all 0.3s ease;
     }
 
-    .form-panel:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .form-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     /* Form Controls */
     .glass-input {
@@ -123,22 +127,22 @@
         width: 100%;
     }
 
-    .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .glass-input:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .glass-input option {
-        background: var(--amazon-dark);
-        color: white;
-    }
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
 
     .glass-label {
         color: rgba(255, 255, 255, 0.9);
@@ -167,42 +171,42 @@
         font-size: 0.9rem;
     }
 
-    .floating-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .floating-btn:hover::before {
-        left: 100%;
-    }
+        .floating-btn:hover::before {
+            left: 100%;
+        }
 
-    .floating-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-    }
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
 
-    .floating-btn.primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .floating-btn.success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
 
-    .floating-btn.warning {
-        background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
-        border: none;
-    }
+        .floating-btn.warning {
+            background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
+            border: none;
+        }
 
     /* Color Swatches */
     .color-swatch {
@@ -217,16 +221,16 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .color-swatch:hover {
-        transform: scale(1.2);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
+        .color-swatch:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
 
-    .color-swatch.selected {
-        border-color: var(--amazon-orange);
-        transform: scale(1.1);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
-    }
+        .color-swatch.selected {
+            border-color: var(--amazon-orange);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
+        }
 
     /* Alert Styling */
     .alert {
@@ -330,6 +334,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -376,44 +381,44 @@
 
     @if (Model.product_images != null && Model.product_images.Any())
     {
-            <div class="form-panel fade-in mb-4">
-                <h4 class="mb-3" style="color:var(--amazon-orange); font-weight:700;">Product Images</h4>
-                <div style="display:flex; flex-wrap:wrap; gap:18px;">
+        <div class="form-panel fade-in mb-4">
+            <h4 class="mb-3" style="color:var(--amazon-orange); font-weight:700;">Product Images</h4>
+            <div style="display:flex; flex-wrap:wrap; gap:18px;">
                 @foreach (var img in Model.product_images)
                 {
-                            <div style="background:rgba(255,255,255,0.08); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:12px; width:170px; text-align:center; position:relative;">
-                                <img src="@img.image_url" alt="Product Image" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:2px solid @(img.image_type=="main" ? "var(--amazon-orange)" : "#ccc"); margin-bottom:8px;" />
-                                <div style="margin-bottom:6px;">
-                                    <span class="badge" style="background:@(img.image_type=="main" ? "var(--amazon-orange)" : "#888"); color:white; font-size:0.85rem; padding:4px 10px; border-radius:8px;">
+                    <div style="background:rgba(255,255,255,0.08); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:12px; width:170px; text-align:center; position:relative;">
+                        <img src="@img.image_url" alt="Product Image" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:2px solid @(img.image_type=="main" ? "var(--amazon-orange)" : "#ccc"); margin-bottom:8px;" />
+                        <div style="margin-bottom:6px;">
+                            <span class="badge" style="background:@(img.image_type=="main" ? "var(--amazon-orange)" : "#888"); color:white; font-size:0.85rem; padding:4px 10px; border-radius:8px;">
                                 @(img.image_type == "main" ? "Main" : "Sub")
-                                    </span>
-                                </div>
-                                <form asp-action="DeleteProductImage" method="post" style="display:inline;">
-                                    <input type="hidden" name="imageId" value="@img.id" />
-                                    <input type="hidden" name="productId" value="@Model.id" />
+                            </span>
+                        </div>
+                        <form asp-action="DeleteProductImage" method="post" style="display:inline;">
+                            <input type="hidden" name="imageId" value="@img.id" />
+                            <input type="hidden" name="productId" value="@Model.id" />
                             @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom:4px; width:100%;">Delete</button>
-                                </form>
-                                <form asp-action="ChangeProductImageType" method="post" style="display:inline;">
-                                    <input type="hidden" name="imageId" value="@img.id" />
-                                    <input type="hidden" name="productId" value="@Model.id" />
-                                    <input type="hidden" name="newType" value="@(img.image_type=="main" ? "sub" : "main")" />
+                            <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom:4px; width:100%;">Delete</button>
+                        </form>
+                        <form asp-action="ChangeProductImageType" method="post" style="display:inline;">
+                            <input type="hidden" name="imageId" value="@img.id" />
+                            <input type="hidden" name="productId" value="@Model.id" />
+                            <input type="hidden" name="newType" value="@(img.image_type=="main" ? "sub" : "main")" />
                             @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-warning btn-sm" style="width:100%;">
-                                        Set as @(img.image_type == "main" ? "Sub" : "Main")
-                                    </button>
-                                </form>
-                            </div>
+                            <button type="submit" class="btn btn-warning btn-sm" style="width:100%;">
+                                Set as @(img.image_type == "main" ? "Sub" : "Main")
+                            </button>
+                        </form>
+                    </div>
                 }
-                </div>
             </div>
+        </div>
     }
 
     <!-- Form Panel -->
     <div class="form-panel fade-in">
         @if (TempData["ErrorMessage"] != null)
         {
-                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
         }
 
         <form asp-action="EditProduct" method="post" enctype="multipart/form-data" id="editProductForm">
@@ -543,7 +548,7 @@
 </div>
 
 @section Scripts {
-        <script>
+    <script>
         // Initialize color swatches
         const swatches = document.querySelectorAll('.color-swatch');
         const colorsInput = document.getElementById('ColorsInput');
@@ -576,5 +581,5 @@
                 selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
             });
         });
-        </script>
+    </script>
 } 

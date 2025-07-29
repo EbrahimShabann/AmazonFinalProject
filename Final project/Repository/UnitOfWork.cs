@@ -13,6 +13,7 @@ using Final_project.Repository.NewFolder;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
+using Final_project.Repository.SavedCartRepositoryFile;
 using Final_project.Repository.WishlistRepositoryFile;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,8 @@ namespace Final_project.Repository
         private IChatMessageRepo _chatMessageRepo;
 
 
+        private ISavedCartRepository _savedCartRepository;
+        private ISavedCartItemRepository _savedCartItemRepository;
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -245,7 +248,25 @@ namespace Final_project.Repository
             }
         }
 
+        public ISavedCartRepository SavedCartRepository
+        {
+            get
+            {
+                if (_savedCartRepository == null)
+                    _savedCartRepository = new SavedCartRepository(db);
+                return _savedCartRepository;
+            }
+        }
 
+        public ISavedCartItemRepository SavedCartItemRepository
+        {
+            get
+            {
+                if (_savedCartItemRepository == null)
+                    _savedCartItemRepository = new SavedCartItemRepository(db);
+                return _savedCartItemRepository;
+            }
+        }
         public void save()
         {
             db.SaveChanges();

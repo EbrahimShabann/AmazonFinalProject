@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var isAdmin = User.IsInRole("Admin");
     var sellerId = ViewBag.CurrentSellerId as string;
 }
@@ -44,9 +45,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
         pointer-events: none;
         z-index: -1;
     }
@@ -79,12 +78,12 @@
         transition: all 0.3s ease;
     }
 
-    .btn:hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        color: white;
-    }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
 
     .btn-success {
         background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
@@ -117,22 +116,22 @@
         transition: all 0.3s ease;
     }
 
-    .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .form-control:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .form-control option {
-        background: var(--amazon-dark);
-        color: white;
-    }
+        .form-control option {
+            background: var(--amazon-dark);
+            color: white;
+        }
 
     /* Table Styling */
     .orders-table-container {
@@ -146,10 +145,10 @@
         transition: all 0.3s ease;
     }
 
-    .orders-table-container:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .orders-table-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     .table {
         margin: 0;
@@ -158,76 +157,76 @@
         width: 100%;
     }
 
-    .table thead {
-        background: #131921; /* Same dark color as buttons */
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-    }
+        .table thead {
+            background: #131921; /* Same dark color as buttons */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
 
-    .table th {
-        color: #0073bb !important; /* Same blue color as edit button background */
-        font-weight: 600;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 12px 16px;
-        text-align: center;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: none;
-        position: relative;
-        background: transparent;
-    }
+        .table th {
+            color: #0073bb !important; /* Same blue color as edit button background */
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+            background: transparent;
+        }
 
-    /* Override any existing table header styles */
-    .table thead th,
-    .table thead tr th {
-        color: #0073bb !important;
-    }
+        /* Override any existing table header styles */
+        .table thead th,
+        .table thead tr th {
+            color: #0073bb !important;
+        }
 
-    .table th::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 20%;
-        right: 20%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
+        .table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-    .table th:hover::after {
-        opacity: 1;
-    }
+        .table th:hover::after {
+            opacity: 1;
+        }
 
-    .table td {
-        color: white !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 12px 16px;
-        vertical-align: middle;
-        text-align: center;
-        font-size: 0.9rem;
-        border-left: none;
-        border-right: none;
-        position: relative;
-        background: transparent;
-    }
+        .table td {
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9rem;
+            border-left: none;
+            border-right: none;
+            position: relative;
+            background: transparent;
+        }
 
-    .table tbody tr {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: none;
-        background: transparent;
-    }
+        .table tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            background: transparent;
+        }
 
-    .table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        transform: scale(1.01);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
+            .table tbody tr:hover {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                transform: scale(1.01);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
 
     /* Category name styling */
     .category-name {
@@ -264,32 +263,32 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .action-btn:hover {
-        background: #232f3e; /* Slightly lighter on hover */
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        text-decoration: none;
-    }
+        .action-btn:hover {
+            background: #232f3e; /* Slightly lighter on hover */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
 
-    .action-btn.edit {
-        color: #0073bb !important; /* Professional blue for edit */
-    }
+        .action-btn.edit {
+            color: #0073bb !important; /* Professional blue for edit */
+        }
 
-    .action-btn.edit:hover {
-        color: #005a8b !important; /* Darker blue on hover */
-        background: #1a2532;
-    }
+            .action-btn.edit:hover {
+                color: #005a8b !important; /* Darker blue on hover */
+                background: #1a2532;
+            }
 
-    .action-btn.delete {
-        color: #dc3545 !important; /* Professional red for delete */
-    }
+        .action-btn.delete {
+            color: #dc3545 !important; /* Professional red for delete */
+        }
 
-    .action-btn.delete:hover {
-        color: #c82333 !important; /* Darker red on hover */
-        background: #1a2532;
-    }
+            .action-btn.delete:hover {
+                color: #c82333 !important; /* Darker red on hover */
+                background: #1a2532;
+            }
 
     .badge {
         background: rgba(255, 255, 255, 0.2);
@@ -302,15 +301,15 @@
         font-weight: 600;
     }
 
-    .badge.bg-primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .badge.bg-primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .badge.bg-secondary {
-        background: rgba(255, 255, 255, 0.3);
-        border: none;
-    }
+        .badge.bg-secondary {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+        }
 
     h1, h2, h3, h4, h5, h6 {
         color: white;
@@ -320,9 +319,9 @@
         color: white;
     }
 
-    .mb-2 span {
-        color: white;
-    }
+        .mb-2 span {
+            color: white;
+        }
 
     strong {
         color: white !important;
@@ -441,18 +440,50 @@
         backdrop-filter: blur(10px);
     }
 
-    .table-dark th {
-        color: white !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        .table-dark th {
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    /* -------------------//pagination ---------------------------------*/
+    .pagination {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .page-item .page-link {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        margin: 0 5px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+        .page-item .page-link:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+    .page-item.active .page-link {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: black;
+        font-weight: bold;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.4;
     }
 </style>
 
 @if (!string.IsNullOrEmpty(sellerId))
 {
-        <div class="mb-2">
-            <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
-            <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
-        </div>
+    <div class="mb-2">
+        <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
+        <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
+    </div>
 }
 <div class="mb-3">
     <a href="/Seller/CreateTestOrders" class="btn btn-success">Create Test Orders</a>
@@ -546,35 +577,87 @@
                     </span>
                 </td>
                 <td><strong>@order.total_amount</strong></td>
-                    <td>
+                <td>
                     @foreach (var item in order.OrderItems.Where(oi => oi.product != null && oi.product.seller_id == sellerId))
                     {
-                                <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:10px;padding:10px 14px;min-width:140px;box-shadow:0 1px 4px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.2);display:block;margin-bottom:10px;">
-                                    <div style="font-weight:600;font-size:1.05em; margin-bottom:7px;color:white;">Product: <span style="color:var(--amazon-orange);">@item.product?.name</span></div>
-                                    <div style="margin-bottom:7px;font-size:0.98em;color:white;">Quantity: <span class="badge bg-secondary">@item.quantity</span></div>
-                                    <div style="font-size:0.98em;color:white;">
-                                        Status:
-                                        <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
+                        <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:10px;padding:10px 14px;min-width:140px;box-shadow:0 1px 4px rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.2);display:block;margin-bottom:10px;">
+                            <div style="font-weight:600;font-size:1.05em; margin-bottom:7px;color:white;">Product: <span style="color:var(--amazon-orange);">@item.product?.name</span></div>
+                            <div style="margin-bottom:7px;font-size:0.98em;color:white;">Quantity: <span class="badge bg-secondary">@item.quantity</span></div>
+                            <div style="font-size:0.98em;color:white;">
+                                Status:
+                                <span class="badge" style="font-size:1em;padding:7px 16px;border-radius:8px;letter-spacing:0.5px;
                             background:@(item.status == "Pending" ? "#ffc107" : item.status == "Processing" ? "#0dcaf0" : item.status == "Shipped" ? "#0d6efd" : item.status == "Delivered" ? "#198754" : item.status == "Cancelled" ? "#dc3545" : "#adb5bd");
                             color:@(item.status == "Pending" ? "#212529" : "#fff");font-weight:600;">
                                     @item.status
-                                        </span>
-                                    </div>
-                                </div>
+                                </span>
+                            </div>
+                        </div>
                     }
-                    </td>
+                </td>
                 <td>
                     <a asp-action="OrderDetails" asp-route-id="@order.id" class="btn btn-info btn-sm">
                         <i class="fas fa-eye"></i> View Details
                     </a>
                     @if (isAdmin)
                     {
-                            <a asp-action="DeleteOrder" asp-route-id="@order.id" class="btn btn-danger btn-sm ml-1">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
+                        <a asp-action="DeleteOrder" asp-route-id="@order.id" class="btn btn-danger btn-sm ml-1">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
                     }
                 </td>
             </tr>
         }
     </tbody>
-</table> 
+</table>
+@* -----------------pagination---------------- *@
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+
+        @* ? Always visible, but disabled if no previous page *@
+        <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" href="@(
+                  ViewBag.CurrentPage > 1
+                    ? Url.Action("Orders", new {
+                        page = ViewBag.CurrentPage - 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">
+                &#x276E;
+            </a>
+        </li>
+
+        @* Page numbers *@
+        @for (int i = 1; i <= ViewBag.totalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Orders", new {
+                    page = i,
+                    searchName = ViewBag.SearchName,
+                    minPrice = ViewBag.MinPrice,
+                    maxPrice = ViewBag.MaxPrice,
+                    categoryId = ViewBag.SelectedCategoryId
+                })">@i</a>
+            </li>
+        }
+
+        @* ? Always visible, but disabled if no next page *@
+        <li class="page-item @(ViewBag.CurrentPage >= ViewBag.totalPages ? "disabled" : "")">
+            <a class="page-link" href="@(
+                  ViewBag.CurrentPage < ViewBag.totalPages
+                    ? Url.Action("Orders", new {
+                        page = ViewBag.CurrentPage + 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">
+                &#x276F;
+            </a>
+        </li>
+
+    </ul>
+</nav>

@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Seller Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -672,7 +673,7 @@
                                         <option value="">All Categories</option>
                                         @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
                                         {
-                                                <option value="@cat.id">@cat.name</option>
+                                            <option value="@cat.id">@cat.name</option>
                                         }
                                     </select>
                                 </div>
@@ -682,7 +683,7 @@
                                         <option value="">All Products</option>
                                         @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
                                         {
-                                                <option value="@p.id">@p.name</option>
+                                            <option value="@p.id">@p.name</option>
                                         }
                                     </select>
                                 </div>
@@ -740,11 +741,11 @@
                             {
                                 if (year == currentYear)
                                 {
-                                                <option value="@year" selected="selected">@year</option>
+                                    <option value="@year" selected="selected">@year</option>
                                 }
                                 else
                                 {
-                                                <option value="@year">@year</option>
+                                    <option value="@year">@year</option>
                                 }
                             }
                         }
@@ -783,7 +784,7 @@
                                         <option value="">All Categories</option>
                                         @foreach (var cat in ViewBag.Categories as List<Final_project.Models.category>)
                                         {
-                                                <option value="@cat.id">@cat.name</option>
+                                            <option value="@cat.id">@cat.name</option>
                                         }
                                     </select>
                                 </div>
@@ -793,7 +794,7 @@
                                         <option value="">All Products</option>
                                         @foreach (var p in ViewBag.Products as List<Final_project.Models.product>)
                                         {
-                                                <option value="@p.id">@p.name</option>
+                                            <option value="@p.id">@p.name</option>
                                         }
                                     </select>
                                 </div>
@@ -878,500 +879,500 @@
 </div>
 
 @section Scripts {
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            function refreshStatistics() {
-                fetch('@Url.Action("GetDashboardStatistics")')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('productsCount').textContent = data.productsCount;
-                        document.getElementById('ordersCount').textContent = data.ordersCount;
-                        document.getElementById('totalSales').textContent = '£ ' + (data.totalSales !== undefined && data.totalSales !== null ? data.totalSales.toFixed(2) : '0.00');
-                        document.getElementById('activeDiscounts').textContent = data.activeDiscounts;
-                        document.getElementById('pendingOrders').textContent = data.pendingOrders;
-                        document.getElementById('processingOrders').textContent = data.processingOrders;
-                        document.getElementById('shippedOrders').textContent = data.shippedOrders;
-                        document.getElementById('deliveredOrders').textContent = data.deliveredOrders;
-                        document.getElementById('monthlySales').textContent = '£ ' + (data.monthlySales !== undefined && data.monthlySales !== null ? data.monthlySales.toFixed(2) : '0.00');
-                        document.getElementById('monthlyOrders').textContent = data.monthlyOrders;
-                        const avgOrderValue = data.ordersCount > 0 && data.totalSales !== undefined && data.totalSales !== null ? (data.totalSales / data.ordersCount).toFixed(2) : '0.00';
-                        document.getElementById('avgOrderValue').textContent = '£ ' + avgOrderValue;
-                        const conversionRate = data.productsCount > 0 ? ((data.ordersCount / data.productsCount) * 100).toFixed(1) : '0.0';
-                        document.getElementById('conversionRate').textContent = conversionRate + '%';
-                    });
-            }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function refreshStatistics() {
+            fetch('@Url.Action("GetDashboardStatistics")')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('productsCount').textContent = data.productsCount;
+                    document.getElementById('ordersCount').textContent = data.ordersCount;
+                    document.getElementById('totalSales').textContent = '£ ' + (data.totalSales !== undefined && data.totalSales !== null ? data.totalSales.toFixed(2) : '0.00');
+                    document.getElementById('activeDiscounts').textContent = data.activeDiscounts;
+                    document.getElementById('pendingOrders').textContent = data.pendingOrders;
+                    document.getElementById('processingOrders').textContent = data.processingOrders;
+                    document.getElementById('shippedOrders').textContent = data.shippedOrders;
+                    document.getElementById('deliveredOrders').textContent = data.deliveredOrders;
+                    document.getElementById('monthlySales').textContent = '£ ' + (data.monthlySales !== undefined && data.monthlySales !== null ? data.monthlySales.toFixed(2) : '0.00');
+                    document.getElementById('monthlyOrders').textContent = data.monthlyOrders;
+                    const avgOrderValue = data.ordersCount > 0 && data.totalSales !== undefined && data.totalSales !== null ? (data.totalSales / data.ordersCount).toFixed(2) : '0.00';
+                    document.getElementById('avgOrderValue').textContent = '£ ' + avgOrderValue;
+                    const conversionRate = data.productsCount > 0 ? ((data.ordersCount / data.productsCount) * 100).toFixed(1) : '0.0';
+                    document.getElementById('conversionRate').textContent = conversionRate + '%';
+                });
+        }
 
-            function loadSalesChart() {
-                fetch('@Url.Action("GetSalesChartData")')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!Array.isArray(data)) {
-                            console.error('API did not return array:', data);
-                            return;
-                        }
-                        const labels = data.map(x => x.date);
-                        const totals = data.map(x => x.total);
-                        const ctx = document.getElementById('salesChart');
-                        if (window.salesChart && typeof window.salesChart.destroy === 'function') window.salesChart.destroy();
-                        window.salesChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Sales',
-                                    data: totals,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
-                                }]
+        function loadSalesChart() {
+            fetch('@Url.Action("GetSalesChartData")')
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.date);
+                    const totals = data.map(x => x.total);
+                    const ctx = document.getElementById('salesChart');
+                    if (window.salesChart && typeof window.salesChart.destroy === 'function') window.salesChart.destroy();
+                    window.salesChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sales',
+                                data: totals,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: 'white'
-                                        }
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
                                     },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 }
                             }
-                        });
+                        }
                     });
-            }
+                });
+        }
 
-            function loadOrdersStatusChart() {
-                fetch('@Url.Action("GetOrdersStatusChartData")')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!Array.isArray(data) || data.length === 0 || data.every(x => !x.status || x.status === 'Unknown')) {
-                            const ctx = document.getElementById('ordersStatusChart').getContext('2d');
-                            ctx.clearRect(0, 0, 600, 75);
-                            ctx.font = '16px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.fillStyle = '#888';
-                            ctx.fillText('No Orders Yet', 300, 40);
-                            return;
-                        }
-                        const filtered = data.filter(x => x.status && x.status !== 'Unknown');
-                        const labels = filtered.map(x => x.status);
-                        const counts = filtered.map(x => x.count);
-                        const colors = ['#ffc107', '#17a2b8', '#007bff', '#28a745', '#dc3545'];
-                        const ctx = document.getElementById('ordersStatusChart');
-                        if (window.ordersStatusChart && typeof window.ordersStatusChart.destroy === 'function') window.ordersStatusChart.destroy();
-                        window.ordersStatusChart = new Chart(ctx, {
-                            type: 'doughnut',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    data: counts,
-                                    backgroundColor: colors.slice(0, counts.length)
-                                }]
-                            },
-                            options: {
-                                responsive: false,
-                                cutout: '75%',
-                                plugins: {
-                                    legend: { 
-                                        display: true,
-                                        labels: {
-                                            color: 'white'
-                                        }
+        function loadOrdersStatusChart() {
+            fetch('@Url.Action("GetOrdersStatusChartData")')
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data) || data.length === 0 || data.every(x => !x.status || x.status === 'Unknown')) {
+                        const ctx = document.getElementById('ordersStatusChart').getContext('2d');
+                        ctx.clearRect(0, 0, 600, 75);
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#888';
+                        ctx.fillText('No Orders Yet', 300, 40);
+                        return;
+                    }
+                    const filtered = data.filter(x => x.status && x.status !== 'Unknown');
+                    const labels = filtered.map(x => x.status);
+                    const counts = filtered.map(x => x.count);
+                    const colors = ['#ffc107', '#17a2b8', '#007bff', '#28a745', '#dc3545'];
+                    const ctx = document.getElementById('ordersStatusChart');
+                    if (window.ordersStatusChart && typeof window.ordersStatusChart.destroy === 'function') window.ordersStatusChart.destroy();
+                    window.ordersStatusChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: counts,
+                                backgroundColor: colors.slice(0, counts.length)
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            cutout: '75%',
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    labels: {
+                                        color: 'white'
                                     }
                                 }
                             }
-                        });
+                        }
                     });
-            }
+                });
+        }
 
-            function loadMonthlyRevenueChart(year) {
-                fetch(`@Url.Action("GetMonthlyRevenueData")?year=${year}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let chartData = data;
-                        if (data && data.data && Array.isArray(data.data)) {
-                            chartData = data.data;
-                        }
-                        if (!Array.isArray(chartData)) {
-                            const ctx = document.getElementById('monthlyRevenueChart');
-                            if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
-                            ctx.clearRect(0, 0, 600, 250);
-                            ctx.font = '16px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.fillStyle = '#888';
-                            ctx.fillText('No Revenue Data Available', 300, 125);
-                            return;
-                        }
-                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        const labels = chartData.map(x => months[x.month - 1]);
-                        const revenues = chartData.map(x => (x.revenue !== undefined && x.revenue !== null) ? Number(x.revenue).toFixed(2) : '0.00');
-                        const orders = chartData.map(x => (x.orders !== undefined && x.orders !== null) ? x.orders : 0);
-                        const ctx = document.getElementById('monthlyRevenueChart');
-                        if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
-                        window.monthlyRevenueChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Revenue',
-                                    data: revenues,
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    yAxisID: 'y'
-                                }, {
-                                    label: 'Orders',
-                                    data: orders,
-                                    borderColor: 'rgba(255, 99, 132, 1)',
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                    yAxisID: 'y1'
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: 'white'
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
-                                    },
-                                    y: {
-                                        type: 'linear',
-                                        display: true,
-                                        position: 'left',
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
-                                    },
-                                    y1: {
-                                        type: 'linear',
-                                        display: true,
-                                        position: 'right',
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            drawOnChartArea: false,
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        },
-                                    }
-                                }
-                            }
-                        });
-                    })
-                    .catch(error => {
+        function loadMonthlyRevenueChart(year) {
+            fetch(`@Url.Action("GetMonthlyRevenueData")?year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    let chartData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        chartData = data.data;
+                    }
+                    if (!Array.isArray(chartData)) {
                         const ctx = document.getElementById('monthlyRevenueChart');
                         if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
                         ctx.clearRect(0, 0, 600, 250);
                         ctx.font = '16px Arial';
                         ctx.textAlign = 'center';
                         ctx.fillStyle = '#888';
-                        ctx.fillText('Error Loading Revenue Data', 300, 125);
-                    });
-            }
-
-            function loadRecentOrders() {
-                fetch('@Url.Action("GetRecentOrders")?count=5')
-                    .then(response => response.json())
-                    .then(data => {
-                        let ordersData = data;
-                        if (data && data.data && Array.isArray(data.data)) {
-                            ordersData = data.data;
-                        }
-                        const container = document.getElementById('recentOrdersList');
-                        if (!Array.isArray(ordersData) || ordersData.length === 0) {
-                            container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Orders Yet</div>';
-                            return;
-                        }
-                        container.innerHTML = ordersData.map(order => {
-                            const name = order.customerName;
-                            const status = order.status ? order.status : '';
-                            let dateStr = '', timeStr = '';
-                            if (order.orderDate) {
-                                try {
-                                    const d = new Date(order.orderDate);
-                                    if (!isNaN(d)) {
-                                        dateStr = d.toLocaleDateString();
-                                        timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        ctx.fillText('No Revenue Data Available', 300, 125);
+                        return;
+                    }
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const labels = chartData.map(x => months[x.month - 1]);
+                    const revenues = chartData.map(x => (x.revenue !== undefined && x.revenue !== null) ? Number(x.revenue).toFixed(2) : '0.00');
+                    const orders = chartData.map(x => (x.orders !== undefined && x.orders !== null) ? x.orders : 0);
+                    const ctx = document.getElementById('monthlyRevenueChart');
+                    if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
+                    window.monthlyRevenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Revenue',
+                                data: revenues,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                yAxisID: 'y'
+                            }, {
+                                label: 'Orders',
+                                data: orders,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                yAxisID: 'y1'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
                                     }
-                                } catch { dateStr = ''; timeStr = ''; }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        drawOnChartArea: false,
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    },
+                                }
                             }
-                            let statusIcon = '';
-                            switch(status.toLowerCase()) {
-                                case 'pending': statusIcon = '<i class="fas fa-hourglass-half text-warning mr-1"></i>'; break;
-                                case 'processing': statusIcon = '<i class="fas fa-cogs text-info mr-1"></i>'; break;
-                                case 'shipped': statusIcon = '<i class="fas fa-shipping-fast text-primary mr-1"></i>'; break;
-                                case 'delivered': statusIcon = '<i class="fas fa-check-circle text-success mr-1"></i>'; break;
-                                case 'cancelled': statusIcon = '<i class="fas fa-times-circle text-danger mr-1"></i>'; break;
-                                default: statusIcon = '<i class="fas fa-question-circle text-secondary mr-1"></i>';
-                            }
-                            return `
-                                <div class="order-item mb-2">
-                                    <div class="item-name">${name}</div>
-                                    <div class="item-details">
-                                        <span class="status-badge">${statusIcon}${status}</span>
-                                        <span style="color: rgba(255,255,255,0.7);">
-                                            <i class="far fa-calendar-alt me-1"></i>${dateStr}
-                                            <i class="far fa-clock ms-2 me-1"></i>${timeStr}
-                                        </span>
-                                    </div>
-                                    <a href="/Seller/OrderDetails/${order.id}" class="item-link">View Details</a>
-                                </div>
-                            `;
-                        }).join('');
+                        }
                     });
-            }
+                })
+                .catch(error => {
+                    const ctx = document.getElementById('monthlyRevenueChart');
+                    if (window.monthlyRevenueChart && typeof window.monthlyRevenueChart.destroy === 'function') window.monthlyRevenueChart.destroy();
+                    ctx.clearRect(0, 0, 600, 250);
+                    ctx.font = '16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#888';
+                    ctx.fillText('Error Loading Revenue Data', 300, 125);
+                });
+        }
 
-            function loadLowStockProducts() {
-                fetch('@Url.Action("GetLowStockProducts")?threshold=10')
-                    .then(response => response.json())
-                    .then(data => {
-                        let productsData = data;
-                        if (data && data.data && Array.isArray(data.data)) {
-                            productsData = data.data;
+        function loadRecentOrders() {
+            fetch('@Url.Action("GetRecentOrders")?count=5')
+                .then(response => response.json())
+                .then(data => {
+                    let ordersData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        ordersData = data.data;
+                    }
+                    const container = document.getElementById('recentOrdersList');
+                    if (!Array.isArray(ordersData) || ordersData.length === 0) {
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Orders Yet</div>';
+                        return;
+                    }
+                    container.innerHTML = ordersData.map(order => {
+                        const name = order.customerName;
+                        const status = order.status ? order.status : '';
+                        let dateStr = '', timeStr = '';
+                        if (order.orderDate) {
+                            try {
+                                const d = new Date(order.orderDate);
+                                if (!isNaN(d)) {
+                                    dateStr = d.toLocaleDateString();
+                                    timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                }
+                            } catch { dateStr = ''; timeStr = ''; }
                         }
-                        const container = document.getElementById('lowStockProductsList');
-                        if (!Array.isArray(productsData) || productsData.length === 0) {
-                            container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Low Stock Products</div>';
-                            return;
+                        let statusIcon = '';
+                        switch(status.toLowerCase()) {
+                            case 'pending': statusIcon = '<i class="fas fa-hourglass-half text-warning mr-1"></i>'; break;
+                            case 'processing': statusIcon = '<i class="fas fa-cogs text-info mr-1"></i>'; break;
+                            case 'shipped': statusIcon = '<i class="fas fa-shipping-fast text-primary mr-1"></i>'; break;
+                            case 'delivered': statusIcon = '<i class="fas fa-check-circle text-success mr-1"></i>'; break;
+                            case 'cancelled': statusIcon = '<i class="fas fa-times-circle text-danger mr-1"></i>'; break;
+                            default: statusIcon = '<i class="fas fa-question-circle text-secondary mr-1"></i>';
                         }
-                        container.innerHTML = productsData.map(product => `
-                            <div class="stock-item mb-2">
-                                <div class="item-name">${product.name}</div>
+                        return `
+                            <div class="order-item mb-2">
+                                <div class="item-name">${name}</div>
                                 <div class="item-details">
-                                    <span class="status-badge">
-                                        <i class="fas fa-box me-1"></i>${product.stockQuantity} in stock
+                                    <span class="status-badge">${statusIcon}${status}</span>
+                                    <span style="color: rgba(255,255,255,0.7);">
+                                        <i class="far fa-calendar-alt me-1"></i>${dateStr}
+                                        <i class="far fa-clock ms-2 me-1"></i>${timeStr}
                                     </span>
                                 </div>
-                                <a href="/Seller/ProductDetails/${product.id}" class="item-link">View Details</a>
+                                <a href="/Seller/OrderDetails/${order.id}" class="item-link">View Details</a>
                             </div>
-                        `).join('');
-                    });
-            }
-
-            function getStatusColor(status) {
-                if (!status) return 'secondary';
-                switch(status.toLowerCase()) {
-                    case 'pending': return 'warning';
-                    case 'processing': return 'info';
-                    case 'shipped': return 'primary';
-                    case 'delivered': return 'success';
-                    case 'cancelled': return 'danger';
-                    default: return 'secondary';
-                }
-            }
-
-            function loadTopProductsChart(params = {}) {
-                const url = new URL('@Url.Action("GetTopSellingProductsChartData")', window.location.origin);
-                Object.keys(params).forEach(key => {
-                    if (params[key]) url.searchParams.append(key, params[key]);
+                        `;
+                    }).join('');
                 });
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!Array.isArray(data)) {
-                            console.error('API did not return array:', data);
-                            return;
-                        }
-                        const labels = data.map(x => x.product);
-                        const quantities = data.map(x => x.quantity);
-                        const ctx = document.getElementById('topProductsChart');
-                        if (window.topProductsChart && typeof window.topProductsChart.destroy === 'function') window.topProductsChart.destroy();
-                        window.topProductsChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Quantity Sold',
-                                    data: quantities,
-                                    backgroundColor: 'rgba(255, 99, 132, 0.6)'
-                                }]
+        }
+
+        function loadLowStockProducts() {
+            fetch('@Url.Action("GetLowStockProducts")?threshold=10')
+                .then(response => response.json())
+                .then(data => {
+                    let productsData = data;
+                    if (data && data.data && Array.isArray(data.data)) {
+                        productsData = data.data;
+                    }
+                    const container = document.getElementById('lowStockProductsList');
+                    if (!Array.isArray(productsData) || productsData.length === 0) {
+                        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100px;font-size:1.1em;color:rgba(255,255,255,0.8);">No Low Stock Products</div>';
+                        return;
+                    }
+                    container.innerHTML = productsData.map(product => `
+                        <div class="stock-item mb-2">
+                            <div class="item-name">${product.name}</div>
+                            <div class="item-details">
+                                <span class="status-badge">
+                                    <i class="fas fa-box me-1"></i>${product.stockQuantity} in stock
+                                </span>
+                            </div>
+                            <a href="/Seller/ProductDetails/${product.id}" class="item-link">View Details</a>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function getStatusColor(status) {
+            if (!status) return 'secondary';
+            switch(status.toLowerCase()) {
+                case 'pending': return 'warning';
+                case 'processing': return 'info';
+                case 'shipped': return 'primary';
+                case 'delivered': return 'success';
+                case 'cancelled': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        function loadTopProductsChart(params = {}) {
+            const url = new URL('@Url.Action("GetTopSellingProductsChartData")', window.location.origin);
+            Object.keys(params).forEach(key => {
+                if (params[key]) url.searchParams.append(key, params[key]);
+            });
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.product);
+                    const quantities = data.map(x => x.quantity);
+                    const ctx = document.getElementById('topProductsChart');
+                    if (window.topProductsChart && typeof window.topProductsChart.destroy === 'function') window.topProductsChart.destroy();
+                    window.topProductsChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Quantity Sold',
+                                data: quantities,
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: 'white'
-                                        }
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
                                     },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 }
                             }
-                        });
-                    });
-            }
-
-            function loadDynamicSalesChart(categoryId = '', productId = '') {
-                const url = new URL('@Url.Action("GetSalesChartData")', window.location.origin);
-                if (categoryId) url.searchParams.append('categoryId', categoryId);
-                if (productId) url.searchParams.append('productId', productId);
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!Array.isArray(data)) {
-                            console.error('API did not return array:', data);
-                            return;
                         }
-                        const labels = data.map(x => x.date);
-                        const totals = data.map(x => x.total);
-                        const ctx = document.getElementById('dynamicSalesChart');
-                        if (window.dynamicSalesChart && typeof window.dynamicSalesChart.destroy === 'function') window.dynamicSalesChart.destroy();
-                        window.dynamicSalesChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Sales',
-                                    data: totals,
-                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                    fill: true
-                                }]
+                    });
+                });
+        }
+
+        function loadDynamicSalesChart(categoryId = '', productId = '') {
+            const url = new URL('@Url.Action("GetSalesChartData")', window.location.origin);
+            if (categoryId) url.searchParams.append('categoryId', categoryId);
+            if (productId) url.searchParams.append('productId', productId);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        console.error('API did not return array:', data);
+                        return;
+                    }
+                    const labels = data.map(x => x.date);
+                    const totals = data.map(x => x.total);
+                    const ctx = document.getElementById('dynamicSalesChart');
+                    if (window.dynamicSalesChart && typeof window.dynamicSalesChart.destroy === 'function') window.dynamicSalesChart.destroy();
+                    window.dynamicSalesChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sales',
+                                data: totals,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: 'white'
+                                    }
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: 'white'
-                                        }
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        color: 'white'
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 },
-                                scales: {
-                                    x: {
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: 'white'
                                     },
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            color: 'white'
-                                        },
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)'
-                                        }
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
                                     }
                                 }
                             }
-                        });
+                        }
                     });
+                });
+        }
+
+        document.getElementById('refreshStats').addEventListener('click', function() {
+            refreshStatistics();
+            loadSalesChart();
+            loadOrdersStatusChart();
+            loadRecentOrders();
+            loadLowStockProducts();
+        });
+
+        document.getElementById('topProductsFilter').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = {};
+            for (const [key, value] of formData.entries()) {
+                params[key] = value;
             }
+            loadTopProductsChart(params);
+        });
 
-            document.getElementById('refreshStats').addEventListener('click', function() {
-                refreshStatistics();
-                loadSalesChart();
-                loadOrdersStatusChart();
-                loadRecentOrders();
-                loadLowStockProducts();
-            });
+        document.getElementById('yearSelector').addEventListener('change', function() {
+            loadMonthlyRevenueChart(this.value);
+        });
 
-            document.getElementById('topProductsFilter').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const params = {};
-                for (const [key, value] of formData.entries()) {
-                    params[key] = value;
-                }
-                loadTopProductsChart(params);
-            });
+        document.getElementById('salesChartFilter').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const categoryId = document.getElementById('salesCategory').value;
+            const productId = document.getElementById('salesProduct').value;
+            loadDynamicSalesChart(categoryId, productId);
+        });
 
-            document.getElementById('yearSelector').addEventListener('change', function() {
-                loadMonthlyRevenueChart(this.value);
-            });
-
-            document.getElementById('salesChartFilter').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const categoryId = document.getElementById('salesCategory').value;
-                const productId = document.getElementById('salesProduct').value;
-                loadDynamicSalesChart(categoryId, productId);
-            });
-
-            function initializeCharts() {
-                if (typeof Chart === 'undefined') {
-                    var script = document.createElement('script');
-                    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-                    script.onload = function() {
-                        initializeCharts();
-                    };
-                    script.onerror = function() {
-                        alert('Chart.js library is not loaded. Please refresh the page.');
-                    };
-                    document.head.appendChild(script);
-                    return;
-                }
-                refreshStatistics();
-                loadSalesChart();
-                loadOrdersStatusChart();
-                loadMonthlyRevenueChart(new Date().getFullYear());
-                loadTopProductsChart();
-                loadRecentOrders();
-                loadLowStockProducts();
-                loadDynamicSalesChart();
+        function initializeCharts() {
+            if (typeof Chart === 'undefined') {
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+                script.onload = function() {
+                    initializeCharts();
+                };
+                script.onerror = function() {
+                    alert('Chart.js library is not loaded. Please refresh the page.');
+                };
+                document.head.appendChild(script);
+                return;
             }
+            refreshStatistics();
+            loadSalesChart();
+            loadOrdersStatusChart();
+            loadMonthlyRevenueChart(new Date().getFullYear());
+            loadTopProductsChart();
+            loadRecentOrders();
+            loadLowStockProducts();
+            loadDynamicSalesChart();
+        }
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initializeCharts);
-            } else {
-                setTimeout(initializeCharts, 100);
-            }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCharts);
+        } else {
+            setTimeout(initializeCharts, 100);
+        }
 
-            setInterval(function() {
-                refreshStatistics();
-                loadRecentOrders();
-                loadLowStockProducts();
-            }, 30000);
-        </script>
+        setInterval(function() {
+            refreshStatistics();
+            loadRecentOrders();
+            loadLowStockProducts();
+        }, 30000);
+    </script>
 } 

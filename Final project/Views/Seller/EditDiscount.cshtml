@@ -1,6 +1,7 @@
 @model Final_project.Models.discount
 @{
     ViewData["Title"] = "Edit Discount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var products = ViewBag.Products as List<Final_project.Models.product>;
     var selectedProducts = ViewBag.SelectedProducts as List<string>;
     var categories = ViewBag.Categories as List<Final_project.Models.category>;
@@ -29,19 +30,17 @@
         padding: 0;
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
         padding: 2rem;
@@ -61,20 +60,25 @@
         overflow: hidden;
     }
 
-    .dashboard-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 3s infinite;
-    }
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
 
     @@keyframes shimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .hero-title {
@@ -107,10 +111,10 @@
         transition: all 0.3s ease;
     }
 
-    .form-panel:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
+        .form-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
 
     /* Glass Input Styling */
     .glass-input {
@@ -125,22 +129,22 @@
         width: 100%;
     }
 
-    .glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .glass-input:focus {
-        outline: none;
-        border-color: var(--amazon-orange);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-    }
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .glass-input option {
-        background: var(--amazon-dark);
-        color: white;
-    }
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
 
     /* Glass Label */
     .glass-label {
@@ -170,37 +174,37 @@
         font-size: 0.9rem;
     }
 
-    .floating-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
 
-    .floating-btn:hover::before {
-        left: 100%;
-    }
+        .floating-btn:hover::before {
+            left: 100%;
+        }
 
-    .floating-btn:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        color: white;
-        text-decoration: none;
-    }
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
 
-    .floating-btn.primary {
-        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
-        border: none;
-    }
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
 
-    .floating-btn.success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
 
     /* Responsive Design */
     @@media (max-width: 768px) {
@@ -228,6 +232,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -274,19 +279,19 @@
                     <select asp-for="discount_type" class="glass-input" id="discount_type">
                         @if (Model.discount_type == "percentage")
                         {
-                                <option value="percentage" selected>Percentage</option>
+                            <option value="percentage" selected>Percentage</option>
                         }
                         else
                         {
-                                <option value="percentage">Percentage</option>
+                            <option value="percentage">Percentage</option>
                         }
                         @if (Model.discount_type == "fixed")
                         {
-                                <option value="fixed" selected>Fixed Amount</option>
+                            <option value="fixed" selected>Fixed Amount</option>
                         }
                         else
                         {
-                                <option value="fixed">Fixed Amount</option>
+                            <option value="fixed">Fixed Amount</option>
                         }
                     </select>
                     <span asp-validation-for="discount_type" class="text-danger"></span>
@@ -321,7 +326,7 @@
                         <option value="">-- Select Category --</option>
                         @foreach (var cat in categories)
                         {
-                                <option value="@cat.id">@cat.name</option>
+                            <option value="@cat.id">@cat.name</option>
                         }
                     </select>
                     <div class="form-check mt-2">
@@ -336,11 +341,11 @@
                         {
                             if (selectedProducts != null && selectedProducts.Contains(p.id))
                             {
-                                        <option value="@p.id" data-category="@p.category_id" selected>@p.name</option>
+                                <option value="@p.id" data-category="@p.category_id" selected>@p.name</option>
                             }
                             else
                             {
-                                        <option value="@p.id" data-category="@p.category_id">@p.name</option>
+                                <option value="@p.id" data-category="@p.category_id">@p.name</option>
                             }
                         }
                     </select>
@@ -357,56 +362,56 @@
 </div>
 
 @section Scripts {
-        <script>
-            // Your existing JavaScript for discount type handling
-            document.getElementById('discount_type').addEventListener('change', function() {
-                const discountType = this.value;
-                const valueLabel = document.getElementById('valueLabel');
-                const valueInput = document.getElementById('valueInput');
-                const valueHelp = document.getElementById('valueHelp');
+    <script>
+        // Your existing JavaScript for discount type handling
+        document.getElementById('discount_type').addEventListener('change', function() {
+            const discountType = this.value;
+            const valueLabel = document.getElementById('valueLabel');
+            const valueInput = document.getElementById('valueInput');
+            const valueHelp = document.getElementById('valueHelp');
 
-                if (discountType === 'percentage') {
-                    valueLabel.textContent = 'Percentage (%)';
-                    valueInput.placeholder = 'Enter percentage (e.g., 15)';
-                    valueHelp.textContent = 'Enter a value between 1 and 100';
-                    valueInput.max = 100;
-                    valueInput.min = 1;
-                } else if (discountType === 'fixed') {
-                    valueLabel.textContent = 'Fixed Amount (£)';
-                    valueInput.placeholder = 'Enter amount (e.g., 10.50)';
-                    valueHelp.textContent = 'Enter the fixed discount amount';
-                    valueInput.max = '';
-                    valueInput.min = 0;
-                }
-            });
+            if (discountType === 'percentage') {
+                valueLabel.textContent = 'Percentage (%)';
+                valueInput.placeholder = 'Enter percentage (e.g., 15)';
+                valueHelp.textContent = 'Enter a value between 1 and 100';
+                valueInput.max = 100;
+                valueInput.min = 1;
+            } else if (discountType === 'fixed') {
+                valueLabel.textContent = 'Fixed Amount (£)';
+                valueInput.placeholder = 'Enter amount (e.g., 10.50)';
+                valueHelp.textContent = 'Enter the fixed discount amount';
+                valueInput.max = '';
+                valueInput.min = 0;
+            }
+        });
 
-            // Category filter functionality
-            document.getElementById('categorySelect').addEventListener('change', function() {
-                const selectedCategory = this.value;
-                const productsSelect = document.getElementById('productsSelect');
-                const applyToCategory = document.getElementById('applyToCategory');
+        // Category filter functionality
+        document.getElementById('categorySelect').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            const productsSelect = document.getElementById('productsSelect');
+            const applyToCategory = document.getElementById('applyToCategory');
 
-                if (selectedCategory && applyToCategory.checked) {
-                    // Clear current selection
-                    Array.from(productsSelect.options).forEach(option => {
-                        option.selected = false;
-                    });
+            if (selectedCategory && applyToCategory.checked) {
+                // Clear current selection
+                Array.from(productsSelect.options).forEach(option => {
+                    option.selected = false;
+                });
 
-                    // Select all products in the category
-                    Array.from(productsSelect.options).forEach(option => {
-                        if (option.dataset.category === selectedCategory) {
-                            option.selected = true;
-                        }
-                    });
-                }
-            });
+                // Select all products in the category
+                Array.from(productsSelect.options).forEach(option => {
+                    if (option.dataset.category === selectedCategory) {
+                        option.selected = true;
+                    }
+                });
+            }
+        });
 
-            // Trigger initial discount type setup
-            document.addEventListener('DOMContentLoaded', function() {
-                const discountTypeSelect = document.getElementById('discount_type');
-                if (discountTypeSelect) {
-                    discountTypeSelect.dispatchEvent(new Event('change'));
-                }
-            });
-        </script>
+        // Trigger initial discount type setup
+        document.addEventListener('DOMContentLoaded', function() {
+            const discountTypeSelect = document.getElementById('discount_type');
+            if (discountTypeSelect) {
+                discountTypeSelect.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
 } 
