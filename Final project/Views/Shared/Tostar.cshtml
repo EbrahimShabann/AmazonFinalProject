@@ -1,24 +1,24 @@
 ﻿﻿
 @if (TempData["success"] != null || TempData["error"] != null || TempData["warning"] != null || TempData["info"] != null)
 {
-    <script>
-        $(document).ready(function () {
-            @if (TempData["success"] != null)
-            {
-                    <text>toastr.success('@TempData["success"]');</text>
-            }
-            @if (TempData["error"] != null)
-            {
-                    <text>toastr.error('@TempData["error"]');</text>
-            }
-            @if (TempData["warning"] != null)
-            {
-                    <text>toastr.warning('@TempData["warning"]');</text>
-            }
-            @if (TempData["info"] != null)
-            {
-                    <text>toastr.info('@TempData["info"]');</text>
-            }
-        });
-    </script>
+        <script>
+            $(document).ready(function () {
+        @if (TempData["success"] != null)
+        {
+            <text>toastr.success('@TempData["success"]');</text>
+        }
+        @if (TempData["error"] != null)
+        {
+            <text>toastr.error('@TempData["error"]');</text>
+        }
+        @if (TempData["warning"] != null)
+        {
+            <text>toastr.warning('@TempData["warning"]');</text>
+        }
+        @if (TempData["info"] != null)
+        {
+            <text>toastr.info('@TempData["info"]');</text>
+        }
+            });
+        </script>
 }

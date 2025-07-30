@@ -6,7 +6,12 @@ namespace Final_project.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction("Index","Landing");
+            if (User.IsInRole("admin")) return RedirectToAction("Index", "AdminDashboard");
+            else if (User.IsInRole("seller")) return RedirectToAction("SellerDashboard", "seller");
+            else if (User.IsInRole("customerService")) return RedirectToAction("Index", "CustomerService");
+
+            else return RedirectToAction("Index", "Profile");
+
         }
     }
 }

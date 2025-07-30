@@ -6,7 +6,7 @@ const chatHistory = [];
 const previousChats = []; // Store previous chats
 
 
-const OPENAI_API_KEY = "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"; 
+const OPENAI_API_KEY = "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";
 const OPENAI_CHAT_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_EMBEDDING_API_URL = "https://api.openai.com/v1/embeddings";
 let selectedModel = "o1-mini"; // Default OpenAI chat model
@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", async () =>  {
     const input = document.getElementById("message-input");
     const newChatBtn = document.getElementById("new-chat-btn");
     const modelSelect = document.getElementById("model-select");
-   
-  
+
+
     if (modelSelect) {
         modelSelect.addEventListener("change", (e) => {
             selectedModel = modelSelect.value;
@@ -56,23 +56,23 @@ document.addEventListener("DOMContentLoaded", async () =>  {
     }
 
     if (sendBtn && input) {
-       sendBtn.addEventListener("click", async () => {
-           const message = input.value.trim();
-           console.log(message);
+        sendBtn.addEventListener("click", async () => {
+            const message = input.value.trim();
+            console.log(message);
 
 
-   if (message) {
-    await callOpenAI(message);  // still sends regular message
-    input.value = "";
-  }
-});
+            if (message) {
+                await callOpenAI(message);  // still sends regular message
+                input.value = "";
+            }
+        });
 
         document.getElementById('message-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 sendBtn.click();
             }
         });
-       
+
     }
 
     if (newChatBtn) {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () =>  {
         });
 
     }
-    
+
 });
 
 // Display current chat

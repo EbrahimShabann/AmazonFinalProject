@@ -24,6 +24,11 @@ namespace Final_project.Repository.CartRepository
             return context.shopping_carts.Find(id);
         }
 
+        public void save()
+        {
+            context.SaveChanges();
+        }
+
         public void Update(shopping_cart entity)
         {
             context.shopping_carts.Update(entity);

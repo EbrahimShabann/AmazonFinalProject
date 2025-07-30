@@ -45,9 +45,9 @@ namespace Final_project.Repository
 
         public ApplicationUser getById(string id)
         {
-           return _context.Users.SingleOrDefault(u=>u.Id==id);
+            return _context.Users.SingleOrDefault(u => u.Id == id);
         }
 
 
     }
-} 
+}

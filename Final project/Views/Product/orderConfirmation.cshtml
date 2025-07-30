@@ -1,6 +1,6 @@
 ﻿@model order
     <title>Order Confirmation - Amazon</title>
-   
+
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -24,7 +24,7 @@
                             <div class="col-md-6">
                                 <h6>Shipping Address</h6>
                                 <p class="mb-1"><strong>@Model.shipping_address</strong></p>
-                               
+
                             </div>
                             <div class="col-md-6">
                                 <h6>Payment Method</h6>
@@ -54,28 +54,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.OrderItems)
+                                @foreach (var item in Model.OrderItems)
                                 {
-                                     <tr class="border-bottom">
-                                        <td>
-                                            <div class="d-flex">
-                                                <img src="/Image/@item.product.product_images.First().image_url" alt="Product" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
-                                                <div>
-                                                    <h6 class="mb-1">@item.product.name</h6>
+                                         <tr class="border-bottom">
+                                            <td>
+                                                <div class="d-flex">
+                                                    <img src="/Image/@item.product.product_images.First().image_url" alt="Product" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
+                                                    <div>
+                                                        <h6 class="mb-1">@item.product.name</h6>
                                                     @* <p class="text-muted mb-0">Color: Black</p> *@
-                                                    <p class="text-muted mb-0">Sold by: Amazon.com</p>
+                                                        <p class="text-muted mb-0">Sold by: Amazon.com</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end align-middle">@item.unit_price?.ToString("C")</td>
-                                        <td class="text-end align-middle">@item.quantity</td>
-                                        <td class="text-end align-middle">@item.Color</td>
-                                        <td class="text-end align-middle">@item.Size</td>
+                                            </td>
+                                            <td class="text-end align-middle">@item.unit_price?.ToString("C")</td>
+                                            <td class="text-end align-middle">@item.quantity</td>
+                                            <td class="text-end align-middle">@item.Color</td>
+                                            <td class="text-end align-middle">@item.Size</td>
                                         <td class="text-end align-middle">$@(item.unit_price* item.quantity)</td>
-                                    </tr>
-                          
+                                        </tr>
+
                                 }
-                                   
+
                                 </tbody>
                             </table>
                         </div>
@@ -97,7 +97,7 @@
                                             <th scope="row">Shipping & handling:</th>
                                             <td class="text-end">$0.00</td>
                                         </tr>
-                                       
+
                                         <tr class="border-top">
                                             <th scope="row"><h5 class="mb-0">Order total:</h5></th>
                                         <td class="text-end"><h5 class="mb-0">@Model.total_amount?.ToString("C")</h5></td>
@@ -120,7 +120,7 @@
                                 <h6>Estimated delivery date</h6>
                                 <p class="mb-0"><strong>@Model.estimated_delivery_date</strong></p>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                 <!-- Actions -->
                 <div class="text-center">
                 <a href="/Profile/orderDetails?id=@Model.id" class="btn btn-warning me-2">View or Manage Order</a>
-                    
+
                     <a href="/Landing/Index" class="btn btn-outline-secondary ms-2">Back To Home</a>
                 </div>
             </div>

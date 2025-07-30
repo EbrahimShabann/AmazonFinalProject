@@ -119,7 +119,7 @@ namespace Final_project.Controllers.Cart
                     cart_id = cart.id,
                     product_id = productId,
                     quantity = 1,
-                    color = color ,
+                    color = color,
                     size = size,
                     added_at = DateTime.UtcNow
                 };

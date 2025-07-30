@@ -524,15 +524,15 @@
                 if (hasDiscount) {
                     priceHtml = `
                         <div class="product-price">
-                            <span class="price-symbol">$</span>
+                            <span class="price-symbol">£</span>
                             <span class="price-whole">${finalPrice}</span>
-                            <span class="price-original">$${originalPrice}</span>
+                            <span class="price-original">£${originalPrice}</span>
                         </div>
                     `;
                 } else {
                     priceHtml = `
                         <div class="product-price">
-                            <span class="price-symbol">$</span>
+                            <span class="price-symbol">£</span>
                             <span class="price-whole">${finalPrice}</span>
                         </div>
                     `;
@@ -563,9 +563,9 @@
                         ${discountBadgeHtml}
                         ${bestsellerBadge}
                         ${newArrivalBadge}
-                        <a href="/dfga/ProductDetails/${item.productId || item.id}" onclick="redirectToProduct(${item.productId || item.id}); return false;" class="text-decoration-none text-dark">
+                            <a href="/product/Details?id=${item.productId || item.id}" onclick="redirectToProduct(${item.productId || item.id}); return false;" class="text-decoration-none text-dark">
                             <div class="product-image">
-                                <img src="${item.imageUrl || '/images/placeholder.jpg'}" alt="${item.productName}" />
+                                    <img src="./images/products/${item.imageUrl || './images/products/placeholder.jpg'}" alt="${item.productName}" />
                             </div>
                             <div class="product-title">
                                 ${item.productName}
@@ -1026,7 +1026,7 @@
 
 
         function redirectToProduct(productId) {
-            window.location.href = `/dfga/ProductDetails/${productId}`;
+            window.location.href = `/product/Details?id=${productId}`;
         }
 
         $(document).on('click', '.add-to-cart', function(e) {

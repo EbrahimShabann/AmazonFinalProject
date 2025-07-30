@@ -2,6 +2,11 @@
 using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
+using Final_project.Repository.CustomerServiceRepoFile.ChatMessage;
+using Final_project.Repository.CustomerServiceRepoFile.ChatSession;
+using Final_project.Repository.CustomerServiceRepoFile.SupportTicket;
+using Final_project.Repository.CustomerServiceRepoFile.TicketHistory;
+using Final_project.Repository.CustomerServiceRepoFile.TicketMessage;
 using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
@@ -9,7 +14,7 @@ using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
 using Final_project.Repository.SavedCartRepositoryFile;
-using Final_project.Repository.WishlistRepository;
+using Final_project.Repository.WishlistRepositoryFile;
 using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository
@@ -36,8 +41,16 @@ namespace Final_project.Repository
         private ISavedCartRepository _savedCartRepository;
         private ISavedCartItemRepository _savedCartItemRepository;
 
+        // Customer Service repositories
+        private ISupportTicketRepo _supportTicketRepo;
+        private ITicketMessageRepo _ticketMessageRepo;
+        private ITicketHistoryRepo _ticketHistoryRepo;
+        private IChatSessionRepo _chatSessionRepo;
+        private IChatMessageRepo _chatMessageRepo;
 
 
+        private ISavedCartRepository _savedCartRepository;
+        private ISavedCartItemRepository _savedCartItemRepository;
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -171,6 +184,51 @@ namespace Final_project.Repository
                 return _messageRepo;
             }
         }
+        public ISupportTicketRepo SupportTicketRepo
+        {
+            get
+            {
+                if (_supportTicketRepo == null)
+                    _supportTicketRepo = new SupportTicketRepo(db);
+                return _supportTicketRepo;
+            }
+        }
+        public ITicketMessageRepo TicketMessageRepo
+        {
+            get
+            {
+                if (_ticketMessageRepo == null)
+                    _ticketMessageRepo = new TicketMessageRepo(db);
+                return _ticketMessageRepo;
+            }
+        }
+        public ITicketHistoryRepo TicketHistoryRepo
+        {
+            get
+            {
+                if (_ticketHistoryRepo == null)
+                    _ticketHistoryRepo = new TicketHistoryRepo(db);
+                return _ticketHistoryRepo;
+            }
+        }
+        public IChatSessionRepo ChatSessionRepo
+        {
+            get
+            {
+                if (_chatSessionRepo == null)
+                    _chatSessionRepo = new ChatSessionRepo(db);
+                return _chatSessionRepo;
+            }
+        }
+        public IChatMessageRepo ChatMessageRepo
+        {
+            get
+            {
+                if (_chatMessageRepo == null)
+                    _chatMessageRepo = new ChatMessageRepo(db);
+                return _chatMessageRepo;
+            }
+        }
 
         public IWishlistItemRepository WishlistItemRepository
         {
@@ -186,7 +244,7 @@ namespace Final_project.Repository
             get
             {
                 if (_wishlistRepository == null)
-                    _wishlistRepository = new WishlistRepository.WishlistRepository(db);
+                    _wishlistRepository = new WishlistRepository(db);
                 return _wishlistRepository;
             }
         }

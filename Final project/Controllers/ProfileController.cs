@@ -1,6 +1,7 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
+using Final_project.Services.CustomerService;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,16 +15,127 @@ namespace Final_project.Areas.Customer.Controllers
     {
         private readonly UnitOfWork uof;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ICustomerServiceService _customerService;
 
-        public ProfileController(UnitOfWork uof, UserManager<ApplicationUser> userManager)
+        public ProfileController(UnitOfWork uof, UserManager<ApplicationUser> userManager, ICustomerServiceService customerService)
         {
             this.uof = uof;
             this.userManager = userManager;
+            this._customerService = customerService;
         }
         public IActionResult Index()
         {
             return View();
         }
+
+        public IActionResult GetCustomerServiceStats()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "User not authenticated" });
+            }
+
+            try
+            {
+                var userTickets = _customerService.GetTicketsByUser(userId);
+                var userChatSessions = _customerService.GetUserChatSessions(userId);
+
+                var stats = new
+                {
+                    TotalTickets = userTickets.Count(),
+                    OpenTickets = userTickets.Count(t => t.status.ToLower() == "open"),
+                    ResolvedTickets = userTickets.Count(t => t.status.ToLower() == "resolved"),
+                    TotalChatSessions = userChatSessions.Count(),
+                    ActiveChatSessions = userChatSessions.Count(s => s.Status.ToLower() == "active"),
+                    UnreadMessages = userChatSessions.Sum(s => _customerService.GetUnreadChatMessageCount(s.Id, userId))
+                };
+
+                return Json(new { success = true, stats = stats });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error retrieving statistics" });
+            }
+        }
+
+        public IActionResult GetRecentCustomerServiceActivity()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "User not authenticated" });
+            }
+
+            try
+            {
+                var recentTickets = _customerService.GetTicketsByUser(userId)
+                    .OrderByDescending(t => t.created_at)
+                    .Take(3)
+                    .Select(t => new
+                    {
+                        Id = t.id,
+                        Subject = t.subject,
+                        Status = t.status,
+                        CreatedAt = t.created_at,
+                        Priority = t.priority
+                    });
+
+                var recentChatSessions = _customerService.GetUserChatSessions(userId)
+                    .OrderByDescending(s => s.CreatedAt)
+                    .Take(3)
+                    .Select(s => new
+                    {
+                        Id = s.Id,
+                        Status = s.Status,
+                        CreatedAt = s.CreatedAt,
+                        UnreadCount = _customerService.GetUnreadChatMessageCount(s.Id, userId)
+                    });
+
+                return Json(new
+                {
+                    success = true,
+                    tickets = recentTickets,
+                    chatSessions = recentChatSessions
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error retrieving activity" });
+            }
+        }
+
+        public IActionResult GetCustomerServiceNotificationCount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+
+            try
+            {
+                var userTickets = _customerService.GetTicketsByUser(userId);
+                var userChatSessions = _customerService.GetUserChatSessions(userId);
+
+                var openTickets = userTickets.Count(t => t.status.ToLower() == "open");
+                var unreadMessages = userChatSessions.Sum(s => _customerService.GetUnreadChatMessageCount(s.Id, userId));
+
+                var totalNotifications = openTickets + unreadMessages;
+
+                return Json(new { success = true, count = totalNotifications });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, count = 0 });
+            }
+        }
+
+        public IActionResult CreateSupportTicketFromProfile()
+        {
+            return PartialView("_CreateSupportTicketModal");
+        }
+
         public IActionResult Orders(string dateFilter, string statusFilter, string search, int page = 1, int size = 10)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -197,7 +309,7 @@ namespace Final_project.Areas.Customer.Controllers
         {
             if(!string.IsNullOrEmpty(msgId))
             {
-               selectedIds.Add(msgId);
+                selectedIds.Add(msgId);
             }
             if (selectedIds == null || selectedIds.Count == 0)
             {
@@ -214,9 +326,9 @@ namespace Final_project.Areas.Customer.Controllers
                 if (message != null && message.sender_id == userId)
                 {
                     uof.MessageRepo.Delete(message);
-                   
+
                 }
-                else 
+                else
                 {
                     return BadRequest();
                 }
@@ -225,13 +337,13 @@ namespace Final_project.Areas.Customer.Controllers
             uof.save();
             return Ok("Selected messages deleted successfully.");
         }
-   
+
         public IActionResult staticPages(string page)
         {
             if (page == "app")
             {
                 return View("AmazonApp");
-            }          
+            }
             else if (page == "contact")
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -13,5 +13,6 @@
         public string UserEmail { get; set; }
         public int MessageCount { get; set; }
         public DateTime? LastMessageAt { get; set; }
+        public bool CanManage { get; set; }
     }
 }

@@ -10,9 +10,9 @@
         <div class="nav-links">
             <a href="#" class="nav-link" data-filter="todaysdeals">Today's Deals</a>
             <a asp-action="Index" asp-controller="Category" class="nav-link">Category</a>
-            <a href="#" class="nav-link">Electronics</a>
-            <a href="#" class="nav-link">Fashion</a>
-            <a href="#" class="nav-link">Video Games</a>
+            <a href="#" class="nav-link" data-category="electronics" data-category-name="Electronics">Electronics</a>
+            <a href="#" class="nav-link" data-category="fashion" data-category-name="Fashion">Fashion</a>
+            <a href="#" class="nav-link" data-category="videogames" data-category-name="Video Games">Video Games</a>
 
             <!-- Prime Dropdown -->
             <div class="prime-dropdown dropdown">
@@ -102,8 +102,8 @@
         <div class="sidebar-section">
             <h4>Help & Settings</h4>
             <ul>
-                <li><a href="#" class="sidebar-main-link">Your Account</a></li>
-                <li><a href="#" class="sidebar-main-link">Customer Service</a></li>
+                <li><a asp-action="Index" asp-controller="Profile" class="sidebar-main-link">Your Account</a></li>
+                <li><a asp-action="staticPages" asp-controller="Profile" asp-route-page="contact" class="sidebar-main-link">Customer Service</a></li>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li><a asp-action="signOut" asp-controller="Account" class="sidebar-main-link">Sign Out</a></li>
@@ -124,9 +124,68 @@
         // Handle Today's Deals click
         $(document).on('click', '[data-filter="todaysdeals"]', function(e) {
             e.preventDefault();
-
-            // Navigate to Category/Index with todaysdeals filter
             window.location.href = `/Category/Index?filter=todaysdeals`;
+            return false;
+        });
+
+        // Handle category navigation (Electronics, Fashion, Video Games)
+        $(document).on('click', '[data-category]', function(e) {
+            e.preventDefault();
+
+            // Get the category name and data attribute
+            const categoryName = $(this).data('category-name');
+            const categoryType = $(this).data('category');
+
+            // First, get all categories to find the matching category ID
+            $.ajax({
+                url: "/Category/GetCategorys",
+                type: "GET",
+                success: function (categories) {
+                    console.log("Categories loaded:", categories);
+
+                    let matchingCategory = null;
+
+                    // Find the matching category based on type
+                    switch(categoryType) {
+                        case 'electronics':
+                            matchingCategory = categories.find(cat =>
+                                cat.name.toLowerCase() === 'electronics' ||
+                                cat.name.toLowerCase().includes('electronic')
+                            );
+                            break;
+                        case 'fashion':
+                            matchingCategory = categories.find(cat =>
+                                cat.name.toLowerCase() === 'fashion' ||
+                                cat.name.toLowerCase().includes('fashion') ||
+                                cat.name.toLowerCase() === 'clothing' ||
+                                cat.name.toLowerCase().includes('apparel')
+                            );
+                            break;
+                        case 'videogames':
+                            matchingCategory = categories.find(cat =>
+                                cat.name.toLowerCase() === 'video games' ||
+                                cat.name.toLowerCase().includes('game') ||
+                                cat.name.toLowerCase() === 'gaming' ||
+                                cat.name.toLowerCase().includes('video game')
+                            );
+                            break;
+                    }
+
+                    if (matchingCategory) {
+                        // Navigate to Category/Index with found category ID
+                        window.location.href = `/Category/Index?categoryId=${matchingCategory.id}&categoryName=${encodeURIComponent(matchingCategory.name)}`;
+                    } else {
+                        // Fallback: navigate with category name only
+                        console.warn(`${categoryName} category not found, using fallback`);
+                        window.location.href = `/Category/Index?categoryName=${encodeURIComponent(categoryName)}`;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading categories:", error);
+                    // Fallback: navigate with category name only
+                    window.location.href = `/Category/Index?categoryName=${encodeURIComponent(categoryName)}`;
+                }
+            });
 
             return false;
         });
@@ -201,3 +260,4 @@
         });
     });
 </script>
+

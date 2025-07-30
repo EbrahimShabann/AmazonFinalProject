@@ -10,8 +10,8 @@
             <div class="logo-container">
                 <img src="https://koto.studio/wp-content/uploads/2025/04/Amazon_CS_01_Intro_00_Thumbnail.jpg"
                      alt="Amazon Logo"
-                     class="logo-img animate__animated animate__fadeInLeft" 
-                style="height:25px;">
+                     class="logo-img animate__animated animate__fadeInLeft"
+                     style="height:25px;">
             </div>
 
             <!-- Progress steps with animation -->
@@ -169,12 +169,12 @@
                     @for (int i = 0; i < Model.Carts.Count; i++)
                     {
                         <div class="d-flex mb-3">
-                            <img src="/Image/@Model.Carts[i].imageUrl" data-id="@Model.Carts[i].ProductId" alt="Product" class="img-thumbnail me-3" 
-                                style="width: 80px; height: 80px;">
+                            <img src="/Image/@Model.Carts[i].imageUrl" data-id="@Model.Carts[i].ProductId" alt="Product" class="img-thumbnail me-3"
+                                 style="width: 80px; height: 80px;">
                             <div>
                                 <div class="fw-bold">@Model.Carts[i].ProductName</div>
                                 @* <div class="fw-medium">@Model.Carts[i].CategoryName</div> *@
-                               
+
                                 <div>$@Model.Carts[i].price</div>
                                 <small class="text-muted">Quantity: @Model.Carts[i].Quantity</small><br />
                                 @if (!string.IsNullOrEmpty(Model.Carts[i].ProductSize))
@@ -185,7 +185,7 @@
                                 {
                                     <div class="small">Color: @Model.Carts[i].ProductColor</div>
                                 }
-                               
+
                             </div>
                         </div>
 
@@ -275,7 +275,7 @@
         // Validate form
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
 
-        @* if (paymentMethod === 'card') {
+    @* if (paymentMethod === 'card') {
             const cardNumber = document.getElementById('cardNumber').value;
             const cardName = document.getElementById('cardName').value;
             const expiryDate = document.getElementById('expiryDate').value;
@@ -354,7 +354,7 @@
             }
         }, 1200); // Change step every 1200ms
 
-        @* // Optional: Stop the animation after 3 full cycles
+    @* // Optional: Stop the animation after 3 full cycles
         setTimeout(() => {
             clearInterval(stepInterval);
         }, 9000); // Stop after 9 seconds (3 steps * 3 cycles) *@

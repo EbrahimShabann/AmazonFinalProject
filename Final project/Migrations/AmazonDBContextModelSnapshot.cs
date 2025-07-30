@@ -34,11 +34,13 @@ namespace Final_project.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"));
 
                     b.Property<string>("ActionType")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("AdditionalInfo")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("TimeStamp")
@@ -47,6 +49,7 @@ namespace Final_project.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("UserID")
+                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -541,6 +544,7 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reason")
@@ -551,9 +555,11 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("orderId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("order_itemId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -779,9 +785,11 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("user_id")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -800,12 +808,14 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("product_id")
+                        .IsRequired()
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("saved_cart_id")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -1261,11 +1271,15 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.order", "Order")
                         .WithMany()
-                        .HasForeignKey("orderId");
+                        .HasForeignKey("orderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Final_project.Models.order_item", "Order_Item")
                         .WithMany()
-                        .HasForeignKey("order_itemId");
+                        .HasForeignKey("order_itemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
 
@@ -1346,7 +1360,9 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("user_id");
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -1355,11 +1371,15 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.product", "Product")
                         .WithMany()
-                        .HasForeignKey("product_id");
+                        .HasForeignKey("product_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Final_project.Models.saved_cart", "SavedCart")
                         .WithMany("SavedCartItems")
-                        .HasForeignKey("saved_cart_id");
+                        .HasForeignKey("saved_cart_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
 

@@ -24,6 +24,6 @@ namespace Final_project.Models
         [Required]
         public string Reason { get; set; }
         public string Notes { get; set; }
-        
+
     }
 }

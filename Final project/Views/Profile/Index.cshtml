@@ -49,6 +49,13 @@
 <div class="container my-5">
     <h2 class="mb-4">Your Account</h2>
 
+    <!-- Customer Service Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            @await Html.PartialAsync("_CustomerServiceStats")
+        </div>
+    </div>
+
     <div class="row g-4">
         <!-- Orders -->
         <div class="col-md-4">
@@ -62,7 +69,7 @@
                         <p>Track, return, or buy things again</p>
                     </div>
                 </div>
-               
+
             </a>
         </div>
         <!-- Login & Security -->
@@ -79,6 +86,34 @@
                 </div>
             </a>
         </div>
+        <!-- Support Tickets -->
+        <div class="col-md-4">
+            <a href="/CustomerService/Index" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fas fa-ticket-alt fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h6>Support Tickets</h6>
+                        <p>View and manage your support requests</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Live Chat -->
+        <div class="col-md-4">
+            <a href="/CustomerService/Chats" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fas fa-comments fa-2x text-success"></i>
+                    </div>
+                    <div>
+                        <h6>Live Chat</h6>
+                        <p>Chat with customer service representatives</p>
+                    </div>
+                </div>
+            </a>
+        </div>
         <!-- FAQ -->
         <div class="col-md-4">
             <a href="/Profile/staticPages?page=faq" class="account-tile">
@@ -91,7 +126,7 @@
                         <p>Frequently Asked Questions Before Completing Your Order</p>
                     </div>
                 </div>
-                
+
             </a>
         </div>
         <!-- Messages -->
@@ -120,11 +155,25 @@
                         <p>Download the Amazon App</p>
                     </div>
                 </div>
-                
+
             </a>
         </div>
 
-       
+        <!-- Your Lists -->
+        <div class="col-md-4">
+            <div class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fa-solid fa-list fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h6>Your Lists</h6>
+                        <p>Modify and share your lists</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         <!-- Contact Us -->
         <div class="col-md-4">
@@ -138,7 +187,7 @@
                         <p>Customer service via phone/chat</p>
                     </div>
                 </div>
-                
+
             </a>
         </div>
     </div>

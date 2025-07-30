@@ -31,15 +31,11 @@
             <div class="navbar-actions">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <span class="text-white me-3">Hello, @User?.Identity.Name</span>
 
                     <!-- Cart with Counter -->
                     <div class="cart-container">
-                        <a href="/Cart/Index">
-                            <i class="fas fa-shopping-cart text-white fs-4"></i>
-                            <span class="cart-counter" id="cartCounter">0</span>
-                        </a>
-                       
+                        <i class="fas fa-shopping-cart text-white fs-4"></i>
+                        <span class="cart-counter" id="cartCounter">0</span>
                     </div>
                 }
 
@@ -52,19 +48,35 @@
                         <i class="fas fa-user text-white fs-4"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
+                        @if (User.IsInRole("customer"))
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Profile"><i class="fas fa-user me-2"></i>Your Account</a>
+                            </li>
+                            <li>
+
+                                <a class="dropdown-item" asp-action="Orders" asp-controller="Profile"><i class="fas fa-box me-2"></i>Your Orders</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Wishlist"><i class="fas fa-heart me-2"></i>Your Wish List</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
+                        }
+                        else if (User.IsInRole("seller") || User.IsInRole("customer service") || User.IsInRole("admin"))
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Switch"><i class="fas fa-user me-2"></i>Dashboard</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
+                        }
+
+
+
+
                         @if (User.Identity.IsAuthenticated)
                         {
-                        <li>
-                            <a class="dropdown-item" href="/Profile/Index"><i class="fas fa-user me-2"></i>Your Account</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/Profile/Orders"><i class="fas fa-box me-2"></i>Your Orders</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/wishlist"><i class="fas fa-heart me-2"></i>Your Wish List</a>
-                        </li>
-                        <li><hr class="dropdown-divider" /></li>
-                       
                             <li>
                                 <a class="dropdown-item" asp-action="SignOut" asp-controller="Account"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a>
                             </li>
@@ -88,35 +100,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
     <!-- Footer -->
-
-    <!-- Trust Section -->
-
-    <section class="trust-section">
-        <h2>Why Shop With Us?</h2>
-        <div class="trust-grid">
-            <div class="trust-item">
-                <div class="trust-icon">🚚</div>
-                <h3 class="trust-title">Fast & Free Delivery</h3>
-                <p class="trust-desc">Get your orders delivered fast with our reliable shipping network. Free delivery on orders over $35.</p>
-            </div>
-            <div class="trust-item">
-                <div class="trust-icon">🔐</div>
-                <h3 class="trust-title">Secure Shopping</h3>
-                <p class="trust-desc">Your personal information and payment details are protected with industry-leading security measures.</p>
-            </div>
-            <div class="trust-item">
-                <div class="trust-icon">↩️</div>
-                <h3 class="trust-title">Easy Returns</h3>
-                <p class="trust-desc">Not satisfied? Return your purchase within 30 days for a full refund. No questions asked.</p>
-            </div>
-            <div class="trust-item">
-                <div class="trust-icon">🎧</div>
-                <h3 class="trust-title">24/7 Support</h3>
-                <p class="trust-desc">Our customer service team is available around the clock to help with any questions or concerns.</p>
-            </div>
-        </div>
-    </section>
-    <footer class="footer d-flrex flex-column">
+    <footer class="footer d-flrex flex-column  container-fluid">
         <div class="container justify-content-center">
             <div class="footer-content">
                 <div class="footer-section">
@@ -176,7 +160,7 @@
             if (searchTerm.length > 0) {
                 // Redirect to Category Index with search parameter
                 window.location.href = `/Category/Index?search=${encodeURIComponent(searchTerm)}`;
-            } 
+            }
         });
 
         // Also handle Enter key press in search input
@@ -290,13 +274,13 @@
         }
 
         $('.cart-container').on('click',function(){
-            console.log("carrrttt");
+            window.location.href="/cart/index";
         })
         // *******************************************************************
 
 
         function redirectToProduct(productId) {
-            window.location.href = `/Landing/Index/${productId}`;
+            window.location.href = `/product/Details/${productId}`;
             // changeit once the productselectProduct ditails is done
         }
 

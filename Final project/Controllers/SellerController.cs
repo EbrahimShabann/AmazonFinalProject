@@ -1,14 +1,15 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Final_project.Models;
+using Final_project.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using Final_project.Repository;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace Final_project.Controllers
 {
@@ -37,10 +38,10 @@ namespace Final_project.Controllers
 
         #region MyProducts
 
-        public async Task<IActionResult> MyProducts(string searchName, decimal? minPrice, decimal? maxPrice, bool? isActive, string categoryId)
+        public async Task<IActionResult> MyProducts(string searchName, decimal? minPrice, decimal? maxPrice, bool? isActive, string categoryId, int page = 1, int pageSize = 10)
         {
             var sellerId = GetCurrentSellerId();
-            var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false, p => p.product_images);
+            var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false && p.seller_id == sellerId, p => p.product_images);
             if (!string.IsNullOrEmpty(searchName))
                 query = query.Where(p => p.name.Contains(searchName));
             if (minPrice.HasValue)
@@ -61,13 +62,29 @@ namespace Final_project.Controllers
             ViewBag.MaxPrice = maxPrice;
             ViewBag.IsActive = isActive;
             ViewBag.SelectedCategoryId = categoryId;
-            return View(products);
+
+            // Pagination logic-------------------------------------------------- + the last 2 params are for pagination
+            var totalItems = await query.CountAsync();
+
+            var products1 = await query
+                 .Skip((page - 1) * pageSize)
+                 .Take(pageSize)
+                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+
+
+            return View(products1);
         }
         #endregion
 
         #region All products
 
-        public async Task<IActionResult> AllProducts(string searchName, decimal? minPrice, decimal? maxPrice, string categoryId)
+        public async Task<IActionResult> AllProducts(string searchName, decimal? minPrice, decimal? maxPrice, string categoryId, int page = 1, int pageSize = 10)
         {
             var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false, p => p.product_images);
             if (!string.IsNullOrEmpty(searchName))
@@ -85,6 +102,19 @@ namespace Final_project.Controllers
             ViewBag.MinPrice = minPrice;
             ViewBag.MaxPrice = maxPrice;
             ViewBag.SelectedCategoryId = categoryId;
+
+            // Pagination logic-------------------------------------------------- + the last 2 params are for pagination
+            var totalItems = await query.CountAsync();
+
+            var products1 = await query
+                 .Skip((page - 1) * pageSize)
+                 .Take(pageSize)
+                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
             return View(products);
         }
         #endregion
@@ -308,6 +338,7 @@ namespace Final_project.Controllers
             if (id == null) return NotFound();
             var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images, p => p.Seller);
             if (product == null) return NotFound();
+            ViewBag.CurrentSellerId = GetCurrentSellerId();
             return View(product);
         }
         #endregion
@@ -399,7 +430,7 @@ namespace Final_project.Controllers
 
         #region Orders
 
-        public async Task<IActionResult> Orders(string searchOrderId, string searchCustomer, string status)
+        public async Task<IActionResult> Orders(string searchOrderId, string searchCustomer, string status, int page = 1, int pageSize = 10)
         {
             var sellerId = GetCurrentSellerId();
 
@@ -417,7 +448,22 @@ namespace Final_project.Controllers
             ViewBag.SearchOrderId = searchOrderId;
             ViewBag.SearchCustomer = searchCustomer;
             ViewBag.Status = status;
+
+            // Pagination logic-------------------------------------------------- + the last 2 params are for pagination
+            var totalItems = await query.CountAsync();
+
+            var products1 = await query
+                 .Skip((page - 1) * pageSize)
+                 .Take(pageSize)
+                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
             return View(orders);
+
+
         }
         #endregion
 
@@ -486,6 +532,7 @@ namespace Final_project.Controllers
                 .Include(o => o.Buyer)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.product)
+                .ThenInclude(p => p.Seller)
                 .FirstOrDefaultAsync();
 
             if (order == null) return NotFound();
@@ -567,10 +614,8 @@ namespace Final_project.Controllers
                 return RedirectToAction("OrderDetails", new { id = order.id });
             }
 
-
             orderItem.status = newStatus;
             await _unitOfWork.SaveAsync();
-
 
             var itemStatuses = (await _unitOfWork.OrderItemRepository.GetAll(oi => oi.order_id == order.id).ToListAsync()).Select(oi => oi.status).ToList();
 
@@ -619,17 +664,15 @@ namespace Final_project.Controllers
 
         #region Discounts
 
-        public async Task<IActionResult> Discounts(string searchDescription, string discountType, bool? isActive, DateTime? startDate, DateTime? endDate, string productId)
+        public async Task<IActionResult> Discounts(string searchDescription, string discountType, bool? isActive, DateTime? startDate, DateTime? endDate, string productId, int page = 1, int pageSize = 10)
         {
             var sellerId = GetCurrentSellerId();
 
-            var productIds = await _unitOfWork.ProductRepository.GetAll(p => p.seller_id == sellerId && p.is_deleted == false).Select(p => p.id).ToListAsync();
-
+            // Get all discounts for the current seller
             IQueryable<discount> query = _context.discounts
-                .Where(d => d.ProductDiscounts.Any(pd => productIds.Contains(pd.product_id)))
+                .Where(d => d.seller_id == sellerId)
                 .Include(d => d.ProductDiscounts)
                 .ThenInclude(pd => pd.product);
-
 
             if (!string.IsNullOrEmpty(searchDescription))
                 query = query.Where(d => d.description.Contains(searchDescription));
@@ -653,6 +696,20 @@ namespace Final_project.Controllers
             ViewBag.ProductId = productId;
             ViewBag.Products = await _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false).ToListAsync();
             ViewBag.CurrentSellerId = sellerId;
+
+            // Pagination logic-------------------------------------------------- + the last 2 params are for pagination
+            var totalItems = await query.CountAsync();
+
+            var products1 = await query
+                 .Skip((page - 1) * pageSize)
+                 .Take(pageSize)
+                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
             return View(discounts);
         }
         #endregion
@@ -696,6 +753,8 @@ namespace Final_project.Controllers
                     }
                     await _unitOfWork.SaveAsync();
                 }
+
+                TempData["SuccessMessage"] = "Discount added successfully!";
                 return RedirectToAction("Discounts");
             }
 
@@ -1557,6 +1616,28 @@ namespace Final_project.Controllers
             await _unitOfWork.SaveAsync();
             TempData["SuccessMessage"] = "Test data seeded successfully!";
             return RedirectToAction("SellerDashboard");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductAjax(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return Json(new { success = false, message = "Invalid product id." });
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.id == id, p => p.product_images);
+            if (product == null)
+                return Json(new { success = false, message = "Product not found." });
+            product.is_deleted = true;
+            product.is_active = false;
+            if (product.product_images != null)
+            {
+                foreach (var img in product.product_images)
+                {
+                    img.is_primary = false;
+                }
+            }
+            await _unitOfWork.SaveAsync();
+            return Json(new { success = true });
         }
 
 

@@ -34,6 +34,6 @@ namespace Final_project.ViewModel.Customer
         public List<ProductsVM> RecommendedProducts { get; set; } = [];
         public List<string> SelectedSizes { get; set; } = [];
         public List<string> SelectedColors { get; set; } = [];
-       
+
     }
 }

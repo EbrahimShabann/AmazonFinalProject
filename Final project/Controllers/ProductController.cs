@@ -25,7 +25,7 @@ namespace Final_project.Controllers
 
         }
 
-        
+
         public IActionResult Details(string id)
         {
             ProductsVM product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
@@ -38,7 +38,7 @@ namespace Final_project.Controllers
             product.RecommendedProducts = uof.ProductRepository.getProductsWithImagesAndRating().Where(p => p.category_id == product.category_id).ToList();
             return View(product);
         }
-        
+
         [Authorize]
         public IActionResult addReview(product_review reviewVM)
         {
@@ -117,7 +117,7 @@ namespace Final_project.Controllers
                 foreach (var cart in cartVM)
                 {
                     var product = uof.ProductRepository.getById(cart.ProductId);
-                   
+
                     if (product == null)
                     {
                         TempData["error"] = "Product not found.";
@@ -149,7 +149,7 @@ namespace Final_project.Controllers
             {
                 //Coming from buy now button with single product
                 var productId = Request.Query["productId"].ToString();
-                var quantity = int.Parse(Request.Query["quantity"]);              
+                var quantity = int.Parse(Request.Query["quantity"]);
                 var product = uof.ProductRepository.getById(productId);
                 string productColor = Request.Query["color"].ToString();
                 if(string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
@@ -314,5 +314,5 @@ namespace Final_project.Controllers
             var order = uof.OrderRepo.getById(orderId);
             return View(order);
         }
-     }
+    }
 }

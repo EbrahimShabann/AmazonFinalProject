@@ -292,6 +292,8 @@
     }
 
     .modal-content {
+        margin-top: 15vh; /* Push it down from top */
+
         background: white;
         border-radius: 8px;
         width: 90%;
@@ -483,11 +485,15 @@
             <div class="filter-group">
                 <label for="filterName">Category Name</label>
                 <input type="text" id="filterName" class="filter-control" placeholder="Enter category name">
+                <div id="NameSuggestions" class="list-group"></div>
+
             </div>
 
             <div class="filter-group">
                 <label for="filterCreatedBy">Created By</label>
                 <input type="text" id="filterCreatedBy" class="filter-control" placeholder="Enter creator name">
+                <div id="CreatedBySuggestions" class="list-group"></div>
+
             </div>
 
             <div class="filter-group">
@@ -495,7 +501,6 @@
                 <select id="filterStatus" class="filter-control">
                     <option value="">All Statuses</option>
                     <option value="active">Active</option>
-                    <option value="pending">Pending</option>
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
@@ -524,7 +529,6 @@
     <table class="categories-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Category Name</th>
                 <th>Created By</th>
                 <th>Created At</th>
@@ -533,7 +537,10 @@
             </tr>
         </thead>
         <tbody id="categoryTableBody">
+
             @Html.Partial("CategoryListPartial", Model)
+
+
         </tbody>
     </table>
 </main>
@@ -560,7 +567,7 @@
                             {
                                 if ((bool)category.is_active)
                                 {
-                                    <option value="@category.id">@category.name</option>
+                                            <option value="@category.id">@category.name</option>
                                 }
                             }
                         </select>
@@ -699,7 +706,7 @@
             hideSpinner(btn);
             showToast(res.success, res.message);
             if (res.success) {
-                reloadCategoryTable();
+                location.reload();
             }
         });
     });
@@ -766,7 +773,7 @@
         }
     });
 
-        $('#categoryForm').on('submit', function (e) {
+    $('#categoryForm').on('submit', function (e) {
       e.preventDefault();
 
       const formData = new FormData(this);
@@ -793,6 +800,41 @@
     });
 
 
-</script>
+    $("#filterName").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminCategory/SuggestCategoryNames', { term: query }, function (data) {
+                $("#NameSuggestions").empty();
+                data.forEach(item => {
+                    $("#NameSuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item + '">' + item + '</div>');
+                });
+            });
+        } else {
+            $("#NameSuggestions").empty();
+        }
+    });  
 
+    $(document).on('click', '#NameSuggestions .list-group-item', function () {
+        $("#filterName").val($(this).data('name'));
+        $("#NameSuggestions").empty();
+    });
+
+    $("#filterCreatedBy").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminCategory/SuggestCreators', { term: query }, function (data) {
+                $("#CreatedBySuggestions").empty();
+                data.forEach(item => {
+                    $("#CreatedBySuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item + '">' + item + '</div>');
+                });
+            });
+        } else {
+            $("#CreatedBySuggestions").empty();
+        }
+    });
+
+    $(document).on('click', '#CreatedBySuggestions .list-group-item', function () {
+        $("#filterCreatedBy").val($(this).data('name'));
+        $("#CreatedBySuggestions").empty();
+    });
 </script>

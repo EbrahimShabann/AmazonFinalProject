@@ -85,9 +85,9 @@
         transition: all 0.2s;
     }
 
-    .cart-item:hover {
-        background-color: rgba(234,237,237,0.5);
-    }
+        .cart-item:hover {
+            background-color: rgba(234,237,237,0.5);
+        }
 
     .item-select {
         margin-right: 15px;
@@ -103,9 +103,9 @@
         transition: transform 0.2s;
     }
 
-    .item-image:hover {
-        transform: scale(1.03);
-    }
+        .item-image:hover {
+            transform: scale(1.03);
+        }
 
     .item-details {
         flex: 1;
@@ -119,10 +119,10 @@
         cursor: pointer;
     }
 
-    .item-title:hover {
-        color: var(--amazon-orange);
-        text-decoration: none;
-    }
+        .item-title:hover {
+            color: var(--amazon-orange);
+            text-decoration: none;
+        }
 
     .item-badge {
         background-color: var(--amazon-yellow);
@@ -183,9 +183,9 @@
         transition: background 0.2s;
     }
 
-    .quantity-btn:hover {
-        background: #e3e6e6;
-    }
+        .quantity-btn:hover {
+            background: #e3e6e6;
+        }
 
     .quantity-display {
         width: 40px;
@@ -204,10 +204,10 @@
         transition: color 0.2s;
     }
 
-    .action-link:hover {
-        color: #c45500;
-        text-decoration: underline;
-    }
+        .action-link:hover {
+            color: #c45500;
+            text-decoration: underline;
+        }
 
     .item-price {
         font-size: 18px;
@@ -226,10 +226,10 @@
         margin-bottom: 15px;
     }
 
-    .summary-subtotal span {
-        font-weight: 700;
-        color: #B12704;
-    }
+        .summary-subtotal span {
+            font-weight: 700;
+            color: #B12704;
+        }
 
     .checkout-btn {
         background: linear-gradient(to bottom,#f7dfa5,#f0c14b);
@@ -245,11 +245,11 @@
         margin-bottom: 15px;
     }
 
-    .checkout-btn:hover {
-        background: linear-gradient(to bottom,#f5d78e,#eeb933);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+        .checkout-btn:hover {
+            background: linear-gradient(to bottom,#f5d78e,#eeb933);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
     .secure-checkout {
         font-size: 12px;
@@ -257,10 +257,10 @@
         text-align: center;
     }
 
-    .secure-checkout i {
-        color: var(--amazon-orange);
-        margin-right: 5px;
-    }
+        .secure-checkout i {
+            color: var(--amazon-orange);
+            margin-right: 5px;
+        }
 
     @@keyframes slideIn {
         from {
@@ -390,29 +390,29 @@
     </div>
      <form method="get"  asp-controller="Product" asp-action="CheckOut">
             @for(int i=0; i < Model.Count; i++)
-            {
-                <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
-                <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
-                <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
-                <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
-                <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
+        {
+            <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+            <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+            <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+            <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+            <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
                 <input type="hidden" name="cartVM[@i].ProductColor" value="@Model[i].Color" />
                 <input type="hidden" name="cartVM[@i].ProductSize" value="@Model[i].Size" />
-            
-            }
-            @if (Model.Any())
-            {
-                <div class="cart-summary">
-                    <h4 class="summary-title">Order Summary</h4>
-                    <div class="summary-subtotal">
-                        Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
-                    </div>
-                    <button class="checkout-btn">Proceed to Checkout</button>
-                    <div class="secure-checkout">
-                        <i class="fas fa-lock"></i> Secure checkout
-                    </div>
+
+        }
+        @if (Model.Any())
+        {
+            <div class="cart-summary">
+                <h4 class="summary-title">Order Summary</h4>
+                <div class="summary-subtotal">
+                    Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
                 </div>
-            }
+                <button class="checkout-btn">Proceed to Checkout</button>
+                <div class="secure-checkout">
+                    <i class="fas fa-lock"></i> Secure checkout
+                </div>
+            </div>
+        }
     </form>
 </div>
 

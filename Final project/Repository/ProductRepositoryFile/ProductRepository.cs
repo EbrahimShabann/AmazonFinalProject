@@ -147,5 +147,14 @@ namespace Final_project.Repository.ProductRepositoryFile
         {
             return db.product_reviews.ToList();
         }
+
+
+        public void DeleteReview(product_review entity)
+        {
+            //delete review
+            db.product_reviews.Remove(entity);
+
+        }
+
     }
 }

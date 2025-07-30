@@ -65,7 +65,7 @@ public partial class product
     public virtual ICollection<product_image> product_images { get; set; } = new List<product_image>();
 
 
-  
+
     [NotMapped]
     public List<string> SelectedColors => Colors?.Split(',').ToList() ?? new List<string>();
 

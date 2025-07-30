@@ -1,7 +1,9 @@
 using Final_project.Filter;
+using Final_project.Hubs;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
+using Final_project.Services.CustomerService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -21,11 +23,11 @@ namespace Final_project
             builder.Services.AddSignalR();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
-            //builder.Services.AddControllersWithViews();
-            builder.Services.AddControllersWithViews(options =>
-            {
-                options.Filters.Add(new HandelAnyErrorAttribute());
-            });
+            builder.Services.AddControllersWithViews();
+            //builder.Services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new HandelAnyErrorAttribute());
+            //});
 
             //Stripe payment
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
@@ -50,6 +52,7 @@ namespace Final_project
 
             //======================Injection============================
             builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddScoped<ICustomerServiceService, CustomerServiceService>();
             //======================SQLInjection=========================
 
             builder.Services.AddDbContext<AmazonDBContext>(
@@ -91,7 +94,7 @@ namespace Final_project
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-     
+
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -99,7 +102,7 @@ namespace Final_project
 
             app.UseAuthorization();
             app.MapStaticAssets();
-            //app.MapHub<>("");
+            app.MapHub<CustomerServiceHub>("/customerServiceHub");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Landing}/{action=Index}/{id?}")

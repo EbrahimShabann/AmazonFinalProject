@@ -13,13 +13,32 @@ namespace Final_project.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        // Updated Index action to handle search parameter
-        public IActionResult Index(CategoryFilter filter, string search = null)
+        // Updated Index action to handle search parameter and category name
+        public IActionResult Index(CategoryFilter filter, string search = null, string categoryName = null)
         {
             // Pass search term to the view through the filter model
             if (!string.IsNullOrEmpty(search))
             {
                 filter.SearchTerm = search;
+            }
+
+            // Handle category name parameter
+            if (!string.IsNullOrEmpty(categoryName))
+            {
+                filter.categoryName = categoryName;
+
+                // If categoryId is not provided but categoryName is, try to find the category ID
+                if (string.IsNullOrEmpty(filter.categoryId))
+                {
+                    var categories = unitOfWork.CategoryRepository.GetCategoryWithItsChildern();
+                    var matchingCategory = categories.FirstOrDefault(c =>
+                        c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingCategory != null)
+                    {
+                        filter.categoryId = matchingCategory.Id.ToString();
+                    }
+                }
             }
 
             return View(filter);
@@ -42,11 +61,25 @@ namespace Final_project.Controllers
             int? minRating = null,
             string sortBy = "relevance",
             string filter = null,
-            string search = null)
+            string search = null,
+            string categoryName = null)
         {
             try
             {
                 int skip = (page - 1) * pageSize;
+
+                // If categoryName is provided but categoryId is not, try to find the category ID
+                if (!string.IsNullOrEmpty(categoryName) && string.IsNullOrEmpty(categoryId))
+                {
+                    var categories = unitOfWork.CategoryRepository.GetCategoryWithItsChildern();
+                    var matchingCategory = categories.FirstOrDefault(c =>
+                        c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingCategory != null)
+                    {
+                        categoryId = matchingCategory.Id.ToString();
+                    }
+                }
 
                 // Handle special filters from landing page
                 if (!string.IsNullOrEmpty(filter))
@@ -178,7 +211,8 @@ namespace Final_project.Controllers
                         minRating = minRating,
                         sortBy = sortBy,
                         filter = filter,
-                        search = search
+                        search = search,
+                        categoryName = categoryName
                     }
                 };
 
@@ -203,7 +237,5 @@ namespace Final_project.Controllers
                 });
             }
         }
-
     }
-
 }
