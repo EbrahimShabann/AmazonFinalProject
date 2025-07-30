@@ -13,7 +13,6 @@ namespace Final_project.Repository.Product
         public Task AddAsync(product entity);
         public void Delete(product entity);
 
-
         public void DeleteReview(product_review entity);
         void delete(product entity);
         List<ProductsVM> getProductsWithImagesAndRating();
@@ -21,6 +20,6 @@ namespace Final_project.Repository.Product
         List<product_review> getProductReviews(string productId);
         List<product_review> getAllReviews();
         void addReview(product_review review);
-
+        void DeleteReviewReply(review_reply reply);
     }
 }

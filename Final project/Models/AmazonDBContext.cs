@@ -53,14 +53,12 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ticket_message> ticket_messages { get; set; }
     public virtual DbSet<AccountLog> AccountLog { get; set; }
-
-
+    public virtual DbSet<review_reply> review_reply { get; set; }
     public virtual DbSet<wishlist> wishlists { get; set; }
     public virtual DbSet<wishlist_item> wishlist_items { get; set; }
     public virtual DbSet<saved_cart> saved_carts { get; set; }
-    public virtual DbSet<saved_cart_item> saved_cart_items { get; set; }
     public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
-    public virtual DbSet<review_reply> review_reply { get; set; }
+    public virtual DbSet<saved_cart_item> saved_cart_items { get; set; }
 
 
 

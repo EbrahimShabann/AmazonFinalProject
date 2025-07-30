@@ -70,7 +70,7 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = false;
             CustomerService.is_deleted = false;
-
+            
             unitOfWork.save();
 
             return Json(new { success = true });
