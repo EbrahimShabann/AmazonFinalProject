@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Final_project.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
 
     public class AdminDashboardController : Controller
     {

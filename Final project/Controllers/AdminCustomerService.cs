@@ -1,10 +1,12 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminCustomerServiceController : Controller
     {
         private readonly UnitOfWork unitOfWork;
@@ -14,7 +16,6 @@ namespace Final_project.Controllers
         {
             this.unitOfWork = unitOfWork;
             this._userManager = _userManager;
-
         }
 
 
@@ -57,6 +58,7 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = false;
             CustomerService.is_deleted = true;
+            CustomerService.deleted_at = DateTime.UtcNow;
             unitOfWork.save();
 
             return Json(new { success = true });
@@ -68,6 +70,7 @@ namespace Final_project.Controllers
 
             CustomerService.is_active = false;
             CustomerService.is_deleted = false;
+
             unitOfWork.save();
 
             return Json(new { success = true });

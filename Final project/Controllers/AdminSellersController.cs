@@ -1,12 +1,16 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
+    [Authorize(Roles = "admin")]
+
     public class AdminSellersController : Controller
     {
 
@@ -28,7 +32,7 @@ namespace Final_project.Controllers
             ViewBag.CountRegectedsellers = seller.Where(u => u.is_deleted & !u.is_active).Count();
             ViewBag.Pendeingsellers = seller.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
 
-            return View();
+            return View("pendingSellers");
         }
         public async Task<IActionResult> Allsellers()
         {
@@ -59,6 +63,7 @@ namespace Final_project.Controllers
 
             seller.is_active = false;
             seller.is_deleted = true;
+            seller.deleted_at = DateTime.UtcNow;
             unitOfWork.save();
 
             return Json(new { success = true });

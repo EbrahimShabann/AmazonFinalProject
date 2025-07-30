@@ -6,6 +6,7 @@ using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
 using System.Security.Claims;
@@ -27,7 +28,7 @@ namespace Final_project.Controllers
 
         public IActionResult Details(string id)
         {
-            var product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
+            ProductsVM product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
             if (product == null)
             {
                 return NotFound();
@@ -116,6 +117,7 @@ namespace Final_project.Controllers
                 foreach (var cart in cartVM)
                 {
                     var product = uof.ProductRepository.getById(cart.ProductId);
+
                     if (product == null)
                     {
                         TempData["error"] = "Product not found.";
@@ -126,6 +128,8 @@ namespace Final_project.Controllers
                         TempData["error"] = "Quantity must be greater than zero.";
                         return RedirectToAction("Index", "Cart");
                     }
+                    if (string.IsNullOrEmpty(cart.ProductColor)) cart.ProductColor = product.SelectedColors[0];
+                    if (string.IsNullOrEmpty(cart.ProductSize)) cart.ProductSize = product.SelectedSizes[0];
                     newOrder.Carts.Add(new CartVM
                     {
                         ProductId = product.id,
@@ -135,8 +139,8 @@ namespace Final_project.Controllers
                         originalPrice = product.price,
                         CategoryName = product.category?.name ?? "Unknown Category",
                         Quantity = cart.Quantity,
-                        //ProductColor=cart.ProductColor,
-                        //ProductSize=cart.ProductSize,
+                        ProductColor = cart.ProductColor,
+                        ProductSize = cart.ProductSize,
                         imageUrl = cart.imageUrl//uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
                     });
                 }
@@ -146,9 +150,13 @@ namespace Final_project.Controllers
                 //Coming from buy now button with single product
                 var productId = Request.Query["productId"].ToString();
                 var quantity = int.Parse(Request.Query["quantity"]);
-                string productColor = Request.Query["color"].ToString();
-                string productSize = Request.Query["size"].ToString();
                 var product = uof.ProductRepository.getById(productId);
+                string productColor = Request.Query["color"].ToString();
+                if (string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
+                string productSize = Request.Query["size"].ToString();
+                if (string.IsNullOrEmpty(productSize)) productSize = product.SelectedSizes[0];
+
+
                 if (product == null)
                 {
                     TempData["error"] = "Product not found.";
@@ -168,6 +176,8 @@ namespace Final_project.Controllers
                     originalPrice = product.price,
                     CategoryName = product.category?.name ?? "Unknown Category",
                     Quantity = quantity,
+                    ProductColor = productColor,
+                    ProductSize = productSize,
                     imageUrl = uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
 
                 });
@@ -236,6 +246,8 @@ namespace Final_project.Controllers
                     seller_id = cart.seller_id,
                     product_id = cart.ProductId,
                     quantity = cart.Quantity,
+                    Color = cart.ProductColor,
+                    Size = cart.ProductSize,
                     discount_applied = cart.originalPrice - cart.price, //price is originalPrice or DiscountPrice
                     unit_price = cart.originalPrice ?? 0,
                     status = "Pending",

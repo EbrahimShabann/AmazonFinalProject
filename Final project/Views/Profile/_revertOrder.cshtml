@@ -1,6 +1,6 @@
 ﻿@model ordersReverted
 
-<partial name="_ValidationScriptsPartial"/>
+<partial name="_ValidationScriptsPartial" />
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -9,8 +9,7 @@
                     <h2 class="h4 mb-0">Return or Replace Items</h2>
                 </div>
                 <div class="card-body">
-                    <form  
-                          id="upsertForm"
+                    <form id="upsertForm"
                           asp-controller="Profile"
                           asp-action="CreateReturn"
                           data-ajax="true"
@@ -19,14 +18,14 @@
                           data-ajax-update="#modalBody">
                         <!-- Order Information -->
                         <div asp-validation-summary="All" class="text-danger"></div>
-                        <input type="hidden" asp-for="order_itemId"/>
+                        <input type="hidden" asp-for="order_itemId" />
                         <div class="mb-4">
                             <h3 class="h5 mb-3">Order Information</h3>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="orderId" class="form-label">Order ID</label>
                                     <input asp-for="orderId" class="form-control" readonly>
-                               
+
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Order Date</label>
@@ -41,6 +40,23 @@
                             <label class="form-label">Order Item</label>
                             <input type="text" class="form-control" asp-for="@Model.Order_Item.product.name" value="@Model.Order_Item.product.name" readonly>
                         </div>
+
+                        <div class="row">
+                            @if (Model.Order_Item.Color != null)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"> Item Color</label>
+                                    <input type="text" class="form-control" asp-for="@Model.Order_Item.Color" value="@Model.Order_Item.Color" readonly>
+                                </div>
+                            }
+                            @if (Model.Order_Item.Size != null)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"> Item Size</label>
+                                    <input type="text" class="form-control" asp-for="@Model.Order_Item.Size" value="@Model.Order_Item.Size" readonly>
+                                </div>
+                            }
+                        </div>
                         <!-- Return Options -->
                         <div class="mb-4">
                             <h3 class="h5 mb-3">Request Options</h3>
@@ -48,12 +64,12 @@
                                 <option value="">Select your request</option>
                                 <option value="return">Return Order</option>
                                 <option value="replace">Replace Order</option>
-                               
+
                             </select>
                             <span asp-validation-for="Reason" class="text-danger"></span>
                         </div>
 
-                       
+
 
                         <!-- Additional Notes -->
                         <div class="mb-4">
@@ -62,7 +78,7 @@
                                       placeholder="Please provide any additional information about your return"></textarea>
                         </div>
 
-                        
+
 
                         <!-- Submit Button -->
                         <div class="d-grid gap-2">

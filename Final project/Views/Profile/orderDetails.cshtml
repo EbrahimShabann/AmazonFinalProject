@@ -1,24 +1,24 @@
 ﻿@using Final_project.ViewModel.Customer
 @model OrderDetailsVM
-<link href="/css/CustomerProfile.css" rel="stylesheet"/>
+<link href="/css/CustomerProfile.css" rel="stylesheet" />
 
 
 
-    <div class="container my-4">
-        <div class="row">
-            <!-- Left Sidebar Navigation -->
+<div class="container my-4">
+    <div class="row">
+        <!-- Left Sidebar Navigation -->
         <partial name="_SideBar" />
-            <!-- Main Content Area -->
-            <div class="col-md-9">
-                <div class="order-details-container p-4">
-                    <!-- Order Header -->
-                    <div class="order-section">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4><i class="fas fa-box-open amazon-orange me-2"></i> Order Details</h4>
-                        
-                        </div>
+        <!-- Main Content Area -->
+        <div class="col-md-9">
+            <div class="order-details-container p-4">
+                <!-- Order Header -->
+                <div class="order-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="fas fa-box-open amazon-orange me-2"></i> Order Details</h4>
 
-                        @* Revert or replace items modal *@
+                    </div>
+
+                    @* Revert or replace items modal *@
                     <div class="modal fade" id="upsertModal" tabindex="-1">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -29,23 +29,23 @@
                         </div>
                     </div>
 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="mb-1"><strong>Order #:</strong> @Model.Order.id</p>
-                                <p class="mb-1"><strong>Order placed:</strong> @Model.Order.order_date?.ToString("dd MMMM yyyy")</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-1"><strong>Total:</strong> @Model.Order.total_amount?.ToString("C")</p>
-                                <p class="mb-1"><strong>Payment method:</strong> @Model.Order.payment_method</p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="shipping-address-box">
-                                    <p class="mb-1"><strong>Shipping address:</strong></p>
-                                    <p class="mb-0">@Model.Order.shipping_address</p>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Order #:</strong> @Model.Order.id</p>
+                            <p class="mb-1"><strong>Order placed:</strong> @Model.Order.order_date?.ToString("dd MMMM yyyy")</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Total:</strong> @Model.Order.total_amount?.ToString("C")</p>
+                            <p class="mb-1"><strong>Payment method:</strong> @Model.Order.payment_method</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="shipping-address-box">
+                                <p class="mb-1"><strong>Shipping address:</strong></p>
+                                <p class="mb-0">@Model.Order.shipping_address</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
                 <!-- Order Status -->
                 <div class="order-section">
@@ -153,17 +153,17 @@
                         <div class="alert alert-danger mt-3">
                             <i class="fas fa-info-circle me-2"></i>
                             <span>This order has been cancelled.</span>
-  
-                          
+
+
                         </div>
                     }
                 </div>
-                    <!-- Order Items -->
-                    <div class="order-section">
-                        <h5 class="mb-3">Order Summary</h5>
-                    @foreach(var item in Model.OrderItems)
+                <!-- Order Items -->
+                <div class="order-section">
+                    <h5 class="mb-3">Order Summary</h5>
+                    @foreach (var item in Model.OrderItems)
                     {
-                          <div class="card mb-3">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <div class="row">
                                     @* <div class="col-md-2">
@@ -178,15 +178,18 @@
                                         }
                                         else
                                         {
-                                            <p class="text-success mb-2"><i class="fas fa-check-circle me-1"></i> Delivered on 
-                                                @(Model.Order.estimated_delivery_date?.ToString("dd MMMM yyyy") 
-                                                ?? 
-                                                Model.Order.delivered_at?.ToString("dd MMMM yyyy"))
+                                            <p class="text-success mb-2">
+                                                <i class="fas fa-check-circle me-1"></i> Delivered on
+                                                @(Model.Order.estimated_delivery_date?.ToString("dd MMMM yyyy")
+                                                    ??
+                                                    Model.Order.delivered_at?.ToString("dd MMMM yyyy"))
                                             </p>
 
                                         }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
                                         <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
+                                        <p class="mb-2"><strong>Color:</strong> @item.Color</p>
+                                        <p class="mb-2"><strong>Size:</strong> @item.Size</p>
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <a href="/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
@@ -197,7 +200,7 @@
                                         }
                                         <a href="/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
                                         <div>
-                                          
+
                                             <a href="/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
                                         </div>
                                     </div>
@@ -207,27 +210,27 @@
 
                     }
                 </div>
-                   
-                    <!-- Order Actions -->
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
-                         <div>
+
+                <!-- Order Actions -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
+                    <div>
                         @if (Model.Order.status.ToLower() == "cancelled" || Model.Order.status.ToLower() == "delivered")
                         {
                             <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
                         }
                         else
                         {
-                            <button id="cancelOrder" class="btn btn-outline-danger" >Cancel Order</button>
+                            <button id="cancelOrder" class="btn btn-outline-danger">Cancel Order</button>
 
                         }
 
-                        </div> 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 <!-- Back to Top Button -->
@@ -239,52 +242,52 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <partial name="Tostar" />
 <script>
-  $(document).ready(function(){
-        $('#cancelOrder').on('click',function(e){
-        Swal.fire({
-                          title: "Are you sure?",
-                          text: "You won't be able to revert this!",
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Yes, Cancel Order!"
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                                     $.ajax({
-                                         url: `/Profile/CancelOrder?orderId=@Model.Order.id`,
-                                          success:function(){
-                                                   Swal.fire({
-                                                    title: "Cancelled!",
-                                                    text: "Order has been cancelled.",
-                                                    icon: "success"
-                                                  });
-                                                   location.reload();
-                                          },
-                                          error:function(err){
-                                              toastr.error(`Error cancelling order` + err);
-                                            }
-                                   });//end of ajax
-                          }
-                        });
-           
-        });
+    $(document).ready(function(){
+          $('#cancelOrder').on('click',function(e){
+          Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, Cancel Order!"
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                                       $.ajax({
+                                           url: `/Profile/CancelOrder?orderId=@Model.Order.id`,
+                                            success:function(){
+                                                     Swal.fire({
+                                                      title: "Cancelled!",
+                                                      text: "Order has been cancelled.",
+                                                      icon: "success"
+                                                    });
+                                                     location.reload();
+                                            },
+                                            error:function(err){
+                                                toastr.error(`Error cancelling order` + err);
+                                              }
+                                     });//end of ajax
+                            }
+                          });
 
-        //revert order
-             $(".returnItem").click(function(){
-          const id = $(this).data('id')
-            $("#modalBody").load(`/Profile/CreateReturn?id=${id}`,function(response,status,xhr){
-              if(status=="error"){
-                  alert(response);
-              }
-              else{
-                  new bootstrap.Modal('#upsertModal').show();
-              }
+          });
 
-          })
-      })
+          //revert order
+               $(".returnItem").click(function(){
+            const id = $(this).data('id')
+              $("#modalBody").load(`/Profile/CreateReturn?id=${id}`,function(response,status,xhr){
+                if(status=="error"){
+                    alert(response);
+                }
+                else{
+                    new bootstrap.Modal('#upsertModal').show();
+                }
+
+            })
+        })
 
 
 
-  }) //end of load
+    }) //end of load
 </script>

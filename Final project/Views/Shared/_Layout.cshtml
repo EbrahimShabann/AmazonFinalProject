@@ -45,6 +45,9 @@
                         <li class="nav-item mx-3">
                             <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Discounts" ? "active-link" : "")" href="@Url.Action("Discounts", "Seller")">Discounts</a>
                         </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Discounts" ? "active-link" : "")" href="@Url.Action("signOut", "Account")">Logout</a>
+                        </li>
                     </ul>
                 </div>
             </div>

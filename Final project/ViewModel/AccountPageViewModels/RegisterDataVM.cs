@@ -13,6 +13,7 @@ namespace Final_project.ViewModel.AccountPageViewModels
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [UniqueEmail(ErrorMessage = "This email address is already signed in.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]

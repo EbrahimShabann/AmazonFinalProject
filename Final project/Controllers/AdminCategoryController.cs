@@ -1,14 +1,14 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
 using Final_project.ViewModel;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
+    [Authorize(Roles = "admin")]
+
     public class AdminCategoryController : Controller
     {
 
@@ -91,6 +91,7 @@ namespace Final_project.Controllers
             }
             category.is_deleted = true;
             category.is_active = false;
+            category.deleted_by = User.FindFirstValue(ClaimTypes.NameIdentifier);
             unitOfWork.save();
 
             return Json(new { success = true, message = "Category deleted successfully" });

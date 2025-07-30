@@ -14,6 +14,7 @@ namespace Final_project.Repository.Product
         public void Delete(product entity);
 
 
+        public void DeleteReview(product_review entity);
         void delete(product entity);
         List<ProductsVM> getProductsWithImagesAndRating();
         List<product_image> GetProduct_Images(string productId);

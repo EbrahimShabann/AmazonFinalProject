@@ -2,6 +2,14 @@
 @model TicketDetailsViewModel
 @{
     ViewData["Title"] = $"Ticket Details - {Model.Ticket.Subject}";
+    var isSupportOrAdmin = ViewBag.IsSupportOrAdmin ?? false;
+    var isCustomer = ViewBag.IsCustomer ?? false;
+    var isSeller = ViewBag.IsSeller ?? false;
+    var canManageTicket = ViewBag.CanManageTicket ?? false;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CustomerService.css" asp-append-version="true" />
 }
 
 <div class="container-fluid">
@@ -77,7 +85,7 @@
                                 }
                             </div>
 
-                            @if (Model.Ticket.Status != "Resolved")
+                            @if (Model.Ticket.Status != "Resolved" && canManageTicket)
                             {
                                 <hr />
                                 <form asp-action="SendTicketMessage" method="post" class="mt-3">
@@ -96,28 +104,31 @@
                 <!-- Sidebar -->
                 <div class="col-md-4">
                     <!-- Actions -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h6 class="mb-0">Actions</h6>
+                    @if (canManageTicket)
+                    {
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">Actions</h6>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Ticket.Status != "Resolved" && isSupportOrAdmin)
+                                {
+                                    <form asp-action="ResolveTicket" method="post" class="mb-2">
+                                        <input type="hidden" name="ticketId" value="@Model.Ticket.Id" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100" onclick="return confirm('Are you sure you want to resolve this ticket?')">
+                                            <i class="fas fa-check"></i> Resolve Ticket
+                                        </button>
+                                    </form>
+                                }
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#updateTicketModal">
+                                    <i class="fas fa-edit"></i> Update Ticket
+                                </button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            @if (Model.Ticket.Status != "Resolved" /*&& User.IsInRole("Support")*/)
-                            {
-                                <form asp-action="ResolveTicket" method="post" class="mb-2">
-                                    <input type="hidden" name="ticketId" value="@Model.Ticket.Id" />
-                                    <button type="submit" class="btn btn-success btn-sm w-100" onclick="return confirm('Are you sure you want to resolve this ticket?')">
-                                        <i class="fas fa-check"></i> Resolve Ticket
-                                    </button>
-                                </form>
-                            }
-                            <button type="button" class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#updateTicketModal">
-                                <i class="fas fa-edit"></i> Update Ticket
-                            </button>
-                        </div>
-                    </div>
+                    }
 
                     <!-- History -->
-                    @if (Model.History.Any())
+                    @if (Model.History.Any() && isSupportOrAdmin)
                     {
                         <div class="card">
                             <div class="card-header">
@@ -143,52 +154,84 @@
 </div>
 
 <!-- Update Ticket Modal -->
-<div class="modal fade" id="updateTicketModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form asp-action="UpdateTicket" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="Id" value="@Model.Ticket.Id" />
+@if (canManageTicket)
+{
+    <div class="modal fade" id="updateTicketModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="UpdateTicket" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id" value="@Model.Ticket.Id" />
 
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Ticket</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Subject</label>
-                        <input name="Subject" class="form-control" value="@Model.Ticket.Subject" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea name="Description" class="form-control" rows="4">@Model.Ticket.Description</textarea>
-                    </div>
-                    @if (/*User.IsInRole("Support")*/ true)
-                    {
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <select name="Status" class="form-select">
-                                <option value="Open" selected="@(Model.Ticket.Status == "Open")">Open</option>
-                                <option value="In Progress" selected="@(Model.Ticket.Status == "In Progress")">In Progress</option>
-                                <option value="Resolved" selected="@(Model.Ticket.Status == "Resolved")">Resolved</option>
-                            </select>
+                            <label class="form-label">Subject</label>
+                            <input name="Subject" class="form-control" value="@Model.Ticket.Subject" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select name="Priority" class="form-select">
-                                <option value="Low" selected="@(Model.Ticket.Priority == "Low")">Low</option>
-                                <option value="Medium" selected="@(Model.Ticket.Priority == "Medium")">Medium</option>
-                                <option value="High" selected="@(Model.Ticket.Priority == "High")">High</option>
-                                <option value="Critical" selected="@(Model.Ticket.Priority == "Critical")">Critical</option>
-                            </select>
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="4">@Model.Ticket.Description</textarea>
                         </div>
-                    }
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Ticket</button>
-                </div>
-            </form>
+                        @if (isSupportOrAdmin)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="Status" class="form-select">
+                                    <option value="Open" selected="@(Model.Ticket.Status == "Open")">Open</option>
+                                    <option value="In Progress" selected="@(Model.Ticket.Status == "In Progress")">In Progress</option>
+                                    <option value="Resolved" selected="@(Model.Ticket.Status == "Resolved")">Resolved</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select name="Priority" class="form-select">
+                                    <option value="Low" selected="@(Model.Ticket.Priority == "Low")">Low</option>
+                                    <option value="Medium" selected="@(Model.Ticket.Priority == "Medium")">Medium</option>
+                                    <option value="High" selected="@(Model.Ticket.Priority == "High")">High</option>
+                                    <option value="Critical" selected="@(Model.Ticket.Priority == "Critical")">Critical</option>
+                                </select>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Ticket</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+}
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/CustomerServiceNotifications.js"></script>
+    <script src="~/js/CustomerServiceJS.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current user ID for real-time functionality
+            setCurrentUserId('@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value');
+
+            // Join ticket group for real-time updates
+            joinTicketGroup('@Model.Ticket.Id');
+
+            // Set up form for real-time messaging
+            const messageForm = document.querySelector('form[asp-action="SendTicketMessage"]');
+            if (messageForm) {
+                messageForm.id = 'ticketMessageForm';
+                messageForm.dataset.ticketId = '@Model.Ticket.Id';
+                messageForm.dataset.senderId = '@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value';
+            }
+
+            // Auto-scroll to bottom of messages
+            const messagesContainer = document.querySelector('.messages-container');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    </script>
+}

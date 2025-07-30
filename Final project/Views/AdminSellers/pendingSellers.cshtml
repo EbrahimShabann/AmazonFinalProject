@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "pendingSellers";
     Layout = "AdminLayout";
 
@@ -46,35 +45,35 @@
             {
                 @for (int i = 0; i < 5; i++)
                 {
-                            <div class="product-card" id="seller-@ViewBag.PendeingSellers[i].Id">
-                                <img src="@ViewBag.PendeingSellers[i].profile_picture_url" class="product-image">
-                                <div class="product-info">
-                                    <div class="product-title">@ViewBag.PendeingSellers[i].UserName</div>
-                                    <div class="product-meta">
-                                        <div class="meta-item">
-                                            <i class="fas fa-tag"></i> @ViewBag.PendeingSellers[i].created_at
-                                        </div>
-                                        <div class="meta-item">
-                                            <span class="status-badge status-pending">Pending Review</span>
-                                        </div>
-                                    </div>
+                    <div class="product-card" id="seller-@ViewBag.PendeingSellers[i].Id">
+                        <img src="@ViewBag.PendeingSellers[i].profile_picture_url" class="product-image">
+                        <div class="product-info">
+                            <div class="product-title">@ViewBag.PendeingSellers[i].UserName</div>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i> @ViewBag.PendeingSellers[i].created_at
                                 </div>
-                                <div class="product-actions">
-                                    <!-- Use buttons with data attributes instead of links -->
-                                    <button class="action-btn btn-approve" data-id="@ViewBag.PendeingSellers[i].Id">Approve</button>
-                                    <button class="action-btn btn-reject" data-id="@ViewBag.PendeingSellers[i].Id">Reject</button>
+                                <div class="meta-item">
+                                    <span class="status-badge status-pending">Pending Review</span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="product-actions">
+                            <!-- Use buttons with data attributes instead of links -->
+                            <button class="action-btn btn-approve" data-id="@ViewBag.PendeingSellers[i].Id">Approve</button>
+                            <button class="action-btn btn-reject" data-id="@ViewBag.PendeingSellers[i].Id">Reject</button>
+                        </div>
+                    </div>
                     if (i == ViewBag.PendeingSellers.Count - 1) { break; }
                 }
             }
             else
             {
-                    <div id="empty-state-message" class="empty-state">
-                        <i class="fas fa-check-circle fa-3x"></i>
-                        <h3>All caught up!</h3>
-                        <p>You don't have any pending Sellers to review.</p>
-                    </div>
+                <div id="empty-state-message" class="empty-state">
+                    <i class="fas fa-check-circle fa-3x"></i>
+                    <h3>All caught up!</h3>
+                    <p>You don't have any pending Sellers to review.</p>
+                </div>
             }
 
         </div>

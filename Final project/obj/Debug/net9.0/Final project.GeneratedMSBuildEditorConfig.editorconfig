@@ -148,6 +148,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/orderConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxvcmRlckNvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Product/_revertOrder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfcmV2ZXJ0T3JkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -198,6 +202,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/orders.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxvcmRlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_CreateSupportTicketModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfQ3JlYXRlU3VwcG9ydFRpY2tldE1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_CustomerServiceStats.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxfQ3VzdG9tZXJTZXJ2aWNlU3RhdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Zeyad/OneDrive/Desktop/Final project/Final project/Views/Profile/_FormPagination.cshtml]
