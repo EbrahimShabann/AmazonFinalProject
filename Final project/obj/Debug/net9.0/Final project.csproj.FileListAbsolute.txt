@@ -281,7 +281,7 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\Views\Shared\_Lay
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-ka3duem7f0.gz
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-c7hxyoiywz.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-igitjnq2c3.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\btpj4hj0h7-m4gfkyivox.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\z5q4b6ps11-kqv6t48z1k.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-ozuavp8us1.gz
@@ -293,8 +293,9 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\a0z7ez63h8-1vy8v
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\th3pen5v8j-3r8b2a0bt1.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\uu1tfk8qyd-9aambh6nv0.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\46qazm2v5g-b8uob5q0f0.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\jxq2ew2une-as5a8p067t.gz
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vqt7zy1sdb-7r1j03lzyp.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vqt7zy1sdb-iwjryh8h66.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\rnp52oshlg-fr7q2aak1r.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\xo4l5966c6-a1qly7p9e7.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\8s9x5061b4-qagmcfajms.gz
@@ -4693,4 +4694,3 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\refint\Final project.dll
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.genruntimeconfig.cache
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\ref\Final project.dll
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\46qazm2v5g-ghk0oolsvg.gz

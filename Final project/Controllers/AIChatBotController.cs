@@ -171,7 +171,7 @@ public class AIChatbotController : Controller
                 - Read and leave product reviews
 
                 Use this background to answer the user's question appropriately even if no specific product or order data is included.";
-            }
+        }
 
         // 🧠 Step 2: Build AI prompt
         string systemPrompt = "You are an AI assistant for an online shopping platform. Use the data provided if relevant to help the user.";

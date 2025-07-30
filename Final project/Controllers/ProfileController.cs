@@ -139,7 +139,7 @@ namespace Final_project.Areas.Customer.Controllers
         public IActionResult Orders(string dateFilter, string statusFilter, string search, int page = 1, int size = 10)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
+            var orders = uof.OrderRepo.getAll().OrderByDescending(o=>o.order_date).Where(o => o.buyer_id == userId);
 
             // Filter based on delivered_at
             if (!string.IsNullOrEmpty(dateFilter))

@@ -49,8 +49,8 @@ namespace Final_project.Repository
         private IChatMessageRepo _chatMessageRepo;
 
 
-        private ISavedCartRepository _savedCartRepository;
-        private ISavedCartItemRepository _savedCartItemRepository;
+    
+   
 
         public UnitOfWork(AmazonDBContext db)
         {

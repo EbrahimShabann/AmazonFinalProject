@@ -1,4 +1,5 @@
 ﻿using Final_project.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Final_project.ViewModel.Customer
 {
@@ -7,6 +8,9 @@ namespace Final_project.ViewModel.Customer
         public string shipping_address { get; set; }
         public string payment_method { get; set; }
         public string UserName { get; set; }
+        [Required]
+        [RegularExpression(@"^(?:\+20|0020|0)?1[0125]\d{8}$",
+          ErrorMessage = "Phone Number must be in one of these formats: +20xxxxxxxxxx, 0020xxxxxxxxxx, or 0xxxxxxxxxx")]
         public string UserPhone { get; set; }
         public decimal ShippingTax { get; set; } = 0;
         public List<CartVM> Carts { get; set; } = new List<CartVM>();

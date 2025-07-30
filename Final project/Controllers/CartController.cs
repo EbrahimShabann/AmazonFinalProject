@@ -3,6 +3,7 @@ using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;
 using Final_project.ViewModel.Cart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers.Cart
@@ -85,6 +86,7 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddToCart(string productId, string color, string size)
         {
             var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
