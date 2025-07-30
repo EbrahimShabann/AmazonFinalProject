@@ -46,7 +46,7 @@
                 @for (int i = 0; i < 5; i++)
                 {
                             <div class="product-card" id="seller-@ViewBag.PendingCustomerService[i].Id">
-                                <img src="@ViewBag.PendingCustomerService[i].profile_picture_url" class="product-image">
+                        <img src="/images/Users/@ViewBag.PendingCustomerService[i].profile_picture_url" class="product-image">
                                 <div class="product-info">
                                     <div class="product-title">@ViewBag.PendingCustomerService[i].UserName</div>
                                     <div class="product-meta">

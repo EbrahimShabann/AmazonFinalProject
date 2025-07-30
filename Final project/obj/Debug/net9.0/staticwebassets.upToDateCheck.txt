@@ -4533,6 +4533,13 @@ wwwroot\lib\signalr\src\third-party-notices.txt
 wwwroot\lib\signalr\src\Utils.ts
 wwwroot\lib\signalr\src\WebSocketTransport.ts
 wwwroot\lib\signalr\src\XhrHttpClient.ts
+wwwroot\Image\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg
+wwwroot\js\index.js
+wwwroot\uploads\1_w.jpg
+wwwroot\images\users\esmael.jpeg
+wwwroot\images\categories\esmael.jpeg
+wwwroot\images\users\download.jpg
+wwwroot\images\categories\download.jpg
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\dist\webworker\signalr.js
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\dist\esm\XhrHttpClient.js.map
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\dist\esm\XhrHttpClient.js
@@ -8933,3 +8940,4 @@ E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\dist\webworker\signalr.
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\package.json
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\README.md
 E:\ITI\FinalProject1.2\Final project\wwwroot\lib\signalr\src\third-party-notices.txt
+E:\ITI\FinalProject1.2\Final project\wwwroot\js\index.js

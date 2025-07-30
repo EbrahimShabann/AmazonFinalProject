@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace Final_project.ViewModel
 {
@@ -11,8 +12,9 @@ namespace Final_project.ViewModel
         public string description { get; set; }
 
         [StringLength(255, ErrorMessage = "Image name cannot exceed 255 characters")]
-        public string? image_url { get; set; } // Store only the image name
-        public string parent_category_id { get; set; }
+        public string? parent_category_id { get; set; } = "";
+        public IFormFile imgFile { get; set; } // For file upload
+        public List<SelectListItem> ParentCategories { get; set; } = new List<SelectListItem>();
 
     }
 }

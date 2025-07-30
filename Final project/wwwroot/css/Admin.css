@@ -200,6 +200,25 @@ body {
     }
 
 /* Main Content */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: #777;
+        margin-bottom: 1rem;
+    }
+
 .main-content {
     flex: 1;
     padding: 2rem;
@@ -715,24 +734,6 @@ body {
     gap: 4px;
 }
 
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-    .empty-state i {
-        font-size: 3rem;
-        color: #ddd;
-        margin-bottom: 1rem;
-    }
-
-    .empty-state h3 {
-        color: #777;
-        margin-bottom: 1rem;
-    }
 
 .status-badge {
     padding: 4px 12px;
@@ -746,3 +747,144 @@ body {
     color: var(--amazon-warning);
 }
 
+/* KEYFRAMES FOR ANIMATION */
+@keyframes popInFade {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ADMIN PROFILE CARD STYLES */
+.admin-profile-card {
+    position: fixed;
+    top: 65px; /* Adjusted position */
+    right: 20px;
+    width: 300px;
+    background-color: #232f3e;
+    color: #eaeded;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    border: 1px solid #37475a;
+    display: none; /* Initially hidden */
+    z-index: 1001;
+    animation: popInFade 0.3s ease-out;
+    overflow: hidden; /* Ensures child elements conform to border-radius */
+}
+
+    /* Upward pointing arrow */
+    .admin-profile-card::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        right: 45px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #232f3e;
+    }
+
+    .admin-profile-card .card-header {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background-color: #1a2431;
+    }
+
+    .admin-profile-card .profile-img {
+        position: relative;
+        margin-right: 15px;
+    }
+
+        .admin-profile-card .profile-img img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #ff9900; /* Amazon Orange */
+        }
+
+    .admin-profile-card .online-status {
+        width: 14px;
+        height: 14px;
+        background-color: #28a745; /* Green for online */
+        border-radius: 50%;
+        border: 2px solid #1a2431;
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+    }
+
+    .admin-profile-card .profile-info h5 {
+        margin: 0;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .admin-profile-card .profile-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #dddddd;
+    }
+
+    .admin-profile-card .card-body {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .admin-profile-card .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+        .admin-profile-card .info-item i {
+            color: #ff9900;
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .admin-profile-card .info-item span strong {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+
+    .admin-profile-card .card-divider {
+        border: 0;
+        height: 1px;
+        background-color: #37475a;
+        margin: 0;
+    }
+
+    .admin-profile-card .card-footer-actions a {
+        display: block;
+        padding: 12px 20px;
+        color: #eaeded;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+        .admin-profile-card .card-footer-actions a:hover {
+            background-color: #37475a;
+            color: #ff9900;
+        }
+
+        .admin-profile-card .card-footer-actions a i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+
+        .admin-profile-card .card-footer-actions a:hover i {
+            opacity: 1;
+        }

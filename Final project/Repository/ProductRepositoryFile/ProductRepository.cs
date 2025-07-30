@@ -22,6 +22,12 @@ namespace Final_project.Repository.ProductRepositoryFile
             db.product_reviews.Remove(entity);
 
         }
+        public void DeleteReviewReply(review_reply entity)
+        {
+            //delete review reply
+            db.review_reply.Remove(entity);
+
+        }
 
         public void add(product entity)
         {

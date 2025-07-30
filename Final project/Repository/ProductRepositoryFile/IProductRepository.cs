@@ -20,6 +20,6 @@ namespace Final_project.Repository.Product
         List<product_review> getProductReviews(string productId);
         List<product_review> getAllReviews();
         void addReview(product_review review);
-
+        void DeleteReviewReply(review_reply reply);
     }
 }
