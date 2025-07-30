@@ -1,14 +1,39 @@
-wwwroot\css\site.css
-wwwroot\favicon.ico
-wwwroot\images\products\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg
-wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
-wwwroot\css\_ErrorLayoutCSS.css
-wwwroot\css\LandingPageCSS.css
-wwwroot\css\CustomerProfile.css
-wwwroot\css\CustomerProductsIndex.css
-wwwroot\css\customerProductDetails.css
+wwwroot\css\AccountPage.css
+wwwroot\css\Admin.css
 wwwroot\css\CustomerCheckOut.css
+wwwroot\css\customerProductDetails.css
+wwwroot\css\CustomerProductsIndex.css
+wwwroot\css\CustomerProfile.css
+wwwroot\css\CustomerService.css
+wwwroot\css\LandingPageCSS.css
+wwwroot\css\site.css
+wwwroot\css\_ErrorLayoutCSS.css
+wwwroot\favicon.ico
+wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
+wwwroot\images\products\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg
+wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
+wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
+wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
+wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
+wwwroot\Image\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg
+wwwroot\Image\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg
+wwwroot\Image\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg
+wwwroot\Image\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg
+wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
+wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
+wwwroot\Image\72b735db-3970-4821-a4d0-842211783748_oar2.jpg
+wwwroot\Image\b587531e-4d94-47b0-8c28-50719cecf873_photo_2025-07-17_21-25-51.jpg
+wwwroot\Image\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg
+wwwroot\Image\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg
+wwwroot\js\AccountPageJS.js
+wwwroot\js\CategoryJS.js
+wwwroot\js\CustomerServiceJS.js
+wwwroot\js\CustomerServiceNotifications.js
+wwwroot\js\LandingPageJS.js
+wwwroot\js\LandingPageLayoutJS.js
+wwwroot\js\ProfileCustomerService.js
 wwwroot\js\site.js
+wwwroot\js\_ErrorLayoutJS.js
 wwwroot\lib\bootstrap-icons\bootstrap-icons.svg
 wwwroot\lib\bootstrap-icons\font\bootstrap-icons.css
 wwwroot\lib\bootstrap-icons\font\bootstrap-icons.json
@@ -4475,7 +4500,7 @@ wwwroot\lib\signalr\dist\webworker\signalr.js
 wwwroot\lib\signalr\dist\webworker\signalr.js.map
 wwwroot\lib\signalr\dist\webworker\signalr.min.js
 wwwroot\lib\signalr\dist\webworker\signalr.min.js.map
-wwwroot\css\AccountPage.css
+wwwroot\lib\signalr\package.json
 wwwroot\lib\signalr\README.md
 wwwroot\lib\signalr\src\AbortController.ts
 wwwroot\lib\signalr\src\AccessTokenHttpClient.ts
@@ -4511,28 +4536,6 @@ wwwroot\lib\signalr\src\third-party-notices.txt
 wwwroot\lib\signalr\src\Utils.ts
 wwwroot\lib\signalr\src\WebSocketTransport.ts
 wwwroot\lib\signalr\src\XhrHttpClient.ts
-wwwroot\css\Admin.css
-wwwroot\css\CustomerService.css
-wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
-wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
-wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
-wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
-wwwroot\Image\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg
-wwwroot\Image\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg
-wwwroot\Image\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg
-wwwroot\Image\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg
-wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
-wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
-wwwroot\Image\72b735db-3970-4821-a4d0-842211783748_oar2.jpg
-wwwroot\Image\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg
-wwwroot\Image\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg
-wwwroot\js\AccountPageJS.js
-wwwroot\js\CategoryJS.js
-wwwroot\js\LandingPageJS.js
-wwwroot\js\LandingPageLayoutJS.js
-wwwroot\js\_ErrorLayoutJS.js
-wwwroot\lib\signalr\package.json
-wwwroot\Image\b587531e-4d94-47b0-8c28-50719cecf873_photo_2025-07-17_21-25-51.jpg
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\css\_ErrorLayoutCSS.css
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\css\LandingPageCSS.css
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\css\CustomerProfile.css
@@ -8933,3 +8936,6 @@ C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\Lan
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\LandingPageLayoutJS.js
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\_ErrorLayoutJS.js
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\lib\signalr\package.json
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\CustomerServiceNotifications.js
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\CustomerServiceJS.js
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\wwwroot\js\ProfileCustomerService.js

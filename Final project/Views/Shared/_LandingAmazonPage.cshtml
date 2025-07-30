@@ -13,6 +13,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
 
+    @await RenderSectionAsync("Styles", required: false)
 
 </head>
 <body>
@@ -57,6 +58,15 @@
                         <li>
                             <a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Your Wish List</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="CustomerService"><i class="fas fa-headset me-2"></i>Support Tickets</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Chats" asp-controller="CustomerService"><i class="fas fa-comments me-2"></i>Live Chat</a>
+                            </li>
+                        }
                         <li><hr class="dropdown-divider" /></li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -111,7 +121,7 @@
             </div>
         </div>
     </section>
-    <footer class="footer d-flrex flex-column">
+    <footer class="footer d-flex flex-column">
         <div class="container justify-content-center">
             <div class="footer-content">
                 <div class="footer-section">
@@ -149,6 +159,8 @@
                         <li><a href="#">Your Orders</a></li>
                         <li><a href="#">Shipping Rates & Policies</a></li>
                         <li><a href="#">Returns & Replacements</a></li>
+                        <li><a asp-action="Index" asp-controller="CustomerService">Customer Support</a></li>
+                        <li><a asp-action="CreateTicket" asp-controller="CustomerService">Create Support Ticket</a></li>
                     </ul>
                 </div>
             </div>
@@ -163,7 +175,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/LandingPageLayoutJS.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
     <script>
         $('.search-btn').on('click', function() {
             const searchTerm = $('#searchInput').val().trim();
@@ -182,7 +193,7 @@
         });
 
         $('.add-to-cart').on('click',function(){
-        var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
+        var isAuth = @Html.Raw(User.Identity.IsAuthenticated ? "true" : "false");
         if(isAuth){
             var productId= $(this).data('product-id');
             console.log(productId);
@@ -214,7 +225,7 @@
                url: "Landing/CartCount",
                type: "post",
                data: {
-                  UserName: '@User.Identity.Name',
+                  UserName: @Html.Raw(Json.Serialize(User.Identity.Name ?? "")),
                },
                success: function (result) {
                    console.log("Search results:", result);
@@ -349,5 +360,7 @@
             console.log('Selected product:', productName);
         }
     </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

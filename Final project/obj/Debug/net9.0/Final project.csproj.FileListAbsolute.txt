@@ -14053,3 +14053,6 @@ C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.pdb
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.genruntimeconfig.cache
 C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\ref\Final project.dll
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\9gkv6ps7t6-2jx6ejmhdp.gz
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\x7oaw856k8-pylekrja5f.gz
+C:\Users\y2you\Desktop\itifintal\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\bogwhkqqgq-by38gbu28e.gz

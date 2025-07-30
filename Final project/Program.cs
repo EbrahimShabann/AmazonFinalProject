@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Final_project.Filter;
+using Final_project.Hubs;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
@@ -18,6 +19,7 @@ namespace Final_project
             var builder = WebApplication.CreateBuilder(args);
             //==================SignalR Services=========================
             builder.Services.AddSignalR();
+            builder.Services.AddScoped<CustomerServiceHub>();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
             //builder.Services.AddControllersWithViews();
@@ -91,7 +93,7 @@ namespace Final_project
 
             app.UseAuthorization();
             app.MapStaticAssets();
-            //app.MapHub<>("");
+            app.MapHub<CustomerServiceHub>("/customerServiceHub");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Landing}/{action=Index}/{id?}")
