@@ -11,6 +11,6 @@ namespace Final_project.ViewModel.AccountPageViewModels
         public String PhoneNumber { get; set; }
 
         [NotMapped]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }

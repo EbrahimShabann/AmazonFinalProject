@@ -31,5 +31,6 @@ namespace Final_project.CustomAttribute
 
             return new ValidationResult("This username is already taken.");
         }
+    
     }
 }

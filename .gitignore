@@ -1,1 +1,26 @@
 .vs
+# Build output
+bin/
+obj/
+**/bin/
+**/obj/
+*.exe
+*.dll
+
+# VS Code and Rider
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Other temp files
+*.tmp
+*.cache
+
+# User-specific files
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates

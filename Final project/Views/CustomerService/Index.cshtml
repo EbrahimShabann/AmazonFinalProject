@@ -2,6 +2,9 @@
 @model List<SupportTicketViewModel>
 @{
     ViewData["Title"] = "Support Tickets";
+    var isSupportOrAdmin = ViewBag.IsSupportOrAdmin ?? false;
+    var isCustomer = ViewBag.IsCustomer ?? false;
+    var isSeller = ViewBag.IsSeller ?? false;
 }
 
 <div class="container-fluid">
@@ -9,9 +12,12 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Support Tickets</h2>
-                <a href="@Url.Action("CreateTicket")" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Create New Ticket
-                </a>
+                @if (isCustomer)
+                {
+                    <a href="@Url.Action("CreateTicket")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Ticket
+                    </a>
+                }
             </div>
 
             @if (TempData["Success"] != null)
@@ -36,7 +42,10 @@
                                         <th>Created</th>
                                         <th>Messages</th>
                                         <th>Last Message</th>
-                                        <th>User</th>
+                                        @if (isSupportOrAdmin)
+                                        {
+                                            <th>User</th>
+                                        }
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -62,11 +71,20 @@
                                             <td>@(ticket.CreatedAt?.ToString("MMM dd, yyyy") ?? "Unknown")</td>
                                             <td>@ticket.MessageCount</td>
                                             <td>@(ticket.LastMessageAt?.ToString("MMM dd, yyyy HH:mm") ?? "-")</td>
-                                            <td>@ticket.UserName</td>
+                                            @if (isSupportOrAdmin)
+                                            {
+                                                <td>@ticket.UserName</td>
+                                            }
                                             <td>
                                                 <a href="@Url.Action("TicketDetails", new { id = ticket.Id })" class="btn btn-sm btn-outline-primary">
                                                     View Details
                                                 </a>
+                                                @if (ticket.CanManage && ticket.Status != "Resolved")
+                                                {
+                                                    <button type="button" class="btn btn-sm btn-outline-success" onclick="resolveTicket('@ticket.Id')">
+                                                        Resolve
+                                                    </button>
+                                                }
                                             </td>
                                         </tr>
                                     }
@@ -79,8 +97,15 @@
                         <div class="text-center py-5">
                             <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
                             <h4 class="text-muted">No support tickets found</h4>
-                            <p class="text-muted">Create your first support ticket to get help from our team.</p>
-                            <a href="@Url.Action("CreateTicket")" class="btn btn-primary">Create Ticket</a>
+                            @if (isCustomer)
+                            {
+                                <p class="text-muted">Create your first support ticket to get help from our team.</p>
+                                <a href="@Url.Action("CreateTicket")" class="btn btn-primary">Create Ticket</a>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No tickets available for your role.</p>
+                            }
                         </div>
                     }
                 </div>
@@ -88,3 +113,31 @@
         </div>
     </div>
 </div>
+
+@if (isSupportOrAdmin)
+{
+    <script>
+        function resolveTicket(ticketId) {
+            if (confirm('Are you sure you want to resolve this ticket?')) {
+                fetch('/CustomerService/ResolveTicket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'ticketId=' + ticketId
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to resolve ticket');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to resolve ticket');
+                });
+            }
+        }
+    </script>
+}

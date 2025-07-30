@@ -13,6 +13,7 @@ let selectedModel = "o1-mini"; // Default OpenAI chat model
 
 async function callOpenAI(userMessage) {
     chatHistory.push({ role: "user", content: userMessage });
+    const timestamp = new Date().toLocaleTimeString();
 
     const response = await fetch("/AIChatbot/Ask", {
         method: "POST",
@@ -36,7 +37,7 @@ async function callOpenAI(userMessage) {
     //}
 
     const assistantMessage = data.reply;
-    chatHistory.push({ role: "assistant", content: assistantMessage });
+    chatHistory.push({ role: "assistant", content: `${assistantMessage} (${timestamp})` });
     displayChat();
 
 }
@@ -77,14 +78,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (newChatBtn) {
         newChatBtn.addEventListener("click", () => {
             if (chatHistory.length > 0) {
-                previousChats.push([...chatHistory]);
-                displayPreviousChats();
+                previousChats.push([...chatHistory]); // Save current chat
+                displayPreviousChats();               // Refresh dropdown
             }
-            chatHistory.length = 0;
+            chatHistory.length = 0;                   // Start fresh chat
             displayChat();
         });
+
     }
-    displayPreviousChats();
+
 });
 
 // Display current chat
@@ -114,22 +116,38 @@ function displayChat() {
 
 // Display previous chats
 function displayPreviousChats() {
-    const prevDiv = document.getElementById("previous-chats");
-    if (!prevDiv) return;
-    prevDiv.innerHTML = "<b>Previous Chats:</b>";
-    if (previousChats.length === 0) {
-        prevDiv.innerHTML += " None";
-        return;
-    }
+    const prevSelect = document.getElementById("previous-chats");
+    if (!prevSelect) return;
+
+    // Clear current options
+    prevSelect.innerHTML = "";
+    const defaultOption = document.createElement("option");
+    defaultOption.text = "Select a previous chat...";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    prevSelect.appendChild(defaultOption);
+
+    // Fill dropdown
     previousChats.forEach((chat, idx) => {
-        const chatSummary = document.createElement("div");
-        chatSummary.style.marginBottom = "8px";
-        chatSummary.style.padding = "6px";
-        chatSummary.style.border = "1px solid #eee";
-        chatSummary.style.background = "#fafafa";
-        chatSummary.textContent = chat.map(m => `${m.role}: ${m.content}`).join(" | ");
-        prevDiv.appendChild(chatSummary);
+        const summary = chat
+            .filter(m => m.role === "user")
+            .map(m => m.content.substring(0, 20))
+            .join(" | ");
+        const option = document.createElement("option");
+        option.value = idx;
+        option.text = `Chat ${idx + 1}: ${summary}`;
+        prevSelect.appendChild(option);
     });
+
+    // Restore selected chat on change
+    prevSelect.onchange = function () {
+        const selectedIndex = this.value;
+        if (selectedIndex !== null && previousChats[selectedIndex]) {
+            chatHistory.length = 0;
+            chatHistory.push(...previousChats[selectedIndex]);
+            displayChat();
+        }
+    };
 }
 
 function cosineSimilarity(vec1, vec2) {
