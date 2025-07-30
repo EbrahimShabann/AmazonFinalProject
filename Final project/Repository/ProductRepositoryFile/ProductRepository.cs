@@ -160,12 +160,5 @@ namespace Final_project.Repository.ProductRepositoryFile
         }
 
 
-        public void DeleteReview(product_review entity)
-        {
-            //delete review
-            db.product_reviews.Remove(entity);
-
-        }
-
     }
 }
