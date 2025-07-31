@@ -38,5 +38,5 @@ public partial class notification
 
     public DateTime? ReadAt { get; set; }
 
-    public int? OrderId { get; set; }
+    public string OrderId { get; set; }
 } 

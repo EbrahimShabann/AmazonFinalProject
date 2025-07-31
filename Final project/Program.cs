@@ -103,6 +103,7 @@ namespace Final_project
             app.UseAuthorization();
             app.MapStaticAssets();
             app.MapHub<CustomerServiceHub>("/customerServiceHub");
+            app.MapHub<SellerOrdersHub>("/sellerOrdersHub");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Landing}/{action=Index}/{id?}")

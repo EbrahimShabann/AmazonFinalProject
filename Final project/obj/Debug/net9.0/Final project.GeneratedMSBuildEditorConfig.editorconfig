@@ -1,19 +1,11 @@
 is_global = true
 build_property.TargetFramework = net9.0
-build_property.TargetFramework = net9.0
-build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
-build_property.UsingMicrosoftNETSdkWeb = true
-build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
-build_property.InvariantGlobalization = 
-build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
-build_property.EnforceExtendedAnalyzerRules = 
-build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Final_project
 build_property.RootNamespace = Final_project
@@ -38,6 +30,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [I:/AmazonFinalProject/Final project/Views/Account/SetProfilePic.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxTZXRQcm9maWxlUGljLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[I:/AmazonFinalProject/Final project/Views/AdminCategory/AddCategory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVxBZGRDYXRlZ29yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [I:/AmazonFinalProject/Final project/Views/AdminCategory/CategoryDetails.cshtml]
@@ -80,8 +76,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXEFsbFNlbGxlcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[I:/AmazonFinalProject/Final project/Views/AdminSellers/pendingSellers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXJzLmNzaHRtbA==
+[I:/AmazonFinalProject/Final project/Views/AdminSellers/pendingSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[I:/AmazonFinalProject/Final project/Views/AdminUsers/AddUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2Vyc1xBZGRVc2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [I:/AmazonFinalProject/Final project/Views/AIChatbot/Index.cshtml]

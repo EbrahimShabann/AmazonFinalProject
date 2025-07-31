@@ -1,10 +1,12 @@
-﻿using Final_project.Models;
+﻿using Final_project.Hubs;
+using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
 using Stripe;
 using Stripe.Checkout;
@@ -18,11 +20,12 @@ namespace Final_project.Controllers
     public class ProductController : Controller
     {
         private readonly UnitOfWork uof;
+        private readonly IHubContext<SellerOrdersHub> hub;
 
-        public ProductController(UnitOfWork uof)
+        public ProductController(UnitOfWork uof,IHubContext<SellerOrdersHub> hub)
         {
             this.uof = uof;
-
+            this.hub = hub;
         }
 
 
@@ -196,7 +199,7 @@ namespace Final_project.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
         [ActionName("CheckOut")]
-        public IActionResult SubmitCheckOut(CheckOutVM model)
+        public async Task<IActionResult> SubmitCheckOut(CheckOutVM model)
         {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -270,8 +273,37 @@ namespace Final_project.Controllers
                     uof.ProductRepository.Update(product);
                 }
             }
-            uof.save();
+      
 
+
+            // 🔔 Get unique sellers from the ordered products
+            var sellerIds= model.Carts
+                .Select(c => c.seller_id)
+                .Distinct()
+                .ToList();
+            foreach (var sellerId in sellerIds)
+            {
+                string message = $"New order #{order.id} contains one or more of your products.";
+
+                //store the notification in the database 
+                var notification = new notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    RecipientId = sellerId,
+                    Title="New Order Notification",
+                    Message = message,
+                    Type = "Order",
+                    IsRead = false,
+                    IsDeleted=false,
+                    CreatedAt = DateTime.Now,
+                    OrderId = order.id,
+                   
+                };
+
+                // Notify each seller about the new order
+                await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
+            }
+            uof.save();
             //handle stripe payment
             if (model.payment_method == "card")
             {
