@@ -16,7 +16,18 @@ namespace Final_project.Repository.ProductRepositoryFile
 
 
 
+        public void DeleteReview(product_review entity)
+        {
+            //delete review
+            db.product_reviews.Remove(entity);
 
+        }
+        public void DeleteReviewReply(review_reply entity)
+        {
+            //delete review reply
+            db.review_reply.Remove(entity);
+
+        }
 
         public void add(product entity)
         {
@@ -148,13 +159,6 @@ namespace Final_project.Repository.ProductRepositoryFile
             return db.product_reviews.ToList();
         }
 
-
-        public void DeleteReview(product_review entity)
-        {
-            //delete review
-            db.product_reviews.Remove(entity);
-
-        }
 
     }
 }

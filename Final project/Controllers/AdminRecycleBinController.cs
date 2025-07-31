@@ -338,7 +338,7 @@ namespace Final_project.Controllers
             {
                 foreach (var reply in review.replies)
                 {
-
+                    unitOfWork.ProductRepository.DeleteReviewReply(reply);
                 }
                 unitOfWork.ProductRepository.DeleteReview(review);
             }

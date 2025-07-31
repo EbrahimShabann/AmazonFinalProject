@@ -503,20 +503,20 @@
                         <i class="fas fa-cube me-2" style="color:var(--amazon-orange);"></i>@Model.name
                     </h2>
                     <div class="product-description">
-                        <strong>Description:</strong><br />
+                        <strong>Description :</strong><br />
                         @Model.description
                     </div>
                     <ul class="product-info-list">
-                        <li><strong>Price:</strong> <span class="fw-bold">@Model.price</span></li>
+                        <li><strong>Price : </strong> <span class="fw-bold">@Model.price</span></li>
                         @if (Model.discount_price.HasValue)
                         {
-                            <li><strong>Discount Price:</strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
+                            <li><strong>Discount Price : </strong> <span class="fw-bold text-success">@Model.discount_price</span></li>
                         }
-                        <li><strong>Stock Quantity:</strong> @Model.stock_quantity</li>
-                        <li><strong>Brand:</strong> @Model.Brand</li>
-                        <li><strong>SKU:</strong> @Model.sku</li>
-                        <li><strong>Category:</strong> @Model.category_id</li>
-                        <li><strong>Colors:</strong>
+                        <li><strong>Stock Quantity : </strong> @Model.stock_quantity</li>
+                        <li><strong>Brand : </strong> @Model.Brand</li>
+                        <li><strong>SKU : </strong> @Model.sku</li>
+                        <li><strong>Category : </strong> @(Model.category?.name?? "No category assigned")</li>
+                        <li><strong>Colors : </strong>
                             @if (!string.IsNullOrEmpty(Model.Colors))
                             {
                                 var colors = Model.Colors.Split(',');
@@ -530,25 +530,39 @@
                                 <span class="text-muted">No Colors</span>
                             }
                         </li>
-                        <li><strong>Sizes:</strong> @Model.Sizes</li>
-                        <li><strong>Created At:</strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
-                        <li><strong>Active:</strong> @(Model.is_active == true ? "Yes" : "No")</li>
-                        <li><strong>Approved:</strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
+                        <li><strong>Sizes : </strong> @Model.Sizes</li>
+                        <li><strong>Created At : </strong> @Model.created_at?.ToString("yyyy-MM-dd")</li>
+                        <li><strong>Active : </strong> @(Model.is_active == true ? "Yes" : "No")</li>
+                        <li><strong>Approved : </strong> @(Model.is_approved == true ? "Approved" : "Pending")</li>
                     </ul>
                     
                     <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.2);" />
                     
                     <!-- Seller Info Section -->
                     <div class="seller-info-section">
-                        <div class="d-flex align-items-center mb-3">
-                            <img src="data:image/png;base64,..." alt="Seller Avatar" class="seller-avatar me-3" />
-                            <div>
-                                <h5 class="mb-0" style="color: rgba(255, 255, 255, 0.9);">
-                                  @Model.Seller?.UserName
-                                </h5>
-                                <small class="text-muted">@Model.Seller?.Email</small>
-                            </div>
-                        </div>
+                       @if (Model.Seller != null)
+                       {
+                         <div class="d-flex align-items-center mb-3">
+                               @if (!string.IsNullOrEmpty(Model.Seller.profile_picture_url))
+                               {
+                                   <img src="@Model.Seller.profile_picture_url" alt="Seller Avatar" class="seller-avatar me-3" />
+                               }
+                               else
+                               {
+                                   <img src="/images/default-avatar.png" alt="Seller Avatar" class="seller-avatar me-3" />
+                               }
+                               <div>
+                                   <h5 class="mb-0" style="color: rgba(255, 255, 255, 0.9);">
+                                       @Model.Seller.UserName
+                                   </h5>
+                                   <small class="text-muted">@Model.Seller.Email</small>
+                               </div>
+                         </div>
+                       }
+                       else
+                       {
+                           <p class="text-muted">No seller information available.</p>
+                       }
                     </div>
                         
                     <!-- Action Buttons -->

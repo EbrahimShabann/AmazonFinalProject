@@ -205,7 +205,12 @@ namespace Final_project.Controllers
                 TempData["error"] = "You must be logged in to checkout.";
                 return RedirectToAction("Login", "Account");
             }
-
+            if (uof.UserRepository.getById(userId).PhoneNumber == null)
+            {
+                uof.UserRepository.getById(userId).PhoneNumber = model.UserPhone;
+                uof.UserRepository.Update(uof.UserRepository.getById(userId));
+                uof.save();
+            }
 
             decimal totalAmount = model.TotalPrice + model.ShippingTax;  //total price after tax
 
@@ -215,6 +220,7 @@ namespace Final_project.Controllers
                 id = Guid.NewGuid().ToString(),
                 buyer_id = userId,
                 shipping_address = model.shipping_address,
+                billing_address = model.shipping_address,
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
                 order_date = DateTime.Now,

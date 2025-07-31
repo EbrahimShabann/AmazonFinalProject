@@ -38,7 +38,8 @@ namespace Final_project.Repository
         private IMessagesRepo _messageRepo;
         private IWishlistItemRepository _wishlistItemRepository;
         private IWishlistRepository _wishlistRepository;
-
+        private ISavedCartRepository _savedCartRepository;
+        private ISavedCartItemRepository _savedCartItemRepository;
 
         // Customer Service repositories
         private ISupportTicketRepo _supportTicketRepo;
@@ -48,8 +49,6 @@ namespace Final_project.Repository
         private IChatMessageRepo _chatMessageRepo;
 
 
-        private ISavedCartRepository _savedCartRepository;
-        private ISavedCartItemRepository _savedCartItemRepository;
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -267,6 +266,8 @@ namespace Final_project.Repository
                 return _savedCartItemRepository;
             }
         }
+
+
         public void save()
         {
             db.SaveChanges();

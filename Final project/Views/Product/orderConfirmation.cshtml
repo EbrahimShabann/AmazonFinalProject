@@ -1,136 +1,136 @@
 ﻿@model order
-    <title>Order Confirmation - Amazon</title>
+<title>Order Confirmation - Amazon</title>
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <!-- Header -->
-                <div class="text-center mb-4">
-                    <h1 class="text-success mb-3">
-                        <i class="bi bi-check-circle-fill"></i> Order Confirmed
-                    </h1>
-                    <p class="text-muted">Thank you for your purchase!</p>
-                    <p class="text-muted">Order #: <strong>@Model.id</strong></p>
-                    <p class="text-muted">Order date: <strong>@Model.order_date</strong></p>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="text-success mb-3">
+                    <i class="bi bi-check-circle-fill"></i> Order Confirmed
+                </h1>
+                <p class="text-muted">Thank you for your purchase!</p>
+                <p class="text-muted">Order #: <strong>@Model.id</strong></p>
+                <p class="text-muted">Order date: <strong>@Model.order_date?.ToString("dd MMMM yyyy hh:mm:ss")</strong></p>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Customer Information</h5>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Shipping Address</h6>
+                            <p class="mb-1"><strong>@Model.shipping_address</strong></p>
 
-                <!-- Customer Info -->
-                <div class="card mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Customer Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Shipping Address</h6>
-                                <p class="mb-1"><strong>@Model.shipping_address</strong></p>
-
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Payment Method</h6>
-                                <p class="mb-1"><strong>@Model.payment_method</strong></p>
-                                <p class="mb-0">Billing address: Same as shipping address</p>
-                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Payment Method</h6>
+                            <p class="mb-1"><strong>@Model.payment_method</strong></p>
+                            <p class="mb-0">Billing address: Same as shipping address</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Order Summary -->
-                <div class="card mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-borderless mb-0">
-                                <thead class="border-bottom">
-                                    <tr>
-                                        <th scope="col" style="width: 60%">Item</th>
-                                        <th scope="col" class="text-end">Price</th>
-                                        <th scope="col" class="text-end">Qty</th>
-                                        <th scope="col" class="text-end">Color</th>
-                                        <th scope="col" class="text-end">Size</th>
-                                        <th scope="col" class="text-end">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+            <!-- Order Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <thead class="border-bottom">
+                                <tr>
+                                    <th scope="col" style="width: 60%">Item</th>
+                                    <th scope="col" class="text-end">Price</th>
+                                    <th scope="col" class="text-end">Qty</th>
+                                    <th scope="col" class="text-end">Color</th>
+                                    <th scope="col" class="text-end">Size</th>
+                                    <th scope="col" class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @foreach (var item in Model.OrderItems)
                                 {
-                                         <tr class="border-bottom">
-                                            <td>
-                                                <div class="d-flex">
-                                                    <img src="/Image/@item.product.product_images.First().image_url" alt="Product" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
-                                                    <div>
-                                                        <h6 class="mb-1">@item.product.name</h6>
+                                    <tr class="border-bottom">
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="/Image/@item.product.product_images.First().image_url" alt="Product" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
+                                                <div>
+                                                    <h6 class="mb-1">@item.product.name</h6>
                                                     @* <p class="text-muted mb-0">Color: Black</p> *@
-                                                        <p class="text-muted mb-0">Sold by: Amazon.com</p>
-                                                    </div>
+                                                    <p class="text-muted mb-0">Sold by: Amazon.com</p>
                                                 </div>
-                                            </td>
-                                            <td class="text-end align-middle">@item.unit_price?.ToString("C")</td>
-                                            <td class="text-end align-middle">@item.quantity</td>
-                                            <td class="text-end align-middle">@item.Color</td>
-                                            <td class="text-end align-middle">@item.Size</td>
-                                            <td class="text-end align-middle">$@(item.unit_price * item.quantity)</td>
-                                        </tr>
+                                            </div>
+                                        </td>
+                                        <td class="text-end align-middle">@(item.unit_price - item.discount_applied)</td>
+                                        <td class="text-end align-middle">@item.quantity</td>
+                                        <td class="text-end align-middle">@item.Color</td>
+                                        <td class="text-end align-middle">@item.Size</td>
+                                        <td class="text-end align-middle">$@((item.unit_price - item.discount_applied) * item.quantity)</td>
+                                    </tr>
 
                                 }
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Total -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row justify-content-end">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Items:</th>
+                                        <td class="text-end">@Model.total_amount?.ToString("C")</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Shipping & handling:</th>
+                                        <td class="text-end">$0.00</td>
+                                    </tr>
+
+                                    <tr class="border-top">
+                                        <th scope="row"><h5 class="mb-0">Order total:</h5></th>
+                                        <td class="text-end"><h5 class="mb-0">@Model.total_amount?.ToString("C")</h5></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Order Total -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row justify-content-end">
-                            <div class="col-md-6">
-                                <table class="table table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">Items:</th>
-                                            <td class="text-end">@Model.total_amount?.ToString("C")</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Shipping & handling:</th>
-                                            <td class="text-end">$0.00</td>
-                                        </tr>
-
-                                        <tr class="border-top">
-                                            <th scope="row"><h5 class="mb-0">Order total:</h5></th>
-                                        <td class="text-end"><h5 class="mb-0">@Model.total_amount?.ToString("C")</h5></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+            <!-- Delivery Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Delivery Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Estimated delivery date</h6>
+                            <p class="mb-0"><strong>@Model.estimated_delivery_date?.ToString("dd MMMM yyyy")</strong></p>
                         </div>
+
                     </div>
                 </div>
+            </div>
 
-                <!-- Delivery Info -->
-                <div class="card mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Delivery Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Estimated delivery date</h6>
-                                <p class="mb-0"><strong>@Model.estimated_delivery_date</strong></p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="text-center">
+            <!-- Actions -->
+            <div class="text-center">
                 <a href="/Profile/orderDetails?id=@Model.id" class="btn btn-warning me-2">View or Manage Order</a>
 
-                    <a href="/Landing/Index" class="btn btn-outline-secondary ms-2">Back To Home</a>
-                </div>
+                <a href="/Landing/Index" class="btn btn-outline-secondary ms-2">Back To Home</a>
             </div>
         </div>
     </div>
+</div>

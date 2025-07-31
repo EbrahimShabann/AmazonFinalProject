@@ -93,6 +93,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\download.jpg",
+      "PackagePath": "staticwebassets\\images\\categories\\download.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\esmael.jpeg",
+      "PackagePath": "staticwebassets\\images\\categories\\esmael.jpeg"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg",
       "PackagePath": "staticwebassets\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg"
     },
@@ -115,6 +123,14 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg",
       "PackagePath": "staticwebassets\\images\\products\\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\download.jpg",
+      "PackagePath": "staticwebassets\\images\\users\\download.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\esmael.jpeg",
+      "PackagePath": "staticwebassets\\images\\users\\esmael.jpeg"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\AccountPageJS.js",
@@ -18151,6 +18167,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\lib\\signalr\\src\\third-party-notices.txt",
       "PackagePath": "staticwebassets\\lib\\signalr\\src\\third-party-notices.txt"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\uploads\\1_w.jpg",
+      "PackagePath": "staticwebassets\\uploads\\1_w.jpg"
     },
     {
       "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Final project.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

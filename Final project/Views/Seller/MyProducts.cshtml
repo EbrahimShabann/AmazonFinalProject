@@ -51,32 +51,32 @@
         padding: 0;
     }
 
-    .container-fluid, .container {
-        background: transparent;
-        padding: 2rem;
-    }
+        /* .container-fluid, .container {
+            background: transparent;
+            padding: 2rem;
+        } */
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-    .container {
-        background: transparent;
-        backdrop-filter: none;
-        border: none;
-        border-radius: 0;
-        padding: 2rem;
-        margin: 0;
-        box-shadow: none;
-    }
+    /* .container {
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            border-radius: 0;
+            padding: 2rem;
+            margin: 0;
+            box-shadow: none;
+        } */
 
     .btn {
         background: rgba(255, 255, 255, 0.15);
@@ -235,7 +235,7 @@
         font-weight: 600;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
-
+    /* ---------------------------------------------------------------------------------------------- */
     .table tbody tr {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
@@ -258,16 +258,38 @@
         border-radius: 12px;
         margin: 1rem 0;
     }
+    /* ///////////////////////////////////////////////////////////////////////////////////////////////////// */
+    .table thead th {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+    }
 
-        .category-header td {
-            color: var(--amazon-orange) !important;
-            font-weight: 700;
-            font-size: 1rem;
-            text-align: center;
-            padding: 12px 16px;
-            position: relative;
-            background: transparent;
-        }
+    .table-hover tbody tr:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transition: background 0.2s;
+    }
+
+    .table td, .table th {
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    td[style*='white-space:nowrap;'] {
+        white-space: nowrap !important;
+    }
+    /* --------------------------------------------- */
+    .category-header td {
+        color: var(--amazon-orange) !important;
+        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
+        padding: 12px 16px;
+        position: relative;
+        background: transparent;
+    }
 
     /* Product Image Styling */
     .product-image {
@@ -714,10 +736,16 @@
         pointer-events: none;
         opacity: 0.4;
     }
+
+    .container {
+        padding: 2rem;
+        max-width: 1400px;
+    }
 </style>
+@* <div class="container"> *@
 
 <!-- Center My Products title and move buttons below -->
-<div class="page-header flex-column align-items-center text-center" style="gap: 0;">
+<div class="page-header flex-column align-items-center text-center" style="gap: 0;margin-bottom:25px">
     <h1 class="page-title w-100 text-center">
         <i class="fas fa-box me-3"></i>My Products
     </h1>
@@ -813,18 +841,18 @@
             <tr>
                 <th><i class="fas fa-image me-2"></i>Image</th>
                 <th><i class="fas fa-tag me-2"></i>Name</th>
-                <th><i class="fas fa-info-circle me-2"></i>Description</th>
+                @* <th><i class="fas fa-info-circle me-2"></i>Description</th> *@
                 <th><i class="fas fa-pound-sign me-2"></i>Price</th>
                 <th><i class="fas fa-percentage me-2"></i>Discount</th>
                 <th><i class="fas fa-boxes me-2"></i>Stock</th>
                 <th><i class="fas fa-copyright me-2"></i>Brand</th>
                 <th><i class="fas fa-palette me-2"></i>Colors</th>
-                <th><i class="fas fa-ruler me-2"></i>Sizes</th>
+                @* <th><i class="fas fa-ruler me-2"></i>Sizes</th> *@
                 <th><i class="fas fa-barcode me-2"></i>SKU</th>
-                <th><i class="fas fa-folder me-2"></i>Category</th>
+                @* <th><i class="fas fa-folder me-2"></i>Category</th> *@
                 <th><i class="fas fa-calendar me-2"></i>Created</th>
                 <th><i class="fas fa-toggle-on me-2"></i>Status</th>
-                <th><i class="fas fa-check-circle me-2"></i>Approved</th>
+                @* <th><i class="fas fa-check-circle me-2"></i>Approved</th> *@
                 <th><i class="fas fa-cogs me-2"></i>Actions</th>
             </tr>
         </thead>
@@ -862,7 +890,7 @@
                                 }
                             </td>
                             <td>@item.name</td>
-                            <td>@item.description</td>
+                            @* <td>@item.description</td> *@
                             <td>@item.price</td>
                             <td>@item.discount_price</td>
                             <td>@item.stock_quantity</td>
@@ -870,9 +898,9 @@
                             <td style="text-align:center;">
                                 @Html.Raw(RenderColors(item.Colors))
                             </td>
-                            <td>@item.Sizes</td>
+                            @* <td>@item.Sizes</td> *@
                             <td>@item.sku</td>
-                            <td>
+                            @* <td>
                                 @if (!string.IsNullOrEmpty(item.category_id) && categoriesDict != null && categoriesDict.ContainsKey(item.category_id))
                                 {
                                     @categoriesDict[item.category_id]
@@ -881,7 +909,7 @@
                                 {
                                     <span>No Category</span>
                                 }
-                            </td>
+                            </td> *@
                             <td>@item.created_at?.ToString("yyyy-MM-dd")</td>
                             <td>
                                 @if (item.is_active == true)
@@ -897,7 +925,7 @@
                                     </span>
                                 }
                             </td>
-                            <td>
+                            @* <td>
                                 @if (item.is_approved == true)
                                 {
                                     <span class="status-badge approved">
@@ -910,7 +938,7 @@
                                         <i class="fas fa-clock"></i>Pending
                                     </span>
                                 }
-                            </td>
+                            </td> *@
                             <td style="text-align:center;">
                                 <div class="d-flex gap-2 justify-content-center align-items-center">
                                     <a asp-action="ProductDetails" asp-route-id="@item.id" class="btn btn-info btn-sm" title="View Details">
@@ -977,7 +1005,7 @@
             @* ? Always visible, but disabled if no next page *@
             <li class="page-item @(ViewBag.CurrentPage >= ViewBag.totalPages ? "disabled" : "")">
                 <a class="page-link" href="@(
-                ViewBag.CurrentPage < ViewBag.totalPages
+                  ViewBag.CurrentPage < ViewBag.totalPages
                     ? Url.Action("MyProducts", new {
                         page = ViewBag.CurrentPage + 1,
                         searchName = ViewBag.SearchName,
@@ -985,7 +1013,9 @@
                         maxPrice = ViewBag.MaxPrice,
                         categoryId = ViewBag.SelectedCategoryId
                     })
-                    : "#")">&#x276F;</a> @* ? *@
+                    : "#")">
+                    &#x276F;
+                </a> @* ? *@
             </li>
 
         </ul>
@@ -1020,45 +1050,105 @@
             </div>
         </div>
     </div>
-</div>
+    @* </div> *@
 
-@section Scripts {
-    <script>
-        var deleteProductId = null;
-        var deleteProductRow = null;
-        $(document).on('click', '.delete-product-btn', function (e) {
-            e.preventDefault();
-            deleteProductId = $(this).data('product-id');
-            deleteProductRow = $(this).closest('tr');
-            var modal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
-            modal.show();
-        });
-        $(document).on('click', '#confirmDeleteProductBtn', function () {
-            if (deleteProductId) {
-                $.ajax({
-                    url: '/Seller/DeleteProductAjax',
-                    type: 'POST',
-                    data: {
-                        id: deleteProductId,
-                        __RequestVerificationToken: $('#antiForgeryForm input[name="__RequestVerificationToken"]').first().val()
-                    },
-                    success: function (result) {
-                        if (result.success) {
-                            if(deleteProductRow) deleteProductRow.fadeOut(400, function() { $(this).remove(); });
-                            var modal = bootstrap.Modal.getInstance(document.getElementById('deleteProductModal'));
-                            if(modal) modal.hide();
-                            showDeleteToast();
-                        }
-                    }
-                });
-            }
-        });
-        function showDeleteToast() {
-            var toast = $('#deleteToast');
-            toast.fadeIn(300);
-            setTimeout(function() {
-                toast.fadeOut(500);
-            }, 3000);
-        }
-    </script>
-} 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:rgba(30,49,80,0.98); border-radius:18px; border:2px solid var(--amazon-orange);">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="logoutModalLabel" style="color:var(--amazon-orange); font-weight:700;">
+                        <i class="fas fa-sign-out-alt me-2"></i>Confirm Logout
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter:invert(1);"></button>
+                </div>
+                <div class="modal-body text-center" style="color:white;">
+                    <p style="font-size:1.15rem;">Are you sure you want to logout?</p>
+                    <p class="text-muted" style="font-size:0.95rem;">You will be redirected to the login page.</p>
+                </div>
+                <div class="modal-footer border-0 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width:100px;">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogoutBtn" style="min-width:100px;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @section Scripts {
+        <script>
+              var deleteProductId = null;
+              var deleteProductRow = null;
+              $(document).on('click', '.delete-product-btn', function (e) {
+                  e.preventDefault();
+                  deleteProductId = $(this).data('product-id');
+                  deleteProductRow = $(this).closest('tr');
+                  var modal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
+                  modal.show();
+              });
+              $(document).on('click', '#confirmDeleteProductBtn', function () {
+                  if (deleteProductId) {
+                      $.ajax({
+                          url: '/Seller/DeleteProductAjax',
+                          type: 'POST',
+                          data: {
+                              id: deleteProductId,
+                              __RequestVerificationToken: $('#antiForgeryForm input[name="__RequestVerificationToken"]').first().val()
+                          },
+                          success: function (result) {
+                              if (result.success) {
+                                  if(deleteProductRow) deleteProductRow.fadeOut(400, function() { $(this).remove(); });
+                                  var modal = bootstrap.Modal.getInstance(document.getElementById('deleteProductModal'));
+                                  if(modal) modal.hide();
+                                  showDeleteToast();
+                              }
+                          }
+                      });
+                  }
+              });
+              function showDeleteToast() {
+                  var toast = $('#deleteToast');
+                  toast.fadeIn(300);
+                  setTimeout(function() {
+                      toast.fadeOut(500);
+                  }, 3000);
+              }
+
+              <!-- JavaScript for Logout Modal -->
+            document.addEventListener('DOMContentLoaded', function() {
+              // Show logout modal when logout button is clicked
+              document.getElementById('logoutBtn').addEventListener('click', function() {
+                  var modal = new bootstrap.Modal(document.getElementById('logoutModal'));
+                  modal.show();
+              });
+
+              // Handle confirm logout
+              document.getElementById('confirmLogoutBtn').addEventListener('click', function() {
+                  // ??? redirect ??? logout URL
+                  window.location.href = '@Url.Action("Logout", "Account")';
+
+                  // ?? ??? ??? ???? logout action ???? POST
+                  // ????? ?????? form submission:
+                  /*
+                  var form = document.createElement('form');
+                  form.method = 'POST';
+                  form.action = '@Url.Action("Logout", "Account")';
+                  // Add anti-forgery token if needed
+                  var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                  if (token) {
+                      var hiddenToken = document.createElement('input');
+                      hiddenToken.type = 'hidden';
+                      hiddenToken.name = '__RequestVerificationToken';
+                      hiddenToken.value = token.value;
+                      form.appendChild(hiddenToken);
+                  }
+                  document.body.appendChild(form);
+                  form.submit();
+                  */
+              });
+            });
+
+
+        </script>
+    }
+</div>

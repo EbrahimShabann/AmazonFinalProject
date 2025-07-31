@@ -4,20 +4,23 @@ using Final_project.Services.Customer;
 using Final_project.Services.CustomerService;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Final_project.Areas.Customer.Controllers
 {
-    //[Authorize(Roles = "Customer")]
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UnitOfWork uof;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly ICustomerServiceService _customerService;
 
-        public ProfileController(UnitOfWork uof, ICustomerServiceService customerService)
+        public ProfileController(UnitOfWork uof, UserManager<ApplicationUser> userManager, ICustomerServiceService customerService)
         {
             this.uof = uof;
+            this.userManager = userManager;
             this._customerService = customerService;
         }
         public IActionResult Index()
@@ -135,8 +138,8 @@ namespace Final_project.Areas.Customer.Controllers
 
         public IActionResult Orders(string dateFilter, string statusFilter, string search, int page = 1, int size = 10)
         {
-            string userId = "c2";//User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var orders = uof.OrderRepo.getAll().OrderByDescending(o => o.order_date).Where(o => o.buyer_id == userId);
 
             // Filter based on delivered_at
             if (!string.IsNullOrEmpty(dateFilter))
@@ -244,7 +247,7 @@ namespace Final_project.Areas.Customer.Controllers
                     status = "Pending",
                     notes = "Order has been created",
                     changed_at = DateTime.Now,
-                    changed_by = "c4" //User.FindFirstValue(ClaimTypes.NameIdentifier)
+                    changed_by = User.FindFirstValue(ClaimTypes.NameIdentifier)
                 };
                 uof.OrderRepo.AddOrderHistory(newOrderHistory);
             }
@@ -312,7 +315,7 @@ namespace Final_project.Areas.Customer.Controllers
             {
                 return BadRequest("No messages selected for deletion.");
             }
-            var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
                 return NotFound();
@@ -343,7 +346,7 @@ namespace Final_project.Areas.Customer.Controllers
             }
             else if (page == "contact")
             {
-                var userId = "c4";//User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 ViewBag.userOrders = uof.OrderRepo.getAll().Where(o => o.buyer_id == userId).ToList();
                 return View("ContactUs");
             }
@@ -370,7 +373,9 @@ namespace Final_project.Areas.Customer.Controllers
             var revertVM = new ordersReverted
             {
                 order_itemId = orderItem.id,
+                Order_Item = uof.OrderRepo.GetOrderItemById(orderItem.id),
                 orderId = orderItem.order_id,
+                Order = uof.OrderRepo.getById(orderItem.order_id),
                 RevertDate = DateTime.Now,
                 Reason = "",
                 Notes = ""
@@ -382,37 +387,152 @@ namespace Final_project.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateReturn(ordersReverted revertVM)
         {
+            revertVM.Order = uof.OrderRepo.getById(revertVM.orderId);
+            var orderItemFromDb = uof.OrderRepo.GetOrderItemById(revertVM.order_itemId);
+            revertVM.Order_Item = orderItemFromDb;
+
+            if (string.IsNullOrEmpty(revertVM.Notes))
+            {
+                if (revertVM.Reason.ToLower() == "return")
+                {
+                    revertVM.Notes = "Return Order Item";
+                }
+                else
+                {
+                    revertVM.Notes = "Replace Order Item";
+                }
+            }
             if (ModelState.IsValid)
             {
-                var orderItem = uof.OrderRepo.GetOrderItemById(revertVM.order_itemId);
-                if (orderItem == null)
+
+                if (revertVM.Order_Item == null)
                 {
                     TempData["error"] = "Order item not found.";
-                    return RedirectToAction("orderDetails", orderItem.order_id);
+                    return RedirectToAction("orderDetails", revertVM.orderId);
                 }
                 // Create new revert record
                 var revertRecord = new ordersReverted
                 {
 
-                    orderId = orderItem.order_id,
-                    order_itemId = orderItem.id,
+                    orderId = revertVM.orderId,
+                    order_itemId = revertVM.order_itemId,
                     RevertDate = DateTime.Now,
                     Reason = revertVM.Reason,
                     Notes = revertVM.Notes
                 };
 
-                var orderHistory = uof.OrderRepo.GetOrderHistoryByOrderId(revertVM.orderId);
-                orderHistory.status = revertVM.Reason;
-
+                //var orderHistory= uof.OrderRepo.GetOrderHistoryByOrderId(revertVM.orderId);
+                // orderHistory.status = revertVM.Reason;
+                orderItemFromDb.status = revertVM.Reason;
                 uof.OrderRepo.AddReturnOrder(revertRecord);
-                uof.OrderRepo.UpdateOrderHistory(orderHistory);
+                uof.OrderItemRepository.Update(orderItemFromDb);
                 uof.save();
                 TempData["success"] = "Order item reverted successfully.";
-                return RedirectToAction("orderDetails", orderItem.order_id);
+                return RedirectToAction("orderDetails", new { id = revertVM.orderId });
             }
+
             TempData["error"] = "Invalid data.";
-            return RedirectToAction("orderDetails", revertVM.orderId);
+            return PartialView("_revertOrder", revertVM);
         }
 
+
+        public async Task<IActionResult> LoginAndSecurity()
+        {
+            //var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+                RedirectToAction("Login", "Account");
+            return View(user);
+        }
+
+        public async Task<IActionResult> EditName()
+        {
+            var user = await userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = new UpdateNameViewModel()
+            {
+                FullName = user.UserName
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditName(UpdateNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            //var user = await userManager.GetUserAsync(User);
+            var user = await userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            user.UserName = model.FullName;
+            await userManager.UpdateAsync(user);
+            uof.save();
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public async Task<IActionResult> EditEmail()
+        {
+            var user = await userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = new UpdateEmailViewModel
+            {
+                NewEmail = user.Email
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmail(UpdateEmailViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //var user = await userManager.FindByEmailAsync("customer1@example.com");
+            await userManager.SetEmailAsync(user, model.NewEmail);
+            uof.save();
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public async Task<IActionResult> EditPhone()
+        {
+            var user = await userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = new UpdatePhoneViewModel
+            {
+                PhoneNumber = user.PhoneNumber
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPhone(UpdatePhoneViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await userManager.GetUserAsync(User);
+            //var user = await userManager.FindByEmailAsync("customer1@example.com");
+            await userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+            uof.save();
+            return RedirectToAction("LoginAndSecurity");
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View(new ChangePasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await userManager.GetUserAsync(User);
+            //var user = await userManager.FindByEmailAsync("customer1@example.com");
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+                return View(model);
+            }
+            uof.save();
+            return RedirectToAction("LoginAndSecurity");
+        }
     }
 }

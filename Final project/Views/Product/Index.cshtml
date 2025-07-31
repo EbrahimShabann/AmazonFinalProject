@@ -1,0 +1,323 @@
+﻿@using Final_project.Services.Customer
+@using Final_project.ViewModel.Customer
+@model PagedResult<ProductsVM>
+@{
+    ViewData["Title"] = "Index";
+    var currentPage = (int)Model.PageNumber;
+    var totalPages = (int)Model.TotalPages;
+    var pageSize = (int)Model.PageSize;
+    var sizeOptions = new[] { 2, 5, 10, 20, 50 };
+}
+<link href="/css/CustomerProductsIndex.css" rel="stylesheet" />
+   
+   
+    <!-- Header with Search -->
+    <header class="header">
+    <img src="https://koto.studio/wp-content/uploads/2025/04/Amazon_CS_01_Intro_00_Thumbnail.jpg" style="width:80px" alt="Logo" class="header__logo">
+        
+        <div class="header__search">
+            <input type="text" class="header__searchInput" placeholder="Search products...">
+            <i class="fas fa-search header__searchIcon"></i>
+        </div>
+        
+       
+ 
+    </header>
+    
+    <!-- Subheader with Categories -->
+
+        <div class="subheader__menu">
+            <i class="fas fa-bars subheader__menuIcon"></i>
+
+        <form method="get" id="paginationForm" class="amazon-page-size-form">
+            <div class="d-flex align-items-center gap-2">
+                <label for="size" class="mb-0 small text-muted">Items per page:</label>
+                <select name="size" id="size" class="form-select amazon-page-select" onchange="this.form.submit()">
+                    @foreach (var sizeOption in sizeOptions)
+                    {
+                        <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
+                    }
+                </select>
+            </div>
+            <input type="hidden" name="page" value="@currentPage" />
+        </form>
+        </div>
+        
+        
+
+    <!-- Main Content Area -->
+    <div class="main">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <h2 class="sidebar__title">Filter Products</h2>
+            @* 
+            <div class="sidebar__section">
+                <h3 class="sidebar__sectionTitle">Categories</h3>
+            @foreach (var category in ViewBag.categories)
+            {
+                <div class="sidebar__filterItem">
+                    <input type="checkbox" id="@category.id" class="sidebar__filterCheckbox">
+                    <label for="@category.id" class="sidebar__filterLabel">@category.name</label>
+                </div>
+
+            }
+                
+            </div> *@
+            
+            <div class="sidebar__section">
+                <h3 class="sidebar__sectionTitle">Price Range</h3>
+                <input type="range" min="0" max="1000" value="500" class="sidebar__priceRange">
+                <div class="sidebar__priceInputs">
+                    <input type="number" min="0" max="1000" value="0" class="sidebar__priceInput">
+                    <input type="number" min="0" max="1000" value="1000" class="sidebar__priceInput">
+                </div>
+            </div>
+            
+            <div class="sidebar__section">
+                <h3 class="sidebar__sectionTitle">Customer Ratings</h3>
+                <div class="sidebar__filterItem">
+                    <input type="checkbox" id="rating4" class="sidebar__filterCheckbox">
+                    <label for="rating4" class="sidebar__filterLabel">4 Stars & Up</label>
+                </div>
+                <div class="sidebar__filterItem">
+                    <input type="checkbox" id="rating3" class="sidebar__filterCheckbox">
+                    <label for="rating3" class="sidebar__filterLabel">3 Stars & Up</label>
+                </div>
+                <div class="sidebar__filterItem">
+                    <input type="checkbox" id="rating2" class="sidebar__filterCheckbox">
+                    <label for="rating2" class="sidebar__filterLabel">2 Stars & Up</label>
+                </div>
+            </div>
+        
+        </aside>
+        
+        <!-- Product Grid -->
+        <main class="products">
+          
+            <div class="products__grid">
+                <!-- Products -->
+                @foreach (var product in Model.Items)
+            {
+
+                <div class="col-4">
+                    <div class="product-card">
+                        <!-- Product Image -->
+                        <div class="product-card__image-container">
+                            <img src="/images/@product.image_url" alt="@product.name" class="product-card__image">
+                            <div class="product-card__quick-view">Quick View</div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="product-card__info">
+                            <h2 class="product-card__title">@product.name</h2>
+                            <div class="product-card__category">@product.Category.name</div>
+
+                            <!-- Rating -->
+                            <div class="product-card__rating">
+                                <div class="product-card__stars">
+                                    @{
+                                        int fullStars = (int)product.rating;
+                                        bool hasHalfStar = product.rating - fullStars >= 0.5;
+                                    }
+
+                                    @for (int i = 0; i < fullStars; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+
+                                    @if (hasHalfStar)
+                                    {
+                                        <i class="fas fa-star-half-alt"></i>
+                                    }
+
+                                    @for (int i = 0; i < 5 - fullStars - (hasHalfStar ? 1 : 0); i++)
+                                    {
+                                        <i class="far fa-star"></i>
+                                    }
+                                </div>
+                                <span class="product-card__review-count">(1,234)</span>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="product-card__price">
+                                <span class="product-card__price-amount">$@product.price</span>
+                                @if (product.price > product.discount_price)
+                                {
+                                    <span class="product-card__original-price">$@product.price</span>
+                                    <span class="product-card__discount">(@((int)(100 - (product.discount_price / product.price) * 100))% off)</span>
+                                }
+                            </div>
+
+                            <!-- Prime Badge -->
+                            <div class="product-card__prime">
+                                <img src="https://m.media-amazon.com/images/G/01/prime/marketing/slashPrime/amazon-prime-delivery-checkmark._CB659998231_.png"
+                                     alt="Prime" class="product-card__prime-icon">
+                                <span class="product-card__prime-text">FREE Delivery</span>
+                            </div>
+
+                            <!-- Stock Status -->
+                            <div class="product-card__stock">In Stock</div>
+
+                            <!-- Buttons -->
+                            <div class="product-card__buttons">
+                         
+                                <button class="details-btn btn btn-outline-warning" data-id="@product.id">
+                                    Details
+                              </button>
+                                <button class="product-card__wishlist-btn">
+                                    <i class="far fa-heart"></i> Add to Wishlist
+                                </button>
+                                <button class="product-card__cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+            }
+            </div>
+            
+            <!-- Pagination -->
+        <nav class="d-flex justify-content-between align-items-center my-4">
+            <div class="text-muted small">
+                Showing page @currentPage of @totalPages
+            </div>
+
+            <ul class="pagination amazon-pagination mb-0">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="?page=@(currentPage - 1)&size=@pageSize" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                @if (totalPages == 0)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link">0</a>
+                    </li>
+                }
+                else
+                {
+                    <!-- Always show first page -->
+                    <li class="page-item @(1 == currentPage ? "active" : "")">
+                        <a class="page-link" href="?page=1&size=@pageSize">1</a>
+                    </li>
+
+                    @if (currentPage > 3)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    @for (int i = Math.Max(2, currentPage - 1); i <= Math.Min(totalPages - 1, currentPage + 1); i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@i&size=@pageSize">@i</a>
+                        </li>
+                    }
+
+                    @if (currentPage < totalPages - 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    @if (totalPages > 1)
+                    {
+                        <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@totalPages&size=@pageSize">@totalPages</a>
+                        </li>
+                    }
+                }
+
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?page=@(currentPage + 1)&size=@pageSize" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        </main>
+    </div>
+
+    <script>
+        // Basic search functionality
+    //     document.querySelector('.header__searchIcon').addEventListener('click', function() {
+    //         const searchTerm = document.querySelector('.header__searchInput').value;
+    //        $.ajax({
+    //        url:"{area=customer}/{controller=product}/{action=Search}",
+    //       error:function(error){
+    //           alert(error)
+    //       }
+    //        })
+               
+    //        }
+    //     });
+        
+    //     Filter functionality
+    //     const checkboxes = document.querySelectorAll('.sidebar__filterCheckbox');
+    //     checkboxes.forEach(checkbox => {
+    //         checkbox.addEventListener('change', function() {
+    //             In a real implementation, you would filter products based on selected filters
+    //             console.log(`Filter changed: ${this.id} - ${this.checked}`);
+    //         });
+    //     });
+        
+    //     Price range filter
+    //     const priceRange = document.querySelector('.sidebar__priceRange');
+    //     const priceInputs = document.querySelectorAll('.sidebar__priceInput');
+        
+    //     priceRange.addEventListener('input', function() {
+    //         priceInputs[1].value = this.value;
+    //         In a real implementation, you would filter products based on price range
+    //     });
+        
+    //     priceInputs.forEach(input => {
+    //         input.addEventListener('change', function() {
+    //             In a real implementation, you would update the range slider and filter products
+    //             if (this === priceInputs[0]) {
+    //                 Min price changed
+    //             } else {
+    //                 Max price changed
+    //                 priceRange.value = this.value;
+    //             }
+    //         });
+    //     });
+        
+    //     Sort functionality
+    //     document.querySelector('.products__sortSelect').addEventListener('change', function() {
+    //         In a real implementation, you would sort products based on selected option
+    //         console.log(`Sort by: ${this.value}`);
+    //     });
+        
+    //     Add to cart functionality
+    //     const addToCartButtons = document.querySelectorAll('.product__addToCart');
+    //     addToCartButtons.forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const productTitle = this.closest('.product').querySelector('.product__title').textContent;
+    //             const productPrice = this.closest('.product').querySelector('.product__price').textContent;
+                
+    //             alert(`Added to cart: ${productTitle} - ${productPrice}`);
+                
+    //             Update cart count
+    //             const cartCount = document.querySelector('.header__cartCount');
+    //             cartCount.textContent = parseInt(cartCount.textContent) + 1;
+    //         });
+    //     });
+ 
+    // });
+document.addEventListener('load',function(){
+         document.querySelectorAll('.details-btn').forEach(button => {
+             console.log("details btn clicked")
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    window.location.href = `/Customer/Product/Details/${productId}`;
+                });
+})
+    
+    </script>

@@ -4949,7 +4949,6 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\sco
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-ka3duem7f0.gz
-C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-b9sayid5wm.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\th3pen5v8j-3r8b2a0bt1.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\uu1tfk8qyd-9aambh6nv0.gz
@@ -9364,9 +9363,10 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\Cas
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Proxies.dll
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\46qazm2v5g-ktlrzr0rbg.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vqt7zy1sdb-iwjryh8h66.gz
-C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-igitjnq2c3.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\btpj4hj0h7-m4gfkyivox.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\z5q4b6ps11-kqv6t48z1k.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-ozuavp8us1.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\7xdwthpi4y-oeabntolks.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\yhcz64ebh2-bj3rinxlgk.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-hwgv53zewi.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-8vizuqfvvc.gz

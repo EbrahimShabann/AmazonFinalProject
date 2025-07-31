@@ -1,4 +1,4 @@
-@model Final_project.Models.order
+ï»¿@model Final_project.Models.order
 
 @{
     ViewData["Title"] = "Delete Order";
@@ -316,7 +316,7 @@
             <p class="order-details"><strong>Date:</strong> @Model.order_date?.ToString("yyyy-MM-dd")</p>
             <p class="order-details"><strong>Customer:</strong> @Model.Buyer?.UserName</p>
             <p class="order-details"><strong>Status:</strong> @Model.status</p>
-            <p class="order-details"><strong>Total Amount:</strong> £@Model.total_amount?.ToString("N2")</p>
+            <p class="order-details"><strong>Total Amount:</strong> ï¿½@Model.total_amount?.ToString("N2")</p>
 
             @if (Model.OrderItems != null && Model.OrderItems.Any())
             {

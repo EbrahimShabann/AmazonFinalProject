@@ -1,5 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using Final_project.Models
+@inject UserManager<ApplicationUser> UserManager
+@{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentUser = await UserManager.GetUserAsync(User);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -15,8 +19,6 @@
 
 </head>
 <body>
-    <!-- Amazon-Style Header -->
-
     <header class="amazon-header">
         <div class="logo-section">
             <div class="logo">
@@ -24,44 +26,55 @@
             </div>
         </div>
 
-        <div class="search-bar">
-            <input type="text" placeholder="Search across dashboard...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
+
 
         <div class="user-actions">
-            <a href="#">
-                <i class="fas fa-bell"></i>
-                <span>Alerts</span>
-                <span class="notification-badge">5</span>
-            </a>
-            <a href="#">
-                <i class="fas fa-envelope"></i>
-                <span>Messages</span>
-            </a>
-            <a href="#">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-            <a href="#">
+            <a href="#" id="userProfileIcon">
                 <i class="fas fa-user-circle"></i>
                 <span>Admin</span>
             </a>
         </div>
     </header>
 
+    <div class="admin-profile-card" id="adminProfileCard">
+        <div class="card-header">
+            <div class="profile-img">
+                <img src="/images/users/@currentUser.profile_picture_url" alt="Admin Avatar" />
+                <div class="online-status"></div>
+            </div>
+            <div class="profile-info">
+                <h5>@(currentUser?.UserName ?? "Admin")</h5>
+                <p>Email: @(currentUser?.Email ?? "-")</p>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <div class="info-item">
+                <i class="fas fa-"></i>
+                <span>Phone number: <strong> @(currentUser?.PhoneNumber ?? "-")</strong></span>
+            </div>
+        </div>
+        <hr class="card-divider">
+        <div class="card-footer-actions">
+            <a asp-controller="Account" asp-action="SignOut"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+
     <div class="main-container">
-        <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <a class="sidebar-item @(currentController == "AdminDashboard" ? "active" : "")" asp-controller="AdminDashboard" asp-action="Index">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
+            <a class="sidebar-item @(currentController == "AdminUsers" ? "active" : "")" asp-action="AddUser" asp-controller="AdminUsers">
+                <i class="fas fa-store"></i>
+                <span>Sellers</span>
+            </a>
             <a class="sidebar-item @(currentController == "AdminSellers" ? "active" : "")" asp-action="pendingSeller" asp-controller="AdminSellers">
                 <i class="fas fa-store"></i>
                 <span>Sellers</span>
             </a>
-
             <a class="sidebar-item @(currentController == "AdminCategory" ? "active" : "")" asp-controller="AdminCategory" asp-action="Index">
                 <i class="fas fa-tags"></i>
                 <span>Categories</span>
@@ -75,27 +88,40 @@
                 <span>Customer Service</span>
             </a>
             <a class="sidebar-item @(currentController == "AdminRecycleBin" ? "active" : "")" asp-controller="AdminRecycleBin" asp-action="Index">
-                <i class="fas fa-trash-alt" ></i>
+                <i class="fas fa-trash-alt"></i>
                 <span>Recycle Bin</span>
-            </a>
-            <a class="sidebar-item" asp-controller="Account" asp-action="SignOut">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
             </a>
         </nav>
 
-        <!-- Main Content -->
-
-
-        @RenderBody();
+        @RenderBody()
 
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        $(".logo-section").on("click",function(){
-           window.location.href="/Landing/Index";
+        $(".logo-section").on("click", function () {
+            window.location.href = "/Landing/Index";
         })
+
+        $(document).ready(function () {
+            let isCardVisible = false;
+
+            // Use the specific ID for the icon
+            $("#userProfileIcon").on("click", function (e) {
+                e.preventDefault(); // Prevent page jump
+                e.stopPropagation();
+                $("#adminProfileCard").fadeToggle(200);
+                isCardVisible = !isCardVisible;
+            });
+
+            // Hide when clicking outside
+            $(document).on("click", function (e) {
+                if (isCardVisible && !$(e.target).closest("#adminProfileCard").length) {
+                    $("#adminProfileCard").fadeOut(200);
+                    isCardVisible = false;
+                }
+            });
+        });
     </script>
 </body>
 </html>

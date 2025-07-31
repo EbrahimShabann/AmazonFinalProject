@@ -33,32 +33,32 @@
         padding: 0;
     }
 
-    .container-fluid, .container {
-        background: transparent;
-        padding: 2rem;
-    }
+        /* .container-fluid, .container {
+            background: transparent;
+            padding: 2rem;
+        } */
 
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-    .container {
-        background: transparent;
-        backdrop-filter: none;
-        border: none;
-        border-radius: 0;
-        padding: 2rem;
-        margin: 0;
-        box-shadow: none;
-    }
+    /* .container {
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            border-radius: 0;
+            padding: 2rem;
+            margin: 0;
+            box-shadow: none;
+        } */
 
     .orders-section {
         min-height: 100vh;
@@ -66,6 +66,76 @@
         flex-direction: column;
         justify-content: flex-start;
     }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Filter Panel */
+    .filter-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .filter-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
 
     .btn {
         background: rgba(255, 255, 255, 0.15);
@@ -477,75 +547,91 @@
         opacity: 0.4;
     }
 </style>
-
-@if (!string.IsNullOrEmpty(sellerId))
-{
-    <div class="mb-2">
+@* <div class="container"> *@
+@* @if (!string.IsNullOrEmpty(sellerId))
+    {
+      <div class="mb-2">
         <span style="font-weight:600;font-size:1.1em;">Seller ID:</span>
         <span class="badge bg-primary" style="font-size:1em;">@sellerId</span>
+     </div>
+    }
+    <div class="mb-3">
+     <a href="/Seller/CreateTestOrders" class="btn btn-success">Create Test Orders</a>
+    </div> *@
+
+
+<!-- Hero Section -->
+<div class="dashboard-hero fade-in">
+    <div class="text-center mb-4">
+        <h1 style="font-weight:800;letter-spacing:0.5px;text-align:center;margin-bottom:40px"><i class="fas fa-star me-3"></i> My Orders</h1>
+        <p class="hero-subtitle" style="margin-bottom:40px">
+            Make Sure That Your Clinets Are Satisfied ^_^
+        </p>
     </div>
-}
-<div class="mb-3">
-    <a href="/Seller/CreateTestOrders" class="btn btn-success">Create Test Orders</a>
+
 </div>
-<form method="get" class="mb-3">
-    <div class="row g-2 align-items-end">
-        <div class="col-md-3">
-            <input type="text" name="searchOrderId" value="@ViewBag.SearchOrderId" class="form-control" placeholder="Order ID" />
+
+
+<div class="filter-panel fade-in">
+    <form method="get" class="mb-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <input type="text" name="searchOrderId" value="@ViewBag.SearchOrderId" class="form-control" placeholder="Order ID" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="searchCustomer" value="@ViewBag.SearchCustomer" class="form-control" placeholder="Customer Name" />
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-control">
+                    <option value="">All Statuses</option>
+                    @if (ViewBag.Status == "Pending")
+                    {
+                        <option value="Pending" selected>Pending</option>
+                    }
+                    else
+                    {
+                        <option value="Pending">Pending</option>
+                    }
+                    @if (ViewBag.Status == "Processing")
+                    {
+                        <option value="Processing" selected>Processing</option>
+                    }
+                    else
+                    {
+                        <option value="Processing">Processing</option>
+                    }
+                    @if (ViewBag.Status == "Shipped")
+                    {
+                        <option value="Shipped" selected>Shipped</option>
+                    }
+                    else
+                    {
+                        <option value="Shipped">Shipped</option>
+                    }
+                    @if (ViewBag.Status == "Delivered")
+                    {
+                        <option value="Delivered" selected>Delivered</option>
+                    }
+                    else
+                    {
+                        <option value="Delivered">Delivered</option>
+                    }
+                    @if (ViewBag.Status == "Cancelled")
+                    {
+                        <option value="Cancelled" selected>Cancelled</option>
+                    }
+                    else
+                    {
+                        <option value="Cancelled">Cancelled</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <input type="text" name="searchCustomer" value="@ViewBag.SearchCustomer" class="form-control" placeholder="Customer Name" />
-        </div>
-        <div class="col-md-3">
-            <select name="status" class="form-control">
-                <option value="">All Statuses</option>
-                @if (ViewBag.Status == "Pending")
-                {
-                    <option value="Pending" selected>Pending</option>
-                }
-                else
-                {
-                    <option value="Pending">Pending</option>
-                }
-                @if (ViewBag.Status == "Processing")
-                {
-                    <option value="Processing" selected>Processing</option>
-                }
-                else
-                {
-                    <option value="Processing">Processing</option>
-                }
-                @if (ViewBag.Status == "Shipped")
-                {
-                    <option value="Shipped" selected>Shipped</option>
-                }
-                else
-                {
-                    <option value="Shipped">Shipped</option>
-                }
-                @if (ViewBag.Status == "Delivered")
-                {
-                    <option value="Delivered" selected>Delivered</option>
-                }
-                else
-                {
-                    <option value="Delivered">Delivered</option>
-                }
-                @if (ViewBag.Status == "Cancelled")
-                {
-                    <option value="Cancelled" selected>Cancelled</option>
-                }
-                else
-                {
-                    <option value="Cancelled">Cancelled</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <table class="table table-bordered table-hover align-middle">
     <thead class="table-dark">
         <tr>
@@ -661,3 +747,4 @@
 
     </ul>
 </nav>
+@* </div> *@
