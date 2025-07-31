@@ -190,7 +190,7 @@ namespace Final_project.Controllers
             Product.is_approved = false;
             Product.is_active = false;
             Product.is_deleted = true;
-
+            
             unitOfWork.save();
 
             return Json(new { success = true });
@@ -223,4 +223,5 @@ namespace Final_project.Controllers
 
     }
 }
+
 

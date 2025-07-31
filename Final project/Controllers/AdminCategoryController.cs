@@ -3,6 +3,7 @@ using Final_project.Repository;
 using Final_project.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace Final_project.Controllers
@@ -182,53 +183,71 @@ namespace Final_project.Controllers
             return Json(suggestions);
         }
 
+        public  IActionResult AddCategory()
+        {
+
+            var categories =unitOfWork.CategoryRepository.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.id,
+                    Text = c.name
+                })
+                .ToList();
+            var model = new CategoryCreateViewModel
+            {
+                ParentCategories = categories
+            };
+            categories.Insert(0, new SelectListItem { Value = "", Text = "No Parent" });
+            return View(model);
+
+        }
+
         [HttpPost]
-        public async Task<IActionResult> AddCategoryAsync(CategoryCreateViewModel model, IFormFile imgFile)
+        public async Task<IActionResult> AddCategory(CategoryCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState); // For AJAX
             }
 
-            if (imgFile != null && imgFile.Length > 0)
+            if (model.imgFile != null && model.imgFile.Length > 0)
             {
-                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images","categories");
                 Directory.CreateDirectory(uploads);
 
-                var fileName = Path.GetFileName(imgFile.FileName);
+                var fileName = Path.GetFileName(model.imgFile.FileName);
                 var filePath = Path.Combine(uploads, fileName);
 
                 await using var stream = new FileStream(filePath, FileMode.Create);
-                await imgFile.CopyToAsync(stream);
+                await model.imgFile.CopyToAsync(stream);
 
                 // Point your model at the saved path
-                model.image_url = "/Category/" + fileName;
             }
 
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             var newCategory = new category
-            {
-                id = Guid.NewGuid().ToString(),
-                name = model.name,
-                description = model.description,
-                parent_category_id = model.parent_category_id,
-                image_url = model.image_url,
-                created_by = currentUserId, // Replace with your logic
-                created_at = DateTime.Now,
-                ParentCategory = await unitOfWork.CategoryRepository.GetByIdAsync(model.parent_category_id),
-                CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
-                last_modified_by = currentUserId, // Replace with your logic
-                last_modified_at = DateTime.Now,
-                LastModifiedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
-                deleted_by = null, // Set to null if not deleted
+                {
+                    id = Guid.NewGuid().ToString(),
+                    name = model.name,
+                    description = model.description,
+                    parent_category_id = string.IsNullOrEmpty(model.parent_category_id) ? null : model.parent_category_id,
+                    image_url = Path.GetFileName(model.imgFile.FileName),
+                    created_by = currentUserId, // Replace with your logic
+                    created_at = DateTime.Now,
+                    ParentCategory = string.IsNullOrEmpty(model.parent_category_id) ? null : await unitOfWork.CategoryRepository.GetByIdAsync(model.parent_category_id),
+                    CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
+                    last_modified_by = currentUserId, // Replace with your logic
+                    last_modified_at = DateTime.Now,
+                    LastModifiedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
+                    deleted_by = null, // Set to null if not deleted
 
-            };
-
+                };
+            
+          
             unitOfWork.CategoryRepository.add(newCategory);
             unitOfWork.save();
-            return Json(new { success = true, message = "Category added successfully!" });
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> CategoryDetails(string id)

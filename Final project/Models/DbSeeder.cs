@@ -12,7 +12,7 @@ namespace Final_project.Models
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 // Define the roles to be created
-                string[] roleNames = { "admin", "seller", "customer", "customerService" };
+                string[] roleNames = { "admin", "seller", "customer", "Support" };
 
                 // Create roles if they don't exist
                 foreach (var roleName in roleNames)
@@ -38,7 +38,7 @@ namespace Final_project.Models
                     var result = await userManager.CreateAsync(adminUser, "Admin1234");
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(adminUser, "admin");
+                        await userManager.AddToRoleAsync(adminUser, "Admin");
                     }
                 }
             }
