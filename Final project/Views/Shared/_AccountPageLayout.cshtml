@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon - @ViewData["Title"]</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/AccountPage.css" asp-append-version="true" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shape">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+                <polygon points="40,10 60,30 60,50 40,70 20,50 20,30"
+                         fill="var(--amazon-orange)"
+                         opacity="0.3" />
+            </svg>
+        </div>
+        <div class="floating-shape">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30"
+                        cy="30"
+                        r="25"
+                        fill="var(--amazon-orange)"
+                        opacity="0.2" />
+            </svg>
+        </div>
+        <div class="floating-shape">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+                <rect x="10"
+                      y="10"
+                      width="50"
+                      height="50"
+                      fill="var(--amazon-orange)"
+                      opacity="0.25"
+                      transform="rotate(45 35 35)" />
+            </svg>
+        </div>
+        <div class="floating-shape">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+                <path d="M45,10 L70,35 L45,60 L20,35 Z"
+                      fill="var(--amazon-orange)"
+                      opacity="0.2" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="back-home-container">
+        <a href="/" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+                <div class="register-container">
+
+                    @RenderBody()
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

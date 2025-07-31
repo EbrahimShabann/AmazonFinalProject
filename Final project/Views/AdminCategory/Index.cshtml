@@ -1,0 +1,840 @@
+﻿@model List<category>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "AdminLayout";
+
+}
+<style>
+
+    /* Main Layout */
+    .main-container {
+        display: flex;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background: var(--amazon-dark);
+        color: white;
+        padding: 1.5rem 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        box-shadow: 3px 0 15px rgba(0,0,0,0.1);
+        z-index: 900;
+    }
+
+        .sidebar:hover {
+            transform: translateX(5px);
+        }
+
+    .sidebar-item {
+        padding: 0.9rem 1.5rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+    }
+
+        .sidebar-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .sidebar-item:hover:before {
+            left: 0;
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 153, 0, 0.2);
+            border-left: 4px solid var(--amazon-orange);
+        }
+
+        .sidebar-item i {
+            width: 30px;
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+            color: var(--amazon-orange);
+        }
+
+        .sidebar-item span {
+            font-weight: 500;
+        }
+
+    /* Main Content */
+    .main-content {
+        flex: 1;
+        padding: 2rem;
+        background: var(--amazon-light);
+    }
+
+    .dashboard-title {
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid var(--amazon-orange);
+        animation: fadeIn 1s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: var(--amazon-card);
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .filter-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: var(--amazon-dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .filter-title i {
+            color: var(--amazon-orange);
+        }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .filter-group {
+        margin-bottom: 0.5rem;
+    }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            color: var(--amazon-dark);
+            font-size: 0.9rem;
+        }
+
+    .filter-control {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+        .filter-control:focus {
+            border-color: var(--amazon-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        }
+
+    .filter-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+    }
+
+    /* Table Styles */
+    .categories-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--amazon-card);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.8s ease;
+    }
+
+        .categories-table th {
+            background: var(--amazon-dark);
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 500;
+        }
+
+        .categories-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .categories-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .categories-table tr:hover {
+            background-color: rgba(35, 47, 62, 0.03);
+        }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.3rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: rgba(0, 166, 90, 0.15);
+        color: var(--amazon-success);
+    }
+
+    .status-pending {
+        background-color: rgba(243, 156, 18, 0.15);
+        color: var(--amazon-warning);
+    }
+
+    .status-inactive {
+        background-color: rgba(231, 76, 60, 0.15);
+        color: var(--amazon-danger);
+    }
+
+    .status-deleted {
+        background-color: rgba(108, 117, 125, 0.15);
+        color: #6c757d;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 0.8rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .btn-primary {
+        background: var(--amazon-orange);
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #e88a00;
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary {
+        background: var(--amazon-light);
+        color: var(--amazon-text);
+        border: 1px solid #ddd;
+    }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+    .btn-success {
+        background: var(--amazon-success);
+        color: white;
+    }
+
+        .btn-success:hover {
+            background: #008d4c;
+        }
+
+    .btn-danger {
+        background: var(--amazon-danger);
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background: #c03a2b;
+        }
+
+    .btn-info {
+        background: var(--amazon-info);
+        color: white;
+    }
+
+        .btn-info:hover {
+            background: #217dbb;
+        }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1100;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+        margin-top: 15vh; /* Push it down from top */
+
+        background: white;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.4s ease;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: var(--amazon-dark);
+        color: white;
+        padding: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .modal-header h3 {
+            font-weight: 500;
+        }
+
+    .modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .form-row {
+        display: flex;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        flex: 1;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--amazon-dark);
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: var(--amazon-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        }
+
+    .description-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .description-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+    .modal-footer {
+        padding: 1.2rem;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    /* Image Upload */
+    .image-upload-container {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+        .image-upload-container.highlight {
+            border-color: var(--amazon-orange);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+    .drop-area {
+        cursor: pointer;
+    }
+
+        .drop-area p {
+            margin: 0.5rem 0;
+        }
+
+    .image-preview {
+        position: relative;
+        display: none;
+        width: 150px;
+        margin: 0 auto;
+    }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 4px;
+        }
+
+    #removeImage {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .loading-spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid white;
+        border-top: 2px solid #3498db;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes spin {
+    0%
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+</style>
+<main class="main-content">
+    <div class="dashboard-title">
+        <h1>Category Management</h1>
+        <button class="btn btn-primary" id="addCategoryBtn">
+            <i class="fas fa-plus"></i> Add Category
+        </button>
+    </div>
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <h3 class="filter-title"><i class="fas fa-filter"></i> Filter Categories</h3>
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label for="filterName">Category Name</label>
+                <input type="text" id="filterName" class="filter-control" placeholder="Enter category name">
+                <div id="NameSuggestions" class="list-group"></div>
+
+            </div>
+
+            <div class="filter-group">
+                <label for="filterCreatedBy">Created By</label>
+                <input type="text" id="filterCreatedBy" class="filter-control" placeholder="Enter creator name">
+                <div id="CreatedBySuggestions" class="list-group"></div>
+
+            </div>
+
+            <div class="filter-group">
+                <label for="filterStatus">Status</label>
+                <select id="filterStatus" class="filter-control">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterDateFrom">Created From</label>
+                <input type="date" id="filterDateFrom" class="filter-control">
+            </div>
+
+            <div class="filter-group">
+                <label for="filterDateTo">Created To</label>
+                <input type="date" id="filterDateTo" class="filter-control">
+            </div>
+        </div>
+
+        <div class="filter-actions">
+            <button class="btn btn-secondary" id="clearFilters">
+                <i class="fas fa-times"></i> Clear Filters
+            </button>
+            <button class="btn btn-primary" id="applyFilters">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+    <!-- Categories Table -->
+    <table class="categories-table">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Created By</th>
+                <th>Created At</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="categoryTableBody">
+
+            @Html.Partial("CategoryListPartial", Model)
+
+
+        </tbody>
+    </table>
+</main>
+<!-- Add Category Modal -->
+<div class="modal" id="addCategoryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-plus-circle"></i> Add New Category</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="categoryForm" enctype="multipart/form-data" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Category Name *</label>
+                        <input type="text" id="Name" name="name" class="form-control" placeholder="Enter category name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ParentCategoryId">Parent Category</label>
+                        <select id="ParentCategoryId" name="parent_category_id" class="form-control">
+                            <option value="">None</option>
+                            @foreach (category category in Model)
+                            {
+                                if ((bool)category.is_active)
+                                {
+                                            <option value="@category.id">@category.name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="description-group">
+                    <label for="description">Category Description</label>
+                    <textarea id="Description" name="description" class="form-control" placeholder="Enter category description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Category Image</label>
+                    <div class="image-upload-container">
+                        <div class="drop-area" id="dropArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                            <p>Drag & drop your image here</p>
+                            <span>OR</span>
+                            <button type="button" class="btn btn-outline-primary mt-2" id="browseBtn">Browse Files</button>
+                            <input type="file" id="imageFile" name="imgFile" accept="image/*" hidden>
+                        </div>
+                        <div class="image-preview mt-3" id="imagePreview" style="display:none;">
+                            <img id="previewImg" src="#" alt="Preview">
+                            <div class="image-name" id="imageNameDisplay"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="image_url" name="image_url">
+                    <small class="text-danger" id="imageError"></small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelAddCategory">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitCategory">
+                        <i class="fas fa-save"></i> Create Category
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+<script>
+    function loadFilteredCategories(page = 1) {
+        const filters = {
+            name: $('#filterName').val(),
+            createdBy: $('#filterCreatedBy').val(),
+            status: $('#filterStatus').val(),
+            dateFrom: $('#filterDateFrom').val(),
+            dateTo: $('#filterDateTo').val(),
+            page: page,
+            pageSize: 10 // or whatever size you want
+        };
+
+        $.get('/AdminCategory/FilterCategories', filters, function (html) {
+            $('#categoryTableBody').html(html);
+        });
+    }
+
+    $('#applyFilters').on('click', function () {
+        loadFilteredCategories(1); // Reset to first page
+    });
+
+    $('#clearFilters').on('click', function () {
+        $('#filterName').val('');
+        $('#filterCreatedBy').val('');
+        $('#filterStatus').val('');
+        $('#filterDateFrom').val('');
+        $('#filterDateTo').val('');
+        loadFilteredCategories(1);
+    });
+
+    $(document).on('click', '.pagination-btn', function () {
+        const page = $(this).data('page');
+        loadFilteredCategories(page);
+    });
+
+    // Initial load
+    $(document).ready(function () {
+        loadFilteredCategories(1);
+    });
+    function showToast(success, message) {
+        toastr.options = {
+            "positionClass": "toast-bottom-right",
+            "timeOut": "2500",
+            "progressBar": true,
+        };
+
+        if (success) {
+            toastr.success(message);
+        } else {
+            toastr.error(message);
+        }
+    }
+
+    function reloadCategoryTable() {
+        $.get('/AdminCategory/CategoryListPartial', function (html) {
+            $('#categoryTableBody').html(html);
+        });
+    }
+
+    function showSpinner(btn) {
+        $(btn).prop("disabled", true);
+        $(btn).append('<span class="loading-spinner"></span>');
+    }
+
+    function hideSpinner(btn) {
+        $(btn).prop("disabled", false);
+        $(btn).find('.loading-spinner').remove();
+    }
+
+    $(document).on('click', '.activate-btn, .deactivate-btn, .delete-btn', function () {
+        const btn = this;
+        const id = $(btn).data('id');
+        let actionUrl = '';
+        let confirmMsg = '';
+
+        if ($(btn).hasClass('activate-btn')) {
+            actionUrl = '/AdminCategory/ActivateCategory';
+        } else if ($(btn).hasClass('deactivate-btn')) {
+            actionUrl = '/AdminCategory/DeactivateCategory';
+        } else if ($(btn).hasClass('delete-btn')) {
+            actionUrl = '/adminCategory/DeleteCategory';
+            confirmMsg = 'Are you sure you want to delete this category?';
+            if (!confirm(confirmMsg)) return;
+        }
+
+        showSpinner(btn);
+
+        $.post(actionUrl, { id: id }, function (res) {
+            hideSpinner(btn);
+            showToast(res.success, res.message);
+            if (res.success) {
+                location.reload();
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+           // Modal functionality
+           const modal = document.getElementById('addCategoryModal');
+           const openBtn = document.getElementById('addCategoryBtn');
+           const closeBtn = document.querySelector('.modal-close');
+           const cancelBtn = document.getElementById('cancelAddCategory');
+           const submitBtn = document.getElementById('submitCategory');
+
+           function openModal() {
+               modal.style.display = 'flex';
+               document.body.style.overflow = 'hidden';
+           }
+
+           function closeModal() {
+               modal.style.display = 'none';
+               document.body.style.overflow = 'auto';
+           }
+
+           openBtn.addEventListener('click', openModal);
+           closeBtn.addEventListener('click', closeModal);
+           cancelBtn.addEventListener('click', closeModal);
+
+           // Close modal when clicking outside
+           window.addEventListener('click', function(e) {
+               if (e.target === modal) {
+                   closeModal();
+               }
+           });
+
+           // Form submission
+           submitBtn.addEventListener('click', function() {
+                closeModal();
+           });
+
+
+
+           document.getElementById('clearFilters').addEventListener('click', function() {
+               document.getElementById('filterName').value = '';
+               document.getElementById('filterCreatedBy').value = '';
+               document.getElementById('filterStatus').value = '';
+               document.getElementById('filterDateFrom').value = '';
+               document.getElementById('filterDateTo').value = '';
+           });
+       });
+       $('#browseBtn').on('click', function () {
+        $('#imageFile').click();
+    });
+
+    $('#imageFile').on('change', function () {
+        const file = this.files[0];
+        if (file) {
+            $('#imageNameDisplay').text(file.name);
+            $('#image_url').val(file.name); // set hidden input value
+            $('#imagePreview').show();
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#previewImg').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    $('#categoryForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      // if you want to double-check:
+      const fileInput = $('#imageFile')[0];
+      if (fileInput.files.length) {
+        formData.append('imgFile', fileInput.files[0]);
+      }
+
+      $.ajax({
+        url: '/AdminCategory/AddCategory',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success(resp) {
+          alert(resp.message);
+        },
+        error(xhr) {
+          alert('Upload failed: ' + xhr.responseText);
+        }
+      });
+    });
+
+
+    $("#filterName").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminCategory/SuggestCategoryNames', { term: query }, function (data) {
+                $("#NameSuggestions").empty();
+                data.forEach(item => {
+                    $("#NameSuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item + '">' + item + '</div>');
+                });
+            });
+        } else {
+            $("#NameSuggestions").empty();
+        }
+    });  
+
+    $(document).on('click', '#NameSuggestions .list-group-item', function () {
+        $("#filterName").val($(this).data('name'));
+        $("#NameSuggestions").empty();
+    });
+
+    $("#filterCreatedBy").keyup(function () {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.get('/AdminCategory/SuggestCreators', { term: query }, function (data) {
+                $("#CreatedBySuggestions").empty();
+                data.forEach(item => {
+                    $("#CreatedBySuggestions").append('<div class="list-group-item list-group-item-action" data-name="' + item + '">' + item + '</div>');
+                });
+            });
+        } else {
+            $("#CreatedBySuggestions").empty();
+        }
+    });
+
+    $(document).on('click', '#CreatedBySuggestions .list-group-item', function () {
+        $("#filterCreatedBy").val($(this).data('name'));
+        $("#CreatedBySuggestions").empty();
+    });
+</script>

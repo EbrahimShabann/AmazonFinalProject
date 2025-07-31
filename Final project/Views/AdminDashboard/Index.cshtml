@@ -1,0 +1,229 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "AdminLayout";
+}
+<main class="main-content">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+
+<!-- Stats Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">@ViewBag.TotalCustomers</div>
+            <div class="stat-title">Total Customers</div>
+            @if(ViewBag.customerPercentage>0)
+            {
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i>  @(Math.Abs(ViewBag.customerPercentage))% from last month
+                </div>
+            }
+            @if (ViewBag.customerPercentage < 0)
+            {
+                <div class="stat-trend down">
+                    <i class="fas fa-arrow-down"></i>  @(Math.Abs(ViewBag.customerPercentage))% from last month
+                </div>
+            }
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-store"></i>
+            </div>
+            <div class="stat-value">@ViewBag.TotalSellers</div>
+            <div class="stat-title">Total Sellers</div>
+            @if (ViewBag.sellerPercentage > 0)
+            {
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i>  @(Math.Abs(ViewBag.sellerPercentage))% from last month
+                </div>
+            }
+            @if (ViewBag.sellerPercentage < 0)
+            {
+                <div class="stat-trend down">
+                    <i class="fas fa-arrow-down"></i>  @(Math.Abs(ViewBag.sellerPercentage))% from last month
+                </div>
+            }
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-value">@ViewBag.TotalProducts</div>
+            <div class="stat-title">Total Products</div>
+            @if (ViewBag.productPercetage > 0)
+            {
+                <div class="stat-trend up">
+                    <i class="fas fa-arrow-up"></i>  @(Math.Abs(ViewBag.productPercetage))% from last month
+                </div>
+            }
+            @if (ViewBag.productPercetage < 0)
+            {
+                <div class="stat-trend down">
+                    <i class="fas fa-arrow-down"></i>  @(Math.Abs(ViewBag.productPercetage))% from last month
+                </div>
+            }
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">@ViewBag.PendingProducts</div>
+            <div class="stat-title">Pending Products</div>
+
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-clock"></i>
+            </div>
+            <div class="stat-value">@ViewBag.PendingSellers</div>
+            <div class="stat-title">Pending Sellers</div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-row">
+        <div class="chart-container">
+            <div class="section-header">
+                <h2 class="section-title">New Sellers & Customers Per Month</h2>
+                <div class="chart-actions">
+                    <button class="btn btn-sm btn-outline-secondary">Monthly</button>
+                    <button class="btn btn-sm btn-outline-secondary ms-2">Quarterly</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="section-header">
+                <h2 class="section-title">Pending Status</h2>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="pendingChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get data from backend
+        const labels = @Html.Raw(Json.Serialize(ViewBag.MonthLabels));
+        const customers = @Html.Raw(Json.Serialize(ViewBag.MonthlyCustomers));
+        const sellers = @Html.Raw(Json.Serialize(ViewBag.MonthlySellers));
+        const pendingData = @Html.Raw(Json.Serialize(ViewBag.PendingChartData));
+
+        // Growth Chart (Line)
+        const growthCtx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'New Customers',
+                        data: customers,
+                        borderColor: '#146eb4',
+                        backgroundColor: 'rgba(20, 110, 180, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#146eb4'
+                    },
+                    {
+                        label: 'New Sellers',
+                        data: sellers,
+                        borderColor: '#FF9900',
+                        backgroundColor: 'rgba(255, 153, 0, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#FF9900'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        // Pending Chart (Doughnut)
+        const pendingCtx = document.getElementById('pendingChart').getContext('2d');
+        const pendingChart = new Chart(pendingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending Sellers', 'Pending Products'],
+                datasets: [{
+                    data: pendingData,
+                    backgroundColor: [
+                        'rgba(255, 153, 0, 0.8)',
+                        'rgba(20, 110, 180, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 153, 0, 1)',
+                        'rgba(20, 110, 180, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 2000
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>

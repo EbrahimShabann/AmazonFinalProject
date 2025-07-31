@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Your Account";
+}
+
+<title>Your Account - Amazon</title>
+
+
+<style>
+    .account-tile {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 20px;
+        display: block;
+        color: #000;
+        background-color: #fff;
+        height: 100%;
+    }
+
+        .account-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    .icon-circle {
+        width: 50px;
+        height: 50px;
+        background-color: #f0f2f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .icon-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .tile-footer {
+        margin-top: 10px;
+        text-align: right;
+    }
+</style>
+
+<div class="container my-5">
+    <h2 class="mb-4">Your Account</h2>
+
+    <div class="row g-4">
+        <!-- Orders -->
+        <div class="col-md-4">
+            <a href="/Profile/Orders" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="Orders" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/order._CB657847415_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Your Orders</h6>
+                        <p>Track, return, or buy things again</p>
+                    </div>
+                </div>
+               
+            </a>
+        </div>
+        <!-- Login & Security -->
+        <div class="col-md-4">
+            <a href="/Profile/LoginAndSecurity" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/security._CB657836742_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Login & Security</h6>
+                        <p>Manage password, email, mobile number</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- FAQ -->
+        <div class="col-md-4">
+            <a href="/Profile/staticPages?page=faq" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/YA_icon_Help_1._CB657836742_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Pre-Order FAQs</h6>
+                        <p>Frequently Asked Questions Before Completing Your Order</p>
+                    </div>
+                </div>
+                
+            </a>
+        </div>
+        <!-- Messages -->
+        <div class="col-md-4">
+            <a href="/Profile/Messages" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fa-solid fa-envelope fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h6>Your Messages</h6>
+                        <p>View messages from sellers & Amazon</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Amazon Mobile App -->
+        <div class="col-md-4">
+            <a href="/Profile/staticPages?page=app" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/mobileapp._CB668209870_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Amazon Mobile App</h6>
+                        <p>Download the Amazon App</p>
+                    </div>
+                </div>
+                
+            </a>
+        </div>
+
+       
+
+        <!-- Contact Us -->
+        <div class="col-md-4">
+            <a href=" /Profile/staticPages?page=contact" class="account-tile">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <img alt="Contact Us" src="https://m.media-amazon.com/images/G/42/x-locale/cs/help/images/gateway/self-service/contact_us._CB665051409_.png" class="icon-img">
+                    </div>
+                    <div>
+                        <h6>Contact Us</h6>
+                        <p>Customer service via phone/chat</p>
+                    </div>
+                </div>
+                
+            </a>
+        </div>
+    </div>
+</div>

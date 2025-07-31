@@ -1,0 +1,33 @@
+﻿@using Final_project.Services.Customer
+@model PagedResult<order>
+<div class="order-list">
+    <!-- Order  -->
+    @foreach (var order in Model.Items)
+    {
+        <div class="order-card">
+            <div class="order-header d-flex justify-content-between">
+                <div>
+                    <span class="fw-bold">ORDER PLACED</span><br>
+                    <span>@order.order_date?.ToString("dd,MMMM,yyyy")</span>
+                </div>
+                <div>
+                    <span class="fw-bold">TOTAL</span><br>
+                    <span>@order.total_amount?.ToString("C")</span>
+                </div>
+                <div>
+                    <span class="fw-bold">SHIP TO</span><br>
+                    <span>@order.Buyer.UserName</span>
+                </div>
+                <div>
+                    <span class="fw-bold">ORDER # @order.id</span><br>
+                    <a href="/Profile/orderDetails?id=@order.id" class="text-primary">Order Details</a>
+                </div>
+            </div>
+
+
+        </div>
+
+    }
+
+
+</div>

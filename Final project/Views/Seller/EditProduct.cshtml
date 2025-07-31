@@ -1,0 +1,951 @@
+@model Final_project.Models.product
+
+@{
+    ViewData["Title"] = "Edit Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+    .container {
+        padding: 2rem;
+        max-width: 1200px;
+    }
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0%
+
+    {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Form Panel */
+    .form-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .form-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+    /* Form Controls */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
+
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .floating-btn:hover::before {
+            left: 100%;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
+
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
+
+        .floating-btn.warning {
+            background: linear-gradient(135deg, var(--warning-orange) 0%, #e67e22 100%);
+            border: none;
+        }
+
+    /* Color Swatches */
+    .color-swatch {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .color-swatch:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-swatch.selected {
+            border-color: var(--amazon-orange);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.3);
+        }
+
+    /* Alert Styling */
+    .alert {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        color: white;
+    }
+
+    .alert-danger {
+        background: rgba(220, 53, 69, 0.2);
+        border-color: rgba(220, 53, 69, 0.3);
+        color: #ff6b6b;
+    }
+
+    /* Utility Classes */
+    .text-center {
+        text-align: center !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.5rem;
+        margin-left: -0.5rem;
+    }
+
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .col-md-12 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .mt-1 {
+        margin-top: 0.25rem !important;
+    }
+
+    .text-danger {
+        color: #ff6b6b !important;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .text-secondary {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .small {
+        font-size: 0.875rem !important;
+    }
+
+    .form-text {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title
+
+    {
+        font-size: 2rem;
+    }
+
+    .col-md-6 {
+        width: 100%;
+    }
+
+    .form-panel {
+        padding: 1.5rem;
+    }
+
+    }
+
+    /* checkbox_style ------------------------------------------------------------------*/
+    /* Simple Radio Button Container - No Background */
+    .glass-radio-group {
+        padding: 0.5rem 0;
+        margin: 0.5rem 0;
+    }
+
+    /* Radio Button Options Container */
+    .radio-options {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    /* Custom Radio Button Wrapper */
+    .glass-radio-option {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        padding: 0.75rem 1.25rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+
+        .glass-radio-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Hide Default Radio Button */
+    .glass-radio-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Custom Radio Button Design */
+    .glass-radio-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+        .glass-radio-custom::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9900 0%, #ff7700 100%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+        }
+
+    /* Active State */
+    .glass-radio-input:checked + .glass-radio-custom {
+        border-color: #ff9900;
+        background: rgba(255, 153, 0, 0.15);
+        box-shadow: 0 0 15px rgba(255, 153, 0, 0.3);
+    }
+
+        .glass-radio-input:checked + .glass-radio-custom::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+    /* Radio Label */
+    .glass-radio-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .glass-radio-input:checked ~ .glass-radio-label {
+        color: #fff;
+        font-weight: 600;
+        text-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
+    }
+
+    .glass-radio-option:hover .glass-radio-label {
+        color: #fff;
+    }
+
+    /* Focus State for Accessibility */
+    .glass-radio-input:focus + .glass-radio-custom {
+        outline: 2px solid rgba(255, 153, 0, 0.5);
+        outline-offset: 2px;
+    }
+
+    /* Active Animation */
+    .glass-radio-option.active {
+        background: rgba(255, 153, 0, 0.1);
+        border-color: rgba(255, 153, 0, 0.3);
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .radio-options
+
+    {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .glass-radio-option {
+        justify-content: center;
+    }
+
+    }
+    /* sizes_selection */
+    select[multiple] {
+        min-height: 120px;
+        padding: 8px;
+    }
+
+        select[multiple] option {
+            padding: 6px 12px;
+            margin: 2px 0;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+            select[multiple] option:checked {
+                background: var(--amazon-orange);
+                color: white;
+            }
+    /* back_button */
+
+    .glass-btn {
+        display: inline-block;
+        padding: 0.6rem 1.4rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ff9900;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+    </style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-edit me-3"></i>
+                Edit Product
+            </h1>
+            <p class="hero-subtitle">
+                Update product information and details
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/MyProducts" class="floating-btn primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to My Products
+            </a>
+            <a href="/Seller/AllProducts" class="floating-btn success">
+                <i class="fas fa-database me-2"></i>View All Products
+            </a>
+        </div>
+    </div>
+
+    @if (Model.product_images != null && Model.product_images.Any())
+    {
+        <div class="form-panel fade-in mb-4">
+            <h4 class="mb-3" style="color:var(--amazon-orange); font-weight:700;">Product Images</h4>
+            <div style="display:flex; flex-wrap:wrap; gap:18px;">
+                @foreach (var img in Model.product_images)
+                {
+                    <div style="background:rgba(255,255,255,0.08); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:12px; width:170px; text-align:center; position:relative;">
+                        <img src="@img.image_url" alt="Product Image" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:2px solid @(img.image_type == "main" ? "var(--amazon-orange)" : "#ccc"); margin-bottom:8px;" />
+                        <div style="margin-bottom:6px;">
+                            <span class="badge" style="background:@(img.image_type == "main" ? "var(--amazon-orange)" : "#888"); color:white; font-size:0.85rem; padding:4px 10px; border-radius:8px;">
+                                @(img.image_type == "main" ? "Main" : "Sub")
+                            </span>
+                        </div>
+                        <form asp-action="DeleteProductImage" method="post" style="display:inline;">
+                            <input type="hidden" name="imageId" value="@img.id" />
+                            <input type="hidden" name="productId" value="@Model.id" />
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom:4px; width:100%;">Delete</button>
+                        </form>
+                        <form asp-action="ChangeProductImageType" method="post" style="display:inline;">
+                            <input type="hidden" name="imageId" value="@img.id" />
+                            <input type="hidden" name="productId" value="@Model.id" />
+                            <input type="hidden" name="newType" value="@(img.image_type == "main" ? "sub" : "main")" />
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-warning btn-sm" style="width:100%;">
+                                Set as @(img.image_type == "main" ? "Sub" : "Main")
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Form Panel -->
+    <div class="form-panel fade-in">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+
+        <form asp-action="EditProduct" method="post" enctype="multipart/form-data" id="editProductForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="id" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="name" class="glass-label text-info">Product Name</label>
+                        <input asp-for="name" class="glass-input" />
+                        <span asp-validation-for="name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="price" class="glass-label text-info">Price</label>
+                        <input asp-for="price" class="glass-input" type="number" step="0.01" />
+                        <span asp-validation-for="price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="discount_price" class="glass-label text-info">Discount Price</label>
+                        <input asp-for="discount_price" class="glass-input" type="number" step="0.01" />
+                        <span asp-validation-for="discount_price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="stock_quantity" class="glass-label text-info">Stock Quantity</label>
+                        <input asp-for="stock_quantity" class="glass-input" type="number" />
+                        <span asp-validation-for="stock_quantity" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Brand" class="glass-label text-info">Brand</label>
+                        <input asp-for="Brand" class="glass-input" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="sku" class="glass-label text-info">SKU</label>
+                        <input asp-for="sku" class="glass-input" />
+                        <span asp-validation-for="sku" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="category_id" class="glass-label text-info">Category</label>
+                        <select asp-for="category_id" class="glass-input">
+                            <option value="">Select Category</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category.id"
+                                            selected="@(category.id == Model.category_id)">
+                                        @category.name
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="category_id" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Sizes" class="glass-label text-info">Sizes</label>
+                        <select name="Sizes" class="glass-input" multiple>
+                            @{
+                                var selectedSizes = Model.Sizes?.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                ?? Array.Empty<string>();
+                            }
+                            <option value="XS" selected="@selectedSizes.Contains("XS")">XS</option>
+                            <option value="S" selected="@selectedSizes.Contains("S")">S</option>
+                            <option value="M" selected="@selectedSizes.Contains("M")">M</option>
+                            <option value="L" selected="@selectedSizes.Contains("L")">L</option>
+                            <option value="XL" selected="@selectedSizes.Contains("XL")">XL</option>
+                            <option value="XXL" selected="@selectedSizes.Contains("XXL")">XXL</option>
+                            <option value="XXXL" selected="@selectedSizes.Contains("XXXL")">XXXL</option>
+                            <option value="36" selected="@selectedSizes.Contains("36")">36</option>
+                            <option value="37" selected="@selectedSizes.Contains("37")">37</option>
+                            <option value="38" selected="@selectedSizes.Contains("38")">38</option>
+                            <option value="39" selected="@selectedSizes.Contains("39")">39</option>
+                            <option value="40" selected="@selectedSizes.Contains("40")">40</option>
+                            <option value="41" selected="@selectedSizes.Contains("41")">41</option>
+                            <option value="42" selected="@selectedSizes.Contains("42")">42</option>
+                            <option value="43" selected="@selectedSizes.Contains("43")">43</option>
+                            <option value="44" selected="@selectedSizes.Contains("44")">44</option>
+                            <option value="45" selected="@selectedSizes.Contains("45")">45</option>
+                            <option value="46" selected="@selectedSizes.Contains("46")">46</option>
+                            <option value="47" selected="@selectedSizes.Contains("47")">47</option>
+                            <option value="48" selected="@selectedSizes.Contains("48")">48</option>
+                            <option value="One Size" selected="@selectedSizes.Contains("One Size")">One Size</option>
+                        </select>
+                        <small class="form-text">Hold Ctrl/Cmd to select multiple sizes</small>
+                        <span asp-validation-for="Sizes" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="description" class="glass-label text-info">Description</label>
+                <textarea asp-for="description" class="glass-input" rows="4"></textarea>
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="glass-label text-info">Colors</label>
+                <div id="colorSwatchContainer" class="mb-2">
+                    <span class="color-swatch" data-color="Red" style="background:red;"></span>
+                    <span class="color-swatch" data-color="Blue" style="background:blue;"></span>
+                    <span class="color-swatch" data-color="Green" style="background:green;"></span>
+                    <span class="color-swatch" data-color="Black" style="background:black;"></span>
+                    <span class="color-swatch" data-color="White" style="background:white; border:1px solid #ccc;"></span>
+                    <span class="color-swatch" data-color="Yellow" style="background:yellow;"></span>
+                    <span class="color-swatch" data-color="Orange" style="background:orange;"></span>
+                    <span class="color-swatch" data-color="Purple" style="background:purple;"></span>
+                    <span class="color-swatch" data-color="Gray" style="background:gray;"></span>
+                    <span class="color-swatch" data-color="Brown" style="background:brown;"></span>
+                    <span class="color-swatch" data-color="Pink" style="background:pink;"></span>
+                    <span class="color-swatch" data-color="Cyan" style="background:cyan;"></span>
+                    <span class="color-swatch" data-color="Gold" style="background:gold;"></span>
+                    <span class="color-swatch" data-color="Silver" style="background:silver;"></span>
+                </div>
+                <input type="hidden" name="Colors" id="ColorsInput" value="@Model.Colors" required />
+                <small class="form-text">Select one or more colors.</small>
+                <div id="selectedColorsText" class="mt-1 text-secondary small"></div>
+                <span asp-validation-for="Colors" class="text-danger"></span>
+            </div>
+
+            <!----------------------Checkbox-->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label glass-label text-info">Is Active</label>
+                <div class="col-sm-10">
+                    <div class="glass-radio-group">
+                        <div class="radio-options">
+                            <div class="glass-radio-option">
+                                <input type="radio" asp-for="is_active" value="true" id="active-yes" class="glass-radio-input" />
+                                <div class="glass-radio-custom"></div>
+                                <label class="glass-radio-label" for="active-yes">Yes</label>
+                            </div>
+                            <div class="glass-radio-option">
+                                <input type="radio" asp-for="is_active" value="false" id="active-no" class="glass-radio-input" />
+                                <div class="glass-radio-custom"></div>
+                                <label class="glass-radio-label" for="active-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="floating-btn warning">
+                    <i class="fas fa-save me-2"></i>Update Product
+                </button>
+                @* <button type="reset" class="floating-btn">
+                    <i class="fas fa-undo me-2"></i>Reset Form
+                </button> *@
+                <a href="/Seller/MyProducts" class="glass-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize color swatches
+        const swatches = document.querySelectorAll('.color-swatch');
+        const colorsInput = document.getElementById('ColorsInput');
+        const selectedColorsText = document.getElementById('selectedColorsText');
+        let selectedColors = [];
+
+        // Parse existing colors
+        if (colorsInput.value) {
+            selectedColors = colorsInput.value.split(',').filter(c => c.trim());
+            selectedColors.forEach(color => {
+                const swatch = document.querySelector(`[data-color="${color.trim()}"]`);
+                if (swatch) {
+                    swatch.classList.add('selected');
+                }
+            });
+            selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+        }
+
+        swatches.forEach(swatch => {
+            swatch.addEventListener('click', function() {
+                const color = this.getAttribute('data-color');
+                if (selectedColors.includes(color)) {
+                    selectedColors = selectedColors.filter(c => c !== color);
+                    this.classList.remove('selected');
+                } else {
+                    selectedColors.push(color);
+                    this.classList.add('selected');
+                }
+                colorsInput.value = selectedColors.join(',');
+                selectedColorsText.textContent = selectedColors.length ? 'Selected: ' + selectedColors.join(', ') : '';
+            });
+        });
+                // Handle One Size selection (if One Size is selected, deselect others)
+        document.querySelector('select[name="Sizes"]')?.addEventListener('change', function(e) {
+            const oneSizeOption = Array.from(this.options).find(opt => opt.value === "One Size");
+
+            if (oneSizeOption?.selected) {
+                // If One Size is selected, deselect all other options
+                Array.from(this.options).forEach(opt => {
+                    if (opt.value !== "One Size") opt.selected = false;
+                });
+            } else if (Array.from(this.selectedOptions).length > 0) {
+                // If any other size is selected, deselect One Size
+                oneSizeOption.selected = false;
+            }
+        });
+        // checkbox_script----------------------------------------------
+        // Enhanced Glassmorphism Radio Button Interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioOptions = document.querySelectorAll('.glass-radio-option');
+            const radioInputs = document.querySelectorAll('.glass-radio-input');
+
+            // Add click handlers for enhanced interaction
+            radioOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const input = this.querySelector('.glass-radio-input');
+                    if (input && !input.checked) {
+                        input.checked = true;
+                        updateActiveState();
+
+                        // Trigger change event for ASP.NET validation
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+
+                // Add ripple effect on click
+                option.addEventListener('mousedown', function(e) {
+                    createRipple(e, this);
+                });
+            });
+
+            // Update active states when radio buttons change
+            radioInputs.forEach(input => {
+                input.addEventListener('change', updateActiveState);
+            });
+
+            // Initial state update
+            updateActiveState();
+
+            function updateActiveState() {
+                radioOptions.forEach(option => {
+                    const input = option.querySelector('.glass-radio-input');
+                    if (input && input.checked) {
+                        option.classList.add('active');
+
+                        // Add pulse animation
+                        option.style.animation = 'pulse 0.3s ease';
+                        setTimeout(() => {
+                            option.style.animation = '';
+                        }, 300);
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+            }
+
+            function createRipple(event, element) {
+                const ripple = document.createElement('span');
+                const rect = element.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                    z-index: 1;
+                `;
+
+                element.style.position = 'relative';
+                element.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+        });
+
+        //elmultible_selection_size
+
+        
+    
+        // ?????? ?? ?????? One Size
+        document.querySelector('select[name="Sizes"]')?.addEventListener('change', function(e) {
+            const oneSizeOption = this.querySelector('option[value="One Size"]');
+            const selectedOptions = Array.from(this.selectedOptions);
+            
+            // ??? ?? ?????? One Size ?? ?????? ????
+            if (selectedOptions.some(opt => opt.value === "One Size") && selectedOptions.length > 1) {
+                // ????? ?????? ???? ???????? ??????
+                Array.from(this.options).forEach(opt => {
+                    opt.selected = opt.value === "One Size";
+                });
+            }
+            // ??? ?? ?????? ?????? ???? ?? One Size ???? ??????
+            else if (selectedOptions.length > 0 && oneSizeOption.selected) {
+                oneSizeOption.selected = false;
+            }
+        });
+    
+
+
+        // Add CSS animations via JavaScript
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+
+            @@keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+}
