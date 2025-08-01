@@ -2515,6 +2515,7 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstra
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\wordpress.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\send-arrow-up.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\bootstrap-icons\icons\chat-right-dots.svg
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\js\ChatbotJS.js
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\house-chimney-medical.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\peace.svg
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\wwwroot\lib\fontawesome-free-6.7.2-web\svgs\solid\equals.svg
@@ -4410,17 +4411,7 @@ wwwroot\css\CustomerService.css
 wwwroot\css\LandingPageCSS.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
-wwwroot\Image\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg
-wwwroot\Image\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg
-wwwroot\Image\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg
-wwwroot\Image\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg
-wwwroot\Image\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg
-wwwroot\Image\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg
-wwwroot\Image\72b735db-3970-4821-a4d0-842211783748_oar2.jpg
-wwwroot\Image\78fe8eb7-ea62-42e1-a8aa-2cf441cbb4ec_oar2.jpg
-wwwroot\Image\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg
-wwwroot\Image\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg
-wwwroot\Image\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg
+wwwroot\Image\users\b340e1ef-5339-4962-a927-a8c1d7078c77_oar2.jpg
 wwwroot\images\categories\download.jpg
 wwwroot\images\categories\esmael.jpeg
 wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
@@ -4429,11 +4420,13 @@ wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
 wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
 wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
 wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
+wwwroot\images\users\27439a28-8d7b-4c05-bb1e-7610dcdd513a_oar2.jpg
 wwwroot\images\users\download.jpg
 wwwroot\images\users\esmael.jpeg
 wwwroot\js\_ErrorLayoutJS.js
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
+wwwroot\js\ChatbotJS.js
 wwwroot\js\index.js
 wwwroot\js\LandingPageJS.js
 wwwroot\js\LandingPageLayoutJS.js

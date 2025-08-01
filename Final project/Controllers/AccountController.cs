@@ -248,6 +248,11 @@ namespace Final_project.Controllers
 
             return View(data);
         }
+        [HttpGet]
+        public IActionResult WatingforAdminApproval()
+        {
+            return View();
+        }
 
     }
 }

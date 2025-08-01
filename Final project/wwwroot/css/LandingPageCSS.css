@@ -1,4 +1,5 @@
-﻿:root {
+﻿/*_landingPageCSS*/
+:root {
     --amazon-orange: #ff9900;
     --amazon-blue: #232f3e;
     --amazon-light-blue: #37475a;
@@ -1139,8 +1140,8 @@ body {
 /* Back to Top Button - Fixed Position */
 .back-to-top {
     position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
+    bottom: 95px !important;
+    right: 33px !important;
     width: 50px;
     height: 50px;
     background-color: var(--amazon-light-blue);
@@ -1153,7 +1154,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-    z-index: 9999;
+    z-index: 9969;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     border: none;
     overflow: visible !important;
@@ -1895,8 +1896,8 @@ body {
     .back-to-top {
         width: 50px;
         height: 50px;
-        bottom: 30px;
-        right: 30px;
+        bottom: 20px;
+        right: 20px;
     }
 
         .back-to-top i {
@@ -1982,8 +1983,8 @@ body {
     .back-to-top {
         width: 36px;
         height: 36px;
-        bottom: 15px;
-        right: 15px;
+        bottom: 10px;
+        right: 10px;
     }
 
         .back-to-top i {

@@ -5,48 +5,8 @@
       "PackagePath": "staticwebassets\\Final project.ha0l2qay2m.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\190dde30-b3e5-416c-991f-401da718424d_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\2d9afbe1-42d9-4b63-b925-2e7421d3c44a_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\2ee06512-4106-4077-8ef9-8a0ad4925af3_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\41f08f63-0da3-441c-bfc5-5aebad48c8b5_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\48d2d0f1-d696-4690-945a-62b159a40025_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\6e36f48f-c1df-425d-acc1-ab77c6d33953_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\72b735db-3970-4821-a4d0-842211783748_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\72b735db-3970-4821-a4d0-842211783748_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\78fe8eb7-ea62-42e1-a8aa-2cf441cbb4ec_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\78fe8eb7-ea62-42e1-a8aa-2cf441cbb4ec_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\7c2e05e2-608d-4ca5-a731-f8703f030559_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\d993493c-092c-4337-804e-987717bbd4f5_oar2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg",
-      "PackagePath": "staticwebassets\\Image\\feb17162-756d-43f4-a860-45fa42e6b88c_oar2.jpg"
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\Image\\users\\b340e1ef-5339-4962-a927-a8c1d7078c77_oar2.jpg",
+      "PackagePath": "staticwebassets\\Image\\users\\b340e1ef-5339-4962-a927-a8c1d7078c77_oar2.jpg"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\css\\AccountPage.css",
@@ -125,6 +85,10 @@
       "PackagePath": "staticwebassets\\images\\products\\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\27439a28-8d7b-4c05-bb1e-7610dcdd513a_oar2.jpg",
+      "PackagePath": "staticwebassets\\images\\users\\27439a28-8d7b-4c05-bb1e-7610dcdd513a_oar2.jpg"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\download.jpg",
       "PackagePath": "staticwebassets\\images\\users\\download.jpg"
     },
@@ -139,6 +103,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\CategoryJS.js",
       "PackagePath": "staticwebassets\\js\\CategoryJS.js"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\ChatbotJS.js",
+      "PackagePath": "staticwebassets\\js\\ChatbotJS.js"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\LandingPageJS.js",

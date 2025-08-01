@@ -9,6 +9,6 @@ namespace Final_project.Repository
         public Task<order_item> GetByIdAsync(string id);
         public Task<int> GetCountAsync(Expression<Func<order_item, bool>> filter = null);
         public Task AddAsync(order_item entity);
-        public void Delete(order_item entity) ;
+        public void Delete(order_item entity);
     }
 } 

@@ -19,6 +19,7 @@ namespace Final_project.Repository.NewFolder
         //Category
         public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams);
         public int GetFilteredProductsCount(ProductFilterParameters filterParams);
+        List<ChatbotProductViewModel> GetProductsForChatbot(string searchTerm, int pageNumber = 1, int pageSize = 8);
 
 
     }

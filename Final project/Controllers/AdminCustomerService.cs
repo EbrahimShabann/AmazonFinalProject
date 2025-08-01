@@ -21,7 +21,7 @@ namespace Final_project.Controllers
 
         public async Task<IActionResult> pendingCustomerService()
         {
-            var CustomerService = (await _userManager.GetUsersInRoleAsync("Support"));
+            var CustomerService = (await _userManager.GetUsersInRoleAsync("customerService"));
             ViewBag.CountPendingCustomerService = CustomerService.Where(u => !u.is_deleted & !u.is_active).Count();
             ViewBag.CountAcceptedCustomerService = CustomerService.Where(u => !u.is_deleted & u.is_active).Count();
             ViewBag.CountRegectedCustomerService = CustomerService.Where(u => u.is_deleted & !u.is_active).Count();
@@ -31,7 +31,7 @@ namespace Final_project.Controllers
         }
         public async Task<IActionResult> AllCustomerService()
         {
-            var CustomerService = (await _userManager.GetUsersInRoleAsync("Support"));
+            var CustomerService = (await _userManager.GetUsersInRoleAsync("customerService"));
             ViewBag.CountAllCustomerService = CustomerService.Where(u => !u.is_deleted).Count();
             ViewBag.CountActiveCustomerService = CustomerService.Where(u => !u.is_deleted & u.is_active).Count();
             ViewBag.CountInactiveCustomerService = CustomerService.Where(u => !u.is_deleted & !u.is_active).Count();
@@ -42,7 +42,7 @@ namespace Final_project.Controllers
         [HttpPost]
         public async Task<JsonResult> ApproveCustomerService(string id)
         {
-            var CustomerService = (await _userManager.GetUsersInRoleAsync("Support")).FirstOrDefault(u => u.Id == id);
+            var CustomerService = (await _userManager.GetUsersInRoleAsync("customerService")).FirstOrDefault(u => u.Id == id);
             if (CustomerService == null) return Json(new { success = false });
 
             CustomerService.is_active = true;
@@ -53,7 +53,7 @@ namespace Final_project.Controllers
         [HttpPost]
         public async Task<JsonResult> RejectCustomerService(string id)
         {
-            var CustomerService = (await _userManager.GetUsersInRoleAsync("Support")).FirstOrDefault(u => u.Id == id);
+            var CustomerService = (await _userManager.GetUsersInRoleAsync("customerService")).FirstOrDefault(u => u.Id == id);
             if (CustomerService == null) return Json(new { success = false });
 
             CustomerService.is_active = false;
@@ -65,7 +65,7 @@ namespace Final_project.Controllers
         }
         public async Task<JsonResult> inactiveCustomerService(string id)
         {
-            var CustomerService = (await _userManager.GetUsersInRoleAsync("Support")).FirstOrDefault(u => u.Id == id);
+            var CustomerService = (await _userManager.GetUsersInRoleAsync("customerService")).FirstOrDefault(u => u.Id == id);
             if (CustomerService == null) return Json(new { success = false });
 
             CustomerService.is_active = false;

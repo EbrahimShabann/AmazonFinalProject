@@ -61,7 +61,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<saved_cart_item> saved_cart_items { get; set; }
     public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
     public virtual DbSet<review_reply> review_reply { get; set; }
-
+    public virtual DbSet<CategoryRequest> CategoryRequest { get; set; }
 
 
 
