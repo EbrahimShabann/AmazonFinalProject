@@ -299,7 +299,7 @@
     <div class="cart-items">
         <div class="cart-header">
             <h1 class="cart-title">Shopping Cart</h1>
-            <div class="cart-price">Price</div>
+            @* <div class="cart-price">Price</div> *@
         </div>
 
         @if (!Model.Any())
@@ -314,20 +314,20 @@
         }
         else
         {
-            <div class="cart-header" style="justify-content: flex-start;">
+            @* <div class="cart-header" style="justify-content: flex-start;">
                 <input type="checkbox" class="form-check-input me-2" checked />
                 <span style="font-size: 14px;">Deselect all items</span>
-            </div>
+            </div> *@
 
             @foreach (var item in Model)
             {
                 <div class="cart-item">
-                    <div class="item-select">
+                    @* <div class="item-select">
                         <input type="checkbox" class="form-check-input" checked />
-                    </div>
+                    </div> *@
 
                     <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
-                        <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                        <img src="/Image/@item.ImageUrl" class="item-image" alt="@item.ProductName" />
                     </a>
 
                     <div class="item-details">
@@ -388,14 +388,16 @@
             </div>
         }
     </div>
-    <form method="get" asp-controller="Product" asp-action="CheckOut">
-        @for (int i = 0; i < Model.Count; i++)
+     <form method="get"  asp-controller="Product" asp-action="CheckOut">
+            @for(int i=0; i < Model.Count; i++)
         {
             <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
             <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
             <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
             <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
             <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
+                <input type="hidden" name="cartVM[@i].ProductColor" value="@Model[i].Color" />
+                <input type="hidden" name="cartVM[@i].ProductSize" value="@Model[i].Size" />
 
         }
         @if (Model.Any())

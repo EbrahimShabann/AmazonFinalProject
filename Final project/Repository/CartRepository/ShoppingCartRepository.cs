@@ -38,5 +38,7 @@ namespace Final_project.Repository.CartRepository
         {
             return context.shopping_carts.ToList();
         }
+
+
     }
 }

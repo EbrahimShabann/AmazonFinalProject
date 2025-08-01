@@ -228,7 +228,7 @@
         {
             <div class="wishlist-item">
                 <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
-                    <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                    <img src="/Image/@item.ImageUrl" class="item-image" alt="@item.ProductName" />
                 </a>
                 <div class="item-details">
                     <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" style="text-decoration: none;">
@@ -301,3 +301,4 @@
         });
     });
 </script>
+

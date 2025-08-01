@@ -1,15 +1,21 @@
-﻿using Final_project.Models;
+﻿using Final_project.Hubs;
+using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
@@ -18,11 +24,12 @@ namespace Final_project.Controllers
     public class ProductController : Controller
     {
         private readonly UnitOfWork uof;
+        private readonly IHubContext<SellerOrdersHub> hub;
 
-        public ProductController(UnitOfWork uof)
+        public ProductController(UnitOfWork uof,IHubContext<SellerOrdersHub> hub)
         {
             this.uof = uof;
-
+            this.hub = hub;
         }
 
 
@@ -42,8 +49,25 @@ namespace Final_project.Controllers
         [Authorize]
         public IActionResult addReview(product_review reviewVM)
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (ModelState.IsValid)
             {
+                //check if the user has purchased the product if true then he can review it
+                var userOrderItem = uof.OrderItemRepository.GetAll()
+                    .FirstOrDefault(oi => oi.product_id == reviewVM.product_id && oi.order.buyer_id == userId);
+                if(userOrderItem == null)
+                {
+                    TempData["error"] = "You have to try this product first!";
+                    return RedirectToAction("Details", new { id = reviewVM.product_id });
+                }
+                //check if the user has already reviewed the product
+                var existingReview = uof.ProductRepository.getProductReviews(reviewVM.product_id)
+                    .FirstOrDefault(r => r.user_id == userId);
+                if (existingReview != null)
+                {
+                    TempData["error"] = "You can't review twice!";
+                    return RedirectToAction("Details", new { id = reviewVM.product_id });
+                }
                 if (reviewVM.rating < 1 || reviewVM.rating > 5)
                 {
                     TempData["error"] = "Rating must be between 1 and 5.";
@@ -56,7 +80,7 @@ namespace Final_project.Controllers
                     title = reviewVM.title,
                     comment = reviewVM.comment,
                     rating = reviewVM.rating,
-                    user_id = User.FindFirst(ClaimTypes.NameIdentifier).Value, // Assuming you have user authentication
+                    user_id = userId, 
                     created_at = DateTime.Now,
 
                 };
@@ -152,7 +176,7 @@ namespace Final_project.Controllers
                 var quantity = int.Parse(Request.Query["quantity"]);
                 var product = uof.ProductRepository.getById(productId);
                 string productColor = Request.Query["color"].ToString();
-                if (string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
+                if(string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
                 string productSize = Request.Query["size"].ToString();
                 if (string.IsNullOrEmpty(productSize)) productSize = product.SelectedSizes[0];
 
@@ -176,8 +200,8 @@ namespace Final_project.Controllers
                     originalPrice = product.price,
                     CategoryName = product.category?.name ?? "Unknown Category",
                     Quantity = quantity,
-                    ProductColor = productColor,
-                    ProductSize = productSize,
+                    ProductColor=productColor,
+                    ProductSize=productSize,
                     imageUrl = uof.ProductRepository.GetProduct_Images(product.id).FirstOrDefault()?.image_url,
 
                 });
@@ -196,7 +220,7 @@ namespace Final_project.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
         [ActionName("CheckOut")]
-        public IActionResult SubmitCheckOut(CheckOutVM model)
+        public async Task<IActionResult> SubmitCheckOut(CheckOutVM model)
         {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -205,7 +229,12 @@ namespace Final_project.Controllers
                 TempData["error"] = "You must be logged in to checkout.";
                 return RedirectToAction("Login", "Account");
             }
-
+            if (uof.UserRepository.getById(userId).PhoneNumber == null) 
+            {
+                uof.UserRepository.getById(userId).PhoneNumber = model.UserPhone;
+                uof.UserRepository.Update(uof.UserRepository.getById(userId));
+                uof.save();
+            }
 
             decimal totalAmount = model.TotalPrice + model.ShippingTax;  //total price after tax
 
@@ -215,10 +244,11 @@ namespace Final_project.Controllers
                 id = Guid.NewGuid().ToString(),
                 buyer_id = userId,
                 shipping_address = model.shipping_address,
+                billing_address = model.shipping_address,
                 payment_method = model.payment_method,
                 total_amount = totalAmount,
                 order_date = DateTime.Now,
-                estimated_delivery_date = DateOnly.FromDateTime(DateTime.Now).AddDays(2), //assuming delivery in 7 days
+                estimated_delivery_date =DateOnly.FromDateTime(DateTime.Now).AddDays(2), //assuming delivery in 7 days
                 status = "Pending",
             };
 
@@ -246,11 +276,11 @@ namespace Final_project.Controllers
                     seller_id = cart.seller_id,
                     product_id = cart.ProductId,
                     quantity = cart.Quantity,
-                    Color = cart.ProductColor,
-                    Size = cart.ProductSize,
+                    Color=cart.ProductColor,
+                    Size=cart.ProductSize,
                     discount_applied = cart.originalPrice - cart.price, //price is originalPrice or DiscountPrice
                     unit_price = cart.originalPrice ?? 0,
-                    status = "Pending",
+                    status="Pending",
 
                 };
                 uof.OrderRepo.addOrderItem(orderItem);
@@ -264,8 +294,40 @@ namespace Final_project.Controllers
                     uof.ProductRepository.Update(product);
                 }
             }
-            uof.save();
+      
 
+
+            // 🔔 Get unique sellers from the ordered products
+            //var sellerIds= model.Carts
+            //    .Select(c => c.seller_id)
+            //    .Distinct()
+            //    .ToList();
+            
+            //    foreach (var sellerId in sellerIds)
+            //    {
+            //        string message = $"New order #{order.id} contains one or more of your products.";
+
+            //        //store the notification in the database 
+            //        var notification = new notification
+            //        {
+            //            Id = Guid.NewGuid().ToString(),
+            //            RecipientId = sellerId,
+            //            Title = "New Order Notification",
+            //            Message = message,
+            //            Type = "Order",
+            //            IsRead = false,
+            //            IsDeleted = false,
+            //            CreatedAt = DateTime.Now,
+            //            OrderId = order.id,
+
+            //        };
+
+            //        // Notify each seller about the new order
+            //        await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
+            //    }
+
+            
+            uof.save();
             //handle stripe payment
             if (model.payment_method == "card")
             {
@@ -287,7 +349,7 @@ namespace Final_project.Controllers
                         Quantity = c.Quantity
                     }).ToList(),
                     Mode = "payment",
-                    SuccessUrl = Url.Action("orderConfirmation", "Product", new { orderId = order.id }, protocol: Request.Scheme),
+                    SuccessUrl = Url.Action("orderConfirmation", "Product", new {  orderId = order.id }, protocol: Request.Scheme),
                     CancelUrl = Url.Action("Index", "Cart", new { area = "Customer" }, protocol: Request.Scheme),
 
                 };
@@ -301,7 +363,7 @@ namespace Final_project.Controllers
             }
 
             TempData["success"] = $"Order placed successfully with ID: {order.id}!";
-            return RedirectToAction("Index", "Landing");
+            return RedirectToAction("Index","Landing");
         }
 
         public IActionResult orderConfirmation(string orderId)

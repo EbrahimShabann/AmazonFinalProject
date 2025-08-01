@@ -3,6 +3,7 @@ using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;
 using Final_project.ViewModel.Cart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers.Cart
@@ -33,7 +34,7 @@ namespace Final_project.Controllers.Cart
                 CartItemId = item.id,
                 ProductId = item.product_id,
                 ProductName = item.Product?.name ?? "Unknown",
-                ImageUrl = "/images/m.png",
+                ImageUrl = unitOfWork.ProductRepository.GetProduct_Images(item.product_id).SingleOrDefault(i=>i.is_primary==true).image_url,
                 Quantity = item.quantity ?? 1,
                 Color = item.color,
                 Size = item.size,
@@ -85,9 +86,10 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddToCart(string productId, string color, string size)
         {
-            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
             string userId = IdClaim.Value;
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
             if (cart == null)
@@ -127,7 +129,7 @@ namespace Final_project.Controllers.Cart
             }
 
             unitOfWork.save();
-            var val = unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
+            var val =unitOfWork.LandingPageReposotory.GetCartCount(User.Identity.Name);
             return Json(val);
         }
 

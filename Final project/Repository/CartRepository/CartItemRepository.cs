@@ -48,5 +48,7 @@ namespace Final_project.Repository.CartRepository
             //return context.cart_items.Include(c => c.Product).ToList();
             return context.cart_items.ToList();
         }
+
+
     }
 }

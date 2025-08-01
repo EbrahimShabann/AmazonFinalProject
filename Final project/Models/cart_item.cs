@@ -28,5 +28,5 @@ public partial class cart_item
     public string? size { get; set; }
     public string? color { get; set; }
 
-    public DateTime? added_at { get; set; } = DateTime.Now;
+    public DateTime? added_at { get; set; } =DateTime.Now;
 }

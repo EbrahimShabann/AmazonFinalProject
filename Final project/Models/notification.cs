@@ -37,4 +37,6 @@ public partial class notification
     public bool IsDeleted { get; set; } = false;
 
     public DateTime? ReadAt { get; set; }
+
+    public string OrderId { get; set; }
 } 

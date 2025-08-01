@@ -11,7 +11,7 @@
                     </h1>
                     <p class="text-muted">Thank you for your purchase!</p>
                     <p class="text-muted">Order #: <strong>@Model.id</strong></p>
-                    <p class="text-muted">Order date: <strong>@Model.order_date</strong></p>
+                <p class="text-muted">Order date: <strong>@Model.order_date?.ToString("dd MMMM yyyy hh:mm:ss")</strong></p>
                 </div>
 
                 <!-- Customer Info -->
@@ -67,11 +67,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="text-end align-middle">@item.unit_price?.ToString("C")</td>
+                                        <td class="text-end align-middle">@(item.unit_price -item.discount_applied)</td>
                                             <td class="text-end align-middle">@item.quantity</td>
                                             <td class="text-end align-middle">@item.Color</td>
                                             <td class="text-end align-middle">@item.Size</td>
-                                            <td class="text-end align-middle">$@(item.unit_price * item.quantity)</td>
+                                        <td class="text-end align-middle">$@((item.unit_price - item.discount_applied) * item.quantity)</td>
                                         </tr>
 
                                 }
@@ -118,7 +118,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6>Estimated delivery date</h6>
-                                <p class="mb-0"><strong>@Model.estimated_delivery_date</strong></p>
+                                <p class="mb-0"><strong>@Model.estimated_delivery_date?.ToString("dd MMMM yyyy")</strong></p>
                             </div>
 
                         </div>

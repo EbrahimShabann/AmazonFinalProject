@@ -1,6 +1,6 @@
 ﻿@using Final_project.ViewModel.Customer
 @model OrderDetailsVM
-<link href="/css/CustomerProfile.css" rel="stylesheet" />
+<link href="/css/CustomerProfile.css" rel="stylesheet"/>
 
 
 
@@ -61,10 +61,17 @@
                                 <h5 class="mb-1">Order Cancelled</h5>
                                 <p class="text-danger mb-0"><i class="fas fa-times-circle me-1"></i> This order was cancelled</p>
                             }
-                            else
+                            else if (Model.Order.status.ToLower() == "shipped")
                             {
                                 <h5 class="mb-1">Order @Model.Order.status</h5>
                                 <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is on the way</p>
+
+                            }
+                            else 
+                            {
+                                <h5 class="mb-1">Order @Model.Order.status</h5>
+                                <p class="text-warning mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Your package is being prepared</p>
+
                             }
                         </div>
                         @if (Model.Order.status.ToLower() != "cancelled")
@@ -78,8 +85,8 @@
                         <div class="tracking-progress mb-3">
                             @{
                                 var progressWidth = 0;
-                                if (Model.Order.status.ToLower() == "delivered") { progressWidth = 100; }
-                                else if (Model.OrderHistory?.status?.ToLower() == "shipped") { progressWidth = 66; }
+                                if (Model.OrderHistory?.status?.ToLower() == "delivered" || Model.Order.status.ToLower() == "delivered") { progressWidth = 100; }
+                                else if (Model.OrderHistory?.status?.ToLower() == "shipped" || Model.Order?.status?.ToLower() == "shipped") { progressWidth = 66; }
                                 else { progressWidth = 33; }
                             }
                             <div class="tracking-progress-bar" style="width: @progressWidth%"></div>
@@ -93,29 +100,36 @@
                             {
                                 <i class="fas fa-check-circle text-muted"></i>
                                 <p class="mb-0">Ordered</p>
-                                <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
+                                <p class="text-muted small">@Model.Order.order_date?.ToString("dd/MM/yyyy")</p>
                             }
                             else
                             {
                                 <i class="fas fa-check-circle text-success"></i>
                                 <p class="mb-0">Ordered</p>
-                                <p class="text-muted small">@Model.Order.order_date?.ToShortDateString()</p>
+                                <p class="text-muted small">@Model.Order.order_date?.ToString("dd/MM/yyyy")</p>
                             }
                         </div>
 
                         <!-- Shipped -->
                         <div class="col">
-                            @if (Model.Order.status.ToLower() == "cancelled")
+                            @if (Model.OrderHistory?.status?.ToLower() == "cancelled" || Model.Order.status.ToLower() == "cancelled")
                             {
                                 <i class="fas fa-times-circle text-muted"></i>
                                 <p class="mb-0">Shipped</p>
                                 <p class="text-muted small">Cancelled</p>
                             }
-                            else if (Model.OrderHistory?.status?.ToLower() == "shipped" || Model.Order.status.ToLower() == "delivered")
+                            else if (Model.OrderHistory?.status?.ToLower() == "shipped" || Model.Order.status.ToLower() == "shipped")
                             {
                                 <i class="fas fa-check-circle text-success"></i>
                                 <p class="mb-0">Shipped</p>
-                                <p class="text-muted small">@Model.OrderHistory?.changed_at?.ToShortDateString()</p>
+                                <p class="text-muted small">@Model.OrderHistory?.changed_at?.ToString("dd/MM/yyyy")</p>
+                            }
+                            else if (Model.OrderHistory?.status?.ToLower() == "delivered" ||
+                            Model.Order?.status?.ToLower() == "delivered" || Model.Order.delivered_at != null)
+                            {
+                                <i class="fas fa-check-circle text-success"></i>
+                                <p class="mb-0">Shipped</p>
+                                <p class="text-muted small">@Model.OrderHistory?.changed_at?.ToString("dd/MM/yyyy")</p>
                             }
                             else
                             {
@@ -127,17 +141,18 @@
 
                         <!-- Delivered -->
                         <div class="col">
-                            @if (Model.Order.status.ToLower() == "cancelled")
+                            @if (Model.OrderHistory?.status?.ToLower() == "cancelled" || Model.Order.status.ToLower() == "cancelled")
                             {
                                 <i class="fas fa-times-circle text-muted"></i>
                                 <p class="mb-0">Delivered</p>
                                 <p class="text-muted small">Cancelled</p>
                             }
-                            else if (Model.Order.delivered_at != null)
+                            else if (Model.OrderHistory?.status?.ToLower() == "delivered" || 
+                            Model.Order?.status?.ToLower() == "delivered" || Model.Order.delivered_at != null)
                             {
                                 <i class="fas fa-check-circle text-success"></i>
                                 <p class="mb-0">Delivered</p>
-                                <p class="text-muted small">@Model.Order.delivered_at?.ToShortDateString()</p>
+                                <p class="text-muted small">@Model.Order.delivered_at?.ToString("dd/MM/yyyy")</p>
                             }
                             else
                             {
@@ -161,7 +176,7 @@
                 <!-- Order Items -->
                 <div class="order-section">
                     <h5 class="mb-3">Order Summary</h5>
-                    @foreach (var item in Model.OrderItems)
+                    @foreach(var item in Model.OrderItems)
                     {
                         <div class="card mb-3">
                             <div class="card-body">
@@ -187,13 +202,14 @@
 
                                         }
                                         <p class="mb-2"><strong>Quantity:</strong> @item.quantity</p>
-                                        <p class="mb-2"><strong>Item price:</strong> @item.unit_price?.ToString("C")</p>
+                                        <p class="mb-2"><strong>Item price:</strong> @(item.unit_price - item.discount_applied)</p>
                                         <p class="mb-2"><strong>Color:</strong> @item.Color</p>
                                         <p class="mb-2"><strong>Size:</strong> @item.Size</p>
                                     </div>
                                     <div class="col-md-4 text-end">
                                         <a href="/Product/CheckOut?productId=@item.product_id&quantity=1" class="btn btn-amazon mb-2">Buy it again</a>
-                                        @if (Model.Order.status.ToLower() == "delivered" && item.status?.ToLower() != "return")
+                                        @if ((Model.Order.status.ToLower() == "delivered" && item.status?.ToLower() != "return") 
+                                            && (Model.Order.status.ToLower() == "delivered" && item.status?.ToLower() != "replace"))
                                         {
                                             <button class="btn btn-outline-secondary mb-2 returnItem" data-id="@item.id">Return or replace items</button>
 
@@ -201,7 +217,11 @@
                                         <a href="/Product/Details?id=@item.product_id" class="btn btn-outline-secondary mb-2">View your item</a>
                                         <div>
 
-                                            <a href="/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a>
+                                            <a href="/Product/Details?id=@item.product_id#reviews" class="text-primary">Write a product review</a><br>
+                                            @if (item.status?.ToLower() == "return" || item.status?.ToLower() == "replace")
+                                            {
+                                                <span class="text-danger">A @item.status.ToUpper() Request was sent already! </span>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -215,14 +235,14 @@
                 <div class="d-flex justify-content-between mt-4">
                     <a href="/Profile/Orders" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Back to orders</a>
                     <div>
-                        @if (Model.Order.status.ToLower() == "cancelled" || Model.Order.status.ToLower() == "delivered")
-                        {
-                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
-                        }
-                        else
+                        @if (Model.Order.status.ToLower() == "pending")
                         {
                             <button id="cancelOrder" class="btn btn-outline-danger">Cancel Order</button>
 
+                        }
+                        else
+                        {
+                            <button id="cancelOrder" class="btn btn-outline-danger" disabled>Cancel Order</button>
                         }
 
                     </div>

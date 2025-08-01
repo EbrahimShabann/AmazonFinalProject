@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Final_project</RootNamespace>
   </PropertyGroup>
@@ -14,6 +14,7 @@
     <Folder Include="Repository\OrderItemsRepositoryFile\" />
     <Folder Include="Repository\ProductImageRepositoryFile\" />
     <Folder Include="Repository\UsersRepositoryFile\" />
+    <Folder Include="ViewModel\Zeyad\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Stripe.net" Version="48.3.0" />
   </ItemGroup>

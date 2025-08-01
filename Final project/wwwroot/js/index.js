@@ -1,4 +1,4 @@
-﻿// Create a function to call OpenAI API using fetch
+// Create a function to call OpenAI API using fetch
 // Use gpt-3.5-turbo or another supported OpenAI model and display responses in the chat window
 // Append both user and assistant messages to the chat history
 
@@ -42,7 +42,7 @@ async function callOpenAI(userMessage) {
 
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () =>  {
     const sendBtn = document.getElementById("send-btn");
     const input = document.getElementById("message-input");
     const newChatBtn = document.getElementById("new-chat-btn");
