@@ -11,7 +11,11 @@ using Microsoft.CodeAnalysis;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
@@ -45,8 +49,25 @@ namespace Final_project.Controllers
         [Authorize]
         public IActionResult addReview(product_review reviewVM)
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (ModelState.IsValid)
             {
+                //check if the user has purchased the product if true then he can review it
+                var userOrderItem = uof.OrderItemRepository.GetAll()
+                    .FirstOrDefault(oi => oi.product_id == reviewVM.product_id && oi.order.buyer_id == userId);
+                if(userOrderItem == null)
+                {
+                    TempData["error"] = "You have to try this product first!";
+                    return RedirectToAction("Details", new { id = reviewVM.product_id });
+                }
+                //check if the user has already reviewed the product
+                var existingReview = uof.ProductRepository.getProductReviews(reviewVM.product_id)
+                    .FirstOrDefault(r => r.user_id == userId);
+                if (existingReview != null)
+                {
+                    TempData["error"] = "You can't review twice!";
+                    return RedirectToAction("Details", new { id = reviewVM.product_id });
+                }
                 if (reviewVM.rating < 1 || reviewVM.rating > 5)
                 {
                     TempData["error"] = "Rating must be between 1 and 5.";
@@ -59,7 +80,7 @@ namespace Final_project.Controllers
                     title = reviewVM.title,
                     comment = reviewVM.comment,
                     rating = reviewVM.rating,
-                    user_id = User.FindFirst(ClaimTypes.NameIdentifier).Value, // Assuming you have user authentication
+                    user_id = userId, 
                     created_at = DateTime.Now,
 
                 };
@@ -277,32 +298,35 @@ namespace Final_project.Controllers
 
 
             // 🔔 Get unique sellers from the ordered products
-            var sellerIds= model.Carts
-                .Select(c => c.seller_id)
-                .Distinct()
-                .ToList();
-            foreach (var sellerId in sellerIds)
-            {
-                string message = $"New order #{order.id} contains one or more of your products.";
+            //var sellerIds= model.Carts
+            //    .Select(c => c.seller_id)
+            //    .Distinct()
+            //    .ToList();
+            
+            //    foreach (var sellerId in sellerIds)
+            //    {
+            //        string message = $"New order #{order.id} contains one or more of your products.";
 
-                //store the notification in the database 
-                var notification = new notification
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    RecipientId = sellerId,
-                    Title="New Order Notification",
-                    Message = message,
-                    Type = "Order",
-                    IsRead = false,
-                    IsDeleted=false,
-                    CreatedAt = DateTime.Now,
-                    OrderId = order.id,
-                   
-                };
+            //        //store the notification in the database 
+            //        var notification = new notification
+            //        {
+            //            Id = Guid.NewGuid().ToString(),
+            //            RecipientId = sellerId,
+            //            Title = "New Order Notification",
+            //            Message = message,
+            //            Type = "Order",
+            //            IsRead = false,
+            //            IsDeleted = false,
+            //            CreatedAt = DateTime.Now,
+            //            OrderId = order.id,
 
-                // Notify each seller about the new order
-                await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
-            }
+            //        };
+
+            //        // Notify each seller about the new order
+            //        await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
+            //    }
+
+            
             uof.save();
             //handle stripe payment
             if (model.payment_method == "card")
