@@ -97,6 +97,10 @@
       "PackagePath": "staticwebassets\\images\\users\\esmael.jpeg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\oar2.jpg",
+      "PackagePath": "staticwebassets\\images\\users\\oar2.jpg"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\js\\AccountPageJS.js",
       "PackagePath": "staticwebassets\\js\\AccountPageJS.js"
     },

@@ -4423,6 +4423,7 @@ wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
 wwwroot\images\users\27439a28-8d7b-4c05-bb1e-7610dcdd513a_oar2.jpg
 wwwroot\images\users\download.jpg
 wwwroot\images\users\esmael.jpeg
+wwwroot\images\users\oar2.jpg
 wwwroot\js\_ErrorLayoutJS.js
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js
