@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static NuGet.Packaging.PackagingConstants;
 
@@ -41,7 +42,11 @@ namespace Final_project.Controllers
         public async Task<IActionResult> MyProducts(string searchName, decimal? minPrice, decimal? maxPrice, bool? isActive, string categoryId, int page = 1, int pageSize = 10)
         {
             var sellerId = GetCurrentSellerId();
+
+            // Build the query
             var query = _unitOfWork.ProductRepository.GetAll(p => p.is_deleted == false && p.seller_id == sellerId, p => p.product_images);
+
+            // Apply filters
             if (!string.IsNullOrEmpty(searchName))
                 query = query.Where(p => p.name.Contains(searchName));
             if (minPrice.HasValue)
@@ -52,33 +57,36 @@ namespace Final_project.Controllers
                 query = query.Where(p => p.is_active == isActive.Value);
             if (!string.IsNullOrEmpty(categoryId))
                 query = query.Where(p => p.category_id == categoryId);
-            var products = await query.ToListAsync();
+
+            // Get total count BEFORE applying pagination
+            var totalItems = await query.CountAsync();
+
+            // Apply pagination and get the results
+            var products = await query
+                 .Skip((page - 1) * pageSize)
+                 .Take(pageSize)
+                 .ToListAsync();
+
+            // Set up ViewBag data
             var categoriesDict = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
             ViewBag.CategoriesDict = categoriesDict.ToDictionary(c => c.id, c => c.name);
+
             var categoriesList = await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
             ViewBag.CategoriesList = categoriesList;
+
             ViewBag.SearchName = searchName;
             ViewBag.MinPrice = minPrice;
             ViewBag.MaxPrice = maxPrice;
             ViewBag.IsActive = isActive;
             ViewBag.SelectedCategoryId = categoryId;
 
-            // Pagination logic-------------------------------------------------- + the last 2 params are for pagination
-            var totalItems = await query.CountAsync();
-
-            var products1 = await query
-                 .Skip((page - 1) * pageSize)
-                 .Take(pageSize)
-                 .ToListAsync();
-
+            // Pagination ViewBag
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = totalItems;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-
-
-            return View(products1);
+            return View(products);
         }
         #endregion
 
@@ -1549,7 +1557,9 @@ namespace Final_project.Controllers
 
         private string GetCurrentSellerId()
         {
-            return User?.Identity?.Name ?? "test-seller-id";
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
+            return userId;
         }
         #endregion
 
@@ -1671,6 +1681,90 @@ namespace Final_project.Controllers
             }
             await _unitOfWork.SaveAsync();
             return Json(new { success = true });
+        }
+
+        [HttpGet]
+        public IActionResult CreateCategoryRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategoryRequest(string CategoryName, string CategoryDiscription)
+        {
+            if (string.IsNullOrWhiteSpace(CategoryName))
+            {
+                ModelState.AddModelError("CategoryName", "Category name is required.");
+            }
+            // Check if category name exists in categories or pending requests
+            bool exists = await _unitOfWork.CategoryRepository.GetAll()
+                .AnyAsync(c => c.name.ToLower() == CategoryName.ToLower() && c.is_deleted == false);
+        bool pending = await _unitOfWork.CategoryRequestRepository.HasPendingCategoryAsync(CategoryName);
+
+            if (exists || pending)
+            {
+                ModelState.AddModelError("CategoryName", "Category name already exists or is pending approval.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var sellerId = GetCurrentSellerId();
+            var req = new CategoryRequest
+            {
+                requredId = Guid.NewGuid().ToString(),
+                SellerId = sellerId,
+                CategoryName = CategoryName,
+                CategoryDiscription = CategoryDiscription,
+                Status = "pending",
+                isDeleted = false
+            };
+            await _unitOfWork.CategoryRequestRepository.InsertAsync(req);
+            await _unitOfWork.SaveAsync();
+            TempData["SuccessMessage"] = "Category request submitted successfully.";
+            return RedirectToAction("SellerDashboard");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddReviewReply(string reviewId)
+        {
+            if (string.IsNullOrEmpty(reviewId)) return NotFound();
+            var review = await _unitOfWork.ProductRepository.GetProductReviewByIdAsync(reviewId);
+            if (review == null) return NotFound();
+            var reply = new review_reply { review_id = reviewId };
+            ViewBag.Review = review;
+            return View(reply);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReviewReply(review_reply model)
+        {
+            if (string.IsNullOrWhiteSpace(model.reply_text))
+            {
+                ModelState.AddModelError("reply_text", "Reply text is required.");
+            }
+            var review = await _unitOfWork.ProductRepository.GetProductReviewByIdAsync(model.review_id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Review = review;
+                return View(model);
+            }
+            var sellerId = GetCurrentSellerId();
+            model.id = Guid.NewGuid().ToString();
+            model.replier_id = sellerId;
+            model.created_at = DateTime.UtcNow;
+            model.is_seller_reply = true;
+            model.is_deleted = false;
+            _unitOfWork.ProductRepository.AddReviewReply(model);
+            await _unitOfWork.SaveAsync();
+            TempData["SuccessMessage"] = "Reply sent successfully.";
+            return RedirectToAction("ProductReviews");
         }
 
 

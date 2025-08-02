@@ -9387,3 +9387,4 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\Bou
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\MailKit.dll
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\MimeKit.dll
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-rr1sbl775x.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\pd3hk5crku-j9doi8kwq6.gz

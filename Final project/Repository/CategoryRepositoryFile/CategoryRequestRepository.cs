@@ -1,5 +1,6 @@
 ﻿
 using Final_project.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository.CategoryRepositoryFile
 {
@@ -14,6 +15,8 @@ namespace Final_project.Repository.CategoryRepositoryFile
         public void add(CategoryRequest entity) => db.CategoryRequest.Add(entity);
 
         public List<CategoryRequest> getAll() => db.CategoryRequest.Where(cr => cr.isDeleted == false).ToList();
+
+        public async Task<List<CategoryRequest>> GetAll() => await db.CategoryRequest.Where(cr => cr.isDeleted == false).ToListAsync();
 
         public CategoryRequest getById(string id) => db.CategoryRequest.Where(cr => cr.isDeleted == false).FirstOrDefault(cr => cr.requredId == id);
 
@@ -34,9 +37,15 @@ namespace Final_project.Repository.CategoryRepositoryFile
 
         public void Update(CategoryRequest entity) => db.CategoryRequest.Update(entity);
 
+        // In your repository
+        public async Task<bool> HasPendingCategoryAsync(string categoryName)
+        {
+            return await db.CategoryRequest
+                .AnyAsync(r => r.CategoryName.ToLower() == categoryName.ToLower()
+                           && r.Status == "pending"
+                           && r.isDeleted == false);
+        }
 
-
-  
-
+        public async Task InsertAsync(CategoryRequest categoryRequest)=> await db.CategoryRequest.AddAsync(categoryRequest);
     }
 }

@@ -51,6 +51,21 @@
                             <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "ProductReviews" ? "active-link" : "")" href="@Url.Action("ProductReviews", "Seller")">Reviews</a>
                         </li>
                     </ul>
+                    @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Seller")
+                    {
+                        <div class="d-flex align-items-center ms-auto" style="gap: 15px;">
+                            <div class="user-info" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; padding: 8px 15px; color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                                <i class="fas fa-user-circle"></i>
+                                <span>Welcome, Seller !</span>
+                            </div>
+                            <form method="post" action="@Url.Action("signOut", "Account")" style="margin: 0;">
+                                <button type="submit" class="logout-btn" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border: none; color: white; padding: 12px 20px; border-radius: 25px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 20px rgba(220,53,69,0.3);">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    }
                 </div>
             </div>
         </nav>

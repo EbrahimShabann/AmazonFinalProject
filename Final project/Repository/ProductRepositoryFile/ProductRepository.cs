@@ -159,6 +159,8 @@ namespace Final_project.Repository.ProductRepositoryFile
             return db.product_reviews.ToList();
         }
 
+        public async Task<product_review> GetProductReviewByIdAsync(string productReviewId) => await db.product_reviews.FirstOrDefaultAsync(pr => pr.id == productReviewId);
 
+        public void AddReviewReply(review_reply reply)=>db.review_reply.Add(reply);
     }
 }

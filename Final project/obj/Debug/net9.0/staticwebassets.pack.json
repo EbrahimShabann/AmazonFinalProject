@@ -61,12 +61,24 @@
       "PackagePath": "staticwebassets\\images\\categories\\esmael.jpeg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\oar2.jpg",
+      "PackagePath": "staticwebassets\\images\\categories\\oar2.jpg"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg",
       "PackagePath": "staticwebassets\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\4c2d0de4-4102-4185-ae11-b2a072728e09.ico",
+      "PackagePath": "staticwebassets\\images\\products\\4c2d0de4-4102-4185-ae11-b2a072728e09.ico"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg",
       "PackagePath": "staticwebassets\\images\\products\\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\6d700f6f-b13d-4374-b526-cc5b80fc8f80.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\6d700f6f-b13d-4374-b526-cc5b80fc8f80.jpg"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg",
