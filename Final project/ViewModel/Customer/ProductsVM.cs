@@ -32,6 +32,7 @@ namespace Final_project.ViewModel.Customer
         public string description { get; set; }
         public List<product_review> reviews { get; set; }
         public List<ProductsVM> RecommendedProducts { get; set; } = [];
+        public order_item UserOrderItem { get; set; }
         public List<string> SelectedSizes { get; set; } = [];
         public List<string> SelectedColors { get; set; } = [];
 

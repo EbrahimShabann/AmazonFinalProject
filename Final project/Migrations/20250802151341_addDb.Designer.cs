@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Final_project.Migrations
 {
     [DbContext(typeof(AmazonDBContext))]
-    [Migration("20250729210848_AddSavedCartSupport")]
-    partial class AddSavedCartSupport
+    [Migration("20250802151341_addDb")]
+    partial class addDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,6 +150,36 @@ namespace Final_project.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.Property<string>("requredId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryDiscription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("requredId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("CategoryRequest");
+                });
+
             modelBuilder.Entity("Final_project.Models.audit_log", b =>
                 {
                     b.Property<string>("id")
@@ -209,12 +239,18 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("color")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("product_id")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -494,6 +530,12 @@ namespace Final_project.Migrations
                     b.Property<string>("id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("discount_applied")
                         .HasColumnType("decimal(18, 2)");
 
@@ -569,12 +611,6 @@ namespace Final_project.Migrations
                     b.Property<string>("Colors")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("SelectedColorsRaw")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedSizesRaw")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sizes")
                         .HasMaxLength(255)
@@ -1118,6 +1154,15 @@ namespace Final_project.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("SellerId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Final_project.Models.audit_log", b =>

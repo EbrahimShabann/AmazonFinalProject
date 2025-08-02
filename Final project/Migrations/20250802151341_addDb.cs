@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Final_project.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:Final project/Migrations/20250726122859_createNewDb.cs
-    public partial class createNewDb : Migration
-========
-    public partial class addingNewTableCategory : Migration
->>>>>>>> 917f03d7b05933197736b9bc152176ce78af37cc:Final project/Migrations/20250801183844_addingNewTableCategory.cs
+    public partial class addDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,10 +17,10 @@ namespace Final_project.Migrations
                 {
                     LogID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ActionType = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    ActionType = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     TimeStamp = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    AdditionalInfo = table.Column<string>(type: "text", nullable: false)
+                    AdditionalInfo = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,10 +167,10 @@ namespace Final_project.Migrations
                 columns: table => new
                 {
                     requredId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SellerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryDiscription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdminComment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -185,8 +181,7 @@ namespace Final_project.Migrations
                         name: "FK_CategoryRequest_Users_SellerId",
                         column: x => x.SellerId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -278,8 +273,8 @@ namespace Final_project.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    user_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    user_id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     last_updated_at = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -290,8 +285,7 @@ namespace Final_project.Migrations
                         name: "FK_saved_carts_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -485,9 +479,7 @@ namespace Final_project.Migrations
                     is_approved = table.Column<bool>(type: "bit", nullable: true),
                     approved_by = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     approved_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    is_deleted = table.Column<bool>(type: "bit", nullable: false),
-                    SelectedColorsRaw = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SelectedSizesRaw = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    is_deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -710,14 +702,12 @@ namespace Final_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:Final project/Migrations/20250726122859_createNewDb.cs
-========
                 name: "saved_cart_items",
                 columns: table => new
                 {
                     id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    saved_cart_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    product_id = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    saved_cart_id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    product_id = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     quantity = table.Column<int>(type: "int", nullable: false),
                     added_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -728,18 +718,15 @@ namespace Final_project.Migrations
                         name: "FK_saved_cart_items_products_product_id",
                         column: x => x.product_id,
                         principalTable: "products",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_saved_cart_items_saved_carts_saved_cart_id",
                         column: x => x.saved_cart_id,
                         principalTable: "saved_carts",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
->>>>>>>> 917f03d7b05933197736b9bc152176ce78af37cc:Final project/Migrations/20250801183844_addingNewTableCategory.cs
                 name: "wishlist_items",
                 columns: table => new
                 {
@@ -770,11 +757,11 @@ namespace Final_project.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    orderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    order_itemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    orderId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    order_itemId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     RevertDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -783,14 +770,12 @@ namespace Final_project.Migrations
                         name: "FK_Orders_Reverted_order_items_order_itemId",
                         column: x => x.order_itemId,
                         principalTable: "order_items",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Orders_Reverted_orders_orderId",
                         column: x => x.orderId,
                         principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
