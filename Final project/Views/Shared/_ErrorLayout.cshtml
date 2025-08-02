@@ -1,0 +1,252 @@
+﻿﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon - @ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/_ErrorLayoutCSS.css" asp-append-version="true" />
+
+</head>
+<body>
+    <!-- Background Layer -->
+    <div class="bg-layer">
+        <div class="geometry-container" id="geometryContainer"></div>
+        <div class="hologram"></div>
+    </div>
+
+    <!-- Advanced Particle System -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- 3D Floating Elements -->
+    <div class="floating-3d" style="top: 10%; left: 10%">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+            <polygon points="30,5 55,25 45,50 15,50 5,25"
+                     fill="var(--amazon-orange)"
+                     opacity="0.4" />
+        </svg>
+    </div>
+
+    <div class="floating-3d" style="top: 20%; right: 15%">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40"
+                    cy="40"
+                    r="35"
+                    fill="none"
+                    stroke="var(--amazon-yellow)"
+                    stroke-width="3"
+                    opacity="0.6" />
+        </svg>
+    </div>
+
+    <!-- Decoration Layer -->
+    <div class="decoration-layer">
+        <div class="orbit-system">
+            <div class="orbit orbit-1"></div>
+            <div class="orbit orbit-2"></div>
+            <div class="orbit orbit-3"></div>
+        </div>
+        <div class="energy-wave" id="energyWave"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Enhanced Amazon Logo -->
+        <div class="logo">
+            <svg viewBox="0 0 180 60">
+                <defs>
+                    <!-- Enhanced gradient with multiple stops -->
+                    <linearGradient id="logoGradient"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="100%">
+                        <stop offset="0%" style="stop-color: #ff9900">
+                            <animate attributeName="stop-color"
+                                     values="#ff9900;#febd69;#ff9900"
+                                     dur="4s"
+                                     repeatCount="indefinite" />
+                        </stop>
+                        <stop offset="30%" style="stop-color: #febd69">
+                            <animate attributeName="stop-color"
+                                     values="#febd69;#ffffff;#febd69"
+                                     dur="4s"
+                                     repeatCount="indefinite" />
+                        </stop>
+                        <stop offset="70%" style="stop-color: #ff9900">
+                            <animate attributeName="stop-color"
+                                     values="#ff9900;#febd69;#ff9900"
+                                     dur="4s"
+                                     repeatCount="indefinite" />
+                        </stop>
+                        <stop offset="100%" style="stop-color: #febd69" />
+                    </linearGradient>
+
+                    <!-- Arrow gradient -->
+                    <linearGradient id="arrowGradient"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="0%">
+                        <stop offset="0%" style="stop-color: #ff9900" />
+                        <stop offset="100%" style="stop-color: #febd69" />
+                    </linearGradient>
+
+                    <!-- Text shadow filter -->
+                    <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Amazon text with enhanced styling -->
+                <text x="15"
+                      y="35"
+                      font-family="Arial Black, Arial, sans-serif"
+                      font-size="28"
+                      font-weight="900"
+                      fill="url(#logoGradient)"
+                      filter="url(#textGlow)"
+                      class="logo-text">
+                    amazon
+                </text>
+
+                <!-- Enhanced smile arrow with animation -->
+                <g class="logo-arrow">
+                    <!-- Main arrow curve -->
+                    <path d="M25 48 Q90 58 145 48"
+                          stroke="url(#arrowGradient)"
+                          stroke-width="4"
+                          fill="none"
+                          stroke-linecap="round">
+                        <animate attributeName="stroke-width"
+                                 values="4;5;4"
+                                 dur="3s"
+                                 repeatCount="indefinite" />
+                    </path>
+
+                    <!-- Arrow tip -->
+                    <path d="M138 44 L145 48 L138 52"
+                          stroke="url(#arrowGradient)"
+                          stroke-width="4"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round">
+                        <animateTransform attributeName="transform"
+                                          type="rotate"
+                                          values="0 145 48;3 145 48;0 145 48"
+                                          dur="3s"
+                                          repeatCount="indefinite" />
+                    </path>
+
+                    <!-- Animated dots along the smile -->
+                    <circle cx="50" cy="50" r="2" fill="#ff9900" opacity="0.8">
+                        <animate attributeName="opacity"
+                                 values="0.8;0.3;0.8"
+                                 dur="2s"
+                                 repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="90" cy="52" r="1.5" fill="#febd69" opacity="0.6">
+                        <animate attributeName="opacity"
+                                 values="0.6;0.2;0.6"
+                                 dur="2s"
+                                 begin="0.5s"
+                                 repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="120" cy="50" r="1.8" fill="#ff9900" opacity="0.7">
+                        <animate attributeName="opacity"
+                                 values="0.7;0.25;0.7"
+                                 dur="2s"
+                                 begin="1s"
+                                 repeatCount="indefinite" />
+                    </circle>
+                </g>
+
+                <!-- Subtle background elements -->
+                <ellipse cx="90"
+                         cy="30"
+                         rx="80"
+                         ry="25"
+                         fill="rgba(255, 153, 0, 0.05)"
+                         opacity="0.5">
+                    <animate attributeName="opacity"
+                             values="0.5;0.2;0.5"
+                             dur="4s"
+                             repeatCount="indefinite" />
+                </ellipse>
+            </svg>
+        </div>
+
+        <!-- Advanced Error Icon -->
+        <div class="error-icon">
+            <svg viewBox="0 0 180 180">
+                <defs>
+                    <radialGradient id="errorGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%"
+                              style="stop-color: var(--amazon-orange); stop-opacity: 1" />
+                        <stop offset="70%"
+                              style="stop-color: var(--amazon-yellow); stop-opacity: 0.8" />
+                        <stop offset="100%"
+                              style="stop-color: var(--amazon-orange); stop-opacity: 0.4" />
+                    </radialGradient>
+                </defs>
+                <circle cx="90"
+                        cy="90"
+                        r="80"
+                        fill="url(#errorGradient)"
+                        opacity="0.9" />
+                <circle cx="90"
+                        cy="90"
+                        r="70"
+                        fill="none"
+                        stroke="white"
+                        stroke-width="4"
+                        opacity="0.8" />
+                <circle cx="90"
+                        cy="90"
+                        r="60"
+                        fill="none"
+                        stroke="white"
+                        stroke-width="2"
+                        opacity="0.6" />
+                <g stroke="white"
+                   stroke-width="8"
+                   stroke-linecap="round"
+                   opacity="0.95">
+                    <path d="M60 60 L120 120 M120 60 L60 120" />
+                </g>
+                <animateTransform attributeName="transform"
+                                  type="rotate"
+                                  values="0 90 90;360 90 90"
+                                  dur="15s"
+                                  repeatCount="indefinite" />
+            </svg>
+        </div>
+
+        <!-- Enhanced Error Content -->
+        <div class="error-content">
+            <h1>Oops! Something went wrong</h1>
+            <p>
+                We're experiencing some technical difficulties. Our team has been
+                notified and is working hard to fix this issue. Thank you for your
+                patience!
+            </p>
+        </div>
+
+        <!-- Premium Home Button -->
+        <a href="#" class="home-button" onclick="goHome()">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3l10 9h-3v9h-6v-7h-2v7h-6v-9h-3l10-9z" />
+            </svg>
+            Return Home
+        </a>
+    </div>
+    <script src="~/js/_ErrorLayoutJS.js"></script>
+</body>
+</html>

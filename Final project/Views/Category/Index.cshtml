@@ -1,0 +1,1065 @@
+﻿@model CategoryFilter
+@{
+    ViewData["Title"] = "Category";
+    Layout = "_LandingAmazonPage";
+}
+<partial name="~/Views/Shared/_SideBarMenu.cshtml" />
+
+<!-- Category Page -->
+<div class="category-page" id="categoryPage">
+    <div class="container-fluid">
+        <div class="row g-0">
+            <!-- Left Sidebar - Category Filters -->
+            <div class="col-md-3 col-lg-2 p-0">
+                <div class="category-sidebar">
+                    <div class="category-header">
+                        <h4 class="">Best Selling</h4>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="filter-section" data-filter-type="department">
+                        <ul class="filter-list">
+                            <li>
+                                <a href="#" class="filter-item active">Electronics</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Cell Phones & Accessories</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Cases & Covers</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Screen Protectors</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Chargers & Cables</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Wireless Chargers</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Computers & Tablets</a>
+                                <ul class="filter-subcategory">
+                                    <li><a href="#" class="filter-item">Laptops</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Desktop Computers</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Tablets</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Computer Accessories</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">TV & Home Theater</a>
+                                <ul class="filter-subcategory">
+                                    <li><a href="#" class="filter-item">Televisions</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Streaming Devices</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Sound Bars</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Home Theater Systems</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Camera & Photo</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Digital Cameras</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Camera Lenses</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Tripods & Monopods</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Memory Cards</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Headphones</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">Over-Ear Headphones</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">In-Ear Headphones</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Wireless Earbuds</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="filter-item">Gaming Headsets</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item">Video Games</a>
+                                <ul class="filter-subcategory">
+                                    <li>
+                                        <a href="#" class="filter-item">PlayStation Games</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">Xbox Games</a></li>
+                                    <li>
+                                        <a href="#" class="filter-item">Nintendo Games</a>
+                                    </li>
+                                    <li><a href="#" class="filter-item">PC Games</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Price Filter -->
+                    <div class="filter-section" data-filter-type="price">
+                        <h5>Price</h5>
+                        <ul class="filter-list">
+                            <li><a href="#" class="filter-item">Under $25</a></li>
+                            <li><a href="#" class="filter-item">$25 to $50</a></li>
+                            <li><a href="#" class="filter-item">$50 to $100</a></li>
+                            <li><a href="#" class="filter-item">$100 to $200</a></li>
+                            <li><a href="#" class="filter-item">$200 & Above</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-section" data-filter-type="rating">
+                        <h5>Customer Review</h5>
+                        <ul class="filter-list">
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★★★ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★★☆ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★★☆☆ & Up</a>
+                            </li>
+                            <li>
+                                <a href="#" class="filter-item rating-filter">★★☆☆☆ & Up</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10">
+                <div class="category-content">
+                    <!-- Sort Bar -->
+                    <div class="sort-bar d-flex">
+                        <div class="sort-options justify-content-end">
+                            <label for="sortSelect">Sort by:</label>
+                            <select id="sortSelect" class="sort-select">
+                                <option value="relevance">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Single Product Card -->
+                    <div class="row justify-content-center">
+                    </div>
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <nav aria-label="Product pagination">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                                <li class="page-item active">
+                                    <span class="page-link">1</span>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <span class="page-link">...</span>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">15</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/CategoryJS.js"></script>
+
+    <script>
+        // Enhanced filtering script with toggle functionality for price, stars, and landing page filters
+        let filterState = {
+            department: {
+                selected: null,
+                selectedId: '@Html.Raw(Model?.categoryId ?? "")',
+                subcategory: null,
+                subcategoryId: null
+            },
+            price: {
+                selected: null,
+                range: null
+            },
+            customerReview: {
+                selected: null,
+                rating: null
+            },
+            filter: '@Html.Raw(Model?.filter ?? "")',
+            search: '@Html.Raw(Model?.SearchTerm ?? "")', // Add search term from model
+            lastUpdated: null,
+            filterType: null
+        };
+
+        let currentPage = 1;
+        let isLoading = false;
+        let isAuthenticated = @Html.Raw(User.Identity.IsAuthenticated ? "true" : "false");
+
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Function to show loading state
+        function showLoading(show = true) {
+            isLoading = show;
+            const productContainer = $('.row.justify-content-center');
+            if (show) {
+                productContainer.html('<div class="col-12 text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading products...</p></div>');
+            }
+        }
+
+        // Function to display active filters badge
+        function updateActiveFiltersBadge() {
+            let activeFilters = [];
+
+            if (filterState.search) {
+                activeFilters.push(`Search: "${filterState.search}"`);
+            }
+
+            if (filterState.department.selected && filterState.department.selected !== 'All Categories') {
+                activeFilters.push(filterState.department.selected);
+            }
+
+            if (filterState.price.selected) {
+                activeFilters.push(filterState.price.selected);
+            }
+
+            if (filterState.customerReview.selected) {
+                activeFilters.push(filterState.customerReview.selected);
+            }
+
+            if (filterState.filter) {
+                switch(filterState.filter.toLowerCase()) {
+                    case 'discounts':
+                        activeFilters.push('Discounted Items');
+                        break;
+                    case 'bestsellers':
+                        activeFilters.push('Best Sellers');
+                        break;
+                    case 'newarrivals':
+                        activeFilters.push('New Arrivals');
+                        break;
+                }
+            }
+
+            // Update or create active filters display
+            let filtersDisplay = $('.active-filters-display');
+            if (filtersDisplay.length === 0) {
+                $('.category-header').after('<div class="active-filters-display mb-3"></div>');
+                filtersDisplay = $('.active-filters-display');
+            }
+
+            if (activeFilters.length > 0) {
+                let filtersHtml = '<div class="active-filters"><h6>Active Filters:</h6>';
+                activeFilters.forEach((filter, index) => {
+                    // Use data attribute instead of onclick to avoid quote escaping issues
+                    filtersHtml += `<span class="badge bg-primary me-2 mb-1" data-filter-index="${index}">${filter} <button class="btn-close btn-close-white ms-1 remove-filter-btn" style="font-size: 0.7em;"></button></span>`;
+                });
+                filtersHtml += '</div>';
+                filtersDisplay.html(filtersHtml);
+
+                // Store the active filters for reference
+                filtersDisplay.data('activeFilters', activeFilters);
+            } else {
+                filtersDisplay.empty();
+            }
+        }
+
+                $(document).on('click', '.remove-filter-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const badge = $(this).closest('.badge');
+            const filterIndex = badge.data('filter-index');
+            const activeFilters = $('.active-filters-display').data('activeFilters');
+
+            if (activeFilters && activeFilters[filterIndex]) {
+                removeFilter(activeFilters[filterIndex]);
+            }
+        });
+
+        // Function to remove individual filter
+           function removeFilter(filterToRemove) {
+            if (filterToRemove.startsWith('Search:')) {
+                filterState.search = '';
+                // Update URL to remove search parameter
+                const url = new URL(window.location);
+                url.searchParams.delete('search');
+                window.history.replaceState({}, '', url);
+                // Clear search input if it exists
+                $('#searchInput').val('');
+            } else if (filterToRemove === filterState.department.selected) {
+                filterState.department.selected = null;
+                filterState.department.selectedId = null;
+                $('.filter-section[data-filter-type="department"] .filter-item').removeClass('active');
+                $('.filter-item[data-category-id="all"]').addClass('active');
+            } else if (filterToRemove === filterState.price.selected) {
+                filterState.price.selected = null;
+                filterState.price.range = null;
+                $('.filter-section[data-filter-type="price"] .filter-item').removeClass('active');
+            } else if (filterToRemove === filterState.customerReview.selected) {
+                filterState.customerReview.selected = null;
+                filterState.customerReview.rating = null;
+                $('.filter-section[data-filter-type="rating"] .filter-item').removeClass('active');
+            } else if (filterToRemove.includes('Discounted') || filterToRemove.includes('Best Sellers') || filterToRemove.includes('New Arrivals')) {
+                filterState.filter = '';
+                $('.landing-filter-item').removeClass('active');
+            }
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Function to load filtered products
+        function loadFilteredProducts(page = 1, resetPage = false) {
+            if (isLoading) return;
+
+            if (resetPage) {
+                currentPage = 1;
+                page = 1;
+            }
+
+            showLoading(true);
+
+            // Prepare filter parameters
+            const params = {
+                page: page,
+                pageSize: 20,
+                sortBy: $('#sortSelect').val() || 'relevance'
+            };
+
+            // Add category filters
+            if (filterState.department.subcategoryId) {
+                params.subcategoryId = filterState.department.subcategoryId;
+                params.categoryId = filterState.department.selectedId;
+            } else if (filterState.department.selectedId && filterState.department.selectedId !== 'all') {
+                params.categoryId = filterState.department.selectedId;
+            }
+
+            // Add price filters
+            if (filterState.price.range) {
+                params.minPrice = filterState.price.range.min;
+                if (filterState.price.range.max !== null) {
+                    params.maxPrice = filterState.price.range.max;
+                }
+            }
+
+            // Add rating filters
+            if (filterState.customerReview.rating) {
+                params.minRating = filterState.customerReview.rating.stars;
+            }
+
+            // Add landing page filter
+            if (filterState.filter) {
+                params.filter = filterState.filter;
+            }
+
+            // Add search parameter
+            if (filterState.search) {
+                params.search = filterState.search;
+            }
+
+            console.log('Loading products with params:', params);
+
+            $.ajax({
+                url: '/Category/GetPaginatedProducts',
+                type: 'GET',
+                data: params,
+                success: function(response) {
+                    showLoading(false);
+
+                    if (response.error) {
+                        console.error('Error loading products:', response.message);
+                        showErrorMessage(response.message);
+                        return;
+                    }
+
+                    renderProducts(response.products);
+                    updatePagination(response.pagination);
+                    updateResultsInfo(response.pagination);
+
+                    // Only call updateStatistics if the response contains statistics
+                    if (response.statistics) {
+                        updateStatistics(response.statistics);
+                    }
+
+                    currentPage = response.pagination.currentPage;
+                    console.log('Products loaded successfully:', response);
+                },
+                error: function(xhr, status, error) {
+                    showLoading(false);
+                    console.error('AJAX Error:', error);
+                    showErrorMessage('Failed to load products. Please try again.');
+                }
+            });
+        }
+
+        // Add the missing updateStatistics function
+        function updateStatistics(statistics) {
+            console.log('Statistics updated:', statistics);
+            // Add your statistics update logic here
+            // For example, if you have a statistics display element:
+            // $('.statistics-display').html(`Total Products: ${statistics.totalProducts}, Categories: ${statistics.totalCategories}`);
+        }
+
+        // Update the updateResultsInfo function to show search term
+        function updateResultsInfo(pagination) {
+            const startResult = ((pagination.currentPage - 1) * pagination.pageSize) + 1;
+            const endResult = Math.min(pagination.currentPage * pagination.pageSize, pagination.totalProducts);
+
+            // Add or update results info display
+            let resultsInfo = $('.results-info');
+            if (resultsInfo.length === 0) {
+                $('.sort-bar').prepend('<div class="results-info me-auto"></div>');
+                resultsInfo = $('.results-info');
+            }
+
+            let filterText = '';
+            if (filterState.filter) {
+                switch(filterState.filter.toLowerCase()) {
+                    case 'discounts':
+                        filterText = ' with discounts';
+                        break;
+                    case 'bestsellers':
+                        filterText = ' (Best Sellers)';
+                        break;
+                    case 'newarrivals':
+                        filterText = ' (New Arrivals)';
+                        break;
+                }
+            }
+
+            // Add search term to results info
+            let searchText = '';
+            if (filterState.search) {
+                searchText = ` for "${filterState.search}"`;
+            }
+
+            resultsInfo.html(`
+                <span>Showing ${startResult}-${endResult} of ${pagination.totalProducts} results${searchText}${filterText}</span>
+            `);
+        }
+
+        // Enhanced renderProducts function with enhanced discount and product display
+        function renderProducts(products) {
+            const productContainer = $('.row.justify-content-center');
+            productContainer.empty();
+
+            if (!products || products.length === 0) {
+                productContainer.html(`
+                    <div class="col-12 text-center p-5">
+                        <h5>No products found</h5>
+                        <p>Try adjusting your filters to see more results.</p>
+                    </div>
+                `);
+                return;
+            }
+
+            products.forEach(item => {
+                // Generate star rating HTML
+                let starsHtml = '';
+                const rating = item.rating || item.ratting || 0;
+                const ratingStarMinus = item.ratingStarMinus || item.rattingStarMinuse || (5 - rating);
+
+                for (let i = 0; i < rating; i++) {
+                    starsHtml += '<span>★</span>';
+                }
+                for (let i = 0; i < ratingStarMinus; i++) {
+                    starsHtml += '<span>☆</span>';
+                }
+
+                // Determine if product has discount
+                const hasDiscount = item.hasDiscount || (item.discountPrice && item.discountPrice < item.originalPrice);
+                const discountPercentage = item.discountPercentage || 0;
+                const finalPrice = item.finalPrice || item.discountPrice || item.originalPrice || item.price;
+                const originalPrice = item.originalPrice || item.price;
+
+                // Create discount badge HTML if product has discount
+                const discountBadgeHtml = hasDiscount ? `<div class="discount-badge">-${discountPercentage}%</div>` : '';
+
+                // Add bestseller badge if this is a bestseller filter
+                const bestsellerBadge = (filterState.filter === 'bestsellers' && item.totalSold > 0) ?
+                    `<div class="bestseller-badge">Best Seller</div>` : '';
+
+                // Add new arrival badge if this is a new arrivals filter
+                const newArrivalBadge = (filterState.filter === 'newarrivals') ?
+                    `<div class="new-arrival-badge">New</div>` : '';
+
+                // Create price HTML based on whether product has discount
+                let priceHtml = '';
+                if (hasDiscount) {
+                    priceHtml = `
+                        <div class="product-price">
+                            <span class="price-symbol">£</span>
+                            <span class="price-whole">${finalPrice}</span>
+                            <span class="price-original">£${originalPrice}</span>
+                        </div>
+                    `;
+                } else {
+                    priceHtml = `
+                        <div class="product-price">
+                            <span class="price-symbol">£</span>
+                            <span class="price-whole">${finalPrice}</span>
+                        </div>
+                    `;
+                }
+
+                // Format delivery timing
+                const deliveryDate = item.deliveryTiming || item.delaviryTiming;
+                let deliveryText = 'Soon';
+                if (deliveryDate) {
+                    try {
+                        deliveryText = new Date(deliveryDate).toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    } catch (e) {
+                        deliveryText = 'Soon';
+                    }
+                }
+
+                // Add sales info for bestsellers
+                const salesInfo = (filterState.filter === 'bestsellers' && item.totalSold) ?
+                    `<div class="sales-info">Sold: ${item.totalSold}</div>` : '';
+
+                const productHtml = `
+                    <div class="product-card m-1 col-3" >
+                        ${discountBadgeHtml}
+                        ${bestsellerBadge}
+                        ${newArrivalBadge}
+                            <a href="/product/Details?id=${item.productId || item.id}" onclick="redirectToProduct(${item.productId || item.id}); return false;" class="text-decoration-none text-dark">
+                            <div class="product-image">
+                                    <img src="./images/products/${item.imageUrl || './images/products/placeholder.jpg'}" alt="${item.productName}" />
+                            </div>
+                            <div class="product-title">
+                                ${item.productName}
+                            </div>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    ${starsHtml}
+                                </div>
+                                <span class="rating-count">${item.ratingCount || rating || 0}</span>
+                            </div>
+                            ${priceHtml}
+                            ${salesInfo}
+                            <div class="product-delivery">FREE delivery ${deliveryText}</div>
+                            <div class="product-prime">
+                                <span class="prime-logo">prime</span>
+                                <span>FREE ${item.prime ? 'One-Day' : 'delivery'}</span>
+                            </div>
+                        </a>
+                        <button class="add-to-cart" data-product-id="${item.productId || item.id}">Add to Cart</button>
+                    </div>
+                `;
+
+                productContainer.append(productHtml);
+            });
+        }
+
+        // Function to update pagination
+        function updatePagination(pagination) {
+            const paginationContainer = $('.pagination');
+            paginationContainer.empty();
+
+            const currentPage = pagination.currentPage;
+            const totalPages = pagination.totalPages;
+
+            // Previous button
+            if (pagination.hasPreviousPage) {
+                paginationContainer.append(`
+                    <li class="page-item">
+                        <a class="page-link pagination-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                    </li>
+                `);
+            } else {
+                paginationContainer.append(`
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                `);
+            }
+
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                paginationContainer.append(`
+                    <li class="page-item">
+                        <a class="page-link pagination-link" href="#" data-page="1">1</a>
+                    </li>
+                `);
+                if (startPage > 2) {
+                    paginationContainer.append(`
+                        <li class="page-item">
+                            <span class="page-link">...</span>
+                        </li>
+                    `);
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const isActive = i === currentPage ? 'active' : '';
+                if (i === currentPage) {
+                    paginationContainer.append(`
+                        <li class="page-item ${isActive}">
+                            <span class="page-link">${i}</span>
+                        </li>
+                    `);
+                } else {
+                    paginationContainer.append(`
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `);
+                }
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationContainer.append(`
+                        <li class="page-item">
+                            <span class="page-link">...</span>
+                        </li>
+                    `);
+                }
+                paginationContainer.append(`
+                    <li class="page-item">
+                        <a class="page-link pagination-link" href="#" data-page="${totalPages}">${totalPages}</a>
+                    </li>
+                `);
+            }
+
+            // Next button
+            if (pagination.hasNextPage) {
+                paginationContainer.append(`
+                    <li class="page-item">
+                        <a class="page-link pagination-link" href="#" data-page="${currentPage + 1}">Next</a>
+                    </li>
+                `);
+            } else {
+                paginationContainer.append(`
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                `);
+            }
+        }
+
+        // Function to show error message
+        function showErrorMessage(message) {
+            const productContainer = $('.row.justify-content-center');
+            productContainer.html(`
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Error!</strong> ${message}
+                    </div>
+                </div>
+            `);
+        }
+
+        // Function to update department selection
+        function updateDepartmentFilter(element) {
+            const categoryName = element.textContent.trim();
+            const categoryId = element.getAttribute('data-category-id');
+            const isSubCategory = element.closest('.filter-subcategory') !== null;
+
+            if (isSubCategory) {
+                const parentElement = element.closest('li').closest('li').querySelector('.filter-item[data-category-id]');
+                filterState.department.selected = parentElement ? parentElement.textContent.trim() : null;
+                filterState.department.selectedId = parentElement ? parentElement.getAttribute('data-category-id') : null;
+                filterState.department.subcategory = categoryName;
+                filterState.department.subcategoryId = categoryId;
+            } else {
+                filterState.department.selected = categoryName;
+                filterState.department.selectedId = categoryId;
+                filterState.department.subcategory = null;
+                filterState.department.subcategoryId = null;
+            }
+
+            filterState.lastUpdated = new Date().toISOString();
+            filterState.filterType = 'department';
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Enhanced function to update price selection with toggle functionality
+        function updatePriceFilter(element) {
+            const priceText = element.textContent.trim();
+            const isCurrentlyActive = $(element).hasClass('active');
+
+            // If clicking the same price filter, toggle it off
+            if (isCurrentlyActive && filterState.price.selected === priceText) {
+                filterState.price.selected = null;
+                filterState.price.range = null;
+                $(element).removeClass('active');
+            } else {
+                // Remove active class from all price filters
+                $('.filter-section[data-filter-type="price"] .filter-item').removeClass('active');
+
+                // Set new price filter
+                let range = null;
+                if (priceText.includes('Under $25')) {
+                    range = { min: 0, max: 25 };
+                } else if (priceText.includes('$25 to $50')) {
+                    range = { min: 25, max: 50 };
+                } else if (priceText.includes('$50 to $100')) {
+                    range = { min: 50, max: 100 };
+                } else if (priceText.includes('$100 to $200')) {
+                    range = { min: 100, max: 200 };
+                } else if (priceText.includes('$200 & Above')) {
+                    range = { min: 200, max: null };
+                }
+
+                filterState.price.selected = priceText;
+                filterState.price.range = range;
+                $(element).addClass('active');
+            }
+
+            filterState.lastUpdated = new Date().toISOString();
+            filterState.filterType = 'price';
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Enhanced function to update customer review selection with toggle functionality
+        function updateCustomerReviewFilter(element) {
+            const ratingText = element.textContent.trim();
+            const isCurrentlyActive = $(element).hasClass('active');
+
+            // If clicking the same rating filter, toggle it off
+            if (isCurrentlyActive && filterState.customerReview.selected === ratingText) {
+                filterState.customerReview.selected = null;
+                filterState.customerReview.rating = null;
+                $(element).removeClass('active');
+            } else {
+                // Remove active class from all rating filters
+                $('.filter-section[data-filter-type="rating"] .filter-item').removeClass('active');
+
+                // Set new rating filter
+                let rating = null;
+                const filledStars = (ratingText.match(/★/g) || []).length;
+
+                if (filledStars >= 1) {
+                    rating = { stars: filledStars, andUp: true };
+                }
+
+                filterState.customerReview.selected = ratingText;
+                filterState.customerReview.rating = rating;
+                $(element).addClass('active');
+            }
+
+            filterState.lastUpdated = new Date().toISOString();
+            filterState.filterType = 'customerReview';
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Function to add landing page filter buttons
+        function addLandingPageFilters() {
+            const filterSection = `
+                <div class="filter-section" data-filter-type="landing">
+                    <h5>Special Offers</h5>
+                    <ul class="filter-list">
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="discounts">Discounted Items</a></li>
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="bestsellers">Best Sellers</a></li>
+                        <li><a href="#" class="filter-item landing-filter-item" data-filter="newarrivals">New Arrivals</a></li>
+                    </ul>
+                </div>
+            `;
+
+            $('.filter-section[data-filter-type="rating"]').after(filterSection);
+
+            // Mark active filter if one was passed from landing page
+            if (filterState.filter) {
+                $(`.landing-filter-item[data-filter="${filterState.filter}"]`).addClass('active');
+            }
+        }
+
+        // Function to handle landing page filter clicks
+        function updateLandingFilter(element) {
+            const filterValue = element.getAttribute('data-filter');
+            const isCurrentlyActive = $(element).hasClass('active');
+
+            // If clicking the same filter, toggle it off
+            if (isCurrentlyActive && filterState.filter === filterValue) {
+                filterState.filter = null;
+                $(element).removeClass('active');
+            } else {
+                // Remove active class from all landing filters
+                $('.landing-filter-item').removeClass('active');
+
+                // Set new filter
+                filterState.filter = filterValue;
+                $(element).addClass('active');
+            }
+
+            filterState.lastUpdated = new Date().toISOString();
+            filterState.filterType = 'landing';
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Function to clear all filters
+        function clearAllFilters() {
+            filterState = {
+                department: {
+                    selected: null,
+                    selectedId: null,
+                    subcategory: null,
+                    subcategoryId: null
+                },
+                price: {
+                    selected: null,
+                    range: null
+                },
+                customerReview: {
+                    selected: null,
+                    rating: null
+                },
+                filter: null,
+                lastUpdated: null,
+                filterType: null
+            };
+
+            // Remove active classes
+            $('.filter-item').removeClass('active');
+            $('.landing-filter-item').removeClass('active');
+            $('.filter-item[data-category-id="all"]').addClass('active');
+
+            // Reset sort
+            $('#sortSelect').val('relevance');
+
+            updateActiveFiltersBadge();
+            loadFilteredProducts(1, true);
+        }
+
+        // Render categories in filter sidebar
+        function renderCategories(categories) {
+            const filterList = $('.filter-section[data-filter-type="department"] .filter-list').first();
+            filterList.empty();
+
+            filterList.append(`
+                <li>
+                    <a href="#" class="filter-item ${!filterState.department.selectedId || filterState.department.selectedId === 'all' ? 'active' : ''} fw-bold" data-category-id="all">All Categories</a>
+                </li>
+            `);
+
+            categories.forEach(category => {
+                const isActive = filterState.department.selectedId === category.id.toString();
+                let categoryHtml = `
+                    <li>
+                        <a href="#" class="filter-item ${isActive ? 'active' : ''}" data-category-id="${category.id}">${category.name}</a>
+                `;
+
+                if (category.childCategories && category.childCategories.length > 0) {
+                    categoryHtml += `<ul class="filter-subcategory">`;
+
+                    category.childCategories.forEach(child => {
+                        categoryHtml += `
+                            <li>
+                                <a href="#" class="filter-item" data-category-id="${child.id}" data-parent-id="${category.id}">${child.name}</a>
+                            </li>
+                        `;
+                    });
+
+                    categoryHtml += `</ul>`;
+                }
+
+                categoryHtml += `</li>`;
+                filterList.append(categoryHtml);
+            });
+        }
+
+        // Event handlers
+        $(document).on('click', '.filter-section[data-filter-type="department"] .filter-item', function(e) {
+            e.preventDefault();
+            updateDepartmentFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.filter-section[data-filter-type="price"] .filter-item', function(e) {
+            e.preventDefault();
+            updatePriceFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.filter-section[data-filter-type="rating"] .filter-item', function(e) {
+            e.preventDefault();
+            updateCustomerReviewFilter(this);
+            return false;
+        });
+
+        $(document).on('click', '.landing-filter-item', function(e) {
+            e.preventDefault();
+            updateLandingFilter(this);
+            return false;
+        });
+
+        // Pagination click handler
+        $(document).on('click', '.pagination-link', function(e) {
+            e.preventDefault();
+            const page = parseInt($(this).data('page'));
+            if (page && !isLoading) {
+                loadFilteredProducts(page, false);
+                $('html, body').animate({ scrollTop: 0 }, 600);
+            }
+            return false;
+        });
+
+        // Sort change handler
+        $(document).on('change', '#sortSelect', function() {
+            loadFilteredProducts(1, true);
+        });
+
+        // Document ready function
+        $(document).ready(function() {
+            // Initialize filters from URL parameters
+           const urlCategoryId = getUrlParameter('categoryId') || '@Model.categoryId';
+           const urlCategoryName = getUrlParameter('categoryName') || '@Model.categoryName';
+           const urlFilter = getUrlParameter('filter') || '@Model.filter';
+           const urlSearch = getUrlParameter('search') || '@Model.SearchTerm';
+
+        if (urlCategoryId && urlCategoryId !== '') {
+              filterState.department.selectedId = urlCategoryId;
+              if (urlCategoryName && urlCategoryName !== '') {
+                  filterState.department.selected = urlCategoryName;
+              }
+          }
+
+          if (urlFilter && urlFilter !== '') {
+              filterState.filter = urlFilter;
+          }
+                if (urlSearch && urlSearch !== '') {
+            filterState.search = urlSearch;
+            // Optionally, update the search input in the navbar
+            $('#searchInput').val(urlSearch);
+        }
+            console.log('Initial Filter State:', JSON.stringify(filterState, null, 2));
+
+            // Load categories
+            $.ajax({
+                url: "/Category/GetCategorys",
+                type: "GET",
+                success: function (result) {
+                    console.log("Categories loaded successfully:", result);
+                    renderCategories(result);
+
+                    // Add landing page filters after categories are loaded
+                    addLandingPageFilters();
+
+                    // Update active filters badge
+                    updateActiveFiltersBadge();
+
+                    // Load products after categories are loaded
+                    loadFilteredProducts(1, true);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error loading categories:", xhr.responseText, status, error);
+
+                    // Add landing page filters even if categories fail
+                    addLandingPageFilters();
+                    updateActiveFiltersBadge();
+
+                    // Still try to load products even if categories fail
+                    loadFilteredProducts(1, true);
+                }
+            });
+        });
+
+        // Utility functions
+        function printFilterState() {
+            console.log('Current Filter State:', JSON.stringify(filterState, null, 2));
+            return filterState;
+        }
+
+
+        // Setup event listeners for all add-to-cart buttons
+        function setupCartButtons() {
+            document.querySelectorAll(".add-to-cart").forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    addToCart(button);
+                });
+            });
+          }
+
+
+        function redirectToProduct(productId) {
+            window.location.href = `/product/Details?id=${productId}`;
+        }
+
+        $(document).on('click', '.add-to-cart', function(e) {
+        var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
+               if(isAuth){
+                   var productId= $(this).data('product-id');
+                   console.log(productId);
+                   $.ajax({
+                      url: "Cart/AddToCart",
+                      type: "post",
+                      data: {
+                         productId: productId,
+                      },
+                      success: function (result) {
+                          console.log("Search results:", result);
+                          UpdateCartValue(result);
+                      },
+                      error: function (xhr, status, error) {
+                          console.error("Search error:", error);
+                      }
+                   });
+               }
+               else{
+                   window.location.href='/Account/Login';
+               }
+
+        });
+        function UpdateCartValue(number) {
+            $('#cartCounter').text(number);
+        }
+ 
+        </script>
+
+
+}
+

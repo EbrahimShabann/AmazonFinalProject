@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "pendingCustomerService";
+    Layout = "AdminLayout";
+
+}
+<!-- Main Content -->
+<main class="main-content">
+    <h1 class="dashboard-title">CustomerService Approval Dashboard</h1>
+
+    <!-- Stats Overview -->
+    <div class="stats-container">
+        <a class="stat-card" style="text-decoration: none">
+            <div class="stat-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <div class="stat-value" id="count-pending">@ViewBag.CountPendingCustomerService</div>
+            <div class="stat-title">Pending CustomerService</div>
+
+        </a>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value" id="count-accepted">@ViewBag.CountAcceptedCustomerService</div>
+            <div class="stat-title">Approved CustomerService</div>
+
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-value" id="count-rejected">@ViewBag.CountRegectedCustomerService</div>
+            <div class="stat-title">Rejected CustomerService</div>
+
+        </div>
+    </div>
+
+    <div class="tickets-container">
+        <div class="section-header">
+            <h2 class="section-title">Pending CustomerService Approvals</h2>
+        </div>
+
+        <div class="ticket-list">
+            @if (ViewBag.PendingCustomerService.Count != 0)
+            {
+                @for (int i = 0; i < 5; i++)
+                {
+                    <div class="product-card" id="seller-@ViewBag.PendingCustomerService[i].Id">
+                        <img src="/images/Users/@ViewBag.PendingCustomerService[i].profile_picture_url" class="product-image">
+                        <div class="product-info">
+                            <div class="product-title">@ViewBag.PendingCustomerService[i].UserName</div>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i> @ViewBag.PendingCustomerService[i].created_at
+                                </div>
+                                <div class="meta-item">
+                                    <span class="status-badge status-pending">Pending Review</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <!-- Use buttons with data attributes instead of links -->
+                            <button class="action-btn btn-approve" data-id="@ViewBag.PendingCustomerService[i].Id">Approve</button>
+                            <button class="action-btn btn-reject" data-id="@ViewBag.PendingCustomerService[i].Id">Reject</button>
+                        </div>
+                    </div>
+                    if (i == ViewBag.PendingCustomerService.Count - 1) { break; }
+                }
+            }
+            else
+            {
+                <div id="empty-state-message" class="empty-state">
+                    <i class="fas fa-check-circle fa-3x"></i>
+                    <h3>All caught up!</h3>
+                    <p>You don't have any pending CustomerService to review.</p>
+                </div>
+            }
+
+        </div>
+        <a asp-action="AllCustomerService" class="view-all-btn">View All CustomerService</a>
+
+    </div>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // Approve Seller
+        $(document).on('click', '.btn-approve', function () {
+            const sellerId = $(this).data('id');
+            $.post('/AdminCustomerService/ApproveCustomerService', { id: sellerId }, function (response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert("Failed to approve CustomerService.");
+                }
+            });
+        });
+
+        // Reject seller
+        $(document).on('click', '.btn-reject', function () {
+            const sellerId = $(this).data('id');
+            $.post('/AdminCustomerService/RejectCustomerService', { id: sellerId }, function (response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert("Failed to reject CustomerService.");
+                }
+            });
+        });
+
+    });
+</script>

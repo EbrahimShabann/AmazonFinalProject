@@ -1,0 +1,896 @@
+@model IEnumerable<Final_project.Models.product>
+@{
+    ViewData["Title"] = "All Products in Database";
+    var categoriesDict = ViewBag.CategoriesDict as Dictionary<string, string>;
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+    /* ///////////////////////////////////////////// */
+    /* .container {
+            padding: 2rem;
+            max-width: 1400px;
+        }
+        .container-fluid, .container {
+            background: transparent;
+            padding: 2rem;
+        }
+        .container {
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            border-radius: 0;
+            padding: 2rem;
+            margin: 0;
+            box-shadow: none;
+        } */
+    /* //////////////////////////////////////////// */
+
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Action Buttons */
+    .floating-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .floating-btn:hover::before {
+            left: 100%;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
+
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
+
+    /* Filter Section */
+    .filter-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .filter-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .glass-input option {
+            background: var(--amazon-dark);
+            color: white;
+        }
+
+    /* Table Styling */
+    .products-table-container {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        .products-table-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+    .table {
+        margin: 0;
+        background: transparent;
+        border: none;
+        width: 100%;
+    }
+
+        .table thead {
+            background: #131921; /* Same dark color as buttons */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
+
+        .table th {
+            color: #0073bb !important; /* Same blue color as edit button background */
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+            background: transparent;
+        }
+
+        /* Override any existing table header styles */
+        .table thead th,
+        .table thead tr th {
+            color: #0073bb !important;
+        }
+
+        .table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--amazon-orange), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .table th:hover::after {
+            opacity: 1;
+        }
+
+        .table td {
+            color: white !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9rem;
+            border-left: none;
+            border-right: none;
+            position: relative;
+            background: transparent;
+        }
+
+    /* Category name styling */
+    .category-name {
+        color: var(--amazon-orange) !important; /* Primary orange color */
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .table tbody tr {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: transparent;
+    }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .category-header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        margin: 1rem 0;
+    }
+
+        .category-header td {
+            color: var(--amazon-orange) !important; /* Primary orange color */
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            padding: 12px 16px;
+            position: relative;
+            background: transparent;
+        }
+
+    /* Product Image Styling */
+    .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+        .product-image:hover {
+            transform: scale(1.1);
+            border-color: var(--amazon-orange);
+            box-shadow: 0 8px 25px rgba(255, 153, 0, 0.3);
+        }
+
+    /* Action Buttons in Table */
+    .action-btn {
+        background: #131921; /* Dark navbar color */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        margin: 0.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .action-btn:hover {
+            background: #232f3e; /* Slightly lighter on hover */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        .action-btn.edit {
+            color: #0073bb !important; /* Professional blue for edit */
+        }
+
+            .action-btn.edit:hover {
+                color: #005a8b !important; /* Darker blue on hover */
+                background: #1a2532;
+            }
+
+        .action-btn.delete {
+            color: #dc3545 !important; /* Professional red for delete */
+        }
+
+            .action-btn.delete:hover {
+                color: #c82333 !important; /* Darker red on hover */
+                background: #1a2532;
+            }
+
+    /* No Results State */
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .floating-actions {
+            flex-direction: column;
+        }
+
+        .floating-btn {
+            justify-content: center;
+        }
+
+        .filter-panel {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Utility Classes */
+    .d-flex {
+        display: flex !important;
+    }
+
+    .justify-content-between {
+        justify-content: space-between !important;
+    }
+
+    .align-items-center {
+        align-items: center !important;
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap !important;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.5rem;
+        margin-left: -0.5rem;
+    }
+
+    .col-md-2 {
+        flex: 0 0 auto;
+        width: 16.666667%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 25%;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .g-3 {
+        gap: 1rem !important;
+    }
+
+    .align-items-end {
+        align-items: end !important;
+    }
+
+    .w-100 {
+        width: 100% !important;
+    }
+
+    .me-2 {
+        margin-right: 0.5rem !important;
+    }
+
+    .me-3 {
+        margin-right: 1rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-muted {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-style: italic;
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        border-radius: 20px;
+    }
+
+    /* Preserve existing styles */
+    .table thead th {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transition: background 0.2s;
+    }
+
+    .table td, .table th {
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    td[style*='white-space:nowrap;'] {
+        white-space: nowrap !important;
+    }
+
+    /* //pagination */
+    .pagination {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 10px 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .page-item .page-link {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        margin: 0 5px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+        .page-item .page-link:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+    .page-item.active .page-link {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: black;
+        font-weight: bold;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    }</style>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="dashboard-hero fade-in">
+        <div class="text-center mb-4">
+            <h1 class="hero-title">
+                <i class="fas fa-database me-3"></i>
+                All Products Database
+            </h1>
+            <p class="hero-subtitle">
+                Browse and manage all products in the system
+            </p>
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/Seller/MyProducts" class="floating-btn primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to My Products
+            </a>
+            <a asp-action="AddProduct" class="floating-btn success">
+                <i class="fas fa-plus me-2"></i>Add New Product
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Panel -->
+    <div class="filter-panel fade-in">
+        <form method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label class="glass-label">Product Name</label>
+                    <input type="text" name="searchName" value="@ViewBag.SearchName" class="glass-input" placeholder="Search products..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="glass-label">Min Price</label>
+                    <input type="number" name="minPrice" value="@ViewBag.MinPrice" class="glass-input" placeholder="Min Price" step="0.01" />
+                </div>
+                <div class="col-md-2">
+                    <label class="glass-label">Max Price</label>
+                    <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="glass-input" placeholder="Max Price" step="0.01" />
+                </div>
+                <div class="col-md-3">
+                    <label class="glass-label">Category</label>
+                    <select name="categoryId" class="glass-input">
+                        <option value="">All Categories</option>
+                        @if (ViewBag.CategoriesDict != null)
+                        {
+                            foreach (var cat in ViewBag.CategoriesDict)
+                            {
+                                if (ViewBag.SelectedCategoryId != null && ViewBag.SelectedCategoryId.ToString() == cat.Key)
+                                {
+                                    <option value="@cat.Key" selected>@cat.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@cat.Key">@cat.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="floating-btn primary">
+                        <i class="fas fa-filter me-2"></i>Apply Filters
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Products Table -->
+    <div class="products-table-container fade-in">
+        @{
+            var groupedProducts = Model.GroupBy(product => !string.IsNullOrEmpty(product.category_id) && categoriesDict != null && categoriesDict.ContainsKey(product.category_id) ? categoriesDict[product.category_id] : "No Category");
+        }
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-image me-2"></i>Image</th>
+                    <th><i class="fas fa-folder me-2"></i>Category</th>
+                    <th><i class="fas fa-tag me-2"></i>Name</th>
+                    <th><i class="fas fa-pound-sign me-2"></i>Price</th>
+                    <th><i class="fas fa-boxes me-2"></i>Stock</th>
+                    <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var group in groupedProducts)
+                    {
+                        <tr class="category-header">
+                            <td colspan="6">
+                                <i class="fas fa-folder-open me-2"></i>
+                                <strong>@group.Key</strong>
+                            </td>
+                        </tr>
+                        foreach (var product in group)
+                        {
+                            <tr>
+                                <td>
+                                    @if (product.product_images != null && product.product_images.Any())
+                                    {
+                                        var mainImage = product.product_images.FirstOrDefault(img => img.image_type == "main");
+                                        if (mainImage != null)
+                                        {
+                                            <img src="@mainImage.image_url" alt="Product Main Image" class="product-image" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@product.product_images.First().image_url" alt="Product Image" class="product-image" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No Image</span>
+                                    }
+                                </td>
+                                <td class="category-name">@group.Key</td>
+                                <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@product.name</td>
+                                <td>@product.price</td>
+                                <td>@product.stock_quantity</td>
+                                <td>
+                                    @* <a asp-action="EditProduct" asp-route-id="@product.id" class="action-btn edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                 </a>
+                                 <button type="button" class="action-btn delete delete-product-btn" data-product-id="@product.id" title="Delete Product"><i class="fas fa-trash"></i> Delete</button> *@
+                                    <a asp-action="ProductDetails" asp-route-id="@product.id" class="btn btn-sm" style="background-color:#131921; color:#016EB2;" title="View Details">
+                                        <i class="fas fa-eye" style="color:#016EB2;"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h3>No Products Found</h3>
+                            <p>Try adjusting your search criteria or browse all products</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @* -----------------pagination---------------- *@
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+
+                @* ? Always visible, but disabled if no previous page *@
+                <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+                    <a class="page-link" href="@(
+                  ViewBag.CurrentPage > 1
+                    ? Url.Action("AllProducts", new {
+                        page = ViewBag.CurrentPage - 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">
+                        &#x276E;
+                    </a>
+                </li>
+
+                @* Page numbers *@
+                @for (int i = 1; i <= ViewBag.totalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("AllProducts", new {
+                    page = i,
+                    searchName = ViewBag.SearchName,
+                    minPrice = ViewBag.MinPrice,
+                    maxPrice = ViewBag.MaxPrice,
+                    categoryId = ViewBag.SelectedCategoryId
+                })">@i</a>
+                    </li>
+                }
+
+                @* ? Always visible, but disabled if no next page *@
+                <li class="page-item @(ViewBag.CurrentPage >= ViewBag.totalPages ? "disabled" : "")">
+                    <a class="page-link" href="@(
+                  ViewBag.CurrentPage < ViewBag.totalPages
+                    ? Url.Action("AllProducts", new {
+                        page = ViewBag.CurrentPage + 1,
+                        searchName = ViewBag.SearchName,
+                        minPrice = ViewBag.MinPrice,
+                        maxPrice = ViewBag.MaxPrice,
+                        categoryId = ViewBag.SelectedCategoryId
+                    })
+                    : "#")">
+                        &#x276F;
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </div>
+</div>
+
+<!-- Toast Success Message -->
+<div id="deleteToast" class="toast align-items-center text-bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999; min-width: 250px; display:none;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fas fa-check-circle me-2"></i>Product deleted successfully!
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:rgba(30,49,80,0.98); border-radius:18px; border:2px solid var(--amazon-orange);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="deleteProductModalLabel" style="color:var(--amazon-orange); font-weight:700;"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter:invert(1);"></button>
+            </div>
+            <div class="modal-body text-center" style="color:white;">
+                <p style="font-size:1.15rem;">Are you sure you want to delete this product?</p>
+                <p class="text-muted" style="font-size:0.95rem;">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width:100px;">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteProductBtn" style="min-width:100px;">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* AntiForgeryToken hidden form for AJAX *@
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script>
+        var deleteProductId = null;
+        var deleteProductRow = null;
+        $(document).on('click', '.delete-product-btn', function (e) {
+            e.preventDefault();
+            deleteProductId = $(this).data('product-id');
+            deleteProductRow = $(this).closest('tr');
+            var modal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
+            modal.show();
+        });
+        $(document).on('click', '#confirmDeleteProductBtn', function () {
+            if (deleteProductId) {
+                $.ajax({
+                    url: '/Seller/DeleteProductAjax',
+                    type: 'POST',
+                    data: {
+                        id: deleteProductId,
+                        __RequestVerificationToken: $('#antiForgeryForm input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            if(deleteProductRow) deleteProductRow.fadeOut(400, function() { $(this).remove(); });
+                            var modal = bootstrap.Modal.getInstance(document.getElementById('deleteProductModal'));
+                            if(modal) modal.hide();
+                            showDeleteToast();
+                        }
+                    }
+                });
+            }
+        });
+        function showDeleteToast() {
+            var toast = $('#deleteToast');
+            toast.fadeIn(300);
+            setTimeout(function() {
+                toast.fadeOut(500);
+            }, 3000);
+        }
+    </script>
+} 

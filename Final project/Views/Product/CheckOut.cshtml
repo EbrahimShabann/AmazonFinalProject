@@ -1,0 +1,338 @@
+﻿@using Final_project.ViewModel.Customer
+@model CheckOutVM
+<link href="/css/CustomerCheckOut.css" rel="stylesheet" />
+
+<!-- Checkout Header Steps -->
+<div class="checkout-header py-3 border-bottom">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <!-- Logo with animation -->
+            <div class="logo-container">
+                <img src="https://koto.studio/wp-content/uploads/2025/04/Amazon_CS_01_Intro_00_Thumbnail.jpg"
+                     alt="Amazon Logo"
+                     class="logo-img animate__animated animate__fadeInLeft"
+                     style="height:25px;">
+            </div>
+
+            <!-- Progress steps with animation -->
+            <div class="d-flex flex-grow-1 justify-content-center steps-container animate__animated animate__fadeIn">
+                <div class="d-flex align-items-center">
+                    @{
+                        // Start with step 1 for demo purposes
+                        int currentStep = 1;
+                        var steps = new[] { "Shipping", "Payment", "Place Order" };
+                    }
+
+                    @for (int i = 1; i <= 3; i++)
+                    {
+                        <div class="step @(currentStep >= i ? "active" : "") @(i == currentStep ? "current" : "")" data-step="@i">
+                            <div class="step-number">@i</div>
+                            <div class="step-label">@steps[i - 1]</div>
+                        </div>
+
+                        @if (i < 3)
+                        {
+                            <div class="step-connector @(currentStep > i ? "active" : "")" data-connector="@i"></div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Secure badge with animation -->
+            <div class="secure-badge animate__animated animate__fadeInRight">
+                <i class="fas fa-lock"></i>
+                <span>Secure Checkout</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Main Checkout Container -->
+<form class="container my-4" id="checkoutForm" method="post" asp-action="CheckOut">
+    <div class="row">
+        <!-- Left Side - Shipping/Payment -->
+        <div class="col-lg-8 mb-4">
+            <!-- Shipping Address -->
+            <div class="card mb-3">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Shipping address</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">User Name</label>
+                        <input type="text" class="form-control" asp-for="UserName" id="userName" value="@Model?.UserName" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="UserPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="UserPhone" asp-for="UserPhone" required>
+                        <div class="form-text">May be used to assist delivery</div>
+                        <span asp-validation-for="UserPhone" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="shippingAddress" class="form-label">Shipping Address</label>
+                        <input type="text" class="form-control" asp-for="shipping_address" id="shippingAddress" value="@Model?.shipping_address" required>
+                    </div>
+
+                    @* <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="zipCode" class="form-label">ZIP/Postal code</label>
+                            <input type="text" class="form-control" id="zipCode" name="zipCode" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Country</label>
+                            <select class="form-select" id="country" name="country" required>
+                                <option value="">Select a country</option>
+                                <option value="eg">Egypt </option>                            
+                                <option value="lib">Libya</option>
+                            </select>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="card mb-3">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Payment method</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group mb-3">
+                        <!-- Credit/Debit Card Option -->
+                        <div class="list-group-item list-group-item-action active" id="cardPaymentMethod">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" asp-for="payment_method" value="card" checked id="paymentCard">
+                                </div>
+                                <img src="https://cdn.vectorstock.com/i/1000v/85/27/payment-card-logos-visa-mastercard-american-ex-vector-42788527.jpg" alt="Card" class="img-fluid me-3" style="height: 25px;">
+                                <div>
+                                    <div class="fw-bold">Credit or Debit Card</div>
+                                    <small class="text-muted">Visa, Mastercard, American Express</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Cash on Delivery Option -->
+                        <div class="list-group-item list-group-item-action" id="cashPaymentMethod">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" asp-for="payment_method" value="cash" id="paymentCash">
+                                </div>
+                                <img src="https://img.freepik.com/premium-vector/cash-payment-icon-vector-image-can-be-used-food-delivery_120816-126875.jpg" alt="Cash" class="img-fluid me-3" style="height: 25px;">
+                                <div>
+                                    <div class="fw-bold">Cash on Delivery</div>
+                                    <small class="text-muted">Pay cash when you receive your order</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Order Summary -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h3 class="h5 mb-0">Order Summary</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Order Items -->
+                    @for (int i = 0; i < Model.Carts.Count; i++)
+                    {
+                        <div class="d-flex mb-3">
+                            <img src="/Image/@Model.Carts[i].imageUrl" data-id="@Model.Carts[i].ProductId" alt="Product" class="img-thumbnail me-3"
+                                 style="width: 80px; height: 80px;">
+                            <div>
+                                <div class="fw-bold">@Model.Carts[i].ProductName</div>
+                                @* <div class="fw-medium">@Model.Carts[i].CategoryName</div> *@
+
+                                <div>$@Model.Carts[i].price</div>
+                                <small class="text-muted">Quantity: @Model.Carts[i].Quantity</small><br />
+                                @if (!string.IsNullOrEmpty(Model.Carts[i].ProductSize))
+                                {
+                                    <div class="small">Size: @Model.Carts[i].ProductSize</div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Carts[i].ProductColor))
+                                {
+                                    <div class="small">Color: @Model.Carts[i].ProductColor</div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <!-- Hidden inputs to POST cart items -->
+                        <input type="hidden" name="Carts[@i].ProductId" value="@Model.Carts[i].ProductId" />
+                        <input type="hidden" name="Carts[@i].ProductName" value="@Model.Carts[i].ProductName" />
+                        <input type="hidden" name="Carts[@i].CategoryName" value="@Model.Carts[i].CategoryName" />
+                        <input type="hidden" name="Carts[@i].price" value="@Model.Carts[i].price" />
+                        <input type="hidden" name="Carts[@i].originalPrice" value="@Model.Carts[i].originalPrice" />
+                        <input type="hidden" name="Carts[@i].seller_id" value="@Model.Carts[i].seller_id" />
+                        <input type="hidden" name="Carts[@i].Quantity" value="@Model.Carts[i].Quantity" />
+                        <input type="hidden" name="Carts[@i].imageUrl" value="@Model.Carts[i].imageUrl" />
+                        <input type="hidden" name="Carts[@i].ProductSize" value="@Model.Carts[i].ProductSize" />
+                        <input type="hidden" name="Carts[@i].ProductColor" value="@Model.Carts[i].ProductColor" />
+                    }
+
+                    <hr>
+
+                    <!-- Order Totals -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between">
+                            <span>Items (@Model.TotalItems):</span>
+                            <span name="TotalPrice">$@Model.TotalPrice</span>
+                            <input type="hidden" asp-for="@Model.TotalPrice" value="@Model.TotalPrice">
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between">
+                            <span>Shipping & handling:</span>
+                            <span name="ShippingTax">$@Model.ShippingTax</span>
+                            <input type="hidden" asp-for="@Model.ShippingTax" value="@Model.ShippingTax">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 pt-2 border-top">
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Order total:</span>
+                            <span>$@(Model.TotalPrice + Model.ShippingTax)</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100">Place your order</button>
+
+                    <div class="mt-3 small text-muted">
+                        By placing your order, you agree to Amazon's <a href="#" class="text-primary">Conditions of Use</a>
+                        and <a href="#" class="text-primary">Privacy Notice</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    // Payment method selection
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            document.querySelectorAll('.list-group-item').forEach(i => {
+                i.classList.remove('active');
+                i.style.setProperty('background-color', '', 'important');
+                i.style.setProperty('border-color', '', 'important');
+            });
+
+            // Add active class to clicked item with yellow styling
+            this.classList.add('active');
+            this.style.setProperty('background-color', '#FFD714', 'important');
+            this.style.setProperty('border-color', '#FCD200', 'important');
+
+            // Update radio button
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
+
+            // Toggle card form visibility
+            if (this.id === 'cardPaymentMethod') {
+                document.getElementById('cardForm').style.display = 'block';
+            } else {
+                document.getElementById('cardForm').style.display = 'none';
+            }
+        });
+    });
+
+    // Form submission
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        // Validate form
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    @* if (paymentMethod === 'card') {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardName = document.getElementById('cardName').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (!cardNumber || !cardName || !expiryDate || !cvv) {
+                e.preventDefault();
+                alert('Please fill in all card details');
+                return;
+            }
+        } *@
+    });
+
+    // Format card number as user types
+    @* document.getElementById('cardNumber').addEventListener('input', function(e) {
+        let value = this.value.replace(/\s+/g, ''); // Remove all spaces
+        if (value.length > 0) {
+            value = value.match(new RegExp('.{1,4}', 'g')).join(' '); // Add space every 4 digits
+        }
+        this.value = value;
+    }); *@
+
+    // Format expiry date as user types
+    @* document.getElementById('expiryDate').addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        this.value = value;
+    }); *@
+
+    //all images clickable to redirect to product details
+    document.querySelectorAll('.img-thumbnail').forEach(img=>{
+        img.addEventListener('click',function(){
+            const id= img.getAttribute('data-id');
+            window.location.href=`/Customer/Product/Details?id=${id}`;
+        })
+    })
+
+    // Add some interactive animations
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentDemoStep = 1;
+        const totalSteps = 3;
+
+        // Auto-advance steps every second
+        const stepInterval = setInterval(function() {
+            // Remove current class from all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('current');
+                step.classList.remove('active');
+            });
+
+            // Remove active class from all connectors
+            document.querySelectorAll('.step-connector').forEach(connector => {
+                connector.classList.remove('active');
+            });
+
+            // Update to next step
+            currentDemoStep = currentDemoStep < totalSteps ? currentDemoStep + 1 : 1;
+
+            // Add classes to current and previous steps
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.querySelector(`.step[data-step="${i}"]`);
+                const connectorElement = document.querySelector(`.step-connector[data-connector="${i}"]`);
+
+                if (i <= currentDemoStep) {
+                    stepElement.classList.add('active');
+                    if (i < currentDemoStep && connectorElement) {
+                        connectorElement.classList.add('active');
+                    }
+                }
+
+                if (i === currentDemoStep) {
+                    stepElement.classList.add('current');
+                }
+            }
+        }, 1200); // Change step every 1200ms
+
+    @* // Optional: Stop the animation after 3 full cycles
+        setTimeout(() => {
+            clearInterval(stepInterval);
+        }, 9000); // Stop after 9 seconds (3 steps * 3 cycles) *@
+    });
+</script>

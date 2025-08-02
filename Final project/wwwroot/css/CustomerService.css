@@ -1,0 +1,316 @@
+﻿
+/* Chat Messages Styling */
+.messages-container {
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+}
+
+.message {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ticket Status Badges */
+.badge.bg-warning {
+    color: #000 !important;
+}
+
+/* Priority Colors */
+.bg-critical {
+    background-color: #dc3545 !important;
+}
+
+.bg-high {
+    background-color: #fd7e14 !important;
+}
+
+.bg-medium {
+    background-color: #20c997 !important;
+}
+
+.bg-low {
+    background-color: #6c757d !important;
+}
+
+/* Card Hover Effects */
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Chat Input Styling */
+#chat-form .input-group input {
+    border-right: none;
+}
+
+#chat-form .input-group button {
+    border-left: none;
+}
+
+/* Responsive Chat Messages */
+@media (max-width: 768px) {
+    .message > div {
+        max-width: 90% !important;
+    }
+}
+
+/* Dashboard Stats Cards */
+.dashboard-stat-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+    .dashboard-stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+/* Ticket Priority Indicators */
+.priority-critical {
+    border-left: 4px solid #dc3545;
+}
+
+.priority-high {
+    border-left: 4px solid #fd7e14;
+}
+
+.priority-medium {
+    border-left: 4px solid #20c997;
+}
+
+.priority-low {
+    border-left: 4px solid #6c757d;
+}
+
+/* Message Bubble Enhancements */
+.message-bubble {
+    position: relative;
+    word-wrap: break-word;
+}
+
+    .message-bubble::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 8px solid transparent;
+    }
+
+    .message-bubble.from-user::after {
+        right: -16px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-left-color: #007bff;
+    }
+
+    .message-bubble.from-other::after {
+        left: -16px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-right-color: #fff;
+    }
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Status Indicators */
+.status-online {
+    color: #28a745;
+}
+
+.status-away {
+    color: #ffc107;
+}
+
+.status-offline {
+    color: #6c757d;
+}
+
+/* Chat Session Cards */
+.chat-session-card {
+    transition: all 0.3s ease;
+    border: 1px solid #dee2e6;
+}
+
+    .chat-session-card:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+    }
+
+    .chat-session-card.has-unread {
+        border-left: 4px solid #007bff;
+    }
+
+/* Ticket Table Enhancements */
+.ticket-table tr:hover {
+    background-color: rgba(0,123,255,0.05);
+}
+
+.ticket-table .priority-cell {
+    width: 100px;
+}
+
+.ticket-table .status-cell {
+    width: 120px;
+}
+
+.ticket-table .actions-cell {
+    width: 150px;
+}
+
+/* Modal Enhancements */
+.modal-content {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 10px 10px 0 0;
+}
+
+/* Form Enhancements */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        transform: translateY(-1px);
+    }
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+}
+
+/* Alert Enhancements */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+.alert-success {
+    background-color: #d1edff;
+    color: #0c5460;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Empty State Styling */
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+    .empty-state i {
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+
+/* Search and Filter Bar */
+.search-filter-bar {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .dashboard-stat-card {
+        margin-bottom: 1rem;
+    }
+
+    .quick-actions {
+        position: relative;
+        top: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .message > div {
+        padding: 0.75rem !important;
+    }
+}

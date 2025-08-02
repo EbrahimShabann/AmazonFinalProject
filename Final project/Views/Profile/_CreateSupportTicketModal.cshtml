@@ -1,0 +1,102 @@
+﻿@model Final_project.Models.DTOs.CustomerService.CreateSupportTicketDto
+
+<div class="modal fade" id="createSupportTicketModal" tabindex="-1" aria-labelledby="createSupportTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="createSupportTicketModalLabel">
+                    <i class="fas fa-ticket-alt me-2"></i>
+                    Create Support Ticket
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="createTicketForm" asp-controller="CustomerService" asp-action="CreateTicket" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Subject" class="form-label">Subject *</label>
+                                <input asp-for="Subject" class="form-control" placeholder="Brief description of your issue" required />
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Priority" class="form-label">Priority *</label>
+                                <select asp-for="Priority" class="form-select" required>
+                                    <option value="">Select Priority</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                                <span asp-validation-for="Priority" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"
+                                  placeholder="Please provide detailed information about your issue..." required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Tip:</strong> Provide as much detail as possible to help us resolve your issue quickly.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-1"></i> Create Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('createTicketForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                fetch('/CustomerService/CreateTicket', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Close modal
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('createSupportTicketModal'));
+                        modal.hide();
+
+                        // Show success message
+                        if (window.customerServiceNotifications) {
+                            window.customerServiceNotifications.show('Support ticket created successfully!', 'success');
+                        }
+
+                        // Reload page or update stats
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        throw new Error('Failed to create ticket');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (window.customerServiceNotifications) {
+                        window.customerServiceNotifications.show('Failed to create support ticket. Please try again.', 'danger');
+                    }
+                });
+            });
+        }
+    });
+</script> 

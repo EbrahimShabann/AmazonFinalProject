@@ -1,0 +1,404 @@
+﻿@model RegisterDataVM
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_AccountPageLayout";
+
+
+}
+<style>
+    /* Role Selection Slider Styles - Centered Fix */
+    .role-selection {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+        .role-selection > label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+    .role-toggle {
+        position: relative;
+        display: inline-block;
+        width: 280px;
+        height: 50px;
+        background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        border-radius: 25px;
+        border: 2px solid #ddd;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .role-toggle:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-toggle input[type="radio"] {
+            display: none;
+        }
+
+    .role-option {
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+    }
+
+        .role-option.customer {
+            left: 0;
+            color: #666;
+        }
+
+        .role-option.seller {
+            right: 0;
+            color: #666;
+        }
+
+    .role-slider {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        height: calc(100% - 8px);
+        background: linear-gradient(135deg, var(--amazon-orange), #ff9500);
+        border-radius: 21px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 2px 6px rgba(255, 153, 0, 0.3);
+        z-index: 1;
+    }
+
+    /* When customer is selected (default) */
+    .role-toggle input[value="customer"]:checked ~ .role-slider {
+        left: 4px;
+    }
+
+    .role-toggle input[value="customer"]:checked ~ .role-option.customer {
+        color: white;
+        font-weight: 700;
+    }
+
+    /* When seller is selected */
+    .role-toggle input[value="seller"]:checked ~ .role-slider {
+        left: calc(50% + 0px);
+    }
+
+    .role-toggle input[value="seller"]:checked ~ .role-option.seller {
+        color: white;
+        font-weight: 700;
+    }
+
+    /* Role icons */
+    .role-option i {
+        margin-right: 6px;
+        font-size: 16px;
+    }
+
+    .role-option.customer i {
+        color: inherit;
+    }
+
+    .role-option.seller i {
+        color: inherit;
+    }
+
+    /* Animation effects */
+    .role-toggle:active .role-slider {
+        transform: scaleX(1.05);
+    }
+
+    /* Responsive design */
+    @@media (max-width: 480px) {
+        .role-toggle
+
+    {
+        width: 260px;
+        height: 45px;
+    }
+
+    .role-option {
+        font-size: 13px;
+    }
+
+        .role-option i {
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+    }
+
+    /* Accessibility */
+    .role-toggle:focus-within {
+        outline: 2px solid var(--amazon-orange);
+        outline-offset: 2px;
+    }
+
+    .role-option:focus {
+        outline: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div class="register-container">
+<!-- Logo -->
+<div class="logo-container">
+    <div class="logo">
+        <i class="fa-brands fa-amazon fa-3x"></i>
+    </div>
+</div>
+
+<!-- E-commerce Icons -->
+<div class="ecommerce-icons">
+    <i class="fas fa-shipping-fast ecommerce-icon"></i>
+    <i class="fas fa-shield-alt ecommerce-icon"></i>
+    <i class="fas fa-medal ecommerce-icon"></i>
+</div>
+
+<!-- Google Login Button -->
+<form asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="/Switch/Index" method="post">
+    <input type="hidden" name="provider" value="Google" />
+    <button type="submit" class="btn btn-google">
+        <svg class="google-icon" viewBox="0 0 24 24">
+            <path fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+            <path fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+            <path fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+            <path fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>
+        Continue with Google
+    </button>
+</form>
+<!-- Divider -->
+<div class="divider">
+    <span>or create account with email</span>
+</div>
+
+<!-- Registration Form -->
+<form id="registerForm" asp-action="Register" asp-controller="Account" method="post">
+    <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+    <div class="form-group">
+        <input type="text"
+               class="form-control"
+               id="Username"
+               asp-for="@Model.UserName"
+               placeholder="Username"
+               required />
+        <i class="fas fa-user input-icon"></i>
+    </div>
+
+    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+    <div class="form-group">
+        <input type="email"
+               class="form-control"
+               id="email"
+               asp-for="@Model.Email"
+               placeholder="Email Address"
+               required />
+        <i class="fas fa-envelope input-icon"></i>
+    </div>
+                    <!-- Role Selection -->
+                    <span asp-validation-for="@Model.Role" class="text-danger"></span>
+                    <div class="role-selection">
+                        <label>Choose your account type:</label>
+                        <div class="role-toggle">
+                            <input type="radio"
+                                   id="customerRole"
+                                   name="Role"
+                                   value="customer"
+                                   asp-for="@Model.Role"
+                                   checked />
+                            <input type="radio"
+                                   id="sellerRole"
+                                   name="Role"
+                                   value="seller"
+                                   asp-for="@Model.Role" />
+
+                            <label for="customerRole" class="role-option customer">
+                                <i class="fas fa-shopping-cart"></i>
+                                Customer
+                            </label>
+                            <label for="sellerRole" class="role-option seller">
+                                <i class="fas fa-store"></i>
+                                Seller
+                            </label>
+
+                            <div class="role-slider"></div>
+                        </div>
+                    </div>
+
+    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+    <div class="form-group">
+        <input type="password"
+               class="form-control"
+               id="password"
+               asp-for="@Model.Password"
+               placeholder="Password"
+               required />
+        <i class="fas fa-eye password-toggle"
+           onclick="togglePassword('password', this)"></i>
+    </div>
+
+    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+    <div class="form-group">
+        <input type="password"
+               class="form-control"
+               id="confirmPassword"
+               asp-for="@Model.ConfirmPassword"
+               placeholder="Confirm Password"
+               required />
+        <i class="fas fa-eye password-toggle"
+           onclick="togglePassword('confirmPassword', this)"></i>
+    </div>
+
+    <span asp-validation-for="@Model.TermsAndPrivacy" class="text-danger"></span>
+    <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="checkbox"
+               asp-for="@Model.TermsAndPrivacy"
+               id="terms"
+               required />
+        <label class="form-check-label" for="terms">
+            I agree to the
+            <a href="#" style="color: var(--amazon-orange)">Terms of Service</a>
+            and
+            <a href="#" style="color: var(--amazon-orange)">Privacy Policy</a>
+        </label>
+    </div>
+
+    <span asp-validation-for="@Model.SubscribeForNewsletter" class="text-danger"></span>
+    <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="checkbox"
+               id="newsletter" 
+               asp-for="@Model.SubscribeForNewsletter" />
+        <label class="form-check-label" for="newsletter">
+            Subscribe to our newsletter for exclusive deals
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        Create Account
+    </button>
+</form>
+
+<!-- Sign In Link -->
+<div class="signin-link">
+    Already have an account? <a asp-action="Login" asp-controller="Account">Sign In</a>
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Create floating particles
+        function createParticles() {
+          const particlesContainer = document.getElementById("particles");
+          const particleCount = 60;
+
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement("div");
+            particle.className = "particle";
+            particle.style.left = Math.random() * 100 + "%";
+
+            // Start particles at random positions across the screen
+            particle.style.top = Math.random() * 100 + "vh";
+
+            particle.style.animationDelay = Math.random() * 8 + "s";
+            particle.style.animationDuration = Math.random() * 4 + 6 + "s";
+            particlesContainer.appendChild(particle);
+          }
+        }
+
+        // Toggle password visibility
+        function togglePassword(fieldId, icon) {
+          const passwordField = document.getElementById(fieldId);
+          const isPassword = passwordField.type === "password";
+
+          // Toggle input type
+          passwordField.type = isPassword ? "text" : "password";
+
+          // Toggle icon
+          icon.classList.toggle("fa-eye");
+          icon.classList.toggle("fa-eye-slash");
+        }
+
+        // Handle Google Login
+        function handleGoogleLogin() {
+          const btn = event.target;
+          const originalContent = btn.innerHTML;
+          btn.innerHTML = `
+            <svg class="google-icon" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Connecting...
+          `;
+          btn.disabled = true;
+
+          // Simulate Google login process
+          setTimeout(() => {
+            alert(
+              "Google login would be implemented here with actual Google OAuth API"
+            );
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+          }, 2000);
+        }
+
+        // Handle form submission
+
+        // Add input animation effects
+        document.querySelectorAll(".form-control").forEach((input) => {
+          input.addEventListener("focus", function () {
+            this.parentElement.classList.add("focused");
+          });
+
+          input.addEventListener("blur", function () {
+            this.parentElement.classList.remove("focused");
+          });
+        });
+
+        // Initialize particles when page loads
+        window.addEventListener("load", createParticles);
+
+        // Add smooth scrolling for better mobile experience
+        document.addEventListener("DOMContentLoaded", function () {
+          // Add touch-friendly interactions
+          const buttons = document.querySelectorAll(".btn");
+          buttons.forEach((button) => {
+            button.addEventListener("touchstart", function () {
+              this.style.transform = "scale(0.95)";
+            });
+
+            button.addEventListener("touchend", function () {
+              this.style.transform = "";
+            });
+          });
+        });
+    </script>
+}

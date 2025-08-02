@@ -1,0 +1,91 @@
+﻿@using Final_project.ViewModel.CustomerService
+@model List<ChatSessionViewModel>
+@{
+    ViewData["Title"] = "Chat Sessions";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Chat Sessions</h2>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="row">
+                            @foreach (var chat in Model)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="card-title mb-0">
+                                                    @chat.CustomerName ↔ @chat.SellerName
+                                                </h6>
+                                                @if (chat.UnreadCount > 0)
+                                                {
+                                                    <span class="badge bg-danger">@chat.UnreadCount</span>
+                                                }
+                                            </div>
+
+                                            @if (!string.IsNullOrEmpty(chat.LastMessage))
+                                            {
+                                                <p class="card-text text-muted small">
+                                                    @(chat.LastMessage.Length > 50 ? chat.LastMessage.Substring(0, 50) + "..." : chat.LastMessage)
+                                                </p>
+                                            }
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    @chat.LastMessageAt?.ToString("MMM dd, HH:mm")
+                                                </small>
+                                                <span class="badge bg-@(chat.Status == "Active" ? "success" : "secondary")">
+                                                    @chat.Status
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="d-flex gap-2">
+                                                <a href="@Url.Action("ChatDetails", new { id = chat.Id })" class="btn btn-primary btn-sm">
+                                                    Open Chat
+                                                </a>
+                                                @if (chat.Status == "Active")
+                                                {
+                                                    <form asp-action="CloseChatSession" method="post" class="d-inline">
+                                                        <input type="hidden" name="sessionId" value="@chat.Id" />
+                                                        <button type="submit" class="btn btn-outline-secondary btn-sm" onclick="return confirm('Close this chat session?')">
+                                                            Close
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No chat sessions found</h4>
+                            <p class="text-muted">Your chat conversations will appear here.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
