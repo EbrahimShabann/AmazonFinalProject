@@ -4,42 +4,343 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    :root {
+        --amazon-orange: #ff9900;
+        --amazon-blue: #232f3e;
+        --amazon-light: #37475a;
+        --amazon-dark: #131921;
+        --success-green: #00853e;
+        --info-blue: #0073bb;
+        --warning-orange: #b12704;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #3498db 50%, #2980b9 75%, #1e3c72 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+    .container {
+        padding: 2rem;
+        max-width: 1400px;
+    }
+
+    /* Card Styling with Glassmorphism */
+    .card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0%
+
+    {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+
+    }
+
+    /* Card Header */
+    .card-header {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px 25px 0 0 !important;
+        padding: 2rem;
+        position: relative;
+    }
+
+        .card-header h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: white !important;
+        }
+
+        .card-header i {
+            color: var(--amazon-orange) !important;
+            margin-right: 0.5rem;
+        }
+
+    /* Card Body */
+    .card-body {
+        padding: 2rem;
+        background: transparent;
+    }
+
+    /* Form Labels */
+    .form-label {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    /* Form Controls */
+    .form-control {
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        color: white !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .form-control:focus {
+            outline: none !important;
+            border-color: var(--amazon-orange) !important;
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: white !important;
+        }
+
+    /* Buttons */
+    .btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-warning {
+        background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%) !important;
+        border: none !important;
+        color: white !important;
+    }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #ff7700 0%, var(--amazon-orange) 100%) !important;
+            color: white !important;
+        }
+
+    .btn-secondary {
+        background: #131921 !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+    }
+
+        .btn-secondary:hover {
+            background: #232f3e !important;
+            color: white !important;
+        }
+
+    /* Alert Messages */
+    .alert {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .alert-success {
+        background: rgba(0, 133, 62, 0.2);
+        border-color: rgba(0, 133, 62, 0.3);
+        color: #00ff7f;
+    }
+
+    /* Validation Messages */
+    .text-danger {
+        color: #ff6b6b !important;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    /* Margin utilities */
+    .mt-5 {
+        margin-top: 3rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .me-1 {
+        margin-right: 0.25rem !important;
+    }
+
+    .me-2 {
+        margin-right: 0.5rem !important;
+    }
+
+    .ms-2 {
+        margin-left: 0.5rem !important;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .card-header h3
+
+    {
+        font-size: 1.5rem;
+    }
+
+    .card-header,
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .btn {
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <div class="card shadow-lg">
+            <div class="card shadow-lg fade-in">
                 <div class="card-header bg-warning text-white">
                     <h3 class="mb-0"><i class="fas fa-plus me-2"></i>Request for Creating Category</h3>
                 </div>
                 <div class="card-body">
                     @if (TempData["SuccessMessage"] != null)
                     {
-                            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
                     }
                     @using (Html.BeginForm("CreateCategoryRequest", "Seller", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="mb-3">
-                            @Html.LabelFor(m => m.CategoryName, "Category Name / اسم التصنيف", new { @class = "form-label" })
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.CategoryName, "Category Name", new { @class = "form-label" })
                             @Html.TextBoxFor(m => m.CategoryName, new { @class = "form-control", maxlength = 255, required = "required", placeholder = "Enter category name..." })
                             @Html.ValidationMessageFor(m => m.CategoryName, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="mb-3">
-                            @Html.LabelFor(m => m.CategoryDiscription, "Category Description / وصف التصنيف (اختياري)", new { @class = "form-label" })
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.CategoryDiscription, "Category Description", new { @class = "form-label" })
                             @Html.TextAreaFor(m => m.CategoryDiscription, 3, 50, new { @class = "form-control", placeholder = "Enter description..." })
                             @Html.ValidationMessageFor(m => m.CategoryDiscription, "", new { @class = "text-danger" })
-                            </div>
-                            <!-- AdminComment is not needed for seller request, but if you want to show it, uncomment below -->
-                            <!--
-                            <div class="mb-3">
-                        @Html.LabelFor(m => m.AdminComment, "Admin Comment / تعليق الأدمن (اختياري)", new { @class = "form-label" })
-                        @Html.TextAreaFor(m => m.AdminComment, 2, 50, new { @class = "form-control", placeholder = "You can leave this empty" })
-                        @Html.ValidationMessageFor(m => m.AdminComment, "", new { @class = "text-danger" })
-                            </div>
-                            -->
-                            <button type="submit" class="btn btn-warning"><i class="fas fa-paper-plane me-1"></i>Send Request</button>
-                            <a href="@Url.Action("SellerDashboard", "Seller")" class="btn btn-secondary ms-2">Cancel</a>
+                        </div>
+                        <!-- AdminComment is not needed for seller request, but if you want to show it, uncomment below -->
+                        <!--
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.AdminComment, "Admin Comment )", new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.AdminComment, 2, 50, new { @class = "form-control", placeholder = "You can leave this empty" })
+                            @Html.ValidationMessageFor(m => m.AdminComment, "", new { @class = "text-danger" })
+                        </div>
+                        -->
+                        <button type="submit" class="btn btn-warning"><i class="fas fa-paper-plane me-1"></i>Send Request</button>
+                        <a href="@Url.Action("SellerDashboard", "Seller")" class="btn btn-secondary ms-2">Cancel</a>
                     }
                 </div>
             </div>
@@ -48,5 +349,5 @@
 </div>
 
 @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }

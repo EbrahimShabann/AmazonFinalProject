@@ -1669,12 +1669,15 @@ namespace Final_project.Controllers
             return Json(new { success = true });
         }
 
+
+
+        #region CreateCategoryRequest
         [HttpGet]
         public IActionResult CreateCategoryRequest()
         {
             return View();
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategoryRequest(string CategoryName, string CategoryDiscription)
@@ -1711,7 +1714,10 @@ namespace Final_project.Controllers
             TempData["SuccessMessage"] = "Category request submitted successfully.";
             return RedirectToAction("SellerDashboard");
         }
+        #endregion
 
+
+        #region AddReviewReply
         [HttpGet]
         public async Task<IActionResult> AddReviewReply(string reviewId)
         {
@@ -1753,6 +1759,6 @@ namespace Final_project.Controllers
             return RedirectToAction("ProductReviews");
         }
 
-
+        #endregion
     }
 }
