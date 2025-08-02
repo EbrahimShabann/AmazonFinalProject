@@ -100,5 +100,13 @@ namespace Final_project.Repository.AccountRepositoryFile
                 
    
         }
+
+        public bool CheckProfilePic(string userName)
+        {
+            var user = db.Users.Where(u => u.UserName == userName).FirstOrDefault();
+            var profilePictureUrl = user?.profile_picture_url;
+            if (profilePictureUrl.Length>0) return true;
+            else return false;
+        }
     }
 }

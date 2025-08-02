@@ -1237,19 +1237,19 @@
                 chatInput: document.querySelector('.chat-input')
             };
         }
+    init() {
+        console.log('=== Initializing Enhanced Amazon Chatbot ===');
+        this.setupEventListeners();
+        this.setupInputBehavior();
+        this.setupQuickActions();
+        this.initializeConnection();
+        this.loadChatHistory();
+        // Remove this line: this.addWelcomeMessage();
+        this.setAuthenticationStatus();
+        this.showInitialPulse();
+        console.log('=== Chatbot initialization complete ===');
+    }
 
-        init() {
-            console.log('=== Initializing Enhanced Amazon Chatbot ===');
-            this.setupEventListeners();
-            this.setupInputBehavior();
-            this.setupQuickActions();
-            this.initializeConnection();
-            this.loadChatHistory();
-            this.addWelcomeMessage();
-            this.setAuthenticationStatus();
-            this.showInitialPulse();
-            console.log('=== Chatbot initialization complete ===');
-        }
 
         setupEventListeners() {
             this.elements.chatbotToggle?.addEventListener('click', this.handleToggleClick.bind(this));
@@ -1356,18 +1356,24 @@
             }
         }
 
-        openChatbot() {
-            if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
-            this.elements.chatbotContainer.classList.remove('minimized');
-            this.elements.chatbotContainer.classList.add('show');
-            this.elements.chatbotToggle.classList.add('active');
-            this.elements.chatbotToggle.innerHTML = '<i class="fas fa-times"></i>';
-            this.elements.chatbotContainer.setAttribute('aria-hidden', 'false');
-            this.elements.messageInput?.focus();
-            this.hideNotification();
-            this.isMinimized = false;
-            this.trackEvent('chatbot_opened');
+           openChatbot() {
+        if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
+
+        // Add welcome message only if chat history is empty and chatbot is being opened
+        if (this.chatHistory.length === 0) {
+            this.addWelcomeMessage();
         }
+
+        this.elements.chatbotContainer.classList.remove('minimized');
+        this.elements.chatbotContainer.classList.add('show');
+        this.elements.chatbotToggle.classList.add('active');
+        this.elements.chatbotToggle.innerHTML = '<i class="fas fa-times"></i>';
+        this.elements.chatbotContainer.setAttribute('aria-hidden', 'false');
+        this.elements.messageInput?.focus();
+        this.hideNotification();
+        this.isMinimized = false;
+        this.trackEvent('chatbot_opened');
+    }
 
         closeChatbot() {
             if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
@@ -1646,15 +1652,19 @@
             }
         }
 
-        displayChat() {
-            if (!this.elements.chatWindow) return;
-            this.elements.chatWindow.innerHTML = '';
+           displayChat() {
+        if (!this.elements.chatWindow) return;
+        this.elements.chatWindow.innerHTML = '';
+
+        // Only display messages if there are any
+        if (this.chatHistory.length > 0) {
             this.chatHistory.forEach((msg, index) => {
                 const messageDiv = this.createMessageElement(msg, index);
                 this.elements.chatWindow.appendChild(messageDiv);
             });
             this.scrollToBottom();
         }
+    }
 
         createMessageElement(msg, index) {
             const messageDiv = document.createElement('div');
@@ -1939,31 +1949,36 @@
             }
         }
 
-        loadChatHistory() {
-            try {
-                const savedData = localStorage.getItem('chatbotData');
-                if (savedData) {
-                    const parsedData = JSON.parse(savedData);
-                    if (this.isDataValid(parsedData)) {
-                        this.chatHistory = parsedData.chatHistory || [];
-                        this.previousChats = parsedData.previousChats || [];
-                        this.updatePreviousChatsDropdown();
-                        this.displayChat();
-                    } else {
-                        // Clear expired data
-                        localStorage.removeItem('chatbotData');
-                        this.chatHistory = [];
-                        this.previousChats = [];
-                        this.addWelcomeMessage();
-                    }
+            loadChatHistory() {
+        try {
+            const savedData = localStorage.getItem('chatbotData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                if (this.isDataValid(parsedData)) {
+                    this.chatHistory = parsedData.chatHistory || [];
+                    this.previousChats = parsedData.previousChats || [];
+                    this.updatePreviousChatsDropdown();
+                    this.displayChat();
                 } else {
-                    this.addWelcomeMessage();
+                    // Clear expired data
+                    localStorage.removeItem('chatbotData');
+                    this.chatHistory = [];
+                    this.previousChats = [];
+                    // Remove this line: this.addWelcomeMessage();
                 }
-            } catch (error) {
-                console.warn('Could not load chat history from localStorage:', error);
-                this.addWelcomeMessage();
+            } else {
+                // Initialize empty arrays but don't add welcome message
+                this.chatHistory = [];
+                this.previousChats = [];
+                // Remove this line: this.addWelcomeMessage();
             }
+        } catch (error) {
+            console.warn('Could not load chat history from localStorage:', error);
+            this.chatHistory = [];
+            this.previousChats = [];
+            // Remove this line: this.addWelcomeMessage();
         }
+    }
 
         isDataValid(data) {
             return data && data.expiresAt && Date.now() < data.expiresAt;

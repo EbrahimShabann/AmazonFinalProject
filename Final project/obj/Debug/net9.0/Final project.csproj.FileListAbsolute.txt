@@ -9366,7 +9366,6 @@ C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\com
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-8vizuqfvvc.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\kzz4tt6z63-0hesna2cko.gz
 C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-vulkk4534x.gz
-C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-toceva3p5m.gz
 D:\Final project\Final project\bin\Debug\net9.0\Castle.Core.dll
 D:\Final project\Final project\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Proxies.dll
 D:\Final project\Final project\bin\Debug\net9.0\Stripe.net.dll
@@ -9384,3 +9383,7 @@ D:\Final project\Final project\obj\Debug\net9.0\compressed\kzz4tt6z63-0hesna2cko
 D:\Final project\Final project\obj\Debug\net9.0\compressed\46qazm2v5g-ktlrzr0rbg.gz
 D:\Final project\Final project\obj\Debug\net9.0\compressed\vqt7zy1sdb-iwjryh8h66.gz
 D:\Final project\Final project\obj\Debug\net9.0\compressed\xo4l5966c6-a1qly7p9e7.gz
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\MailKit.dll
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\bin\Debug\net9.0\MimeKit.dll
+C:\Users\Zeyad\OneDrive\Desktop\Final project\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-rr1sbl775x.gz

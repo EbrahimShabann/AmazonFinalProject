@@ -69,8 +69,11 @@
         <i class="fas fa-eye password-toggle"
            onclick="togglePassword('password', this)"></i>
     </div>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger text-center" style="list-style:none" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                    </div>
 
-    <div class="remember-me">
+            <div class="remember-me">
         <div class="form-check">
             <input class="form-check-input"
                    type="checkbox"
@@ -80,9 +83,9 @@
                 Remember me
             </label>
         </div>
-        <div class="forgot-password">
-            <a href="#">Forgot password?</a>
-        </div>
+                        <div class="forgot-password">
+                            <a asp-action="ForgotPassword" asp-controller="Account">Forgot password?</a>
+                        </div>
     </div>
 
     <button type="submit" class="btn btn-primary">
