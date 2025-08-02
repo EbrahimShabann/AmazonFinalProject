@@ -42,7 +42,7 @@ body {
 .logo-section {
     display: flex;
     align-items: center;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .logo {
@@ -162,9 +162,8 @@ body {
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
-    text-decoration:none;
-    color:white;
-        
+    text-decoration: none;
+    color: white;
 }
 
     .sidebar-item:before {

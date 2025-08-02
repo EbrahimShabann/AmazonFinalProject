@@ -1,0 +1,361 @@
+﻿
+@{
+    ViewData["Title"] = "WatingforAdminApproval";
+    Layout = "_AccountPageLayout";
+
+}
+
+<div class="waiting-container">
+    <div class="waiting-card">
+        <!-- Amazon Logo -->
+        <div class="amazon-logo">amazon</div>
+
+        <!-- Amazon Smile SVG (Corrected) -->
+        <div class="amazon-smile">
+            <svg width="120" height="40" viewBox="0 0 120 40">
+                <path d="M20 10 Q60 30 100 10"
+                      stroke="var(--amazon-orange)"
+                      stroke-width="4"
+                      fill="none"
+                      stroke-linecap="round">
+                    <animate attributeName="d"
+                             values="M20 10 Q60 30 100 10;M20 10 Q60 35 100 10;M20 10 Q60 30 100 10"
+                             dur="2s"
+                             repeatCount="indefinite" />
+                </path>
+                <circle cx="25" cy="8" r="2" fill="var(--amazon-orange)">
+                    <animate attributeName="r"
+                             values="2;3;2"
+                             dur="1s"
+                             repeatCount="indefinite" />
+                </circle>
+                <circle cx="95" cy="8" r="2" fill="var(--amazon-orange)">
+                    <animate attributeName="r"
+                             values="2;3;2"
+                             dur="1s"
+                             repeatCount="indefinite"
+                             begin="0.5s" />
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Amazon Admin SVG -->
+        <div class="amazon-worker">
+            <div class="worker-container">
+                <svg width="150" height="120" viewBox="0 0 150 120">
+                    <!-- Admin Body -->
+                    <rect x="65"
+                          y="60"
+                          width="20"
+                          height="40"
+                          fill="var(--amazon-blue)"
+                          rx="3" />
+                    <!-- Admin Head -->
+                    <circle cx="75" cy="45" r="12" fill="#fdbcb4" />
+                    <!-- Admin Glasses -->
+                    <rect x="68"
+                          y="40"
+                          width="14"
+                          height="8"
+                          fill="none"
+                          stroke="#333"
+                          stroke-width="1"
+                          rx="2" />
+                    <line x1="75"
+                          y1="40"
+                          x2="75"
+                          y2="48"
+                          stroke="#333"
+                          stroke-width="1" />
+                    <!-- Admin Hat/Crown -->
+                    <rect x="62"
+                          y="30"
+                          width="26"
+                          height="8"
+                          fill="var(--amazon-gold)"
+                          rx="4" />
+                    <rect x="70"
+                          y="25"
+                          width="10"
+                          height="8"
+                          fill="var(--amazon-gold)"
+                          rx="2" />
+                    <!-- Badge/ID -->
+                    <rect x="68"
+                          y="65"
+                          width="14"
+                          height="10"
+                          fill="white"
+                          stroke="var(--amazon-orange)"
+                          stroke-width="1"
+                          rx="2" />
+                    <rect x="70"
+                          y="67"
+                          width="10"
+                          height="2"
+                          fill="var(--amazon-blue)" />
+                    <rect x="70"
+                          y="70"
+                          width="6"
+                          height="1"
+                          fill="var(--amazon-orange)" />
+                    <rect x="70" y="72" width="8" height="1" fill="#666" />
+                    <!-- Admin Arms with Clipboard -->
+                    <rect x="45"
+                          y="65"
+                          width="15"
+                          height="4"
+                          fill="#fdbcb4"
+                          rx="2"
+                          transform="rotate(-15 52.5 67)">
+                        <animateTransform attributeName="transform"
+                                          type="rotate"
+                                          values="-15 52.5 67;-5 52.5 67;-15 52.5 67"
+                                          dur="3s"
+                                          repeatCount="indefinite" />
+                    </rect>
+                    <rect x="90"
+                          y="65"
+                          width="15"
+                          height="4"
+                          fill="#fdbcb4"
+                          rx="2"
+                          transform="rotate(15 97.5 67)">
+                        <animateTransform attributeName="transform"
+                                          type="rotate"
+                                          values="15 97.5 67;5 97.5 67;15 97.5 67"
+                                          dur="3s"
+                                          repeatCount="indefinite" />
+                    </rect>
+                    <!-- Clipboard -->
+                    <rect x="35"
+                          y="55"
+                          width="16"
+                          height="20"
+                          fill="white"
+                          stroke="#333"
+                          stroke-width="1"
+                          rx="2">
+                        <animateTransform attributeName="transform"
+                                          type="translate"
+                                          values="0 0;2 -2;0 0"
+                                          dur="3s"
+                                          repeatCount="indefinite" />
+                    </rect>
+                    <rect x="37"
+                          y="58"
+                          width="12"
+                          height="1"
+                          fill="var(--amazon-blue)" />
+                    <rect x="37" y="61" width="10" height="1" fill="#666" />
+                    <rect x="37" y="64" width="8" height="1" fill="#666" />
+                    <rect x="37"
+                          y="67"
+                          width="11"
+                          height="1"
+                          fill="var(--amazon-orange)" />
+                    <!-- Checkmarks -->
+                    <text x="45"
+                          y="63"
+                          font-family="Arial"
+                          font-size="4"
+                          fill="green">
+                        ✓
+                    </text>
+                    <text x="45"
+                          y="70"
+                          font-family="Arial"
+                          font-size="4"
+                          fill="green">
+                        ✓
+                    </text>
+                    <!-- Admin Legs -->
+                    <rect x="67"
+                          y="100"
+                          width="6"
+                          height="15"
+                          fill="var(--amazon-blue)"
+                          rx="3" />
+                    <rect x="77"
+                          y="100"
+                          width="6"
+                          height="15"
+                          fill="var(--amazon-blue)"
+                          rx="3" />
+                    <!-- Admin Shoes -->
+                    <ellipse cx="70" cy="117" rx="4" ry="2" fill="#333" />
+                    <ellipse cx="80" cy="117" rx="4" ry="2" fill="#333" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Waiting Text -->
+        <h2 class="waiting-text">Pending Admin Approval</h2>
+        <p class="status-text" id="statusText">
+            Your request is being reviewed by our admin team
+        </p>
+
+        <!-- Custom Spinner -->
+        <div class="custom-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar-animated"></div>
+        </div>
+
+        <!-- Animated Packages -->
+        <div class="packages-animation">
+            <svg class="package" width="40" height="40" viewBox="0 0 40 40">
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="25"
+                      fill="var(--amazon-gold)"
+                      rx="3" />
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="8"
+                      fill="var(--amazon-orange)"
+                      rx="3" />
+                <rect x="17"
+                      y="5"
+                      width="6"
+                      height="15"
+                      fill="var(--amazon-orange)" />
+                <rect x="10"
+                      y="17"
+                      width="20"
+                      height="3"
+                      fill="var(--amazon-blue)" />
+            </svg>
+
+            <svg class="package" width="40" height="40" viewBox="0 0 40 40">
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="25"
+                      fill="var(--amazon-blue)"
+                      rx="3" />
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="8"
+                      fill="var(--amazon-orange)"
+                      rx="3" />
+                <rect x="17"
+                      y="5"
+                      width="6"
+                      height="15"
+                      fill="var(--amazon-orange)" />
+                <rect x="10"
+                      y="17"
+                      width="20"
+                      height="3"
+                      fill="var(--amazon-gold)" />
+            </svg>
+
+            <svg class="package" width="40" height="40" viewBox="0 0 40 40">
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="25"
+                      fill="var(--amazon-orange)"
+                      rx="3" />
+                <rect x="5"
+                      y="10"
+                      width="30"
+                      height="8"
+                      fill="var(--amazon-gold)"
+                      rx="3" />
+                <rect x="17"
+                      y="5"
+                      width="6"
+                      height="15"
+                      fill="var(--amazon-blue)" />
+                <rect x="10"
+                      y="17"
+                      width="20"
+                      height="3"
+                      fill="var(--amazon-blue)" />
+            </svg>
+        </div>
+
+        <!-- Admin Approval Icons -->
+        <div class="service-icons">
+            <i class="fas fa-user-shield service-icon" title="Admin Review"></i>
+            <i class="fas fa-clipboard-check service-icon"
+               title="Approval Process"></i>
+            <i class="fas fa-certificate service-icon" title="Verification"></i>
+        </div>
+
+        <!-- Additional Info -->
+        <p style="color: #666; font-size: 0.9rem; margin-top: 1rem">
+            <i class="fas fa-hourglass-half"
+               style="color: var(--amazon-orange); margin-right: 5px"></i>
+            Typical approval time: 24-48 hours
+        </p>
+    </div>
+</div>
+
+
+ @section Scripts{
+    <script>
+        // Dynamic admin approval status messages
+        const statusMessages = [
+          "Your request is being reviewed by our admin team...",
+          "Verifying your account information...",
+          "Checking compliance requirements...",
+          "Reviewing submitted documentation...",
+          "Processing your approval request...",
+          "Admin team is evaluating your application...",
+          "Final review in progress...",
+        ];
+
+        let messageIndex = 0;
+        const statusText = document.getElementById("statusText");
+
+        function rotateStatusMessages() {
+          statusText.style.opacity = "0";
+          setTimeout(() => {
+            statusText.textContent = statusMessages[messageIndex];
+            statusText.style.opacity = "1";
+            messageIndex = (messageIndex + 1) % statusMessages.length;
+          }, 500);
+        }
+
+        // Change status message every 4 seconds (slower for admin approval)
+        setInterval(rotateStatusMessages, 4000);
+
+        // Create animated particles
+        function createParticles() {
+          const particlesContainer = document.getElementById("particles");
+          const particleTypes = ["particle-1", "particle-2", "particle-3"];
+
+          for (let i = 0; i < 20; i++) {
+            const particle = document.createElement("div");
+            particle.className = `particle ${
+              particleTypes[Math.floor(Math.random() * particleTypes.length)]
+            }`;
+            particle.style.left = Math.random() * 100 + "%";
+            particle.style.animationDelay = Math.random() * 15 + "s";
+            particle.style.animationDuration = Math.random() * 10 + 8 + "s";
+            particlesContainer.appendChild(particle);
+          }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Simulate admin approval process (for demo purposes)
+        setTimeout(() => {
+          // Could redirect to approval status page or dashboard
+          // window.location.href = '/admin/approval-status';
+        }, 30000); // Longer timeout for admin approval
+    </script>
+}
+

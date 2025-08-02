@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@* _landingAmazonPage layouyt *@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -7,12 +8,10 @@
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="~/css/LandingPageCSS.css" asp-append-version="true" />
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-
+    @RenderSection("Styles", required: false)
 
 </head>
 <body>
@@ -30,7 +29,7 @@
             <!-- Add this line -->
             <div id="searchResults" class="search-results-container"></div>
             <div class="navbar-actions">
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated&&User.IsInRole("customer"))
                 {
 
                     <!-- Cart with Counter -->
@@ -62,6 +61,14 @@
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Wishlist"><i class="fas fa-heart me-2"></i>Your Wish List</a>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="CustomerService"><i class="fas fa-headset me-2"></i>Support Tickets</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Chats" asp-controller="CustomerService"><i class="fas fa-comments me-2"></i>Live Chat</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
 
                         }
                         else if (User.IsInRole("seller") || User.IsInRole("customer service") || User.IsInRole("admin"))
@@ -152,6 +159,7 @@
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/LandingPageLayoutJS.js"></script>
+    @* <script src="~/js/ChatbotJS.js" asp-append-version="true"></script> *@
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
@@ -177,7 +185,7 @@
             var productId= $(this).data('product-id');
             console.log(productId);
             $.ajax({
-               url: "Cart/AddToCart",
+               url: "/Cart/AddToCart",
                type: "post",
                data: {
                   productId: productId,
@@ -201,7 +209,7 @@
         var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
         if(isAuth){
              $.ajax({
-               url: "Landing/CartCount",
+               url: "/Landing/CartCount",
                type: "post",
                data: {
                   UserName: '@User.Identity.Name',
@@ -226,7 +234,7 @@
                 searchTimeout = setTimeout(function() {
                     if (searchTerm.length > 2) {
                         $.ajax({
-                            url: "Landing/Search",
+                            url: "/Landing/Search",
                             type: "GET",
                             data: {
                                query: searchTerm,

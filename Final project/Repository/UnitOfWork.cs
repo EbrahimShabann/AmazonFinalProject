@@ -2,6 +2,7 @@
 using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
+using Final_project.Repository.CategoryRepositoryFile;
 using Final_project.Repository.CustomerServiceRepoFile.ChatMessage;
 using Final_project.Repository.CustomerServiceRepoFile.ChatSession;
 using Final_project.Repository.CustomerServiceRepoFile.SupportTicket;
@@ -47,10 +48,10 @@ namespace Final_project.Repository
         private ITicketHistoryRepo _ticketHistoryRepo;
         private IChatSessionRepo _chatSessionRepo;
         private IChatMessageRepo _chatMessageRepo;
+        private ICategoryRequestRepository _categoryRequestRepository;
 
 
-    
-   
+
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -266,6 +267,15 @@ namespace Final_project.Repository
                 if (_savedCartItemRepository == null)
                     _savedCartItemRepository = new SavedCartItemRepository(db);
                 return _savedCartItemRepository;
+            }
+        }
+        public ICategoryRequestRepository CategoryRequestRepository
+        {
+            get
+            {
+                if (_categoryRequestRepository == null)
+                    _categoryRequestRepository = new CategoryRequestRepository(db);
+                return _categoryRequestRepository;
             }
         }
 

@@ -31,7 +31,7 @@ namespace Final_project.Repository.AccountRepositoryFile
                         return false;
 
                     // Ensure directory exists
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Image");
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
 
@@ -90,6 +90,23 @@ namespace Final_project.Repository.AccountRepositoryFile
                 return true;
             }
             return false;
+        }
+
+        public bool IsApprovedSeller(string username)
+        {
+            var foundUser = db.Users.FirstOrDefault(u=>u.UserName==username && u.is_active==true);
+            if (foundUser != null) return true;
+            else return false;
+                
+   
+        }
+
+        public bool CheckProfilePic(string userName)
+        {
+            var user = db.Users.Where(u => u.UserName == userName).FirstOrDefault();
+            var profilePictureUrl = user?.profile_picture_url;
+            if (profilePictureUrl.Length>0) return true;
+            else return false;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Final_project.ViewModel.CreateUserViewModel
         public DateTime birthdate { get; set; }
         public IFormFile imgFile { get; set; } // For file upload
 
-        public List<string> Roles { get; set; } = new List<string> { "seller", "CustomerService" };
+        public List<string> Roles { get; set; } = new List<string> { "seller", "customerService" };
 
     }
 

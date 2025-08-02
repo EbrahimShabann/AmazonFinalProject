@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Registration Confirmation";
+    Layout = "_AccountPageLayout";
+}
+
+<body class="auth-page">
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shape">📦</div>
+        <div class="floating-shape">🛒</div>
+        <div class="floating-shape">✉️</div>
+        <div class="floating-shape">✓</div>
+    </div>
+
+    <!-- Particles System -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 7s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 0.5s;"></div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="register-container">
+                    <!-- Logo -->
+                    <div class="logo-container">
+                        <div class="logo">Amazon</div>
+                    </div>
+
+                    <!-- Email Success Icon with Animation -->
+                    <div class="text-center mb-4">
+                        <div class="amazon-smile">
+                            <i class="fas fa-envelope fa-5x" style="color: var(--amazon-orange); animation: pulse 2s infinite;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Welcome Text -->
+                    <div class="welcome-text">
+                        <h4 style="color: var(--amazon-blue); font-weight: 600; margin-bottom: 1rem;">Check Your Email</h4>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="text-center mb-4">
+                        <h5 style="color: var(--amazon-orange); font-weight: 600; margin-bottom: 1rem;">Registration Successful!</h5>
+                        <p style="color: #666; margin-bottom: 1rem;">We've sent a verification email to your email address.</p>
+                        <p style="color: #666; margin-bottom: 2rem;">Please check your inbox and click the verification link to activate your account.</p>
+                    </div>
+
+                    <!-- E-commerce Icons -->
+                    <div class="ecommerce-icons">
+                        <i class="fas fa-check-circle ecommerce-icon"></i>
+                        <i class="fas fa-envelope ecommerce-icon"></i>
+                        <i class="fas fa-user-check ecommerce-icon"></i>
+                    </div>
+
+                    <!-- Resend Email Section -->
+                    <div class="form-group">
+                        <p style="color: #666; text-align: center; margin-bottom: 1rem;">Didn't receive the email?</p>
+                        <form asp-action="ResendEmailConfirmation" method="post">
+                            <div class="form-group">
+                                <div class="position-relative">
+                                    <input type="email" name="email" placeholder="Enter your email" required class="form-control" style="padding-right: 45px;">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary" style="margin-bottom: 1rem;">
+                                <span class="loading-spinner"></span>
+                                Resend Verification Email
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <!-- Back to Login -->
+                    <div class="text-center">
+                        <a asp-action="Login" class="btn-google" style="background: var(--amazon-light-gray); border: 1px solid #e0e0e0; color: var(--amazon-blue);">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Login
+                        </a>
+                    </div>
+
+                    <!-- Additional Help Text -->
+                    <div class="text-center mt-3">
+                        <p style="color: #999; font-size: 0.9rem;">
+                            Check your spam folder if you don't see the email in your inbox.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

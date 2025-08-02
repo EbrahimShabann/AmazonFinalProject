@@ -34,7 +34,7 @@ namespace Final_project.Controllers
 
             var deletedProducts = unitOfWork.ProductRepository.GetAll(p => p.is_deleted)
                 .ToList();
-            var DeletedSupport = (await _userManager.GetUsersInRoleAsync("CustomerService"));
+            var DeletedSupport = (await _userManager.GetUsersInRoleAsync("customerService"));
             var DeletedCustomerService = DeletedSupport.Where(c => c.is_deleted).ToList();
 
             var DeletedSeller = (await _userManager.GetUsersInRoleAsync("Seller")).Where(c => c.is_deleted).ToList();

@@ -150,6 +150,39 @@ namespace Final_project.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.Property<string>("requredId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryDiscription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("requredId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("CategoryRequest");
+                });
+
             modelBuilder.Entity("Final_project.Models.audit_log", b =>
                 {
                     b.Property<string>("id")
@@ -1131,6 +1164,17 @@ namespace Final_project.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Final_project.Models.audit_log", b =>

@@ -8,11 +8,11 @@ namespace Final_project.Controllers
     public class LandingController : Controller
     {
         private readonly UnitOfWork unitOfWork;
-
         public LandingController(UnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
+
         public IActionResult Index()
         {
             unitOfWork.CategoryRepository.GetCategoryWithItsChildern();
@@ -22,22 +22,22 @@ namespace Final_project.Controllers
                 NewArrivals = unitOfWork.LandingPageReposotory.GetNewArrivals(),
                 DiscountProducts = unitOfWork.LandingPageReposotory.GetNewDiscounts()
             };
-
             return View(DataForPage);
         }
-    
+
+        // Updated Search method with enhanced product data for chatbot compatibility
         public IActionResult Search(string query)
         {
-            return Json(unitOfWork.LandingPageReposotory.ProductSearch(query));
+            var products = unitOfWork.LandingPageReposotory.ProductSearch(query);
+            return Json(products);
         }
 
         [HttpPost]
         public IActionResult CartCount(string UserName)
         {
-            var cart=unitOfWork.LandingPageReposotory.GetCartCount(UserName); 
+            var cart = unitOfWork.LandingPageReposotory.GetCartCount(UserName);
             return Json(cart);
         }
-
 
         [HttpGet]
         public IActionResult Error()

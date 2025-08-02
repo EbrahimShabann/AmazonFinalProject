@@ -6,6 +6,156 @@
 
 
 }
+<style>
+    /* Role Selection Slider Styles - Centered Fix */
+    .role-selection {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+        .role-selection > label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+    .role-toggle {
+        position: relative;
+        display: inline-block;
+        width: 280px;
+        height: 50px;
+        background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        border-radius: 25px;
+        border: 2px solid #ddd;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .role-toggle:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-toggle input[type="radio"] {
+            display: none;
+        }
+
+    .role-option {
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+    }
+
+        .role-option.customer {
+            left: 0;
+            color: #666;
+        }
+
+        .role-option.seller {
+            right: 0;
+            color: #666;
+        }
+
+    .role-slider {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        height: calc(100% - 8px);
+        background: linear-gradient(135deg, var(--amazon-orange), #ff9500);
+        border-radius: 21px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 2px 6px rgba(255, 153, 0, 0.3);
+        z-index: 1;
+    }
+
+    /* When customer is selected (default) */
+    .role-toggle input[value="customer"]:checked ~ .role-slider {
+        left: 4px;
+    }
+
+    .role-toggle input[value="customer"]:checked ~ .role-option.customer {
+        color: white;
+        font-weight: 700;
+    }
+
+    /* When seller is selected */
+    .role-toggle input[value="seller"]:checked ~ .role-slider {
+        left: calc(50% + 0px);
+    }
+
+    .role-toggle input[value="seller"]:checked ~ .role-option.seller {
+        color: white;
+        font-weight: 700;
+    }
+
+    /* Role icons */
+    .role-option i {
+        margin-right: 6px;
+        font-size: 16px;
+    }
+
+    .role-option.customer i {
+        color: inherit;
+    }
+
+    .role-option.seller i {
+        color: inherit;
+    }
+
+    /* Animation effects */
+    .role-toggle:active .role-slider {
+        transform: scaleX(1.05);
+    }
+
+    /* Responsive design */
+    @@media (max-width: 480px) {
+        .role-toggle
+
+    {
+        width: 260px;
+        height: 45px;
+    }
+
+    .role-option {
+        font-size: 13px;
+    }
+
+        .role-option i {
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+    }
+
+    /* Accessibility */
+    .role-toggle:focus-within {
+        outline: 2px solid var(--amazon-orange);
+        outline-offset: 2px;
+    }
+
+    .role-option:focus {
+        outline: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div class="register-container">
 <!-- Logo -->
 <div class="logo-container">
     <div class="logo">
@@ -65,6 +215,35 @@
                required />
         <i class="fas fa-envelope input-icon"></i>
     </div>
+                    <!-- Role Selection -->
+                    <span asp-validation-for="@Model.Role" class="text-danger"></span>
+                    <div class="role-selection">
+                        <label>Choose your account type:</label>
+                        <div class="role-toggle">
+                            <input type="radio"
+                                   id="customerRole"
+                                   name="Role"
+                                   value="customer"
+                                   asp-for="@Model.Role"
+                                   checked />
+                            <input type="radio"
+                                   id="sellerRole"
+                                   name="Role"
+                                   value="seller"
+                                   asp-for="@Model.Role" />
+
+                            <label for="customerRole" class="role-option customer">
+                                <i class="fas fa-shopping-cart"></i>
+                                Customer
+                            </label>
+                            <label for="sellerRole" class="role-option seller">
+                                <i class="fas fa-store"></i>
+                                Seller
+                            </label>
+
+                            <div class="role-slider"></div>
+                        </div>
+                    </div>
 
     <span asp-validation-for="@Model.Password" class="text-danger"></span>
     <div class="form-group">
@@ -127,6 +306,10 @@
     Already have an account? <a asp-action="Login" asp-controller="Account">Sign In</a>
 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>

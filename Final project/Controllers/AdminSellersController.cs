@@ -32,7 +32,7 @@ namespace Final_project.Controllers
             ViewBag.CountRegectedsellers = seller.Where(u => u.is_deleted & !u.is_active).Count();
             ViewBag.Pendeingsellers = seller.Where(u => !u.is_deleted & !u.is_active).OrderByDescending(u => u.created_at).ToList();
 
-            return View("pendingSellers");
+            return View("pendingSeller");
         }
         public async Task<IActionResult> Allsellers()
         {

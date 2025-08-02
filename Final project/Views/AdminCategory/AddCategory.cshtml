@@ -1,4 +1,4 @@
-﻿@model Final_project.ViewModel.CategoryCreateViewModel
+﻿@model CategoryCreateViewModel
 @{
     ViewData["Title"] = "Create Category";
     Layout = "AdminLayout";
@@ -26,17 +26,15 @@
     }
 
     @@keyframes fadeIn {
-        from
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
     }
 
@@ -294,37 +292,35 @@
 
     /* Responsive design */
     @@media (max-width: 768px) {
-        .main-container
+        .main-container {
+            flex-direction: column;
+        }
 
-    {
-        flex-direction: column;
-    }
+        .sidebar {
+            width: 100%;
+            padding: 1rem 0;
+        }
 
-    .sidebar {
-        width: 100%;
-        padding: 1rem 0;
-    }
+        .category-form-card {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
 
-    .category-form-card {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
+        .amazon-header {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
-    .amazon-header {
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
+        .search-bar {
+            order: 3;
+            max-width: 100%;
+            margin-top: 0.5rem;
+        }
 
-    .search-bar {
-        order: 3;
-        max-width: 100%;
-        margin-top: 0.5rem;
-    }
-
-    .preview-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        .preview-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
     }
 
@@ -351,17 +347,15 @@
         }
 
     @@keyframes slideIn {
-        from
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
     }
 </style>
@@ -371,7 +365,7 @@
             <h3>Create New Category</h3>
             <p>Organize your products with a well-structured category system</p>
         </div>
-        <form asp-action="AddCategory" id="categoryForm"  enctype="multipart/form-data" method="post">
+        <form asp-action="AddCategory" id="categoryForm" enctype="multipart/form-data" method="post">
             <div class="form-group mb-3">
                 <label asp-for="name"></label>
                 <input asp-for="name" class="form-control" />
@@ -406,9 +400,9 @@
                     </button>
                     <div id="fileName"></div>
 
-                    <input asp-for="imgFile" id="categoryImage" type="file" class="form-control" style="display: none;"   />
+                    <input asp-for="imgFile" id="categoryImage" type="file" class="form-control" style="display: none;" />
 
-                </div> 
+                </div>
                 <span asp-validation-for="imgFile" class="text-danger"></span>
                 <div id="imageError" class="text-danger" style="display: none;"></div>
 
@@ -425,7 +419,7 @@
                         <img id="previewImage" src="" alt="Preview">
                         <i class="fas fa-image" id="placeholderIcon" style="font-size: 2.5rem; color: #a0aec0;"></i>
                     </div>
-                    
+
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Create Category</button>

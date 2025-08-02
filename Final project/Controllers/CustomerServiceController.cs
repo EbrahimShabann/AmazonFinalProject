@@ -35,7 +35,7 @@ namespace Final_project.Controllers.CustomerService
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return false;
 
-            return await _userManager.IsInRoleAsync(user, "Support") ||
+            return await _userManager.IsInRoleAsync(user, "customerService") ||
                    await _userManager.IsInRoleAsync(user, "Admin");
         }
 
@@ -243,7 +243,7 @@ namespace Final_project.Controllers.CustomerService
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Support")]
+        [Authorize(Roles = "Admin,customerService")]
         public async Task<IActionResult> ResolveTicket(string ticketId)
         {
             var ticket = _customerService.GetTicketById(ticketId);
@@ -415,7 +415,7 @@ namespace Final_project.Controllers.CustomerService
         }
 
         // Dashboard for Support and Admin only
-        [Authorize(Roles = "Admin,Support")]
+        [Authorize(Roles = "Admin,customerService")]
         public async Task<IActionResult> Dashboard()
         {
             // Check if user has proper permissions
