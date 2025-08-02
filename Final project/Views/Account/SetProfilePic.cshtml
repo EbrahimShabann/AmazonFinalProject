@@ -1,0 +1,202 @@
+﻿@model ProfilePic_DateOfBirth
+@{
+    ViewData["Title"] = "SetProfilePic";
+    Layout = "_AccountPageLayout";
+
+}
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div class="register-container">
+
+<div class="logo-container">
+    <div class="logo">Amazon</div>
+</div>
+
+<form id="registrationForm" method="post" asp-action="SetProfilePic" asp-controller="Account" enctype="multipart/form-data">
+    <!-- Profile Image Upload -->
+    <input type="hidden" asp-for="@Model.UserID" value="@Model.UserID" />
+    <div class="image-upload-container">
+        <div class="image-upload-zone" id="imageUploadZone">
+            <input type="file"
+                   class="file-input"
+                   id="profileImage"
+                   asp-for="@Model.ImageFile"
+                   accept="image/*" />
+            <img id="imagePreview"
+                 class="image-preview"
+                 alt="Profile Preview" />
+            <button type="button" class="remove-image" id="removeImage">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="upload-content">
+                <i class="fas fa-camera upload-icon"></i>
+                <div class="upload-text">Upload Profile Picture</div>
+                <div class="upload-subtext">
+                    Drag & drop or click to select
+                </div>
+            </div>
+        </div>
+    </div>
+    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+    <div class="form-group">
+        <input type="tel"
+               class="form-control"
+               id="phone"
+               asp-for="@Model.PhoneNumber"
+               placeholder="Phone Number"
+               required />
+        <i class="fas fa-phone input-icon"></i>
+    </div>
+
+    <!-- Birthday Input -->
+    <div class="form-group birthday-container">
+        <input type="date"
+               class="form-control birthday-input"
+               id="birthday"
+               asp-for="@Model.Birthday"
+               required />
+        <div class="age-warning" id="ageWarning">
+            <i class="fas fa-exclamation-triangle"></i>
+            You must be at least 18 years old to register.
+        </div>
+        <div class="age-success" id="ageSuccess">
+            <i class="fas fa-check-circle"></i>
+            Age verification successful!
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="registerBtn">
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <span id="btnText">Continue to Account</span>
+    </button>
+</form>
+
+            </div>
+        </div>
+    </div>
+</div>
+ @section Scripts{
+    <script>
+        // Create floating particles
+        function createParticles() {
+          const particlesContainer = document.getElementById("particles");
+          const particleCount = 60;
+
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement("div");
+            particle.className = "particle";
+            particle.style.left = Math.random() * 100 + "%";
+            particle.style.top = Math.random() * 100 + "vh";
+            particle.style.animationDelay = Math.random() * 8 + "s";
+            particle.style.animationDuration = Math.random() * 4 + 6 + "s";
+            particlesContainer.appendChild(particle);
+          }
+        }
+
+        // Image Upload Functionality
+        const imageUploadZone = document.getElementById("imageUploadZone");
+        const profileImageInput = document.getElementById("profileImage");
+        const imagePreview = document.getElementById("imagePreview");
+        const removeImageBtn = document.getElementById("removeImage");
+
+        // Handle drag and drop
+        imageUploadZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          imageUploadZone.classList.add("dragover");
+        });
+
+        imageUploadZone.addEventListener("dragleave", () => {
+          imageUploadZone.classList.remove("dragover");
+        });
+
+        imageUploadZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          imageUploadZone.classList.remove("dragover");
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            handleImageUpload(files[0]);
+          }
+        });
+
+        // Handle file selection
+        profileImageInput.addEventListener("change", (e) => {
+          if (e.target.files.length > 0) {
+            handleImageUpload(e.target.files[0]);
+          }
+        });
+
+        // Handle image upload
+        function handleImageUpload(file) {
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              imagePreview.src = e.target.result;
+              imagePreview.classList.add("show");
+              removeImageBtn.classList.add("show");
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+
+        // Remove image
+        removeImageBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          imagePreview.classList.remove("show");
+          removeImageBtn.classList.remove("show");
+          profileImageInput.value = "";
+        });
+
+        // Age verification
+        const birthdayInput = document.getElementById("birthday");
+        const ageWarning = document.getElementById("ageWarning");
+        const ageSuccess = document.getElementById("ageSuccess");
+        const registerBtn = document.getElementById("registerBtn");
+
+        function calculateAge(birthDate) {
+          const today = new Date();
+          const birth = new Date(birthDate);
+          let age = today.getFullYear() - birth.getFullYear();
+          const monthDiff = today.getMonth() - birth.getMonth();
+
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birth.getDate())
+          ) {
+            age--;
+          }
+
+          return age;
+        }
+
+        function validateAge() {
+          const birthDate = birthdayInput.value;
+          if (birthDate) {
+            const age = calculateAge(birthDate);
+
+            if (age < 18) {
+              ageWarning.classList.add("show");
+              ageSuccess.classList.remove("show");
+              registerBtn.disabled = true;
+              return false;
+            } else {
+              ageWarning.classList.remove("show");
+              ageSuccess.classList.add("show");
+              registerBtn.disabled = false;
+              return true;
+            }
+          } else {
+            ageWarning.classList.remove("show");
+            ageSuccess.classList.remove("show");
+            registerBtn.disabled = false;
+            return true;
+          }
+        }
+
+        birthdayInput.addEventListener("change", validateAge);
+        birthdayInput.addEventListener("blur", validateAge);
+
+        // Initialize particles when page loads
+        window.addEventListener("load", createParticles);
+    </script>
+ }

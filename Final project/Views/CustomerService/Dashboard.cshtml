@@ -1,0 +1,160 @@
+﻿@using Final_project.ViewModel.CustomerService
+@model CustomerServiceDashboardViewModel
+@{
+    ViewData["Title"] = "Customer Service Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Customer Service Dashboard</h2>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>@Model.TotalTickets</h4>
+                                    <p class="mb-0">Total Tickets</p>
+                                </div>
+                                <i class="fas fa-ticket-alt fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>@Model.OpenTickets</h4>
+                                    <p class="mb-0">Open Tickets</p>
+                                </div>
+                                <i class="fas fa-exclamation-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>@Model.ResolvedTickets</h4>
+                                    <p class="mb-0">Resolved Tickets</p>
+                                </div>
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>@Model.HighPriorityTickets</h4>
+                                    <p class="mb-0">High Priority</p>
+                                </div>
+                                <i class="fas fa-fire fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Recent Tickets -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Tickets</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.RecentTickets.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Subject</th>
+                                                <th>Status</th>
+                                                <th>Priority</th>
+                                                <th>User</th>
+                                                <th>Created</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var ticket in Model.RecentTickets)
+                                            {
+                                                <tr>
+                                                    <td>@ticket.Subject</td>
+                                                    <td>
+                                                        <span class="badge bg-@(ticket.Status == "Open" ? "warning" : ticket.Status == "Resolved" ? "success" : "secondary") badge-sm">
+                                                            @ticket.Status
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-@(ticket.Priority == "Critical" ? "danger" : ticket.Priority == "High" ? "warning" : ticket.Priority == "Medium" ? "info" : "secondary") badge-sm">
+                                                            @ticket.Priority
+                                                        </span>
+                                                    </td>
+                                                    <td>@ticket.UserName</td>
+                                                    <td>@ticket.CreatedAt?.ToString("MMM dd")</td>
+                                                    <td>
+                                                        <a href="@Url.Action("TicketDetails", new { id = ticket.Id })" class="btn btn-outline-primary btn-sm">
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted text-center">No recent tickets</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Sessions -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5 class="mb-0">Active Chat Sessions</h5>
+                            <span class="badge bg-success">@Model.ActiveChatSessions</span>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.RecentChats.Any())
+                            {
+                                @foreach (var chat in Model.RecentChats)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <small class="fw-bold">@chat.CustomerName ↔ @chat.SellerName</small><br />
+                                            <small class="text-muted">@chat.LastMessageAt?.ToString("MMM dd, HH:mm")</small>
+                                        </div>
+                                        <a href="@Url.Action("ChatDetails", new { id = chat.Id })" class="btn btn-outline-primary btn-sm">
+                                            View
+                                        </a>
+                                    </div>
+                                    <hr />
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted text-center">No active chat sessions</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

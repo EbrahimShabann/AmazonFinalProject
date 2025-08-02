@@ -1,0 +1,438 @@
+﻿@model List<CartItemViewModel>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    var subtotal = ViewBag.Subtotal ?? 0M;
+}
+
+<style>
+    :root {
+        --amazon-orange: #FF9900;
+        --amazon-dark: #131921;
+        --amazon-light: #232F3E;
+        --amazon-yellow: #FFD814;
+        --amazon-light-gray: #EAEDED;
+        --amazon-dark-gray: #565959;
+    }
+
+    body {
+        background-color: var(--amazon-light-gray);
+        font-family: 'Amazon Ember', Arial, sans-serif;
+    }
+
+    .cart-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        display: flex;
+        gap: 20px;
+    }
+
+    .cart-items {
+        flex: 3;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .cart-summary {
+        flex: 1;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .cart-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-title {
+        font-size: 28px;
+        font-weight: 400;
+        color: var(--amazon-dark);
+        margin: 0;
+    }
+
+    .cart-price {
+        font-size: 14px;
+        color: var(--amazon-dark-gray);
+    }
+
+    .empty-cart {
+        padding: 40px;
+        text-align: center;
+    }
+
+    .empty-cart-icon {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-cart-text {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .cart-item {
+        padding: 20px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        transition: all 0.2s;
+    }
+
+        .cart-item:hover {
+            background-color: rgba(234,237,237,0.5);
+        }
+
+    .item-select {
+        margin-right: 15px;
+        align-self: center;
+    }
+
+    .item-image {
+        width: 140px;
+        height: 140px;
+        object-fit: contain;
+        margin-right: 20px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+        .item-image:hover {
+            transform: scale(1.03);
+        }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-title {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--amazon-dark);
+        margin-bottom: 8px;
+        cursor: pointer;
+    }
+
+        .item-title:hover {
+            color: var(--amazon-orange);
+            text-decoration: none;
+        }
+
+    .item-badge {
+        background-color: var(--amazon-yellow);
+        color: #111;
+        font-size: 12px;
+        padding: 3px 6px;
+        border-radius: 3px;
+        margin-right: 8px;
+    }
+
+    .item-stock {
+        color: #007600;
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .item-variants {
+        font-size: 14px;
+        color: var(--amazon-dark-gray);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .label-variants {
+        font-weight: 600;
+        color: var(--amazon-dark);
+        margin-right: 4px;
+    }
+
+    .item-delivery {
+        color: var(--amazon-dark-gray);
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .item-actions {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        overflow: hidden;
+    }
+
+    .quantity-btn {
+        background: #f0f2f2;
+        border: none;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .quantity-btn:hover {
+            background: #e3e6e6;
+        }
+
+    .quantity-display {
+        width: 40px;
+        height: 30px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+
+    .action-link {
+        color: #0066c0;
+        font-size: 14px;
+        cursor: pointer;
+        margin-right: 15px;
+        transition: color 0.2s;
+    }
+
+        .action-link:hover {
+            color: #c45500;
+            text-decoration: underline;
+        }
+
+    .item-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--amazon-dark);
+    }
+
+    .summary-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: var(--amazon-dark);
+    }
+
+    .summary-subtotal {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+        .summary-subtotal span {
+            font-weight: 700;
+            color: #B12704;
+        }
+
+    .checkout-btn {
+        background: linear-gradient(to bottom,#f7dfa5,#f0c14b);
+        border-radius: 3px;
+        border: 1px solid #a88734;
+        color: #111;
+        font-weight: 500;
+        padding: 10px;
+        width: 100%;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 15px;
+    }
+
+        .checkout-btn:hover {
+            background: linear-gradient(to bottom,#f5d78e,#eeb933);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+    .secure-checkout {
+        font-size: 12px;
+        color: var(--amazon-dark-gray);
+        text-align: center;
+    }
+
+        .secure-checkout i {
+            color: var(--amazon-orange);
+            margin-right: 5px;
+        }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(-10px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .cart-item {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@media (max-width: 768px) {
+        .cart-container {
+            flex-direction: column;
+        }
+
+        .cart-item {
+            flex-direction: column;
+        }
+
+        .item-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
+<div class="cart-container">
+    <div class="cart-items">
+        <div class="cart-header">
+            <h1 class="cart-title">Shopping Cart</h1>
+            @* <div class="cart-price">Price</div> *@
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-cart">
+                <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="empty-cart-text">Your Amazon Cart is empty</h3>
+                <a href="/" class="btn btn-warning">Shop today's deals</a>
+            </div>
+        }
+        else
+        {
+            @* <div class="cart-header" style="justify-content: flex-start;">
+                <input type="checkbox" class="form-check-input me-2" checked />
+                <span style="font-size: 14px;">Deselect all items</span>
+            </div> *@
+
+            @foreach (var item in Model)
+            {
+                <div class="cart-item">
+                    @* <div class="item-select">
+                        <input type="checkbox" class="form-check-input" checked />
+                    </div> *@
+
+                    <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
+                        <img src="/Image/@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                    </a>
+
+                    <div class="item-details">
+                        <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" style="text-decoration: none;">
+                            <h4 class="item-title">@item.ProductName</h4>
+                        </a>
+
+                        @if (!string.IsNullOrEmpty(item.Badge))
+                        {
+                            <span class="item-badge">@item.Badge</span>
+                        }
+                        <div class="item-stock">@(item.InStock ? "In Stock" : "Currently unavailable")</div>
+                        @if (!string.IsNullOrEmpty(item.Color) || !string.IsNullOrEmpty(item.Size))
+                        {
+                            <div class="item-variants">
+                                @if (!string.IsNullOrEmpty(item.Color))
+                                {
+                                    <span><span class="label-variants">Color:</span> @item.Color</span>
+
+                                    <br />
+                                }
+                                @if (!string.IsNullOrEmpty(item.Size))
+                                {
+                                    <span><span class="label-variants">Size:</span> @item.Size</span>
+                                }
+                            </div>
+                        }
+                        <div class="item-delivery">Eligible for FREE delivery</div>
+
+                        <div class="item-actions">
+                            <div class="quantity-control">
+                                <form asp-action="Decrease" method="post">
+                                    <input type="hidden" name="id" value="@item.CartItemId" />
+                                    <button type="submit" class="quantity-btn">-</button>
+                                </form>
+                                <input type="text" class="quantity-display" value="@item.Quantity" readonly />
+                                <form asp-action="Increase" method="post">
+                                    <input type="hidden" name="id" value="@item.CartItemId" />
+                                    <button type="submit" class="quantity-btn">+</button>
+                                </form>
+                            </div>
+
+                            <form asp-action="Delete" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@item.CartItemId" />
+                                <button type="submit" class="action-link">Delete</button>
+                            </form>
+                            <div class="action-link">Save for later</div>
+                        </div>
+
+                        <div class="item-price">EGP @item.Price.ToString("N2")</div>
+                    </div>
+                </div>
+            }
+
+
+            <div class="cart-header" style="justify-content: flex-end;">
+                <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
+            </div>
+        }
+    </div>
+    <form method="get" asp-controller="Product" asp-action="CheckOut">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <input type="hidden" name="cartVM[@i].ProductId" value="@Model[i].ProductId" />
+            <input type="hidden" name="cartVM[@i].ProductName" value="@Model[i].ProductName" />
+            <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
+            <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
+            <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
+            <input type="hidden" name="cartVM[@i].ProductColor" value="@Model[i].Color" />
+            <input type="hidden" name="cartVM[@i].ProductSize" value="@Model[i].Size" />
+
+        }
+        @if (Model.Any())
+        {
+            <div class="cart-summary">
+                <h4 class="summary-title">Order Summary</h4>
+                <div class="summary-subtotal">
+                    Subtotal (@Model.Sum(x => x.Quantity) items): <span>EGP @subtotal.ToString("N2")</span>
+                </div>
+                <button class="checkout-btn">Proceed to Checkout</button>
+                <div class="secure-checkout">
+                    <i class="fas fa-lock"></i> Secure checkout
+                </div>
+            </div>
+        }
+    </form>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<script>
+    document.querySelectorAll('.quantity-display').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value < 1) this.value = 1;
+            if (this.value > 999) this.value = 999;
+        });
+    });
+
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const display = this.closest('.quantity-control').querySelector('.quantity-display');
+            display.classList.add('quantity-change');
+            setTimeout(() => {
+                display.classList.remove('quantity-change');
+            }, 300);
+        });
+    });
+</script>

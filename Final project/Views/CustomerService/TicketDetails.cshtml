@@ -1,0 +1,237 @@
+﻿@using Final_project.ViewModel.CustomerService
+@model TicketDetailsViewModel
+@{
+    ViewData["Title"] = $"Ticket Details - {Model.Ticket.Subject}";
+    var isSupportOrAdmin = ViewBag.IsSupportOrAdmin ?? false;
+    var isCustomer = ViewBag.IsCustomer ?? false;
+    var isSeller = ViewBag.IsSeller ?? false;
+    var canManageTicket = ViewBag.CanManageTicket ?? false;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CustomerService.css" asp-append-version="true" />
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index")">Support Tickets</a></li>
+                    <li class="breadcrumb-item active">@Model.Ticket.Subject</li>
+                </ol>
+            </nav>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="row">
+                <!-- Ticket Information -->
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@Model.Ticket.Subject</h5>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-@(Model.Ticket.Status == "Open" ? "warning" : Model.Ticket.Status == "Resolved" ? "success" : "secondary")">
+                                    @Model.Ticket.Status
+                                </span>
+                                <span class="badge bg-@(Model.Ticket.Priority == "Critical" ? "danger" : Model.Ticket.Priority == "High" ? "warning" : Model.Ticket.Priority == "Medium" ? "info" : "secondary")">
+                                    @Model.Ticket.Priority
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-3">@Model.Ticket.Description</p>
+                            <small class="text-muted">
+                                Created by @Model.Ticket.UserName on @Model.Ticket.CreatedAt?.ToString("MMM dd, yyyy HH:mm")
+                                @if (Model.Ticket.ResolvedAt.HasValue)
+                                {
+                                    <br />
+                                    <span>Resolved on @Model.Ticket.ResolvedAt.Value.ToString("MMM dd, yyyy HH:mm")</span>
+                                }
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Messages</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="messages-container" style="max-height: 400px; overflow-y: auto;">
+                                @if (Model.Messages.Any())
+                                {
+                                    @foreach (var message in Model.Messages.OrderBy(m => m.SentAt))
+                                    {
+                                        <div class="message mb-3 @(message.IsFromUser ? "text-end" : "")">
+                                            <div class="d-inline-block p-3 rounded @(message.IsFromUser ? "bg-primary text-white" : "bg-light")" style="max-width: 70%;">
+                                                <div>@message.Message</div>
+                                                <small class="@(message.IsFromUser ? "text-white-50" : "text-muted")">
+                                                    @message.SenderName - @message.SentAt?.ToString("MMM dd, yyyy HH:mm")
+                                                </small>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted text-center">No messages yet.</p>
+                                }
+                            </div>
+
+                            @if (Model.Ticket.Status != "Resolved" && canManageTicket)
+                            {
+                                <hr />
+                                <form asp-action="SendTicketMessage" method="post" class="mt-3">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="TicketId" value="@Model.Ticket.Id" />
+                                    <div class="mb-3">
+                                        <textarea name="Message" class="form-control" rows="3" placeholder="Type your message..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Send Message</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-md-4">
+                    <!-- Actions -->
+                    @if (canManageTicket)
+                    {
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">Actions</h6>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Ticket.Status != "Resolved" && isSupportOrAdmin)
+                                {
+                                    <form asp-action="ResolveTicket" method="post" class="mb-2">
+                                        <input type="hidden" name="ticketId" value="@Model.Ticket.Id" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100" onclick="return confirm('Are you sure you want to resolve this ticket?')">
+                                            <i class="fas fa-check"></i> Resolve Ticket
+                                        </button>
+                                    </form>
+                                }
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#updateTicketModal">
+                                    <i class="fas fa-edit"></i> Update Ticket
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- History -->
+                    @if (Model.History.Any() && isSupportOrAdmin)
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">History</h6>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var history in Model.History.OrderByDescending(h => h.ChangedAt))
+                                {
+                                    <div class="mb-2">
+                                        <small class="text-muted">
+                                            @history.ChangedAt?.ToString("MMM dd, HH:mm")<br />
+                                            <strong>@history.FieldChanged</strong> changed from "@history.OldValue" to "@history.NewValue"
+                                        </small>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Ticket Modal -->
+@if (canManageTicket)
+{
+    <div class="modal fade" id="updateTicketModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="UpdateTicket" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Id" value="@Model.Ticket.Id" />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Ticket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <input name="Subject" class="form-control" value="@Model.Ticket.Subject" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="4">@Model.Ticket.Description</textarea>
+                        </div>
+                        @if (isSupportOrAdmin)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="Status" class="form-select">
+                                    <option value="Open" selected="@(Model.Ticket.Status == "Open")">Open</option>
+                                    <option value="In Progress" selected="@(Model.Ticket.Status == "In Progress")">In Progress</option>
+                                    <option value="Resolved" selected="@(Model.Ticket.Status == "Resolved")">Resolved</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select name="Priority" class="form-select">
+                                    <option value="Low" selected="@(Model.Ticket.Priority == "Low")">Low</option>
+                                    <option value="Medium" selected="@(Model.Ticket.Priority == "Medium")">Medium</option>
+                                    <option value="High" selected="@(Model.Ticket.Priority == "High")">High</option>
+                                    <option value="Critical" selected="@(Model.Ticket.Priority == "Critical")">Critical</option>
+                                </select>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/CustomerServiceNotifications.js"></script>
+    <script src="~/js/CustomerServiceJS.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current user ID for real-time functionality
+            setCurrentUserId('@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value');
+
+            // Join ticket group for real-time updates
+            joinTicketGroup('@Model.Ticket.Id');
+
+            // Set up form for real-time messaging
+            const messageForm = document.querySelector('form[asp-action="SendTicketMessage"]');
+            if (messageForm) {
+                messageForm.id = 'ticketMessageForm';
+                messageForm.dataset.ticketId = '@Model.Ticket.Id';
+                messageForm.dataset.senderId = '@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value';
+            }
+
+            // Auto-scroll to bottom of messages
+            const messagesContainer = document.querySelector('.messages-container');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    </script>
+}

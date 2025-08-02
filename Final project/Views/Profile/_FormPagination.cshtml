@@ -1,0 +1,19 @@
+﻿@{
+    var currentPage = (int)Model.PageNumber;
+    var totalPages = (int)Model.TotalPages;
+    var pageSize = (int)Model.PageSize;
+    var sizeOptions = new[] { 2, 5, 10, 20, 50 };
+}
+<form method="get" id="paginationForm" class="amazon-page-size-form">
+    <label for="size" class="form-label">Items per page</label>
+
+
+    <select name="size" id="size" class="form-select amazon-page-select" onchange="this.form.submit()">
+        @foreach (var sizeOption in sizeOptions)
+        {
+            <option value="@sizeOption" selected="@(pageSize == sizeOption ? "selected" : null)">@sizeOption</option>
+        }
+    </select>
+
+    <input type="hidden" name="page" value="@currentPage" />
+</form>

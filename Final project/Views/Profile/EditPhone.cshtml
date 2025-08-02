@@ -1,0 +1,229 @@
+﻿@using Final_project.ViewModel.Customer
+@model UpdatePhoneViewModel
+@{
+    ViewData["Title"] = "Update Phone Number";
+}
+
+<style>
+    .phone-edit-container {
+        max-width: 500px;
+        margin: 30px auto;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 25px;
+        border: 1px solid #ddd;
+        animation: slideIn 0.4s ease-out;
+    }
+
+    .phone-edit-header {
+        border-bottom: 1px solid #e7e7e7;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+        .phone-edit-header h2 {
+            font-weight: 400;
+            color: #111;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .phone-edit-header p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+    .form-group {
+        position: relative;
+    }
+
+        .form-group label {
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+    .phone-input-container {
+        display: flex;
+        align-items: center;
+        border: 1px solid #a6a6a6;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .country-code {
+        padding: 10px;
+        background: #f3f3f3;
+        border-right: 1px solid #a6a6a6;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .form-control {
+        border: none;
+        padding: 10px;
+        width: 100%;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: inset 0 0 0 1px #e77600;
+        }
+
+    .phone-input-container:focus-within {
+        border-color: #e77600;
+        box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
+    }
+
+    .btn-amazon-save {
+        background: linear-gradient(to bottom,#f7dfa5,#f0c14b);
+        border-radius: 3px;
+        border: 1px solid #a88734;
+        color: #111;
+        font-weight: 500;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        max-width: 200px;
+        margin-top: 20px;
+        position: relative;
+    }
+
+        .btn-amazon-save:hover {
+            background: linear-gradient(to bottom,#f5d78e,#eeb933);
+            border-color: #9c7e31;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-amazon-save:active {
+            background: #f0c14b;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+    .text-danger {
+        color: #c40000;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* Phone number validation indicators */
+    .valid-phone {
+        position: absolute;
+        right: 10px;
+        top: 38px;
+        color: #2fa12f;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .phone-input-container.valid + .valid-phone {
+        opacity: 1;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 576px) {
+        .phone-edit-container {
+            padding: 20px 15px;
+            margin: 20px 10px;
+        }
+
+        .btn-amazon-save {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="phone-edit-container">
+    <div class="phone-edit-header">
+        <h2>Update Phone Number</h2>
+        <p>We'll use this number for account security and notifications</p>
+    </div>
+
+    <form asp-action="EditPhone" method="post" id="phoneForm">
+        <div class="form-group">
+            <label asp-for="PhoneNumber">Mobile phone number</label>
+            <div class="phone-input-container">
+                <span class="country-code">+1</span>
+                <input asp-for="PhoneNumber" class="form-control"
+                       placeholder="(XXX) XXX-XXXX"
+                       pattern="[0-9]{10}"
+                       title="Please enter a 10-digit phone number"
+                       maxlength="10" />
+            </div>
+            <i class="fas fa-check-circle valid-phone"></i>
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-amazon-save" id="saveButton">
+            Save changes
+        </button>
+    </form>
+</div>
+
+<script>
+    // Phone number formatting
+    const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+    phoneInput.addEventListener('input', function(e) {
+        // Format phone number as (XXX) XXX-XXXX
+        const input = this.value.replace(/\D/g, '').substring(0,10);
+        const formatted = input.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+        this.value = formatted;
+
+        // Validate and show checkmark
+        const container = this.closest('.phone-input-container');
+        if (input.length === 10) {
+            container.classList.add('valid');
+        } else {
+            container.classList.remove('valid');
+        }
+    });
+
+    // Form submission handling
+    document.getElementById('phoneForm').addEventListener('submit', function(e) {
+        const button = document.getElementById('saveButton');
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+        // Simulate verification delay (remove in production)
+        setTimeout(() => {
+            if (!this.hasAttribute('data-submitted')) {
+                button.disabled = false;
+                button.textContent = 'Save changes';
+            }
+        }, 2000);
+
+        this.setAttribute('data-submitted', 'true');
+    });
+
+    // Initialize phone validation
+    if (phoneInput.value) {
+        const input = phoneInput.value.replace(/\D/g, '');
+        if (input.length === 10) {
+            phoneInput.closest('.phone-input-container').classList.add('valid');
+        }
+    }
+</script>
+
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

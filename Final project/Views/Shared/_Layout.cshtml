@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Final_project</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+
+    <!-- Bootstrap Icons -->
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+
+    <!-- FontAwesome -->
+    <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+
+    @RenderSection("Styles", required: false)
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg shadow" style="backdrop-filter: blur(10px); background-color: rgba(30, 30, 30, 0.6); min-height: 70px;">
+            <div class="container-fluid">
+                <a class="navbar-brand nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "SellerDashboard" ? "active-link" : "")" href="@Url.Action("SellerDashboard", "Seller")">Dashboard</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "MyProducts" ? "active-link" : "")" href="@Url.Action("MyProducts", "Seller")">My Products</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "AllProducts" ? "active-link" : "")" href="@Url.Action("AllProducts", "Seller")">All Products</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active-link" : "")" href="@Url.Action("Orders", "Seller")">My Orders</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Discounts" ? "active-link" : "")" href="@Url.Action("Discounts", "Seller")">Discounts</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "ProductReviews" ? "active-link" : "")" href="@Url.Action("ProductReviews", "Seller")">Reviews</a>
+                        </li>
+                    </ul>
+                    @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Seller")
+                    {
+                        <div class="d-flex align-items-center ms-auto" style="gap: 15px;">
+                            <div class="user-info" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); border-radius: 25px; padding: 8px 15px; color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                                <i class="fas fa-user-circle"></i>
+                                <span>Welcome, Seller !</span>
+                            </div>
+                            <form method="post" action="@Url.Action("Logout", "Account")" style="margin: 0;">
+                                <button type="submit" class="logout-btn" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border: none; color: white; padding: 12px 20px; border-radius: 25px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 20px rgba(220,53,69,0.3);">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <style>
+        .nav-custom {
+            color: white !important;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+        }
+
+            .nav-custom:hover {
+                color: #FFC107 !important;
+            }
+
+        .active-link {
+            color: #FF8300 !important;
+            font-weight: bold;
+            border-bottom: 2px solid #FF8300;
+        }
+
+        .nav-item {
+            transition: margin 0.3s ease;
+        }
+
+        .navbar {
+            height: 70px;
+        }
+    </style>
+
+    @* <div class="container mt-4"> *@
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+    @* </div> *@
+
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container">
+            &copy; 2025 - Final_project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
