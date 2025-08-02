@@ -49,11 +49,11 @@ public partial class product
 
     public DateTime? created_at { get; set; } = DateTime.UtcNow;
 
-    public DateTime? last_modified_at { get; set; }
+    public DateTime? last_modified_at { get; set; } = DateTime.UtcNow;
 
-    public bool? is_active { get; set; }
+    public bool? is_active { get; set; } = true;
 
-    public bool? is_approved { get; set; }
+    public bool? is_approved { get; set; } = false;
 
     [StringLength(255)]
     public string approved_by { get; set; }
@@ -71,6 +71,8 @@ public partial class product
 
     [NotMapped]
     public List<string> SelectedSizes => Sizes?.Split(',').ToList() ?? new List<string>();
+
+    public bool IsSellerActevated { get; set; }
 
 
 }

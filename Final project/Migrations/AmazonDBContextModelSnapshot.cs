@@ -618,6 +618,9 @@ namespace Final_project.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("IsSellerActevated")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Sizes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");

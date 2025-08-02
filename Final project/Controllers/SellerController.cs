@@ -149,31 +149,13 @@ namespace Final_project.Controllers
             {
                 product.id = Guid.NewGuid().ToString();
 
-                var testUser = await _unitOfWork.UserRepository.GetAsync(u => u.Id == "test-seller-id");
-                if (testUser == null)
-                {
-                    testUser = new Final_project.Models.ApplicationUser
-                    {
-                        Id = "test-seller-id",
-                        UserName = "test-seller",
-                        Email = "test-seller@test.com",
-                        EmailConfirmed = true,
-                        PhoneNumberConfirmed = true,
-                        TwoFactorEnabled = false,
-                        LockoutEnabled = false,
-                        AccessFailedCount = 0
-                    };
-                    _unitOfWork.UserRepository.add(testUser);
-                    await _unitOfWork.SaveAsync();
-                }
+                var sellerId = GetCurrentSellerId();
+                product.seller_id = sellerId;
 
-                product.seller_id = "test-seller-id";
                 product.created_at = DateTime.UtcNow;
-                product.is_active = Request.Form["is_active"].Contains("true");
+                product.IsSellerActevated = Request.Form["is_active"].Contains("true");
                 product.is_deleted = false;
-
                 product.Sizes = SelectedSizes != null ? string.Join(",", SelectedSizes) : null;
-
 
                 var productId = product.id;
 
@@ -292,7 +274,7 @@ namespace Final_project.Controllers
             product.category_id = updatedProduct.category_id;
             product.seller_id = "test-seller-id";
             product.last_modified_at = DateTime.UtcNow;
-            product.is_active = Request.Form["is_active"].FirstOrDefault()?.ToLower() == "true";
+            product.IsSellerActevated = Request.Form["is_active"].FirstOrDefault()?.ToLower() == "true";
 
             // Handle images (keep your existing image handling code)
             if (newImageFiles != null && newImageFiles.Length > 0)
@@ -419,7 +401,7 @@ namespace Final_project.Controllers
 
 
             product.is_deleted = true;
-            product.is_active = false;
+            product.IsSellerActevated = false;
 
 
             if (product.product_images != null)
@@ -1558,6 +1540,10 @@ namespace Final_project.Controllers
         private string GetCurrentSellerId()
         {
             var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (IdClaim == null)
+            {
+                throw new Exception("NameIdentifier claim not found for current user");
+            }
             string userId = IdClaim.Value;
             return userId;
         }
@@ -1671,7 +1657,7 @@ namespace Final_project.Controllers
             if (product == null)
                 return Json(new { success = false, message = "Product not found." });
             product.is_deleted = true;
-            product.is_active = false;
+            product.IsSellerActevated = false;
             if (product.product_images != null)
             {
                 foreach (var img in product.product_images)
@@ -1700,7 +1686,7 @@ namespace Final_project.Controllers
             // Check if category name exists in categories or pending requests
             bool exists = await _unitOfWork.CategoryRepository.GetAll()
                 .AnyAsync(c => c.name.ToLower() == CategoryName.ToLower() && c.is_deleted == false);
-        bool pending = await _unitOfWork.CategoryRequestRepository.HasPendingCategoryAsync(CategoryName);
+            bool pending = await _unitOfWork.CategoryRequestRepository.HasPendingCategoryAsync(CategoryName);
 
             if (exists || pending)
             {

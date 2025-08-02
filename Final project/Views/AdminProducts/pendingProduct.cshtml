@@ -23,7 +23,7 @@
             </div>
             <div class="stat-value" id="count-accepted">@ViewBag.CountAcceptedProducts</div>
             <div class="stat-title">Approved Products</div>
-       
+
         </div>
         <div class="stat-card">
             <div class="stat-icon">
@@ -44,42 +44,46 @@
         </div>
 
         <div class="ticket-list">
-            @if (ViewBag.PendeingProducts.Count != 0){
-                @for (int i=0 ; i<5 ; i++)
+            @if (ViewBag.PendeingProducts.Count != 0)
             {
-                <div class="product-card" id="product-@ViewBag.PendeingProducts[i].id">
-                    <img src="@ViewBag.PendeingProducts[i].Product_Images[0].image_url" class="product-image">
-                    <div class="product-info">
-                        <div class="product-title">@ViewBag.PendeingProducts[i].name</div>
-                        <div class="product-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-tag"></i> @ViewBag.PendeingProducts[i].category.name
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-dollar-sign"></i> @ViewBag.PendeingProducts[i].price
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-user"></i> @ViewBag.PendeingProducts[i].Seller.UserName
-                            </div>
-                            <div class="meta-item">
-                                <span class="status-badge status-pending">Pending Review</span>
+                @for (int i = 0; i < 5; i++)
+                {
+                    <div class="product-card" id="product-@ViewBag.PendeingProducts[i].id">
+                        <img src="@ViewBag.PendeingProducts[i].Product_Images[0].image_url" class="product-image">
+                        <div class="product-info">
+                            <div class="product-title">@ViewBag.PendeingProducts[i].name</div>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i> @ViewBag.PendeingProducts[i].category.name
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-dollar-sign"></i> @ViewBag.PendeingProducts[i].price
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-user"></i> @ViewBag.PendeingProducts[i].Seller.UserName
+                                </div>
+                                <div class="meta-item">
+                                    <span class="status-badge status-pending">Pending Review</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="product-actions">
+                            <!-- Use buttons with data attributes instead of links -->
+                            <button class="action-btn btn-approve" data-id="@ViewBag.PendeingProducts[i].id">Approve</button>
+                            <button class="action-btn btn-reject" data-id="@ViewBag.PendeingProducts[i].id">Reject</button>
+                        </div>
                     </div>
-                    <div class="product-actions">
-                        <!-- Use buttons with data attributes instead of links -->
-                        <button class="action-btn btn-approve" data-id="@ViewBag.PendeingProducts[i].id">Approve</button>
-                        <button class="action-btn btn-reject" data-id="@ViewBag.PendeingProducts[i].id">Reject</button>
-                    </div>
-                </div>
-                if (i == ViewBag.PendeingProducts.Count - 1){ break; }
+                    if (i == ViewBag.PendeingProducts.Count - 1) { break; }
                 }
-            }else{
-            <div id="empty-state-message" class="empty-state">
-                <i class="fas fa-check-circle fa-3x"></i>
-                <h3>All caught up!</h3>
-                <p>You don't have any pending products to review.</p>
-            </div>}
+            }
+            else
+            {
+                <div id="empty-state-message" class="empty-state">
+                    <i class="fas fa-check-circle fa-3x"></i>
+                    <h3>All caught up!</h3>
+                    <p>You don't have any pending products to review.</p>
+                </div>
+            }
         </div>
         <a asp-action="AllProducts" class="view-all-btn">View All Products</a>
 
@@ -96,7 +100,7 @@
             const productId = $(this).data('id');
             $.post('/AdminProducts/ApproveProduct', { id: productId }, function (response) {
                 if (response.success) {
-                    location.reload(); 
+                    location.reload();
                 } else {
                     alert("Failed to approve product.");
                 }
@@ -108,7 +112,7 @@
             const productId = $(this).data('id');
             $.post('/AdminProducts/RejectProduct', { id: productId }, function (response) {
                 if (response.success) {
-                    location.reload(); 
+                    location.reload();
                 } else {
                     alert("Failed to reject product.");
                 }

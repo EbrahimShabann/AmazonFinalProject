@@ -146,31 +146,29 @@
     /* Neumorphic Stats Cards - Modified for 3x2 layout */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3 أعمدة ثابتة */
+        grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
         margin-bottom: 3rem;
-        max-width: 1200px; /* عرض أقصى مناسب */
+        max-width: 1200px;
         margin-left: auto;
-        margin-right: auto; /* توسيط الشبكة */
-        padding: 0 20px; /* هامش جانبي */
+        margin-right: auto;
+        padding: 0 20px;
     }
 
-    /* تعديلات للشاشات المتوسطة */
+
     @@media (max-width: 1024px) {
         .stats-grid {
-            grid-template-columns: repeat(2, 1fr); /* 2 عمود للشاشات المتوسطة */
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
-    /* تعديلات للشاشات الصغيرة */
     @@media (max-width: 640px) {
         .stats-grid {
-            grid-template-columns: 1fr; /* عمود واحد للجوال */
+            grid-template-columns: 1fr;
             gap: 1.5rem;
         }
     }
 
-    /* تحسينات على الكروت نفسها */
     .neumorphic-card {
         background: rgba(255, 255, 255, 0.12);
         backdrop-filter: blur(20px);
@@ -181,7 +179,7 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-        min-height: 220px; /* ارتفاع ثابت للكروت */
+        min-height: 220px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -681,7 +679,7 @@
 <div class="container">
 
     <!-- logout buttons -->
-    <div class="logout-container">
+    @* <div class="logout-container">
         <div class="user-info">
             <i class="fas fa-user-circle"></i>
             <span>Welcome, Seller !</span>
@@ -690,7 +688,7 @@
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
-    </div>
+    </div> *@
 
 
     <div class="dashboard-hero">

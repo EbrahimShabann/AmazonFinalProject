@@ -73,6 +73,10 @@
       "PackagePath": "staticwebassets\\images\\products\\4c2d0de4-4102-4185-ae11-b2a072728e09.ico"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\4f310790-db86-417c-a64d-7b99a0a789f0.png",
+      "PackagePath": "staticwebassets\\images\\products\\4f310790-db86-417c-a64d-7b99a0a789f0.png"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg",
       "PackagePath": "staticwebassets\\images\\products\\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg"
     },
@@ -83,6 +87,18 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg",
       "PackagePath": "staticwebassets\\images\\products\\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\9b5a324b-3b1b-4b45-b846-719665e81aec.png",
+      "PackagePath": "staticwebassets\\images\\products\\9b5a324b-3b1b-4b45-b846-719665e81aec.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\a801ce54-9753-426a-af68-9700926bdc01.png",
+      "PackagePath": "staticwebassets\\images\\products\\a801ce54-9753-426a-af68-9700926bdc01.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\aae324c4-2ccb-4f63-a704-d51f46f80c8f.png",
+      "PackagePath": "staticwebassets\\images\\products\\aae324c4-2ccb-4f63-a704-d51f46f80c8f.png"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg",
@@ -111,6 +127,10 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\86f36097-3755-4312-98ac-0bc800abf679_oar2.jpg",
       "PackagePath": "staticwebassets\\images\\users\\86f36097-3755-4312-98ac-0bc800abf679_oar2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\Untitled (1).png",
+      "PackagePath": "staticwebassets\\images\\users\\Untitled (1).png"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\users\\a19a9a89-18e5-412d-9118-077d0e4e7186_ChatGPT_Image_Jul_27__2025__11_36_29_PM-removebg-preview (1).png",

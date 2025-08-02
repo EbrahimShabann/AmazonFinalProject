@@ -4418,9 +4418,13 @@ wwwroot\images\categories\esmael.jpeg
 wwwroot\images\categories\oar2.jpg
 wwwroot\images\products\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg
 wwwroot\images\products\4c2d0de4-4102-4185-ae11-b2a072728e09.ico
+wwwroot\images\products\4f310790-db86-417c-a64d-7b99a0a789f0.png
 wwwroot\images\products\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg
 wwwroot\images\products\6d700f6f-b13d-4374-b526-cc5b80fc8f80.jpg
 wwwroot\images\products\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg
+wwwroot\images\products\9b5a324b-3b1b-4b45-b846-719665e81aec.png
+wwwroot\images\products\a801ce54-9753-426a-af68-9700926bdc01.png
+wwwroot\images\products\aae324c4-2ccb-4f63-a704-d51f46f80c8f.png
 wwwroot\images\products\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg
 wwwroot\images\products\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg
 wwwroot\images\products\f1ce109a-27d6-415c-a5d8-34d007ddb0f7.jpg
@@ -4436,6 +4440,7 @@ wwwroot\images\users\eab7005a-0f57-45da-99ff-6c3033cd2035_oar2.jpg
 wwwroot\images\users\ed3386d7-2124-4788-907c-6ae4514f6c62_oar2.jpg
 wwwroot\images\users\esmael.jpeg
 wwwroot\images\users\oar2.jpg
+wwwroot\images\users\Untitled (1).png
 wwwroot\js\_ErrorLayoutJS.js
 wwwroot\js\AccountPageJS.js
 wwwroot\js\CategoryJS.js

@@ -50,7 +50,8 @@ public class AdminUsersController : Controller
             UserName = model.UserName,
             Email = model.Email,
             date_of_birth = model.birthdate,
-            profile_picture_url = model.imgFile != null ? Path.GetFileName(model.imgFile.FileName) : null
+            profile_picture_url = model.imgFile != null ? Path.GetFileName(model.imgFile.FileName) : null,
+            EmailConfirmed=true,
 
         };
 
