@@ -730,24 +730,10 @@ namespace Final_project.Controllers
                 discount.seller_id = GetCurrentSellerId();
                 discount.created_at = DateTime.UtcNow;
 
-                _unitOfWork.DiscountRepository.add(discount);
+                _unitOfWork.DiscountRepository.ApplyDiscountToProducts(discount,productIds);
 
-                await _unitOfWork.SaveAsync();
 
-                if (productIds != null)
-                {
-                    foreach (var pid in productIds)
-                    {
-                        var pd = new Final_project.Models.product_discount
-                        {
-                            id = Guid.NewGuid().ToString(),
-                            product_id = pid,
-                            discount_id = discount.id
-                        };
-                        _unitOfWork.ProductDiscountRepository.add(pd);
-                    }
-                    await _unitOfWork.SaveAsync();
-                }
+     
 
                 TempData["SuccessMessage"] = "Discount added successfully!";
                 return RedirectToAction("Discounts");

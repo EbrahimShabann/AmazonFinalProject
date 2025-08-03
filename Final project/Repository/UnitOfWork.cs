@@ -12,6 +12,7 @@ using Final_project.Repository.DeviceRepositoryFile;
 using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
+using Final_project.Repository.NotificationRepoFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
@@ -51,6 +52,7 @@ namespace Final_project.Repository
         private IChatMessageRepo _chatMessageRepo;
         private ICategoryRequestRepository _categoryRequestRepository;
         private IDeviceRepository _deviceRepository;
+        private INotificationRepo _notificationRepo;
 
 
 
@@ -290,6 +292,17 @@ namespace Final_project.Repository
                 return _deviceRepository;
             }
         }
+
+        public INotificationRepo NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepo == null)
+                    _notificationRepo = new NotificationRepo(db);
+                return _notificationRepo;
+            }
+        }
+
 
         public void save()
         {

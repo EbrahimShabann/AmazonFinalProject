@@ -166,6 +166,9 @@ namespace Final_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -201,7 +204,6 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeviceFingerprint")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 

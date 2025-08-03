@@ -3,13 +3,11 @@ using Final_project.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Configuration;
-using System.Security.Claims;
-using System.Threading.Tasks;
+
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superadmin")]
 
     public class AdminSellersController : Controller
     {

@@ -138,34 +138,7 @@ namespace Final_project.Controllers
             return RedirectToAction("Index", "AdminDashboard");
         }
 
-        // Optional: Method to manage admin-created user settings
-        [HttpGet]
-        public async Task<IActionResult> ManageUser(string userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var model = new ManageUserViewModel
-            {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                EmailConfirmed = user.EmailConfirmed,
-                PhoneNumberConfirmed = user.PhoneNumberConfirmed == "true",
-                TwoFactorEnabled = user.TwoFactorEnabled,
-                IsActive = user.is_active,
-                CurrentRoles = userRoles.ToList(),
-                ProfilePictureUrl = user.profile_picture_url
-            };
-
-            return View(model);
-        }
+ 
     }
 
 }

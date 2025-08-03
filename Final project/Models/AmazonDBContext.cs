@@ -62,6 +62,7 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
     public virtual DbSet<review_reply> review_reply { get; set; }
     public virtual DbSet<CategoryRequest> CategoryRequest { get; set; }
+    public virtual DbSet<notification> Notifications { get; set; }
     public DbSet<UserDevice> UserDevices { get; set; }
     public DbSet<TwoFactorCode> TwoFactorCodes { get; set; }
 

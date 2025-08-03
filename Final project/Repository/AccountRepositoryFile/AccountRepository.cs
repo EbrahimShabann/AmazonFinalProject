@@ -348,5 +348,11 @@ namespace Final_project.Repository.AccountRepositoryFile
         }
 
         #endregion
+
+        public string GetUserPhoneNumber(string UserId)
+        {
+            return db.Users.FirstOrDefault(u => u.Id == UserId).PhoneNumber;
+        }
+
     }
 }

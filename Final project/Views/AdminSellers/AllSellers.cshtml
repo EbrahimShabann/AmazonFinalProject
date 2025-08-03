@@ -1,8 +1,13 @@
 ﻿@model List<ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "AllSellers";
     Layout = "AdminLayout";
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 
 
@@ -11,6 +16,7 @@
         background-color: rgba(231, 76, 60, 0.15);
         color: var(--amazon-danger);
     }
+
     .filter-section {
         background: var(--amazon-card);
         border-radius: 12px;
@@ -21,9 +27,9 @@
         transition: var(--transition);
     }
 
-    .filter-section:hover {
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
-    }
+        .filter-section:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
 
     .section-title {
         display: flex;
@@ -31,24 +37,24 @@
         margin-bottom: 1.8rem;
     }
 
-    .section-title i {
-        background: var(--amazon-secondary);
-        color: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 1.2rem;
-    }
+        .section-title i {
+            background: var(--amazon-secondary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
 
-    .section-title h2 {
-        color: var(--amazon-dark);
-        font-size: 1.8rem;
-        font-weight: 600;
-    }
+        .section-title h2 {
+            color: var(--amazon-dark);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
 
     .filter-grid {
         display: grid;
@@ -71,24 +77,24 @@
         align-items: center;
     }
 
-    .filter-label i {
-        margin-right: 8px;
-        color: var(--amazon-secondary);
-        font-size: 0.9rem;
-    }
+        .filter-label i {
+            margin-right: 8px;
+            color: var(--amazon-secondary);
+            font-size: 0.9rem;
+        }
 
     .input-wrapper {
         position: relative;
     }
 
-    .input-wrapper i {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        font-size: 0.95rem;
-    }
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 0.95rem;
+        }
 
     .filter-input {
         width: 100%;
@@ -101,12 +107,12 @@
         box-shadow: var(--shadow-light);
     }
 
-    .filter-input:focus {
-        outline: none;
-        border-color: var(--amazon-primary);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: #888;
-    }
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--amazon-primary);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: #888;
+        }
 
     .filter-select {
         width: 100%;
@@ -121,11 +127,11 @@
         box-shadow: var(--shadow-light);
     }
 
-    .filter-select:focus {
-        outline: none;
-        border-color: var(--amazon-primary);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-    }
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--amazon-primary);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+        }
 
     .price-range-container {
         display: flex;
@@ -143,12 +149,12 @@
         box-shadow: var(--shadow-light);
     }
 
-    .price-input:focus {
-        outline: none;
-        border-color: var(--amazon-primary);
-        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
-        background: #fff;
-    }
+        .price-input:focus {
+            outline: none;
+            border-color: var(--amazon-primary);
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
+            background: #fff;
+        }
 
     .filter-actions {
         display: flex;
@@ -172,16 +178,16 @@
         align-items: center;
     }
 
-    .result-count i {
-        margin-right: 10px;
-        color: var(--amazon-primary);
-        font-size: 1.4rem;
-    }
+        .result-count i {
+            margin-right: 10px;
+            color: var(--amazon-primary);
+            font-size: 1.4rem;
+        }
 
-    .result-count strong {
-        color: var(--amazon-secondary);
-        margin: 0 5px;
-    }
+        .result-count strong {
+            color: var(--amazon-secondary);
+            margin: 0 5px;
+        }
     /* Product Table */
     .products-table-container {
         background: var(--amazon-card);
@@ -197,26 +203,26 @@
         min-width: 800px;
     }
 
-    .products-table th {
-        background: var(--amazon-dark);
-        color: white;
-        text-align: left;
-        padding: 1rem;
-        font-weight: 500;
-    }
+        .products-table th {
+            background: var(--amazon-dark);
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 500;
+        }
 
-    .products-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-    }
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
 
-    .products-table tr:nth-child(even) {
-        background: #f9f9f9;
-    }
+        .products-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
 
-    .products-table tr:hover {
-        background: #f0f7ff;
-    }
+        .products-table tr:hover {
+            background: #f0f7ff;
+        }
 
     .product-image-cell {
         width: 60px;
@@ -274,17 +280,17 @@
         transition: all 0.3s;
     }
 
-    .pagination-btn:hover {
-        background: var(--amazon-orange);
-        color: white;
-        border-color: var(--amazon-orange);
-    }
+        .pagination-btn:hover {
+            background: var(--amazon-orange);
+            color: white;
+            border-color: var(--amazon-orange);
+        }
 
-    .pagination-btn.active {
-        background: var(--amazon-orange);
-        color: white;
-        border-color: var(--amazon-orange);
-    }
+        .pagination-btn.active {
+            background: var(--amazon-orange);
+            color: white;
+            border-color: var(--amazon-orange);
+        }
 
     /* Action Buttons */
     .action-btn {
@@ -337,16 +343,16 @@
         position: relative;
     }
 
-    .select-wrapper i {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--amazon-secondary);
-        font-size: 1rem;
-        z-index: 2;
-        pointer-events: none;
-    }
+        .select-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--amazon-secondary);
+            font-size: 1rem;
+            z-index: 2;
+            pointer-events: none;
+        }
 
     .form-control {
         width: 100%;
@@ -374,12 +380,12 @@
         color: var(--text-color);
     }
 
-    .styled-date-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        background-color: #fff;
-    }
+        .styled-date-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: #fff;
+        }
 
     .date-icon {
         position: absolute;
@@ -417,19 +423,19 @@
         transition: background-color 0.2s;
     }
 
-    .form-control option:hover {
-        background-color: rgba(20, 110, 180, 0.1);
-    }
+        .form-control option:hover {
+            background-color: rgba(20, 110, 180, 0.1);
+        }
 
-    .form-control option:checked {
-        background-color: var(--amazon-secondary);
-        color: white;
-    }
+        .form-control option:checked {
+            background-color: var(--amazon-secondary);
+            color: white;
+        }
 
-    .form-control option:first-child {
-        color: #888;
-        font-style: italic;
-    }
+        .form-control option:first-child {
+            color: #888;
+            font-style: italic;
+        }
 
     /* Hover effect for dropdown */
     .form-control:hover {
@@ -501,41 +507,44 @@
 
                 @foreach (ApplicationUser u in Model)
                 {
-                        <tr>
-                            <td>@u.UserName</td>
-                            <td>@u.created_at</td>
-                            <td>
+                    <tr>
+                        <td>@u.UserName</td>
+                        <td>@u.created_at</td>
+                        <td>
                             @if (u.is_active & !u.is_deleted)
                             {
-                                        <span class="status-badge status-approved">Active</span>
+                                <span class="status-badge status-approved">Active</span>
                             }
                             else if (!u.is_active & !u.is_deleted)
                             {
-                                        <span class="status-badge status-inactive">Inactive</span>
+                                <span class="status-badge status-inactive">Inactive</span>
                             }
-                            </td>
-                            <td>
+                        </td>
+                        <td>
                             @if (u.is_active & !u.is_deleted)
                             {
-                                        <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@u.Id">
-                                            <i class="fas fa-ban"></i> Inactivate
-                                        </button>
+                                <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@u.Id">
+                                    <i class="fas fa-ban"></i> Inactivate
+                                </button>
                             }
                             else if (!u.is_active & !u.is_deleted)
                             {
-                                        <button id="approved-btn" class="action-btn btn-approve" data-id="@u.Id">
-                                            <i class="fas fa-check"></i>Activate
-                                        </button>
-                                        <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
-                                            <i class="fas fa-times"></i> Delelete
-                                        </button>
+                                <button id="approved-btn" class="action-btn btn-approve" data-id="@u.Id">
+                                    <i class="fas fa-check"></i>Activate
+                                </button>
+                                @if (role == "superadmin")
+                                {
+                                    <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
+                                        <i class="fas fa-times"></i> Delelete
+                                    </button>
+                                }
 
                             }
-                                <button id="details-btn" class="action-btn btn-details" data-id="@u.Id">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </button>
-                            </td>
-                        </tr>
+                            <button id="details-btn" class="action-btn btn-details" data-id="@u.Id">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </td>
+                    </tr>
                 }
 
             </tbody>

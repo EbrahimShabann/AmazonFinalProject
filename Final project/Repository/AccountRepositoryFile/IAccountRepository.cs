@@ -58,5 +58,7 @@ namespace Final_project.Repository.AccountRepositoryFile
         public Task<int> GetTrustedDeviceCountAsync(string userId);
         public Task<List<UserDevice>> GetRecentLoginAttemptsAsync(string userId, int hours = 24);
         #endregion
+
+        public string GetUserPhoneNumber(string UserId);
     }
 }

@@ -53,6 +53,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\Untitled (1).png",
+      "PackagePath": "staticwebassets\\images\\categories\\Untitled (1).png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\da5d629f-818f-4258-85be-409f91558f0a.png",
+      "PackagePath": "staticwebassets\\images\\categories\\da5d629f-818f-4258-85be-409f91558f0a.png"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\categories\\download.jpg",
       "PackagePath": "staticwebassets\\images\\categories\\download.jpg"
     },
@@ -65,8 +73,28 @@
       "PackagePath": "staticwebassets\\images\\categories\\oar2.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\0e7ed9c7-e18e-41d7-91cd-56c986a8fe72.png",
+      "PackagePath": "staticwebassets\\images\\products\\0e7ed9c7-e18e-41d7-91cd-56c986a8fe72.png"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg",
       "PackagePath": "staticwebassets\\images\\products\\132007fe-3ab1-4170-bc34-71fbd844b0f0.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\1474e362-a043-46b0-815e-fb3b570ca251.png",
+      "PackagePath": "staticwebassets\\images\\products\\1474e362-a043-46b0-815e-fb3b570ca251.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\1d777156-6dc2-49c5-864f-516e2fd43744.png",
+      "PackagePath": "staticwebassets\\images\\products\\1d777156-6dc2-49c5-864f-516e2fd43744.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\3aced4bb-3621-4d70-b678-663ddf49b20a.png",
+      "PackagePath": "staticwebassets\\images\\products\\3aced4bb-3621-4d70-b678-663ddf49b20a.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\41763072-c13a-4760-8f34-7a0f6830fd36.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\41763072-c13a-4760-8f34-7a0f6830fd36.jpg"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\4c2d0de4-4102-4185-ae11-b2a072728e09.ico",
@@ -81,12 +109,40 @@
       "PackagePath": "staticwebassets\\images\\products\\55be5e0b-4625-4dfc-b439-eb57196fe4f3.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\59fb4644-ba87-4bd4-be56-fac0b01ac7a7.png",
+      "PackagePath": "staticwebassets\\images\\products\\59fb4644-ba87-4bd4-be56-fac0b01ac7a7.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\5aecbd08-abe9-46fe-89e1-b55fcd4e1ef3.png",
+      "PackagePath": "staticwebassets\\images\\products\\5aecbd08-abe9-46fe-89e1-b55fcd4e1ef3.png"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\6d700f6f-b13d-4374-b526-cc5b80fc8f80.jpg",
       "PackagePath": "staticwebassets\\images\\products\\6d700f6f-b13d-4374-b526-cc5b80fc8f80.jpg"
     },
     {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\72cf537f-0f27-4793-8569-bb6cbc61e496.png",
+      "PackagePath": "staticwebassets\\images\\products\\72cf537f-0f27-4793-8569-bb6cbc61e496.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\78f5ed47-278b-455d-b6c5-196080c6ef2a.png",
+      "PackagePath": "staticwebassets\\images\\products\\78f5ed47-278b-455d-b6c5-196080c6ef2a.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\87de1df6-2db3-4694-b461-09a77fc22634.png",
+      "PackagePath": "staticwebassets\\images\\products\\87de1df6-2db3-4694-b461-09a77fc22634.png"
+    },
+    {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg",
       "PackagePath": "staticwebassets\\images\\products\\8b5dc12d-5641-47f0-9791-7bba5d94a49d.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\91a560de-6250-48a2-b58b-c260e65e0f5c.png",
+      "PackagePath": "staticwebassets\\images\\products\\91a560de-6250-48a2-b58b-c260e65e0f5c.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\94117638-286c-46e1-939c-1586945f0926.png",
+      "PackagePath": "staticwebassets\\images\\products\\94117638-286c-46e1-939c-1586945f0926.png"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\9b5a324b-3b1b-4b45-b846-719665e81aec.png",
@@ -103,6 +159,14 @@
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg",
       "PackagePath": "staticwebassets\\images\\products\\cfa87041-6313-493f-97ea-b3964dd26aa4.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\dc17c157-1515-42ef-bdee-08682e981a31.png",
+      "PackagePath": "staticwebassets\\images\\products\\dc17c157-1515-42ef-bdee-08682e981a31.png"
+    },
+    {
+      "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\e0837f2f-7eb4-4ad4-86d2-1bf1c5d827d4.jpg",
+      "PackagePath": "staticwebassets\\images\\products\\e0837f2f-7eb4-4ad4-86d2-1bf1c5d827d4.jpg"
     },
     {
       "Id": "C:\\Users\\Zeyad\\OneDrive\\Desktop\\Final project\\Final project\\wwwroot\\images\\products\\e52b4c9a-5d45-4d18-b841-07cc77a504a7.jpg",

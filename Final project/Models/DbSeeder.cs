@@ -12,7 +12,7 @@ namespace Final_project.Models
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 // Define the roles to be created
-                string[] roleNames = { "admin", "seller", "customer", "customerService" };
+                string[] roleNames = { "admin", "seller", "customer", "customerService", "superAdmin" };
 
                 // Create roles if they don't exist
                 foreach (var roleName in roleNames)
@@ -40,7 +40,22 @@ namespace Final_project.Models
                     {
                         await userManager.AddToRoleAsync(adminUser, "admin");
                     }
+
+                    var superadminUser = new ApplicationUser
+                    {
+                        UserName = "superAdmin@amazon.com",
+                        Email = "superAdmin@amazon.com",
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed="true",
+                    };
+
+                    var superresult = await userManager.CreateAsync(superadminUser, "superAdmin1234");
+                    if (superresult.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(superadminUser, "superAdmin");
+                    }
                 }
+
             }
         }
     }

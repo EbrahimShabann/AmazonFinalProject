@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superadmin")]
 
     public class AdminProductsController : Controller
     {
@@ -28,7 +28,6 @@ namespace Final_project.Controllers
             var CountAcceptedProducts = unitOfWork.ProductRepository.GetAll(p => (bool)p.is_approved && (bool)p.is_active).Count();
             var CountRegectedProducts = unitOfWork.ProductRepository.GetAll(p => (bool)!p.is_approved && (bool)!p.is_active && !p.is_deleted).Count();
             var PendingProducts = unitOfWork.ProductRepository.GetAll(p => (bool)!p.is_approved && (bool)p.is_active).OrderByDescending(t => t.created_at).ToList();
-            List<product_image> ProductImages = unitOfWork.ProductImageRepository.GetAll().ToList();
             List<category> category = unitOfWork.CategoryRepository.GetAll().ToList();
             foreach (product p in PendingProducts)
             {
@@ -223,4 +222,3 @@ namespace Final_project.Controllers
 
     }
 }
-

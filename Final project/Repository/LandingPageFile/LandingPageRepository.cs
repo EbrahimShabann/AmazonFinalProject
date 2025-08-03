@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository.LandingPageFile
 {
-    public class LandingPageRepository:ILandingPageRepository
+    public class LandingPageRepository : ILandingPageRepository
     {
         private readonly AmazonDBContext db;
 
@@ -102,29 +102,29 @@ namespace Final_project.Repository.LandingPageFile
 
             // Get newest discounted products with their discount information with pagination
             var discountedProducts = db.product_discounts
-                .Include(pd => pd.product)
-                .Include(pd => pd.Discount)
-                .Where(pd => pd.product.is_active == true &&
-                            pd.product.is_approved == true &&
-                            pd.product.is_deleted == false &&
-                            pd.Discount.is_active == true &&
-                            pd.Discount.start_date <= currentDate &&
-                            (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
-                .OrderByDescending(pd => pd.Discount.created_at) // Newest discounts first
-                .Skip(skip)
-                .Take(take)
-                .Select(pd => new
-                {
-                    Product = pd.product,
-                    Discount = pd.Discount,
-                    TotalSold = db.order_items
-                                 .Where(oi => oi.product_id == pd.product_id)
-                                 .Sum(oi => oi.quantity) ?? 0,
-                    TotalRevenue = db.order_items
-                                   .Where(oi => oi.product_id == pd.product_id)
-                                   .Sum(oi => oi.quantity * oi.unit_price) ?? 0
-                })
-                .ToList();
+     .Include(pd => pd.product)
+     .Include(pd => pd.Discount)
+     .Where(pd => pd.product.is_active == true &&
+                 pd.product.is_approved == true &&
+                 pd.product.is_deleted == false &&
+                 pd.Discount.is_active == true &&
+                 pd.Discount.start_date <= currentDate &&
+                 (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+     .OrderByDescending(pd => pd.Discount.created_at)
+     .Skip(skip)
+     .Take(take)
+     .GroupJoin(
+         db.order_items,
+         pd => pd.product_id,
+         oi => oi.product_id,
+         (pd, orderItems) => new
+         {
+             Product = pd.product,
+             Discount = pd.Discount,
+             TotalSold = orderItems.Sum(oi => oi.quantity ?? 0),
+             TotalRevenue = orderItems.Sum(oi => (oi.quantity ?? 0) * (oi.unit_price ?? 0))
+         })
+     .ToList();
 
             var result = new List<LandingPageProductDiscount>();
 
@@ -132,11 +132,11 @@ namespace Final_project.Repository.LandingPageFile
             {
                 // Calculate the discounted price based on discount type
                 decimal? discountedPrice = item.Product.price;
-                if (item.Discount.discount_type == "Percentage" && item.Discount.value.HasValue)
+                if (item.Discount.discount_type == "percentage" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
                 }
-                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
+                else if (item.Discount.discount_type == "fixed" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price - item.Discount.value.Value;
                 }
@@ -147,7 +147,7 @@ namespace Final_project.Repository.LandingPageFile
                     ProductName = item.Product.name,
                     ImageUrl = GetProductImageUrl(item.Product.id),
                     Price = Math.Round((decimal)item.Product.price, 2),
-                    DiscountPrice = Math.Round((decimal)discountedPrice,2),
+                    DiscountPrice = Math.Round((decimal)discountedPrice, 2),
                     TotalSold = (int)item.TotalSold,
                     ratting = GetProductRating(item.Product.id),
                     ratingCount = GetProductRatingCount(item.Product.id),
@@ -300,11 +300,11 @@ namespace Final_project.Repository.LandingPageFile
 
                         if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
                         {
-                            if (activeDiscount.Discount.discount_type == "Percentage")
+                            if (activeDiscount.Discount.discount_type == "percentage")
                             {
                                 discountedPrice = product.price.Value * (1 - activeDiscount.Discount.value.Value / 100);
                             }
-                            else if (activeDiscount.Discount.discount_type == "Fixed")
+                            else if (activeDiscount.Discount.discount_type == "fixed")
                             {
                                 discountedPrice = product.price.Value - activeDiscount.Discount.value.Value;
                             }
@@ -439,18 +439,18 @@ namespace Final_project.Repository.LandingPageFile
                                     (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
                         .FirstOrDefault();
 
-                    // Calculate discounted price if discount exists
+                    //// Calculate discounted price if discount exists
                     decimal? discountedPrice = null;
                     decimal? discountPercentage = null;
 
                     if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
                     {
-                        if (activeDiscount.Discount.discount_type == "Percentage")
+                        if (activeDiscount.Discount.discount_type == "percentage")
                         {
                             discountPercentage = activeDiscount.Discount.value.Value;
                             discountedPrice = product.price * (1 - activeDiscount.Discount.value.Value / 100);
                         }
-                        else if (activeDiscount.Discount.discount_type == "Fixed")
+                        else if (activeDiscount.Discount.discount_type == "fixed")
                         {
                             discountedPrice = product.price - activeDiscount.Discount.value.Value;
                             discountPercentage = (decimal?)((activeDiscount.Discount.value.Value / product.price) * 100);
@@ -465,8 +465,10 @@ namespace Final_project.Repository.LandingPageFile
                     {
                         ProductId = product.id,
                         ProductName = product.name,
-                        Price = Math.Round((decimal)product.price,2),
-                        DiscountPrice = Math.Round((decimal)discountedPrice,2),
+                        // Fix the Price - handle null values
+                        Price = product.price.HasValue ? Math.Round(product.price.Value, 2) : 0,
+                        // Fix the DiscountPrice - handle null values properly
+                        DiscountPrice = discountedPrice.HasValue ? Math.Round(discountedPrice.Value, 2) : (decimal?)null,
                         ImageUrl = GetProductImageUrl(product.id),
                         ratting = GetProductRating(product.id),
                         ratingCount = GetProductRatingCount(product.id),
@@ -478,8 +480,7 @@ namespace Final_project.Repository.LandingPageFile
                     data.rattingStarMinuse = 5 - data.ratting;
                     landingPageProducts.Add(data);
                 }
-
-                return landingPageProducts;
+                    return landingPageProducts;
             }
             catch (Exception ex)
             {
@@ -649,7 +650,7 @@ namespace Final_project.Repository.LandingPageFile
                             pd.Discount.start_date <= currentDate &&
                             (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate) &&
                             // Today's deals can be either created today or have high discount percentage
-                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 20)) // 20% or more discount
+                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 2)) // 20% or more discount
                 .OrderByDescending(pd => pd.Discount.value) // Order by highest discount first
                 .ThenByDescending(pd => pd.Discount.created_at) // Then by newest
                 .Skip(skip)
@@ -675,12 +676,12 @@ namespace Final_project.Repository.LandingPageFile
                 decimal? discountedPrice = item.Product.price;
                 decimal? discountPercentage = null;
 
-                if (item.Discount.discount_type == "Percentage" && item.Discount.value.HasValue)
+                if (item.Discount.discount_type == "percentage" && item.Discount.value.HasValue)
                 {
                     discountPercentage = item.Discount.value.Value;
                     discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
                 }
-                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
+                else if (item.Discount.discount_type == "fixed" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price - item.Discount.value.Value;
                     // Calculate percentage for fixed discount - FIXED: Cast to decimal? instead of using Math.Round
@@ -805,7 +806,7 @@ namespace Final_project.Repository.LandingPageFile
                             {
                                 finalDiscountPrice = product.price.Value * (1 - activeDiscount.Discount.value.Value / 100);
                             }
-                            else if (activeDiscount.Discount.discount_type == "Fixed")
+                            else if (activeDiscount.Discount.discount_type == "fixed")
                             {
                                 finalDiscountPrice = product.price.Value - activeDiscount.Discount.value.Value;
                             }

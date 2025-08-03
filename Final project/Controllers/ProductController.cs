@@ -4,6 +4,7 @@ using Final_project.Repository;
 using Final_project.Services.Customer;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -16,6 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Twilio;
+
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace Final_project.Controllers
 {
@@ -25,11 +30,13 @@ namespace Final_project.Controllers
     {
         private readonly UnitOfWork uof;
         private readonly IHubContext<SellerOrdersHub> hub;
+        private readonly IConfiguration _configuration;
 
-        public ProductController(UnitOfWork uof, IHubContext<SellerOrdersHub> hub)
+        public ProductController(UnitOfWork uof, IHubContext<SellerOrdersHub> hub,IConfiguration configuration)
         {
             this.uof = uof;
             this.hub = hub;
+            this._configuration = configuration;
         }
 
 
@@ -94,7 +101,6 @@ namespace Final_project.Controllers
 
 
         [HttpGet]
-        [Authorize]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
@@ -316,6 +322,16 @@ namespace Final_project.Controllers
 
 
             uof.save();
+            
+            try
+            {
+                SendOrderConfirmation(order.id);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "SMS sending failed: " + ex.Message;
+
+            }
             //handle stripe payment
             if (model.payment_method == "card")
             {
@@ -351,7 +367,7 @@ namespace Final_project.Controllers
             }
 
             TempData["success"] = $"Order placed successfully with ID: {order.id}!";
-            return RedirectToAction("Index", "Landing");
+            return RedirectToAction("orderConfirmation", "Product", new { orderId=order.id });
         }
 
         public IActionResult orderConfirmation(string orderId)
@@ -364,5 +380,119 @@ namespace Final_project.Controllers
             var order = uof.OrderRepo.getById(orderId);
             return View(order);
         }
+
+
+        #region sendingSms
+        [HttpGet]
+        [Authorize]
+
+        public async Task<IActionResult> TestSMSToEgyptianNumber(string Userid,string customMessage = null, bool developmentMode = false)
+        {
+            try
+            {
+                // Your specific Egyptian number
+
+                var targetNumber = uof.AccountRepository.GetUserPhoneNumber(Userid);
+                //targetNumber = "+2" + targetNumber;
+                // Get Twilio configuration
+                var accountSid = _configuration["TwilioSettings:AccountSid"];
+                var authToken = _configuration["TwilioSettings:AuthToken"];
+                var fromPhone = _configuration["TwilioSettings:PhoneNumber"];
+
+                // Validate configuration
+                if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) || string.IsNullOrEmpty(fromPhone))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Twilio configuration missing",
+                        message = "Check your appsettings.json for Twilio settings"
+                    });
+                }
+
+                // Use custom message or default test message
+                var messageBody = customMessage ?? "🔐 Hello from your Amazon Clone app! This is a test SMS. Time: " + DateTime.Now.ToString("HH:mm:ss");
+
+
+                // Initialize Twilio and send real SMS
+                TwilioClient.Init(accountSid, authToken);
+
+                var message = await MessageResource.CreateAsync(
+                    body: messageBody,
+                    from: new Twilio.Types.PhoneNumber(fromPhone),
+                    to: new Twilio.Types.PhoneNumber(targetNumber)
+                );
+
+                return Json(new
+                {
+                    success = true,
+                    messageSid = message.Sid,
+                    status = message.Status?.ToString(),
+                    message = "SMS sent successfully!",
+                    sentTo = targetNumber,
+                    messageBody = messageBody,
+                    timestamp = DateTime.Now,
+                    note = $"Message sent from {fromPhone} to {targetNumber}"
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex) when (ex.Message.Contains("unverified"))
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Number not verified",
+                    message = "You need to verify +201027028411 in Twilio Console first",
+                    instructions = new
+                    {
+                        step1 = "Go to https://console.twilio.com",
+                        step2 = "Navigate to Phone Numbers → Manage → Verified Caller IDs",
+                        step3 = "Click 'Add a new number'",
+                        step4 = "Enter: +201027028411",
+                        step5 = "Complete verification by entering the code sent to your phone"
+                    },
+                    twilioError = ex.Message
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Twilio API Error",
+                    message = ex.Message,
+                    code = ex.Code,
+                    moreInfo = ex.MoreInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = ex.Message,
+                    type = ex.GetType().Name,
+                    message = "Unexpected error occurred"
+                });
+            }
+        }
+
+
+
+
+
+        public async Task<IActionResult> SendOrderConfirmation(string orderId)
+        {
+           
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return await TestSMSToEgyptianNumber(userId,$"✅ Order confirmed!Hi ${User.Identity.Name},Your order #{orderId} is Confirmed. Thank you for shopping with us!");
+        }
+
+    
+ 
+
+        #endregion
+
+
     }
 }

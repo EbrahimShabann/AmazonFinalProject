@@ -32,7 +32,7 @@ public partial class product
     public string Sizes { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
-    public decimal? discount_price { get; set; }
+    public decimal? discount_price { get; set; } = 0;
 
     public int? stock_quantity { get; set; }
 

@@ -15,7 +15,7 @@
 
 </head>
 <body>
-    @if (User.IsInRole("customer"))
+    @if (!User.IsInRole("customerService"))
     {
         <partial name="_ChatBotButton" />
 

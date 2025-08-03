@@ -1,8 +1,13 @@
-﻿@model List<product>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@model List<product>
 @{
     ViewData["Title"] = "AllProducts";
     Layout = "AdminLayout";
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 
 <style>
@@ -654,18 +659,24 @@
                                     <button id="active-btn" class="action-btn btn-approve" data-id="@p.id">
                                         <i class="fas fa-check"></i> Activate
                                     </button>
-                                    <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                                    @if (role == "superadmin")
+                                    {
+                                        <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    }
                                 }
                                 else if ((bool)!p.is_active & (bool)!p.is_approved & !p.is_deleted)
                                 {
                                     <button id="approved-btn" class="action-btn btn-approve" data-id="@p.id">
                                         <i class="fas fa-check"></i> Approved
                                     </button>
-                                    <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                                    @if (role == "superadmin")
+                                    {
+                                        <button id="delete-btn" class="action-btn btn-delete" data-id="@p.id">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    }
                                 }
                                 <a id="details-btn" class="action-btn btn-details" href="Seller" data-id="@p.id">
                                     <i class="fas fa-info-circle"></i> Details
@@ -743,15 +754,23 @@
                             ?`      <button id="active-btn" class="action-btn btn-approve" data-id="${p.id}">
                                         <i class="fas fa-check"></i> Activate
                                     </button>
-                                    <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>`
+    @if (role == "superadmin")
+    {
+                                            <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+    }`
                         :(p.rejected)?`<button id="approved-btn" class="action-btn btn-approve" data-id="${p.id}">
                                     <i class="fas fa-check"></i> Approved
                                 </button>
-                                <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>`: '';
+    @if (role == "superadmin")
+    {
+
+                                        <button id="delete-btn" class="action-btn btn-delete" data-id="${p.id}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+    }
+                                `: '';
                         rows += `
 
                         <tr>

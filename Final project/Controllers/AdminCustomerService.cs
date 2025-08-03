@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superadmin")]
     public class AdminCustomerServiceController : Controller
     {
         private readonly UnitOfWork unitOfWork;
