@@ -143,7 +143,7 @@ namespace Final_project.Services.SmsService
             if (digitsOnly.Length == 11 && digitsOnly.StartsWith("01"))
             {
                 // Format: 01XXXXXXXXX -> +201XXXXXXXXX
-                return "+20" + digitsOnly;
+                return "+2" + digitsOnly;
             }
             else if (digitsOnly.Length == 10 && digitsOnly.StartsWith("1"))
             {
