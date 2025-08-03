@@ -1,78 +1,82 @@
 ﻿using Final_project.Models;
 using Final_project.ViewModel.CreateUserViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
-
-public class AdminUsersController : Controller
+namespace Final_project.Controllers
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    [Authorize(Roles = "superadmin")]
 
-    public AdminUsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public class AdminUsersController : Controller
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
-    }
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-    // GET: AdminUsers/AddUser
-    [HttpGet]
-    public IActionResult AddUser()
-    {
-        var model = new CreateUserViewModel();
-        return View(model);
-    }
-
-    // POST: AdminUsers/AddUser
-    [HttpPost]
-    public async Task<IActionResult> AddUser(CreateUserViewModel model)
-    {
-
-        if (!ModelState.IsValid)
-            return View(model);
-
-
-        if (model.imgFile != null && model.imgFile.Length > 0)
+        public AdminUsersController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
-            Directory.CreateDirectory(uploads);
-
-            var fileName = Path.GetFileName(model.imgFile.FileName);
-            var filePath = Path.Combine(uploads, fileName);
-
-            await using var stream = new FileStream(filePath, FileMode.Create);
-            await model.imgFile.CopyToAsync(stream);
-
-            // Point your model at the saved path
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
-        var user = new ApplicationUser
-        {
-            UserName = model.UserName,
-            Email = model.Email,
-            date_of_birth = model.birthdate,
-            profile_picture_url = model.imgFile != null ? Path.GetFileName(model.imgFile.FileName) : null
 
-        };
-
-        var result = await _userManager.CreateAsync(user, model.Password);
-        if (result.Succeeded)
+        // GET: AdminUsers/AddUser
+        [HttpGet]
+        public IActionResult AddUser()
         {
-            if (!await _roleManager.RoleExistsAsync(model.SelectedRole))
-            {
-                ModelState.AddModelError("", "Selected role does not exist.");
+            var model = new CreateUserViewModel();
+            return View(model);
+        }
+
+        // POST: AdminUsers/AddUser
+        [HttpPost]
+        public async Task<IActionResult> AddUser(CreateUserViewModel model)
+        {
+
+            if (!ModelState.IsValid)
                 return View(model);
+
+
+            if (model.imgFile != null && model.imgFile.Length > 0)
+            {
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "users");
+                Directory.CreateDirectory(uploads);
+
+                var fileName = Path.GetFileName(model.imgFile.FileName);
+                var filePath = Path.Combine(uploads, fileName);
+
+                await using var stream = new FileStream(filePath, FileMode.Create);
+                await model.imgFile.CopyToAsync(stream);
+
+                // Point your model at the saved path
+            }
+            var user = new ApplicationUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                date_of_birth = model.birthdate,
+                profile_picture_url = model.imgFile != null ? Path.GetFileName(model.imgFile.FileName) : null
+
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                if (!await _roleManager.RoleExistsAsync(model.SelectedRole))
+                {
+                    ModelState.AddModelError("", "Selected role does not exist.");
+                    return View(model);
+                }
+
+                await _userManager.AddToRoleAsync(user, model.SelectedRole);
+                TempData["Success"] = "User added successfully!";
+                return RedirectToAction("Index", "AdminDashboard");
             }
 
-            await _userManager.AddToRoleAsync(user, model.SelectedRole);
-            TempData["Success"] = "User added successfully!";
-            return RedirectToAction("Index", "AdminDashboard");
-        }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
 
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError("", error.Description);
+            return View(model);
         }
-
-        return View(model);
     }
 }

@@ -17,5 +17,6 @@ namespace Final_project.Models
         public string Status { get; set; } = "pending";
         public string? AdminComment  { get; set; }
         public bool isDeleted { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

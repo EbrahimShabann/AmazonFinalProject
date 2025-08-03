@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
 using System.Threading.Tasks;
+using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "superadmin")]
 
     [Produces("application/json")]
 
@@ -328,12 +329,12 @@ namespace Final_project.Controllers
             {
                 unitOfWork.OrderItemRepository.Delete(item);
             }
-            var productImgs = unitOfWork.ProductImageRepository.GetAll(img => img.product_id == productId);
+            var productImgs = unitOfWork.ProductImageRepository.GetAll(img => img.product_id == productId).ToList();
             foreach (var productImg in productImgs)
             {
                 unitOfWork.ProductImageRepository.Delete(productImg);
             }
-            var reviews = unitOfWork.ProductRepository.getProductReviews(productId);
+            var reviews = unitOfWork.ProductRepository.getProductReviews(productId).ToList();
             foreach (var review in reviews)
             {
                 foreach (var reply in review.replies)
@@ -341,6 +342,17 @@ namespace Final_project.Controllers
                     unitOfWork.ProductRepository.DeleteReviewReply(reply);
                 }
                 unitOfWork.ProductRepository.DeleteReview(review);
+            }
+            var productDiscount = unitOfWork.ProductDiscountRepository
+                .GetAll(d => d.product_id == productId)
+                .ToList();
+            foreach(var discount in productDiscount)
+                unitOfWork.ProductDiscountRepository.Delete(discount);
+
+            var wishlistItems = unitOfWork.WishlistItemRepository.getAll().Where(w => w.product_id == productId).ToList();
+            foreach (var item in wishlistItems)
+            {
+                unitOfWork.WishlistItemRepository.Remove(item);
             }
             // Add more dependencies as needed
             await Task.CompletedTask;

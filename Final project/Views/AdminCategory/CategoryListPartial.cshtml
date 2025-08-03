@@ -1,10 +1,15 @@
-﻿@model List<category>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@model List<category>
 @{
     int page = ViewBag.Page ?? 1;
     int pageSize = ViewBag.PageSize ?? 10;
     int totalCount = ViewBag.TotalCount ?? Model.Count;
     int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 @if (Model == null || !Model.Any())
 {
@@ -45,9 +50,12 @@ else
                         <button class="btn btn-success activate-btn" data-id="@c.id">
                             <i class="fas fa-check-circle"></i> Activate
                         </button>
+                        @if(role == "superadmin")
+                        {
                         <button class="btn btn-danger delete-btn" data-id="@c.id">
                             <i class="fas fa-trash"></i> Delete
                         </button>
+                        }
                     </div>
                 </td>
             }

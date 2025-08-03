@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static NuGet.Packaging.PackagingConstants;
 
@@ -140,26 +141,25 @@ namespace Final_project.Controllers
             if (ModelState.IsValid)
             {
                 product.id = Guid.NewGuid().ToString();
+                //var testUser = await _unitOfWork.UserRepository.GetAsync(u => u.Id == "test-seller-id");
+                //if (testUser == null)
+                //{
+                //    testUser = new Final_project.Models.ApplicationUser
+                //    {
+                //        Id = "test-seller-id",
+                //        UserName = "test-seller",
+                //        Email = "test-seller@test.com",
+                //        EmailConfirmed = true,
+                //        PhoneNumberConfirmed = true,
+                //        TwoFactorEnabled = false,
+                //        LockoutEnabled = false,
+                //        AccessFailedCount = 0
+                //    };
+                //    _unitOfWork.UserRepository.add(testUser);
+                //    await _unitOfWork.SaveAsync();
+                //}
 
-                var testUser = await _unitOfWork.UserRepository.GetAsync(u => u.Id == "test-seller-id");
-                if (testUser == null)
-                {
-                    testUser = new Final_project.Models.ApplicationUser
-                    {
-                        Id = "test-seller-id",
-                        UserName = "test-seller",
-                        Email = "test-seller@test.com",
-                        EmailConfirmed = true,
-                        PhoneNumberConfirmed = true,
-                        TwoFactorEnabled = false,
-                        LockoutEnabled = false,
-                        AccessFailedCount = 0
-                    };
-                    _unitOfWork.UserRepository.add(testUser);
-                    await _unitOfWork.SaveAsync();
-                }
-
-                product.seller_id = "test-seller-id";
+                product.seller_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 product.created_at = DateTime.UtcNow;
                 product.is_active = Request.Form["is_active"].Contains("true");
                 product.is_deleted = false;

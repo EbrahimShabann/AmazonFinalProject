@@ -72,6 +72,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxXYXRpbmdmb3JBZG1pbkFwcHJvdmFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ITI/FinalProject/FinalProject1.3/AmazonFinalProject/Final project/Views/AdminCategoryRequest/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVJlcXVlc3RcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ITI/FinalProject/FinalProject1.3/AmazonFinalProject/Final project/Views/AdminCategory/AddCategory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DYXRlZ29yeVxBZGRDYXRlZ29yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -118,10 +122,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/ITI/FinalProject/FinalProject1.3/AmazonFinalProject/Final project/Views/AdminSellers/pendingSeller.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ITI/FinalProject/FinalProject1.3/AmazonFinalProject/Final project/Views/AdminSellers/pendingSellers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TZWxsZXJzXHBlbmRpbmdTZWxsZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ITI/FinalProject/FinalProject1.3/AmazonFinalProject/Final project/Views/AdminUsers/AddUser.cshtml]

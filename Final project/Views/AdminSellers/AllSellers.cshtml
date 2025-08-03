@@ -1,8 +1,13 @@
 ﻿@model List<ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "AllSellers";
     Layout = "AdminLayout";
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 
 
@@ -501,41 +506,44 @@
 
                 @foreach (ApplicationUser u in Model)
                 {
-                        <tr>
-                            <td>@u.UserName</td>
-                            <td>@u.created_at</td>
-                            <td>
-                            @if (u.is_active & !u.is_deleted)
-                            {
-                                        <span class="status-badge status-approved">Active</span>
-                            }
-                            else if (!u.is_active & !u.is_deleted)
-                            {
-                                        <span class="status-badge status-inactive">Inactive</span>
-                            }
-                            </td>
-                            <td>
-                            @if (u.is_active & !u.is_deleted)
-                            {
-                                        <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@u.Id">
-                                            <i class="fas fa-ban"></i> Inactivate
-                                        </button>
-                            }
-                            else if (!u.is_active & !u.is_deleted)
-                            {
-                                        <button id="approved-btn" class="action-btn btn-approve" data-id="@u.Id">
-                                            <i class="fas fa-check"></i>Activate
-                                        </button>
-                                        <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
-                                            <i class="fas fa-times"></i> Delelete
-                                        </button>
+                <tr>
+                    <td>@u.UserName</td>
+                    <td>@u.created_at</td>
+                    <td>
+                    @if (u.is_active & !u.is_deleted)
+                    {
+                        <span class="status-badge status-approved">Active</span>
+                    }
+                    else if (!u.is_active & !u.is_deleted)
+                    {
+                        <span class="status-badge status-inactive">Inactive</span>
+                    }
+                    </td>
+                    <td>
+                    @if (u.is_active & !u.is_deleted)
+                    {
+                        <button id="inactive-btn" class="action-btn deactivate-btn" data-id="@u.Id">
+                            <i class="fas fa-ban"></i> Inactivate
+                        </button>
+                    }
+                    else if (!u.is_active & !u.is_deleted)
+                    {
+                        <button id="approved-btn" class="action-btn btn-approve" data-id="@u.Id">
+                            <i class="fas fa-check"></i>Activate
+                        </button>
+                        @if (role == "superadmin")
+                        {
+                            <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
+                                <i class="fas fa-times"></i> Delelete
+                            </button>
+                        }
 
-                            }
-                                <button id="details-btn" class="action-btn btn-details" data-id="@u.Id">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </button>
-                            </td>
-                        </tr>
+                    }
+                        <button id="details-btn" class="action-btn btn-details" data-id="@u.Id">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </td>
+                </tr>
                 }
 
             </tbody>
