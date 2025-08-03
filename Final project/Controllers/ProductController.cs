@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
-    //[Authorize(Roles = "Customer")]
+
 
     public class ProductController : Controller
     {
@@ -36,6 +36,7 @@ namespace Final_project.Controllers
         public IActionResult Details(string id)
         {
             ProductsVM product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (product == null)
             {
                 return NotFound();
@@ -43,6 +44,8 @@ namespace Final_project.Controllers
             product.ExistingImages = uof.ProductRepository.GetProduct_Images(id);
             product.reviews = uof.ProductRepository.getProductReviews(id);
             product.RecommendedProducts = uof.ProductRepository.getProductsWithImagesAndRating().Where(p => p.category_id == product.category_id).ToList();
+            product.UserOrderItem = uof.OrderItemRepository.GetAll()
+                    .FirstOrDefault(oi => oi.product_id == id && oi.order.buyer_id == userId);
             return View(product);
         }
 
@@ -52,22 +55,7 @@ namespace Final_project.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (ModelState.IsValid)
             {
-                //check if the user has purchased the product if true then he can review it
-                var userOrderItem = uof.OrderItemRepository.GetAll()
-                    .FirstOrDefault(oi => oi.product_id == reviewVM.product_id && oi.order.buyer_id == userId);
-                if (userOrderItem == null)
-                {
-                    TempData["error"] = "You have to try this product first!";
-                    return RedirectToAction("Details", new { id = reviewVM.product_id });
-                }
-                //check if the user has already reviewed the product
-                var existingReview = uof.ProductRepository.getProductReviews(reviewVM.product_id)
-                    .FirstOrDefault(r => r.user_id == userId);
-                if (existingReview != null)
-                {
-                    TempData["error"] = "You can't review twice!";
-                    return RedirectToAction("Details", new { id = reviewVM.product_id });
-                }
+
                 if (reviewVM.rating < 1 || reviewVM.rating > 5)
                 {
                     TempData["error"] = "Rating must be between 1 and 5.";

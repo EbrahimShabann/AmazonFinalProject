@@ -15,7 +15,11 @@
 
 </head>
 <body>
-    <partial name="_ChatBotButton" />
+    @if (User.IsInRole("customer"))
+    {
+        <partial name="_ChatBotButton" />
+
+    }
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" asp-action="Index" asp-controller="Landing"><i class="fab fa-amazon"></i> Amazon</a>
@@ -71,7 +75,7 @@
 
 
                         }
-                        else if (User.IsInRole("seller") || User.IsInRole("customer service") || User.IsInRole("admin"))
+                        else if (User.IsInRole("seller") || User.IsInRole("customerService") || User.IsInRole("admin"))
                         {
                             <li>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Switch"><i class="fas fa-user me-2"></i>Dashboard</a>
@@ -346,6 +350,47 @@
             // Add your product selection logic here
             console.log('Selected product:', productName);
         }
+    </script>
+
+    <script>
+        // Enhanced device fingerprinting
+        function getDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Device fingerprint', 2, 2);
+
+            const fingerprint = {
+                screen: screen.width + 'x' + screen.height,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform,
+                canvas: canvas.toDataURL(),
+                userAgent: navigator.userAgent
+            };
+
+            return fingerprint;
+        }
+
+        // Send fingerprint data with login requests
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form[action*="Login"]');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function() {
+                    const fingerprint = getDeviceFingerprint();
+
+                    // Add hidden fields for enhanced fingerprinting
+                    Object.keys(fingerprint).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'deviceInfo.' + key;
+                        input.value = fingerprint[key];
+                        loginForm.appendChild(input);
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

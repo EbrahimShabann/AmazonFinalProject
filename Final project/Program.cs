@@ -3,8 +3,12 @@ using Final_project.Hubs;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
+using Final_project.Services.Background;
 using Final_project.Services.CustomerService;
+using Final_project.Services.DeviceService;
 using Final_project.Services.EmailService;
+using Final_project.Services.SmsService;
+using Final_project.Services.TwoFactorService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -109,7 +113,17 @@ namespace Final_project
                 options.TokenLifespan = TimeSpan.FromHours(24); // Email confirmation tokens expire in 24 hours
             });
 
-            // Remove duplicate IdentityOptions configuration since it's now in AddIdentity above
+            //=================End Email Virification=================
+
+            //================= 2fv Two Factor Verification () ======================
+
+            builder.Services.AddScoped<ISmsService, EgyptSmsService>();
+            builder.Services.AddScoped<IDeviceService,EnhancedDeviceService>();
+            builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
+
+            // Add background service for cleaning expired codes
+            builder.Services.AddHostedService <ExpiredCodesCleanupService>();
+            //ExpiredCodesCleanupService
             //=================End Email Virification=================
 
             var app = builder.Build();

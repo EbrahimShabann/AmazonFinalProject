@@ -23,7 +23,7 @@ namespace Final_project.Controllers
 
 
             }
-            else if (User.IsInRole("customerService")) return RedirectToAction("Index", "CustomerService");
+            else if (User.IsInRole("customerService")) return RedirectToAction("dashboard", "CustomerService");
 
             else return RedirectToAction("Index", "Profile");
 

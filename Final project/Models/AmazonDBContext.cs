@@ -62,12 +62,27 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<ordersReverted> Orders_Reverted { get; set; }
     public virtual DbSet<review_reply> review_reply { get; set; }
     public virtual DbSet<CategoryRequest> CategoryRequest { get; set; }
+    public DbSet<UserDevice> UserDevices { get; set; }
+    public DbSet<TwoFactorCode> TwoFactorCodes { get; set; }
 
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<UserDevice>()
+          .HasOne(d => d.User)
+          .WithMany(u => u.UserDevices)
+          .HasForeignKey(d => d.UserId);
+
+        modelBuilder.Entity<TwoFactorCode>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.TwoFactorCodes)
+            .HasForeignKey(c => c.UserId);
+
+        modelBuilder.Entity<AccountLog>()
+    .Property(a => a.ActionType)
+    .HasMaxLength(200); // Or more, as needed
 
         modelBuilder.Entity<ApplicationUser>(entity => {
             entity.ToTable("Users");

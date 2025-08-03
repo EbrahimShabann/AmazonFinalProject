@@ -10,8 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text.Encodings.Web;
 using Final_project.Services.EmailService;
+using Final_project.Services.SmsService;
+using Final_project.Services.DeviceService;
+using Final_project.Services.TwoFactorService;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
+
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 namespace Final_project.Controllers
 {
     public class AccountController : Controller
@@ -21,23 +27,34 @@ namespace Final_project.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IEmailService emailService;
+        private readonly ISmsService smsService;
+        private readonly IDeviceService deviceService;
+        private readonly ITwoFactorService twoFactorService;
+        private readonly IConfiguration _configuration;
 
         public AccountController(UnitOfWork unitOfWork, UserManager<ApplicationUser> userManager,
                          SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager,
-                         IEmailService emailService)
+                         IEmailService emailService, ISmsService smsService, IDeviceService deviceService,
+                         ITwoFactorService twoFactorService,IConfiguration configuration)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.emailService = emailService;
+            this.smsService = smsService;
+            this.deviceService = deviceService;
+            this.twoFactorService = twoFactorService;
+            this._configuration = configuration;
         }
+
+        #region Login and Registration
+
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDataVM loginData)
@@ -57,9 +74,48 @@ namespace Final_project.Controllers
                     bool found = await userManager.CheckPasswordAsync(user, loginData.Password);
                     if (found)
                     {
+                        // Check if user has phone number but it's not confirmed
+                        if (!string.IsNullOrEmpty(user.PhoneNumber) && user.PhoneNumberConfirmed != "true")
+                        {
+                            // Redirect to phone verification first
+                            HttpContext.Session.SetString("PendingUserId", user.Id);
+                            HttpContext.Session.SetString("RememberMe", loginData.RememberMe.ToString());
+                            HttpContext.Session.SetString("LoginPurpose", "PhoneVerification");
+
+                            return RedirectToAction("VerifyPhoneNumber", new { purpose = "Login" });
+                        }
+
+                        // Check if user has 2FA enabled and phone is confirmed
+                        if (user.TwoFactorEnabled && !string.IsNullOrEmpty(user.PhoneNumber) && user.PhoneNumberConfirmed == "true")
+                        {
+                            // Check if this is a new/untrusted device
+                            bool isNewDevice = await deviceService.IsNewDeviceAsync(user.Id, HttpContext);
+
+                            if (isNewDevice)
+                            {
+                                // Store login attempt in session
+                                HttpContext.Session.SetString("PendingUserId", user.Id);
+                                HttpContext.Session.SetString("RememberMe", loginData.RememberMe.ToString());
+                                HttpContext.Session.SetString("LoginPurpose", "TwoFactor");
+
+                                // Send SMS verification for new device
+                                await twoFactorService.SendLoginVerificationAsync(user.Id, user.PhoneNumber);
+
+                                // Log the new device attempt
+                                unitOfWork.AccountRepository.UpdateUserLogs(user, "New device login attempt - SMS sent");
+
+                                return RedirectToAction("VerifyTwoFactor", new { purpose = "Login" });
+                            }
+                        }
+
+                        // Proceed with normal login for trusted devices or users without 2FA
                         await signInManager.SignInAsync(user, loginData.RememberMe);
-                        var data = unitOfWork.AccountRepository.UpdateUserLogs(user, "Login");
+                        var data = unitOfWork.AccountRepository.UpdateUserLogs(user, "Login successful");
                         unitOfWork.AccountRepository.UpdateLastLog(user.Id);
+
+                        // Update device information
+                        await deviceService.GetOrCreateDeviceAsync(user.Id, HttpContext);
+
                         return RedirectToAction("Index", "Switch");
                     }
                 }
@@ -67,8 +123,6 @@ namespace Final_project.Controllers
             }
             return View(loginData);
         }
-
-
 
         [HttpGet]
         public IActionResult Register()
@@ -87,12 +141,13 @@ namespace Final_project.Controllers
                     UserName = registerData.UserName,
                     Email = registerData.Email,
                     PasswordHash = registerData.Password,
+                    PhoneNumberConfirmed = "false",
+                    TwoFactorEnabled = false,
                 };
 
                 IdentityResult created = await userManager.CreateAsync(user, registerData.Password);
                 if (created.Succeeded)
                 {
-                    // Use the selected role instead of hardcoded "customer"
                     await userManager.AddToRoleAsync(user, registerData.Role);
                     unitOfWork.AccountRepository.UpdateUserLogs(user, $"Register as {registerData.Role}");
 
@@ -114,11 +169,13 @@ namespace Final_project.Controllers
             }
             return View("Register", registerData);
         }
+
         [HttpGet]
         public IActionResult RegisterConfirmation()
         {
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
@@ -136,8 +193,9 @@ namespace Final_project.Controllers
             var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
-                // Optionally sign in the user after email confirmation
                 await signInManager.SignInAsync(user, false);
+                unitOfWork.AccountRepository.UpdateUserLogs(user, "Email confirmed");
+
                 return RedirectToAction("SetProfilePic", "Account", new { userId = user.Id });
             }
 
@@ -150,7 +208,6 @@ namespace Final_project.Controllers
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
                 return RedirectToAction("RegisterConfirmation");
             }
 
@@ -168,6 +225,400 @@ namespace Final_project.Controllers
             return RedirectToAction("RegisterConfirmation");
         }
 
+        #endregion
+
+        #region Profile Setup
+
+        [HttpGet]
+        public IActionResult SetProfilePic(string userId)
+        {
+            return View(new ProfilePic_DateOfBirth() { UserID = userId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetProfilePic(ProfilePic_DateOfBirth data)
+        {
+            if (ModelState.IsValid)
+            {
+                var condition = await unitOfWork.AccountRepository.SetProfileAndBirthday(data);
+                if (condition)
+                {
+                    // If phone number was provided, redirect to phone verification
+                    if (!string.IsNullOrEmpty(data.PhoneNumber))
+                    {
+                        HttpContext.Session.SetString("PendingUserId", data.UserID);
+                        HttpContext.Session.SetString("LoginPurpose", "PhoneVerification");
+                        return RedirectToAction("VerifyPhoneNumber", new { purpose = "Registration" });
+                    }
+
+                    return RedirectToAction("Index", "Switch");
+                }
+            }
+
+            return View(data);
+        }
+
+        #endregion
+
+        #region Phone Number Verification
+
+        [HttpGet]
+        public async Task<IActionResult> VerifyPhoneNumber(string purpose)
+        {
+            var userId = HttpContext.Session.GetString("PendingUserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null || string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Send SMS verification code
+            var code = await twoFactorService.GenerateCodeAsync(userId, "PhoneVerification");
+            var sent = await smsService.SendVerificationCodeAsync(user.PhoneNumber, code);
+
+            if (!sent)
+            {
+                TempData["ErrorMessage"] = "Failed to send SMS verification code. Please try again.";
+                return RedirectToAction("Login");
+            }
+
+            unitOfWork.AccountRepository.UpdateUserLogs(user, $"Phone verification SMS sent for {purpose}");
+
+            var model = new VerifyPhoneNumberVM
+            {
+                UserId = userId,
+                PhoneNumber = user.PhoneNumber,
+                Purpose = purpose,
+                MaskedPhoneNumber = GetMaskedPhoneNumber(user.PhoneNumber)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberVM model)
+            {
+            if (ModelState.IsValid)
+            {
+                var isValid = await twoFactorService.ValidateCodeAsync(model.UserId, model.Code, "PhoneVerification");
+
+                if (isValid)
+                {
+                    var user = await userManager.FindByIdAsync(model.UserId);
+                    if (user != null)
+                    {
+                        // Mark phone number as confirmed
+                        await unitOfWork.AccountRepository.UpdatePhoneConfirmationAsync(user.Id, true);
+
+                        unitOfWork.AccountRepository.UpdateUserLogs(user, "Phone number verified successfully");
+
+                        var loginPurpose = HttpContext.Session.GetString("LoginPurpose");
+
+                        if (loginPurpose == "PhoneVerification" && model.Purpose == "Login")
+                        {
+                            // After phone verification during login, check for 2FA
+                            if (user.TwoFactorEnabled)
+                            {
+                                bool isNewDevice = await deviceService.IsNewDeviceAsync(user.Id, HttpContext);
+                                if (isNewDevice)
+                                {
+                                    HttpContext.Session.SetString("LoginPurpose", "TwoFactor");
+                                    await twoFactorService.SendLoginVerificationAsync(user.Id, user.PhoneNumber);
+                                    return RedirectToAction("VerifyTwoFactor", new { purpose = "Login" });
+                                }
+                            }
+
+                            // Sign in user after phone verification
+                            var rememberMe = bool.Parse(HttpContext.Session.GetString("RememberMe") ?? "false");
+                            await signInManager.SignInAsync(user, rememberMe);
+                            await deviceService.GetOrCreateDeviceAsync(user.Id, HttpContext);
+                            unitOfWork.AccountRepository.UpdateLastLog(user.Id);
+
+                            ClearLoginSession();
+                            return RedirectToAction("Index", "Switch");
+                        }
+                        else if (model.Purpose == "Registration")
+                        {
+                            // After registration phone verification, ask if they want to enable 2FA
+                            return RedirectToAction("EnableTwoFactorPrompt");
+                        }
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid verification code.");
+                }
+            }
+
+            // Reload the model for display
+            var userForModel = await userManager.FindByIdAsync(model.UserId);
+            model.MaskedPhoneNumber = GetMaskedPhoneNumber(userForModel?.PhoneNumber);
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EnableTwoFactorPrompt()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnableTwoFactorPrompt(bool enableTwoFactor)
+        {
+            var userId = HttpContext.Session.GetString("PendingUserId");
+            if (!string.IsNullOrEmpty(userId))
+            {
+                if (enableTwoFactor)
+                {
+                    await unitOfWork.AccountRepository.UpdateTwoFactorEnabledAsync(userId, true);
+                    var user = await userManager.FindByIdAsync(userId);
+                    unitOfWork.AccountRepository.UpdateUserLogs(user, "Two-factor authentication enabled during registration");
+                }
+
+                ClearLoginSession();
+            }
+
+            return RedirectToAction("Index", "Switch");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResendPhoneVerification()
+        {
+            var userId = HttpContext.Session.GetString("PendingUserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "Session expired. Please try again." });
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null && !string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                var code = await twoFactorService.GenerateCodeAsync(userId, "PhoneVerification");
+                var sent = await smsService.SendVerificationCodeAsync(user.PhoneNumber, code);
+
+                if (sent)
+                {
+                    unitOfWork.AccountRepository.UpdateUserLogs(user, "Phone verification SMS resent");
+                }
+
+                return Json(new { success = sent, message = sent ? "Code sent!" : "Failed to send SMS." });
+            }
+
+            return Json(new { success = false, message = "Unable to send verification code." });
+        }
+
+        #endregion
+
+        #region Two Factor Authentication
+
+        [HttpGet]
+        public IActionResult VerifyTwoFactor(string purpose)
+        {
+            var userId = HttpContext.Session.GetString("PendingUserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new TwoFactorVerificationVM
+            {
+                UserId = userId,
+                Purpose = purpose,
+                RememberMe = bool.Parse(HttpContext.Session.GetString("RememberMe") ?? "false")
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyTwoFactor(TwoFactorVerificationVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var isValid = await twoFactorService.ValidateCodeAsync(model.UserId, model.Code, model.Purpose);
+
+                if (isValid)
+                {
+                    var user = await userManager.FindByIdAsync(model.UserId);
+                    if (user != null)
+                    {
+                        // Sign in the user
+                        await signInManager.SignInAsync(user, model.RememberMe);
+
+                        // Mark device as trusted and update device info
+                        var device = await deviceService.GetOrCreateDeviceAsync(user.Id, HttpContext);
+                        await deviceService.MarkDeviceAsTrustedAsync(device.Id);
+
+                        // Log successful verification
+                        unitOfWork.AccountRepository.UpdateUserLogs(user, "Two-factor authentication successful");
+                        unitOfWork.AccountRepository.UpdateLastLog(user.Id);
+
+                        ClearLoginSession();
+                        return RedirectToAction("Index", "Switch");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid verification code.");
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult EnableTwoFactor()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EnableTwoFactor(EnableTwoFactorVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    // Validate the verification code
+                    var isValid = await twoFactorService.ValidateCodeAsync(userId, model.VerificationCode, "EnableTwoFactor");
+
+                    if (isValid)
+                    {
+                        // Enable 2FA and update phone number
+                        user.TwoFactorEnabled = true;
+                        user.PhoneNumber = model.PhoneNumber;
+                        user.PhoneNumberConfirmed = "true";
+
+                        await userManager.UpdateAsync(user);
+
+                        unitOfWork.AccountRepository.UpdateUserLogs(user, "Two-factor authentication enabled");
+
+                        TempData["SuccessMessage"] = "Two-factor authentication has been enabled successfully.";
+                        return RedirectToAction("Profile", "User");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid verification code.");
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> SendPhoneVerification(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                return Json(new { success = false, message = "Phone number is required." });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var code = await twoFactorService.GenerateCodeAsync(userId, "EnableTwoFactor");
+            var sent = await smsService.SendVerificationCodeAsync(phoneNumber, code);
+
+            return Json(new { success = sent, message = sent ? "Verification code sent!" : "Failed to send SMS." });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> DisableTwoFactor()
+        {
+            if (Request.Method == "GET")
+            {
+                return View();
+            }
+            else if (Request.Method == "POST")
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    user.TwoFactorEnabled = false;
+                    await userManager.UpdateAsync(user);
+                    unitOfWork.AccountRepository.UpdateUserLogs(user, "Two-factor authentication disabled");
+                    TempData["SuccessMessage"] = "Two-factor authentication has been disabled.";
+                }
+
+                return RedirectToAction("Profile", "User");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResendTwoFactorCode()
+        {
+            var userId = HttpContext.Session.GetString("PendingUserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "Session expired. Please try logging in again." });
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null && !string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                var sent = await twoFactorService.SendLoginVerificationAsync(userId, user.PhoneNumber);
+                if (sent)
+                {
+                    unitOfWork.AccountRepository.UpdateUserLogs(user, "Two-factor code resent");
+                }
+                return Json(new { success = sent, message = sent ? "Code sent!" : "Failed to send SMS." });
+            }
+
+            return Json(new { success = false, message = "Unable to send verification code." });
+        }
+
+        #endregion
+
+        #region Device Management
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ManageDevices()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var devices = await unitOfWork.AccountRepository.GetUserDevicesAsync(userId);
+
+            return View(devices);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveDevice(int deviceId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var device = await unitOfWork.AccountRepository.GetDeviceAsync(deviceId);
+
+            if (device != null && device.UserId == userId)
+            {
+                await unitOfWork.AccountRepository.RemoveDeviceAsync(deviceId);
+                var user = await userManager.FindByIdAsync(userId);
+                unitOfWork.AccountRepository.UpdateUserLogs(user, $"Device removed: {device.DeviceName}");
+            }
+
+            return RedirectToAction("ManageDevices");
+        }
+
+        #endregion
+
+        #region External Login (Google OAuth)
 
         [HttpPost]
         [AllowAnonymous]
@@ -179,10 +630,10 @@ namespace Final_project.Controllers
                 provider,
                 redirectUrl);
 
-            // Force fresh login every time
             properties.Items["prompt"] = "select_account";
             return Challenge(properties, provider);
         }
+
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null)
@@ -206,7 +657,6 @@ namespace Final_project.Controllers
                 {
                     unitOfWork.AccountRepository.UpdateUserLogs(user, "Google Account Login");
                     await userManager.UpdateAsync(user);
-
                 }
                 return LocalRedirect(returnUrl ?? "/");
             }
@@ -216,7 +666,6 @@ namespace Final_project.Controllers
 
                 if (email != null)
                 {
-                    //In case a new Account Login
                     var user = await userManager.FindByEmailAsync(email);
                     if (user == null)
                     {
@@ -226,7 +675,9 @@ namespace Final_project.Controllers
                             Email = email,
                             google_id = info.ProviderKey,
                             PasswordHash = "Google API",
-                            EmailConfirmed=true,
+                            EmailConfirmed = true,
+                            PhoneNumberConfirmed = "false",
+                            TwoFactorEnabled = false
                         };
 
                         var createResult = await userManager.CreateAsync(user);
@@ -237,7 +688,6 @@ namespace Final_project.Controllers
                             createResult = await userManager.AddLoginAsync(user, info);
 
                             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
                             await signInManager.SignInAsync(user, isPersistent: false);
 
                             return RedirectToAction("SetProfilePic", "Account", new { userId = user.Id });
@@ -246,88 +696,21 @@ namespace Final_project.Controllers
 
                     if (user != null)
                     {
-
-                        // Clear any existing external cookie
                         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-                        // Sign in the user
                         await signInManager.SignInAsync(user, isPersistent: false);
-                        unitOfWork.AccountRepository.UpdateUserLogs(user, "Google  Login");
+                        unitOfWork.AccountRepository.UpdateUserLogs(user, "Google Login");
                         unitOfWork.AccountRepository.UpdateLastLog(user.Id);
 
-                        return RedirectToAction("Index", "Switch");   ///////////////////////////////////////////
+                        return RedirectToAction("Index", "Switch");
                     }
                 }
                 return RedirectToAction(nameof(Login));
             }
         }
-        public async Task<IActionResult> SignOut()
-        {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return RedirectToAction("Index", "Landing");
-        }
+        #endregion
 
-        [HttpGet]
-        public IActionResult CreateRole()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateRole(RoleDataVM roleDataVM)
-        {
-            if (ModelState.IsValid)
-            {
-                if (User.Identity.IsAuthenticated)
-                {
-                    IdentityRole identityRole = new IdentityRole()
-                    {
-                        Name = roleDataVM.RoleName
-                    };
-                    IdentityResult result = await roleManager.CreateAsync(identityRole);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Admin");
-                    }
-                    foreach (var i in result.Errors)
-                    {
-                        ModelState.AddModelError("", i.Description);
-                    }
-                }
-            }
-            return View();
-        }
-
-
-        [HttpGet]
-        public IActionResult SetProfilePic(string userId)
-        {
-            return View(new ProfilePic_DateOfBirth() { UserID = userId });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetProfilePic(ProfilePic_DateOfBirth data)
-        {
-            if (ModelState.IsValid)
-            {
-                var condition = await unitOfWork.AccountRepository.SetProfileAndBirthday(data);
-                if (condition)
-                {
-                    return RedirectToAction("Index", "Switch");
-                }
-            }
-
-            return View(data);
-        }
-        [HttpGet]
-        public IActionResult WatingforAdminApproval()
-        {
-            return View();
-        }
-
+        #region Password Reset
 
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -343,20 +726,16 @@ namespace Final_project.Controllers
             {
                 var user = await userManager.FindByEmailAsync(model.Email);
 
-                // Don't reveal that the user does not exist or is not confirmed
                 if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
                 {
                     return RedirectToAction("ForgotPasswordConfirmation");
                 }
 
-                // Generate password reset token
                 var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-                // Create password reset link
                 var resetLink = Url.Action("ResetPassword", "Account",
                     new { userId = user.Id, token = token }, Request.Scheme);
 
-                // Send password reset email
                 await emailService.SendPasswordResetEmailAsync(user.Email, resetLink, user.UserName);
 
                 return RedirectToAction("ForgotPasswordConfirmation");
@@ -412,9 +791,7 @@ namespace Final_project.Controllers
             var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
             if (result.Succeeded)
             {
-                // Log the password reset activity
                 unitOfWork.AccountRepository.UpdateUserLogs(user, "Password Reset");
-
                 return RedirectToAction("ResetPasswordConfirmation");
             }
 
@@ -432,12 +809,69 @@ namespace Final_project.Controllers
             return View();
         }
 
+        #endregion
+
+        #region Role Management
+
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(RoleDataVM roleDataVM)
+        {
+            if (ModelState.IsValid)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    IdentityRole identityRole = new IdentityRole()
+                    {
+                        Name = roleDataVM.RoleName
+                    };
+                    IdentityResult result = await roleManager.CreateAsync(identityRole);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    foreach (var i in result.Errors)
+                    {
+                        ModelState.AddModelError("", i.Description);
+                    }
+                }
+            }
+            return View();
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return RedirectToAction("Index", "Landing");
+        }
+
+        [HttpGet]
+        public IActionResult WatingforAdminApproval()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Email Connection Testing
+
         [HttpGet]
         public async Task<IActionResult> TestEmailConnection()
         {
             try
             {
-                // Cast to your concrete implementation to access TestConnectionAsync
                 var emailServiceImpl = emailService as Final_project.Services.EmailService.EmailService;
                 if (emailServiceImpl != null)
                 {
@@ -467,7 +901,6 @@ namespace Final_project.Controllers
                 var username = config["EmailSettings:Username"];
                 var password = config["EmailSettings:Password"];
 
-                // Show configuration details (mask password)
                 var configDetails = new
                 {
                     SmtpServer = smtpServer,
@@ -479,7 +912,6 @@ namespace Final_project.Controllers
                     PasswordIsAppPasswordLength = password?.Replace(" ", "").Length == 16
                 };
 
-                // Return config first if there are obvious issues
                 if (string.IsNullOrEmpty(password) || password.Length < 10)
                 {
                     return Json(new
@@ -490,7 +922,6 @@ namespace Final_project.Controllers
                     });
                 }
 
-                // Direct test with detailed error reporting
                 using var client = new MailKit.Net.Smtp.SmtpClient();
 
                 await client.ConnectAsync(smtpServer, smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
@@ -515,5 +946,242 @@ namespace Final_project.Controllers
                 });
             }
         }
+
+        #endregion
+
+        #region Helper Methods
+
+        private string GetMaskedPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length < 4)
+                return phoneNumber;
+
+            return phoneNumber.Substring(0, 4) + "****" + phoneNumber.Substring(phoneNumber.Length - 2);
+        }
+
+        private void ClearLoginSession()
+        {
+            HttpContext.Session.Remove("PendingUserId");
+            HttpContext.Session.Remove("RememberMe");
+            HttpContext.Session.Remove("LoginPurpose");
+        }
+
+        #endregion
+
+        #region sendingSms
+        [HttpGet]
+        [Authorize]
+
+        public async Task<IActionResult> TestSMSToEgyptianNumber(string customMessage = null, bool developmentMode = false)
+        {
+            try
+            {
+                // Your specific Egyptian number
+                var targetNumber = "+201027028411";
+
+                // Get Twilio configuration
+                var accountSid = _configuration["TwilioSettings:AccountSid"];
+                var authToken = _configuration["TwilioSettings:AuthToken"];
+                var fromPhone = _configuration["TwilioSettings:PhoneNumber"];
+
+                // Validate configuration
+                if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) || string.IsNullOrEmpty(fromPhone))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Twilio configuration missing",
+                        message = "Check your appsettings.json for Twilio settings"
+                    });
+                }
+
+                // Use custom message or default test message
+                var messageBody = customMessage ?? "🔐 Hello from your Amazon Clone app! This is a test SMS. Time: " + DateTime.Now.ToString("HH:mm:ss");
+
+
+                // Initialize Twilio and send real SMS
+                TwilioClient.Init(accountSid, authToken);
+
+                var message = await MessageResource.CreateAsync(
+                    body: messageBody,
+                    from: new Twilio.Types.PhoneNumber(fromPhone),
+                    to: new Twilio.Types.PhoneNumber(targetNumber)
+                );
+
+                return Json(new
+                {
+                    success = true,
+                    messageSid = message.Sid,
+                    status = message.Status?.ToString(),
+                    message = "SMS sent successfully!",
+                    sentTo = targetNumber,
+                    messageBody = messageBody,
+                    timestamp = DateTime.Now,
+                    note = $"Message sent from {fromPhone} to {targetNumber}"
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex) when (ex.Message.Contains("unverified"))
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Number not verified",
+                    message = "You need to verify +201027028411 in Twilio Console first",
+                    instructions = new
+                    {
+                        step1 = "Go to https://console.twilio.com",
+                        step2 = "Navigate to Phone Numbers → Manage → Verified Caller IDs",
+                        step3 = "Click 'Add a new number'",
+                        step4 = "Enter: +201027028411",
+                        step5 = "Complete verification by entering the code sent to your phone"
+                    },
+                    twilioError = ex.Message
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Twilio API Error",
+                    message = ex.Message,
+                    code = ex.Code,
+                    moreInfo = ex.MoreInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = ex.Message,
+                    type = ex.GetType().Name,
+                    message = "Unexpected error occurred"
+                });
+            }
+        }
+
+
+        public async Task<IActionResult> SendWelcomeMessage()
+        {
+            return await TestSMSToEgyptianNumber("🎉 Welcome to our Amazon Clone app! Your account is ready to use.");
+        }
+
+        public async Task<IActionResult> SendVerificationCode()
+        {
+            var code = new Random().Next(100000, 999999).ToString();
+            return await TestSMSToEgyptianNumber($"🔐 Your verification code is: {code}. Valid for 10 minutes.");
+        }
+
+        public async Task<IActionResult> SendOrderConfirmation()
+        {
+            var orderNumber = "ORD" + new Random().Next(10000, 99999);
+            return await TestSMSToEgyptianNumber($"✅ Order confirmed! Order #{orderNumber}. Thank you for shopping with us!");
+        }
+
+        public async Task<IActionResult> SendCustomMessage(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Message cannot be empty",
+                    message = "Please provide a message to send"
+                });
+            }
+
+            return await TestSMSToEgyptianNumber(message);
+        }
+        [HttpGet]
+        public async Task<IActionResult> TestTwilio()
+        {
+            try
+            {
+                var accountSid = _configuration["TwilioSettings:AccountSid"];
+                var authToken = _configuration["TwilioSettings:AuthToken"];
+                var fromPhone = _configuration["TwilioSettings:PhoneNumber"];
+
+                TwilioClient.Init(accountSid, authToken);
+
+                // Check account status first
+                var account = await Twilio.Rest.Api.V2010.AccountResource.FetchAsync();
+
+                // Try different number formats to see which one works
+                var testNumbers = new[]
+                {
+            "+201027028411",      // Your current format
+            "+20 10 27028411",    // Format shown in console
+            "+2010 27028411",     // Alternative format
+        };
+
+                var debugInfo = new
+                {
+                    accountType = account.Type?.ToString(),
+                    accountStatus = account.Status?.ToString(),
+                    accountSid = accountSid,
+                    fromPhone = fromPhone,
+                    testingNumbers = testNumbers,
+                    timestamp = DateTime.Now
+                };
+
+                // Try the first number format (your current one)
+                var toPhone = "+201027028411"; // This should be correct
+
+                var message = await MessageResource.CreateAsync(
+                    body: "🔐 Test SMS from your Amazon Clone app! Verification code: 123456",
+                    from: new Twilio.Types.PhoneNumber(fromPhone),
+                    to: new Twilio.Types.PhoneNumber(toPhone)
+                );
+
+                return Json(new
+                {
+                    success = true,
+                    messageSid = message.Sid,
+                    status = message.Status?.ToString(),
+                    debugInfo = debugInfo,
+                    message = "SMS sent successfully!",
+                    testNumber = toPhone
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex)
+            {
+                // Enhanced error handling with more debugging info
+                return Json(new
+                {
+                    success = false,
+                    error = ex.Message,
+                    code = ex.Code,
+                    moreInfo = ex.MoreInfo,
+                    troubleshooting = new
+                    {
+                        step1 = "Wait 5-10 minutes after verification for propagation",
+                        step2 = "Try re-verifying the number in console",
+                        step3 = "Check if trial account has any restrictions",
+                        step4 = "Verify the exact format: +201027028411",
+                        consolePath = "Develop > Phone Numbers > Manage > Verified Caller IDs"
+                    },
+                    possibleCauses = new[]
+                    {
+                "Verification still propagating (wait 5-10 minutes)",
+                "Number format mismatch",
+                "Trial account limitations",
+                "API credentials issue"
+            }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = ex.Message,
+                    type = ex.GetType().Name
+                });
+            }
+        }
+
+
+        #endregion
     }
 }

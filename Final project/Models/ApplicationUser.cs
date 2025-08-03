@@ -15,16 +15,23 @@ namespace Final_project.Models
         public bool is_active { get; set; } = false;
         public bool is_deleted { get; set; } =false;
         public DateTime? deleted_at { get; set; }
+        public string PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
 
-        public virtual ICollection<chat_session> ChatSessionsAsCustomer { get; set; }
-        public virtual ICollection<chat_session> ChatSessionsAsSeller { get; set; }
-        public virtual ICollection<chat_message> ChatMessages { get; set; }
-        public virtual ICollection<discount> Discounts { get; set; }
-        public virtual ICollection<order> OrdersAsBuyer { get; set; }
-        public virtual ICollection<product> Products { get; set; }
-        public virtual ICollection<product_review> ProductReviews { get; set; }
-        public virtual ICollection<shopping_cart> ShoppingCarts { get; set; }
-        public virtual ICollection<support_ticket> SupportTickets { get; set; }
-        public virtual ICollection<ticket_message> TicketMessages { get; set; }
+        // Make sure all navigation properties are virtual for lazy loading
+        public virtual ICollection<TwoFactorCode>? TwoFactorCodes { get; set; }
+        public virtual ICollection<UserDevice>? UserDevices { get; set; }
+
+        // All other navigation properties should also be virtual
+        public virtual ICollection<chat_session>? ChatSessionsAsCustomer { get; set; }
+        public virtual ICollection<chat_session>? ChatSessionsAsSeller { get; set; }
+        public virtual ICollection<chat_message>? ChatMessages { get; set; }
+        public virtual ICollection<discount>? Discounts { get; set; }
+        public virtual ICollection<order>? OrdersAsBuyer { get; set; }
+        public virtual ICollection<product>? Products { get; set; }
+        public virtual ICollection<product_review>? ProductReviews { get; set; }
+        public virtual ICollection<shopping_cart>? ShoppingCarts { get; set; }
+        public virtual ICollection<support_ticket>? SupportTickets { get; set; }
+        public virtual ICollection<ticket_message>? TicketMessages { get; set; }
     }
 }

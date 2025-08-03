@@ -153,7 +153,7 @@ namespace Final_project.Controllers
                 product.seller_id = sellerId;
 
                 product.created_at = DateTime.UtcNow;
-                product.IsSellerActevated = Request.Form["is_active"].Contains("true");
+                product.is_active = Request.Form["is_active"].Contains("true");
                 product.is_deleted = false;
                 product.Sizes = SelectedSizes != null ? string.Join(",", SelectedSizes) : null;
 
@@ -274,7 +274,7 @@ namespace Final_project.Controllers
             product.category_id = updatedProduct.category_id;
             product.seller_id = "test-seller-id";
             product.last_modified_at = DateTime.UtcNow;
-            product.IsSellerActevated = Request.Form["is_active"].FirstOrDefault()?.ToLower() == "true";
+            product.is_active = Request.Form["is_active"].FirstOrDefault()?.ToLower() == "true";
 
             // Handle images (keep your existing image handling code)
             if (newImageFiles != null && newImageFiles.Length > 0)
@@ -401,7 +401,7 @@ namespace Final_project.Controllers
 
 
             product.is_deleted = true;
-            product.IsSellerActevated = false;
+            product.is_active = false;
 
 
             if (product.product_images != null)
@@ -1563,7 +1563,7 @@ namespace Final_project.Controllers
                     UserName = sellerId,
                     Email = sellerId + "@test.com",
                     EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
+                    PhoneNumberConfirmed = "true",
                     TwoFactorEnabled = false,
                     LockoutEnabled = false,
                     AccessFailedCount = 0
@@ -1601,7 +1601,7 @@ namespace Final_project.Controllers
                     UserName = "test-buyer",
                     Email = "test-buyer@test.com",
                     EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
+                    PhoneNumberConfirmed = "true",
                     TwoFactorEnabled = false,
                     LockoutEnabled = false,
                     AccessFailedCount = 0
@@ -1657,7 +1657,7 @@ namespace Final_project.Controllers
             if (product == null)
                 return Json(new { success = false, message = "Product not found." });
             product.is_deleted = true;
-            product.IsSellerActevated = false;
+            product.is_active = false;
             if (product.product_images != null)
             {
                 foreach (var img in product.product_images)
@@ -1669,6 +1669,9 @@ namespace Final_project.Controllers
             return Json(new { success = true });
         }
 
+
+
+        #region CreateCategoryRequest
         [HttpGet]
         public IActionResult CreateCategoryRequest()
         {
@@ -1711,7 +1714,10 @@ namespace Final_project.Controllers
             TempData["SuccessMessage"] = "Category request submitted successfully.";
             return RedirectToAction("SellerDashboard");
         }
+        #endregion
 
+
+        #region AddReviewReply
         [HttpGet]
         public async Task<IActionResult> AddReviewReply(string reviewId)
         {
@@ -1753,6 +1759,6 @@ namespace Final_project.Controllers
             return RedirectToAction("ProductReviews");
         }
 
-
+        #endregion
     }
 }
