@@ -597,45 +597,54 @@
             });
         });
 
-           // Add to cart button
-    $('.product-btn-cart').each(function(){
-             $(this).click(function () {
-                 const productId= $(this).data("id");
-                  const size = document.getElementById('selectedSize')?.value;
-                 const color = document.getElementById('selectedColor')?.value;
+              // Add to cart button
+    $('.product-btn-cart').each(function () {
+        $(this).click(function () {
+            const productId = $(this).data("id");
+            const size = document.getElementById('selectedSize')?.value;
+            const color = document.getElementById('selectedColor')?.value;
+
             $.ajax({
                 url: `/Cart/AddToCart?productId=${productId}&color=${color}&size=${size}`,
                 type: "POST",
                 success: function (response) {
-                     toastr.success('Item added to cart successfully');
-                     UpdateCartValue(response)
-
+                    toastr.success('Item added to cart successfully');
+                    UpdateCartValue(response);
                 },
-                error: function () {
-                    toastr.error('An error occurred while adding item to cart');
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        // Redirect to login if not authenticated
+                        window.location.href = '/Account/Login';
+                    } else {
+                        toastr.error('An error occurred while adding item to cart');
+                    }
                 }
             });
         });
-    })
+    });
 
 
-          // Add to WishList
     $('.wishlist-btn').each(function(){
-             $(this).click(function () {
-                 const productId= $(this).data("id");
+        $(this).click(function () {
+            const productId = $(this).data("id");
 
             $.ajax({
                 url: `/Wishlist/AddToWishlist?productId=${productId}`,
+                method: "POST",
                 success: function (response) {
                     toastr.success('Item added to wishlist successfully');
                 },
-                error: function () {
-                    toastr.error('An error occurred while adding item to wishlist');
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        window.location.href = '/Account/Login'; // redirect to login
+                    } else {
+                        toastr.error('An error occurred while adding item to wishlist');
+                    }
                 }
             });
         });
+    });
 
-    })
 
 
 

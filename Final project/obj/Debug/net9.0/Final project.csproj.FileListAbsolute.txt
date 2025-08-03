@@ -1,3 +1,4 @@
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.Development.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\efpt.config.json
@@ -7,7 +8,6 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.staticwebasse
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.exe
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.deps.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.runtimeconfig.json
-I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\AutoMapper.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Azure.Core.dll
@@ -107,6 +107,7 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Memory.Data.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Reflection.MetadataLoadContext.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Runtime.Caching.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Twilio.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\af\Humanizer.resources.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\ar\Humanizer.resources.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\az\Humanizer.resources.dll
@@ -4697,4 +4698,3 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\refint\Final project.dll
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.genruntimeconfig.cache
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\ref\Final project.dll
-I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Twilio.dll

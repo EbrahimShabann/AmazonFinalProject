@@ -36,11 +36,14 @@ namespace Final_project.Controllers.Wishlist
             }).ToList();
             return View(itemViewModel);
         }
-
+        [AllowAnonymous]
         public IActionResult AddToWishlist(string productId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "NotLoggedIn" });
+            }
             var wishlist = unitOfWork.WishlistRepository.GetWishlistByUserId(userId);
             if (wishlist == null)
             {

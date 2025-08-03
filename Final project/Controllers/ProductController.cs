@@ -95,7 +95,7 @@ namespace Final_project.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
