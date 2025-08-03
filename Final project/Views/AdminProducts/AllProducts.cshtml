@@ -611,7 +611,7 @@
                         <tr>
                             <td>@p.name</td>
                             <td>@p.price</td>
-                            <td>@p.Seller.UserName</td>
+                            <td>@p.Seller?.UserName</td>
                             <td>@p.category.name</td>
                             <td>
                                 @if ((bool)p.is_active & (bool)p.is_approved & !p.is_deleted)

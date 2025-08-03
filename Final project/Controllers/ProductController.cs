@@ -2,6 +2,7 @@
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
+using Final_project.Services.SmsService;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
 using Microsoft.AspNetCore.Authorization;
@@ -282,15 +283,15 @@ namespace Final_project.Controllers
                     uof.ProductRepository.Update(product);
                 }
             }
-      
 
+            //send notification to the seller
 
             // 🔔 Get unique sellers from the ordered products
             //var sellerIds= model.Carts
             //    .Select(c => c.seller_id)
             //    .Distinct()
             //    .ToList();
-            
+
             //    foreach (var sellerId in sellerIds)
             //    {
             //        string message = $"New order #{order.id} contains one or more of your products.";
@@ -309,13 +310,29 @@ namespace Final_project.Controllers
             //            OrderId = order.id,
 
             //        };
-
+            //uof.NotificationRepository.add(notification);
             //        // Notify each seller about the new order
             //        await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
             //    }
 
             
             uof.save();
+
+            // Send SMS to user
+            var user = uof.UserRepository.getById(userId);
+            try
+            {
+                if (!string.IsNullOrEmpty(user.PhoneNumber))
+                {
+                    SmsSender.SendOrderConfirmation(user.PhoneNumber, order.id);
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "SMS sending failed: " + ex.Message;
+                
+            }
+
             //handle stripe payment
             if (model.payment_method == "card")
             {

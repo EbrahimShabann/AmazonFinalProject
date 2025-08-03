@@ -11,6 +11,7 @@ using Final_project.Repository.CustomerServiceRepoFile.TicketMessage;
 using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
+using Final_project.Repository.NotificationRepoFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
@@ -41,6 +42,7 @@ namespace Final_project.Repository
         private IWishlistRepository _wishlistRepository;
         private ISavedCartRepository _savedCartRepository;
         private ISavedCartItemRepository _savedCartItemRepository;
+        private INotificationRepo _notificationRepo;
 
         // Customer Service repositories
         private ISupportTicketRepo _supportTicketRepo;
@@ -276,6 +278,15 @@ namespace Final_project.Repository
                 if (_categoryRequestRepository == null)
                     _categoryRequestRepository = new CategoryRequestRepository(db);
                 return _categoryRequestRepository;
+            }
+        }
+        public INotificationRepo NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepo == null)
+                    _notificationRepo = new NotificationRepo(db);
+                return _notificationRepo;
             }
         }
 

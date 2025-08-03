@@ -17,43 +17,47 @@
 }
 else
 {
-    @foreach (category c in Model)
-    {
-        <tr>
-            <td>@c.name</td>
-            <td>@c.CreatedByUser.UserName</td>
-            <td>@c.created_at</td>
-            @if ((bool)c.is_active & !c.is_deleted)
-            {
-                <td><span class="status-badge status-active ">Active</span></td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary deactivate-btn" data-id="@c.id">
-                            <i class="fas fa-ban"></i> Inactive
-                        </button>
-                        <a class="btn btn-info" data-id="@c.id" href="AdminCategory/CategoryDetails/@c.id">
-                            <i class="fas fa-eye"></i> Details
-                        </a>
-                    </div>
-                </td>
-            }
-            else if ((bool)!c.is_active & !c.is_deleted)
-            {
-                <td><span class="status-badge status-inactive">Inactive</span></td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn btn-success activate-btn" data-id="@c.id">
-                            <i class="fas fa-check-circle"></i> Activate
-                        </button>
-                        <button class="btn btn-danger delete-btn" data-id="@c.id">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </td>
-            }
+    
+        @foreach (category c in Model)
+        {
+            <tr>
+                <td>@c.name</td>
+                <td>@c.CreatedByUser?.UserName</td>
+                <td>@c.created_at</td>
+                @if ((bool)c.is_active & !c.is_deleted)
+                {
+                    <td><span class="status-badge status-active ">Active</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary deactivate-btn" data-id="@c.id">
+                                <i class="fas fa-ban"></i> Inactive
+                            </button>
+                            <a class="btn btn-info" data-id="@c.id" href="AdminCategory/CategoryDetails/@c.id">
+                                <i class="fas fa-eye"></i> Details
+                            </a>
+                        </div>
+                    </td>
+                }
+                else if ((bool)!c.is_active & !c.is_deleted)
+                {
+                    <td><span class="status-badge status-inactive">Inactive</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-success activate-btn" data-id="@c.id">
+                                <i class="fas fa-check-circle"></i> Activate
+                            </button>
+                            <button class="btn btn-danger delete-btn" data-id="@c.id">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                }
 
-        </tr>
+            </tr>
+        }
+
     }
+  
 }
 <style>
     .pagination-btn {
