@@ -1,5 +1,6 @@
 ﻿using Final_project.Models;
 using Final_project.Repository;
+using Microsoft.AspNetCore.Identity;
 
 namespace Final_project.Services.CustomerService
 {
@@ -7,10 +8,12 @@ namespace Final_project.Services.CustomerService
     {
 
         private readonly UnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CustomerServiceService(UnitOfWork unitOfWork)
+        public CustomerServiceService(UnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         // Support Ticket operations
@@ -233,6 +236,19 @@ namespace Final_project.Services.CustomerService
         public chat_message GetLatestChatMessage(string sessionId)
         {
             return _unitOfWork.ChatMessageRepo.GetLatestMessage(sessionId);
+        }
+
+        // User management for chat sessions
+        public async Task<List<ApplicationUser>> GetAllCustomers()
+        {
+            var customers = await _userManager.GetUsersInRoleAsync("Customer");
+            return customers.Where(u => !u.is_deleted).ToList();
+        }
+
+        public async Task<List<ApplicationUser>> GetAllSellers()
+        {
+            var sellers = await _userManager.GetUsersInRoleAsync("Seller");
+            return sellers.Where(u => !u.is_deleted).ToList();
         }
     }
 }
