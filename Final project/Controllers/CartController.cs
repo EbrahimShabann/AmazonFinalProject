@@ -89,7 +89,7 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
-        //[Authorize]
+        
         public IActionResult AddToCart(string productId, string color, string size)
         {
 
@@ -180,5 +180,23 @@ namespace Final_project.Controllers.Cart
             unitOfWork.save();
             return RedirectToAction("Index");
         }
+        
+        public IActionResult ClearCart()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
+            if (cart != null)
+            {
+                var items = unitOfWork.CartItemRepository.GetCartItemsByCartId(cart.id);
+                foreach (var item in items)
+                {
+                    unitOfWork.CartItemRepository.Remove(item);
+                }
+                unitOfWork.ShoppingCartRepository.Delete(cart);
+                unitOfWork.save();
+            }
+            return RedirectToAction("Index","Landing");
+        }
+
     }
 }

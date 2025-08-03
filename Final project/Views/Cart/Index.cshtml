@@ -314,10 +314,7 @@
         }
         else
         {
-            @* <div class="cart-header" style="justify-content: flex-start;">
-                <input type="checkbox" class="form-check-input me-2" checked />
-                <span style="font-size: 14px;">Deselect all items</span>
-            </div> *@
+             <button class="bg-danger" asp-action="ClearCart">Clear Cart</button>
 
             @foreach (var item in Model)
             {
