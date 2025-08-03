@@ -2,6 +2,7 @@
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
+using Final_project.Services.SmsService;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
 using MailKit.Search;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
@@ -32,7 +34,7 @@ namespace Final_project.Controllers
         private readonly IHubContext<SellerOrdersHub> hub;
         private readonly IConfiguration _configuration;
 
-        public ProductController(UnitOfWork uof, IHubContext<SellerOrdersHub> hub,IConfiguration configuration)
+        public ProductController(UnitOfWork uof, IHubContext<SellerOrdersHub> hub, IConfiguration configuration)
         {
             this.uof = uof;
             this.hub = hub;
@@ -289,7 +291,7 @@ namespace Final_project.Controllers
                 }
             }
 
-
+            //send notification to the seller
 
             // 🔔 Get unique sellers from the ordered products
             //var sellerIds= model.Carts
@@ -315,23 +317,23 @@ namespace Final_project.Controllers
             //            OrderId = order.id,
 
             //        };
-
+            //uof.NotificationRepository.add(notification);
             //        // Notify each seller about the new order
             //        await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
             //    }
 
 
             uof.save();
-            
-            try
-            {
-                SendOrderConfirmation(order.id);
-            }
-            catch (Exception ex)
-            {
-                TempData["error"] = "SMS sending failed: " + ex.Message;
 
-            }
+            //try
+            //{
+            //    SendOrderConfirmation(order);
+            //}
+            //catch (Exception ex)
+            //{
+            //    TempData["error"] = "SMS sending failed: " + ex.Message;
+
+            //}
             //handle stripe payment
             if (model.payment_method == "card")
             {
@@ -367,11 +369,24 @@ namespace Final_project.Controllers
             }
 
             TempData["success"] = $"Order placed successfully with ID: {order.id}!";
-            return RedirectToAction("orderConfirmation", "Product", new { orderId=order.id });
+            return RedirectToAction("orderConfirmation", "Product", new { orderId = order.id });
         }
 
         public IActionResult orderConfirmation(string orderId)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = uof.ShoppingCartRepository.GetShoppingCartByUserId(userId);
+            var cartItems = uof.CartItemRepository.GetCartItemsByUserId(userId);
+            if (cart != null)
+            {
+                foreach (var item in cartItems)
+                {
+                    uof.CartItemRepository.Remove(item);
+                }
+
+                uof.ShoppingCartRepository.Delete(cart);
+                uof.save();
+            }
             if (string.IsNullOrEmpty(orderId))
             {
                 TempData["error"] = "Invalid order ID.";
@@ -385,15 +400,30 @@ namespace Final_project.Controllers
         #region sendingSms
         [HttpGet]
         [Authorize]
-
-        public async Task<IActionResult> TestSMSToEgyptianNumber(string Userid,string customMessage = null, bool developmentMode = false)
+        public async Task<IActionResult> TestSMSToEgyptianNumber(string Userid, string customMessage = null, bool developmentMode = false)
         {
+            // Declare targetNumber outside try block so it's accessible in catch blocks
+            string targetNumber = null;
+
             try
             {
-                // Your specific Egyptian number
+                // Get the user's phone number
+                targetNumber = uof.AccountRepository.GetUserPhoneNumber(Userid);
 
-                var targetNumber = uof.AccountRepository.GetUserPhoneNumber(Userid);
-                //targetNumber = "+2" + targetNumber;
+                // Format Egyptian phone number to international E.164 format
+                targetNumber = FormatEgyptianPhoneNumber(targetNumber);
+
+                // Validate the formatted number
+                if (string.IsNullOrEmpty(targetNumber))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Invalid phone number",
+                        message = "Could not format the phone number properly"
+                    });
+                }
+
                 // Get Twilio configuration
                 var accountSid = _configuration["TwilioSettings:AccountSid"];
                 var authToken = _configuration["TwilioSettings:AuthToken"];
@@ -412,7 +442,6 @@ namespace Final_project.Controllers
 
                 // Use custom message or default test message
                 var messageBody = customMessage ?? "🔐 Hello from your Amazon Clone app! This is a test SMS. Time: " + DateTime.Now.ToString("HH:mm:ss");
-
 
                 // Initialize Twilio and send real SMS
                 TwilioClient.Init(accountSid, authToken);
@@ -441,13 +470,13 @@ namespace Final_project.Controllers
                 {
                     success = false,
                     error = "Number not verified",
-                    message = "You need to verify +201027028411 in Twilio Console first",
+                    message = $"You need to verify {targetNumber} in Twilio Console first",
                     instructions = new
                     {
                         step1 = "Go to https://console.twilio.com",
                         step2 = "Navigate to Phone Numbers → Manage → Verified Caller IDs",
                         step3 = "Click 'Add a new number'",
-                        step4 = "Enter: +201027028411",
+                        step4 = $"Enter: {targetNumber}",
                         step5 = "Complete verification by entering the code sent to your phone"
                     },
                     twilioError = ex.Message
@@ -461,7 +490,8 @@ namespace Final_project.Controllers
                     error = "Twilio API Error",
                     message = ex.Message,
                     code = ex.Code,
-                    moreInfo = ex.MoreInfo
+                    moreInfo = ex.MoreInfo,
+                    formattedNumber = targetNumber
                 });
             }
             catch (Exception ex)
@@ -476,20 +506,45 @@ namespace Final_project.Controllers
             }
         }
 
-
-
-
-
-        public async Task<IActionResult> SendOrderConfirmation(string orderId)
+        /// <summary>
+        /// Formats Egyptian phone numbers to international E.164 format for Twilio
+        /// </summary>
+        /// <param name="phoneNumber">The phone number to format</param>
+        /// <returns>Formatted phone number in E.164 format or null if invalid</returns>
+        private string FormatEgyptianPhoneNumber(string phoneNumber)
         {
-           
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return null;
 
-            return await TestSMSToEgyptianNumber(userId,$"✅ Order confirmed!Hi ${User.Identity.Name},Your order #{orderId} is Confirmed. Thank you for shopping with us!");
+            // Remove any spaces, dashes, or other non-digit characters except +
+            var cleanNumber = System.Text.RegularExpressions.Regex.Replace(phoneNumber, @"[^\d+]", "");
+
+            // If it already starts with +20, return as-is
+            if (cleanNumber.StartsWith("+20"))
+                return cleanNumber;
+
+            // If it starts with 20, add the +
+            if (cleanNumber.StartsWith("20"))
+                return "+" + cleanNumber;
+
+            // If it starts with 01 (Egyptian mobile format), convert to +201
+            if (cleanNumber.StartsWith("01") && cleanNumber.Length == 11)
+                return "+2" + cleanNumber;
+
+            // If it starts with 1 and is 10 digits (01 without the 0), convert to +201
+            if (cleanNumber.StartsWith("1") && cleanNumber.Length == 10)
+                return "+20" + cleanNumber;
+
+            // If none of the above patterns match, return null (invalid)
+            return null;
         }
 
-    
- 
+        public async Task<IActionResult> SendOrderConfirmation(order order)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return await TestSMSToEgyptianNumber(userId, $"✅ Order confirmed! Hi {User.Identity.Name}, Your order #{order.id} is confirmed to adress {order.shipping_address}. Thank you for shopping with us!");
+        }
 
         #endregion
 
