@@ -34,7 +34,7 @@
                         <div class="carousel-item @(i == 0 ? "active" : "") h-100">
                             @if (!string.IsNullOrEmpty(Model.ExistingImages[i].image_url))
                             {
-                                <img src="/Image/@Model.ExistingImages[i].image_url"
+                                <img src="@Model.ExistingImages[i].image_url"
                                      class="d-block mx-auto h-100"
                                      style="object-fit: contain; max-width: 100%;"
                                      alt="@Model.name">
@@ -68,7 +68,7 @@
                     <div class="flex-grow-0" style="width: calc(25% - 8px);">
                         @if (!string.IsNullOrEmpty(Model.ExistingImages[i].image_url))
                         {
-                            <img src="/Image/@Model.ExistingImages[i].image_url"
+                            <img src="@Model.ExistingImages[i].image_url"
                                  class="img-thumbnail cursor-pointer w-100"
                                  style="height: 150px; object-fit: cover;"
                                  onclick="$('#productImageCarousel').carousel(@i)"
@@ -423,7 +423,7 @@
                                             </div>
 
                                             <a href="/Product/Details/@product.id" class="text-decoration-none text-dark">
-                                                <img src="/images/@product.image_url" class="card-img-top" alt="@product.name" style="height: 200px; object-fit: contain;">
+                                                <img src="@product.image_url" class="card-img-top" alt="@product.name" style="height: 200px; object-fit: contain;">
                                                 <div class="card-body">
                                                     <h5 class="card-title" style="height: 50px; overflow: hidden;">@product.name</h5>
                                                     <div class="text-warning mb-2">

@@ -1,8 +1,13 @@
 ﻿@model List<ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "AllCustomerService";
     Layout = "AdminLayout";
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 
 
@@ -527,10 +532,12 @@
                                 <button id="approved-btn" class="action-btn btn-approve" data-id="@u.Id">
                                     <i class="fas fa-check"></i>Activate
                                 </button>
-                                <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
-                                    <i class="fas fa-times"></i> Delelete
-                                </button>
-
+                                @if (role == "superadmin")
+                                {
+                                    <button id="reject-btn" class="action-btn btn-reject" data-id="@u.Id">
+                                        <i class="fas fa-times"></i> Delelete
+                                    </button>
+                                }
                             }
                             <button id="details-btn" class="action-btn btn-details" data-id="@u.Id">
                                 <i class="fas fa-info-circle"></i> Details

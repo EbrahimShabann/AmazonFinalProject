@@ -1356,7 +1356,7 @@
             }
         }
 
-           openChatbot() {
+        openChatbot() {
         if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
 
         // Add welcome message only if chat history is empty and chatbot is being opened
@@ -1369,12 +1369,19 @@
         this.elements.chatbotToggle.classList.add('active');
         this.elements.chatbotToggle.innerHTML = '<i class="fas fa-times"></i>';
         this.elements.chatbotContainer.setAttribute('aria-hidden', 'false');
+
+        // Reset minimize button state
+        if (this.elements.chatbotMinimize) {
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-minus"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Minimize chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Minimize');
+        }
+
         this.elements.messageInput?.focus();
         this.hideNotification();
         this.isMinimized = false;
         this.trackEvent('chatbot_opened');
     }
-
         closeChatbot() {
             if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
             this.elements.chatbotContainer.classList.remove('show', 'minimized');
@@ -1386,12 +1393,27 @@
             this.trackEvent('chatbot_closed');
         }
 
-        minimizeChatbot() {
-            if (!this.elements.chatbotContainer) return;
+    minimizeChatbot() {
+        if (!this.elements.chatbotContainer || !this.elements.chatbotMinimize) return;
+
+        if (this.isMinimized) {
+            // Expand the chatbot
+            this.elements.chatbotContainer.classList.remove('minimized');
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-minus"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Minimize chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Minimize');
+            this.isMinimized = false;
+            this.trackEvent('chatbot_expanded');
+        } else {
+            // Minimize the chatbot
             this.elements.chatbotContainer.classList.add('minimized');
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-expand-alt"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Expand chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Expand');
             this.isMinimized = true;
             this.trackEvent('chatbot_minimized');
         }
+    }
 
         isChatbotVisible() {
             return this.elements.chatbotContainer?.classList.contains('show');

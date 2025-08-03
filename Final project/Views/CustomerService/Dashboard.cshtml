@@ -3,10 +3,15 @@
 @{
     ViewData["Title"] = "Customer Service Dashboard";
 }
+<link href="/css/CustomerProfile.css" rel="stylesheet" />
+
+
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+        <partial name="_SideBar" />
+
+        <div class="col-9">
             <h2 class="mb-4">Customer Service Dashboard</h2>
 
             <!-- Stats Cards -->

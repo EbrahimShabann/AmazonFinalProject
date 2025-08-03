@@ -115,11 +115,11 @@
                     <div class="filter-section" data-filter-type="price">
                         <h5>Price</h5>
                         <ul class="filter-list">
-                            <li><a href="#" class="filter-item">Under $25</a></li>
-                            <li><a href="#" class="filter-item">$25 to $50</a></li>
-                            <li><a href="#" class="filter-item">$50 to $100</a></li>
-                            <li><a href="#" class="filter-item">$100 to $200</a></li>
-                            <li><a href="#" class="filter-item">$200 & Above</a></li>
+                            <li><a href="#" class="filter-item">Under £25</a></li>
+                            <li><a href="#" class="filter-item">£25 to £50</a></li>
+                            <li><a href="#" class="filter-item">£50 to £100</a></li>
+                            <li><a href="#" class="filter-item">£100 to £200</a></li>
+                            <li><a href="#" class="filter-item">£200 & Above</a></li>
                         </ul>
                     </div>
 
@@ -565,7 +565,7 @@
                         ${newArrivalBadge}
                             <a href="/product/Details?id=${item.productId || item.id}" onclick="redirectToProduct(${item.productId || item.id}); return false;" class="text-decoration-none text-dark">
                             <div class="product-image">
-                                    <img src="./images/products/${item.imageUrl || './images/products/placeholder.jpg'}" alt="${item.productName}" />
+                                    <img src="${item.imageUrl || './images/products/placeholder.jpg'}" alt="${item.productName}" />
                             </div>
                             <div class="product-title">
                                 ${item.productName}
@@ -736,15 +736,15 @@
 
                 // Set new price filter
                 let range = null;
-                if (priceText.includes('Under $25')) {
+                if (priceText.includes('Under £25')) {
                     range = { min: 0, max: 25 };
-                } else if (priceText.includes('$25 to $50')) {
+                } else if (priceText.includes('£25 to £50')) {
                     range = { min: 25, max: 50 };
-                } else if (priceText.includes('$50 to $100')) {
+                } else if (priceText.includes('£50 to £100')) {
                     range = { min: 50, max: 100 };
-                } else if (priceText.includes('$100 to $200')) {
+                } else if (priceText.includes('£100 to £200')) {
                     range = { min: 100, max: 200 };
-                } else if (priceText.includes('$200 & Above')) {
+                } else if (priceText.includes('£200 & Above')) {
                     range = { min: 200, max: null };
                 }
 

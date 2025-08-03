@@ -61,12 +61,27 @@ public partial class AmazonDBContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<saved_cart_item> saved_cart_items { get; set; }
     public virtual DbSet<CategoryRequest> CategoryRequest { get; set; }
     public virtual DbSet<notification> Notifications { get; set; }
+    public DbSet<UserDevice> UserDevices { get; set; }
+    public DbSet<TwoFactorCode> TwoFactorCodes { get; set; }
 
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<UserDevice>()
+          .HasOne(d => d.User)
+          .WithMany(u => u.UserDevices)
+          .HasForeignKey(d => d.UserId);
+
+        modelBuilder.Entity<TwoFactorCode>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.TwoFactorCodes)
+            .HasForeignKey(c => c.UserId);
+
+        modelBuilder.Entity<AccountLog>()
+    .Property(a => a.ActionType)
+    .HasMaxLength(200); // Or more, as needed
 
         modelBuilder.Entity<ApplicationUser>(entity => {
             entity.ToTable("Users");

@@ -89,7 +89,7 @@ namespace Final_project.Controllers.Cart
         //[Authorize]
         public IActionResult AddToCart(string productId, string color, string size)
         {
-         
+
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {

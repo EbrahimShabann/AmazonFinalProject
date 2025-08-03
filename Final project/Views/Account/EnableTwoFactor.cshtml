@@ -1,0 +1,132 @@
+﻿<!-- Views/Account/EnableTwoFactor.cshtml -->
+@model EnableTwoFactorVM
+
+@{
+    ViewData["Title"] = "Enable Two-Factor Authentication";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Enable Two-Factor Authentication</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Two-factor authentication adds an extra layer of security to your account by requiring a verification code sent to your phone.
+                </div>
+
+                <form asp-action="EnableTwoFactor" method="post" id="enableTwoFactorForm">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="+1234567890" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        <small class="form-text text-muted">Enter your phone number with country code (e.g., +1234567890)</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="button" id="sendCodeBtn" class="btn btn-secondary">Send Verification Code</button>
+                        <div id="codeStatus" class="mt-2"></div>
+                    </div>
+
+                    <div class="form-group mb-3" id="codeSection" style="display: none;">
+                        <label asp-for="VerificationCode" class="form-label">Verification Code</label>
+                        <input asp-for="VerificationCode" class="form-control text-center" style="font-size: 1.2em; letter-spacing: 0.3em;" maxlength="6" placeholder="000000" />
+                        <span asp-validation-for="VerificationCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" id="enableBtn" disabled>Enable Two-Factor Authentication</button>
+                        <a asp-action="Profile" asp-controller="User" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Important Notes</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Keep your phone number up to date to ensure you can receive verification codes</li>
+                    <li>You'll need to verify your identity when logging in from new devices</li>
+                    <li>Make sure your phone can receive SMS messages</li>
+                    <li>You can disable two-factor authentication at any time from your profile settings</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendCodeBtn = document.getElementById('sendCodeBtn');
+        const codeSection = document.getElementById('codeSection');
+        const codeStatus = document.getElementById('codeStatus');
+        const enableBtn = document.getElementById('enableBtn');
+        const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+        const codeInput = document.querySelector('input[name="VerificationCode"]');
+
+        sendCodeBtn.addEventListener('click', function() {
+            const phoneNumber = phoneInput.value.trim();
+
+            if (!phoneNumber) {
+                alert('Please enter a phone number first.');
+                return;
+            }
+
+            sendCodeBtn.disabled = true;
+            sendCodeBtn.textContent = 'Sending...';
+
+            fetch('/Account/SendPhoneVerification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: 'phoneNumber=' + encodeURIComponent(phoneNumber)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    codeStatus.innerHTML = '<div class="alert alert-success">Verification code sent to your phone!</div>';
+                    codeSection.style.display = 'block';
+                    codeInput.focus();
+
+                    // Start countdown
+                    let countdown = 60;
+                    const countdownInterval = setInterval(() => {
+                        sendCodeBtn.textContent = `Resend Code (${countdown}s)`;
+                        countdown--;
+
+                        if (countdown < 0) {
+                            clearInterval(countdownInterval);
+                            sendCodeBtn.disabled = false;
+                            sendCodeBtn.textContent = 'Resend Code';
+                        }
+                    }, 1000);
+
+                } else {
+                    codeStatus.innerHTML = '<div class="alert alert-danger">Failed to send code: ' + data.message + '</div>';
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.textContent = 'Send Verification Code';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                codeStatus.innerHTML = '<div class="alert alert-danger">An error occurred while sending the code.</div>';
+                sendCodeBtn.disabled = false;
+                sendCodeBtn.textContent = 'Send Verification Code';
+            });
+        });
+
+        // Enable submit button when code is entered
+        codeInput.addEventListener('input', function() {
+            enableBtn.disabled = this.value.length !== 6;
+        });
+    });
+</script>

@@ -8,6 +8,7 @@ using Final_project.Repository.CustomerServiceRepoFile.ChatSession;
 using Final_project.Repository.CustomerServiceRepoFile.SupportTicket;
 using Final_project.Repository.CustomerServiceRepoFile.TicketHistory;
 using Final_project.Repository.CustomerServiceRepoFile.TicketMessage;
+using Final_project.Repository.DeviceRepositoryFile;
 using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
@@ -51,6 +52,8 @@ namespace Final_project.Repository
         private IChatSessionRepo _chatSessionRepo;
         private IChatMessageRepo _chatMessageRepo;
         private ICategoryRequestRepository _categoryRequestRepository;
+        private IDeviceRepository _deviceRepository;
+        private INotificationRepo _notificationRepo;
 
 
 
@@ -280,6 +283,17 @@ namespace Final_project.Repository
                 return _categoryRequestRepository;
             }
         }
+        //private IDeviceRepository _deviceRepository;
+        public IDeviceRepository DeviceRepository
+        {
+            get
+            {
+                if (_deviceRepository == null)
+                    _deviceRepository = new DeviceRepository(db);
+                return _deviceRepository;
+            }
+        }
+
         public INotificationRepo NotificationRepository
         {
             get

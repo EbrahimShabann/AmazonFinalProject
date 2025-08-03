@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superadmin")]
 
     public class AdminCategoryController : Controller
     {
@@ -266,6 +266,9 @@ namespace Final_project.Controllers
 
             return View(category);
         }
-
+        public async Task<IActionResult> categoryRequest()
+        {
+            return View();
+        }
     }
 }
