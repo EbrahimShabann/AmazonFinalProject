@@ -1,4 +1,13 @@
-I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.dll
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.AssemblyReference.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rpswa.dswa.cache.json
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.GeneratedMSBuildEditorConfig.editorconfig
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfoInputs.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfo.cs
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.CoreCompileInputs.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.MvcApplicationPartsAssemblyInfo.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cs
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.sourcelink.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.Development.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\efpt.config.json
@@ -8,6 +17,7 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.staticwebasse
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.exe
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.deps.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.runtimeconfig.json
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\AutoMapper.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Azure.Core.dll
@@ -267,16 +277,6 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-arm64\native\M
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.AssemblyReference.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rpswa.dswa.cache.json
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.GeneratedMSBuildEditorConfig.editorconfig
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfoInputs.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfo.cs
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.CoreCompileInputs.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.MvcApplicationPartsAssemblyInfo.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cs
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.sourcelink.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjimswa.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -294,6 +294,7 @@ I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-vulkk
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-8vizuqfvvc.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\a0z7ez63h8-1vy8v7pjxj.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pd3hk5crku-j9doi8kwq6.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\th3pen5v8j-3r8b2a0bt1.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\uu1tfk8qyd-9aambh6nv0.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\kzz4tt6z63-0hesna2cko.gz

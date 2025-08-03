@@ -53,7 +53,7 @@ namespace Final_project.Repository
         private IChatMessageRepo _chatMessageRepo;
         private ICategoryRequestRepository _categoryRequestRepository;
         private IDeviceRepository _deviceRepository;
-        private INotificationRepo _notificationRepo;
+      
 
 
 

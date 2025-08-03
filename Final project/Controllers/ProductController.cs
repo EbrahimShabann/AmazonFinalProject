@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
@@ -324,15 +325,15 @@ namespace Final_project.Controllers
             
             uof.save();
             
-            try
-            {
-                SendOrderConfirmation(order);
-            }
-            catch (Exception ex)
-            {
-                TempData["error"] = "SMS sending failed: " + ex.Message;
+            //try
+            //{
+            //    SendOrderConfirmation(order);
+            //}
+            //catch (Exception ex)
+            //{
+            //    TempData["error"] = "SMS sending failed: " + ex.Message;
 
-            }
+            //}
             //handle stripe payment
             if (model.payment_method == "card")
             {
@@ -373,6 +374,19 @@ namespace Final_project.Controllers
 
         public IActionResult orderConfirmation(string orderId)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = uof.ShoppingCartRepository.GetShoppingCartByUserId(userId);
+            var cartItems = uof.CartItemRepository.GetCartItemsByUserId(userId);
+            if (cart != null)
+            {
+                foreach (var item in cartItems)
+                {
+                    uof.CartItemRepository.Remove(item);
+                }
+                
+                uof.ShoppingCartRepository.Delete(cart);
+                uof.save();
+            }
             if (string.IsNullOrEmpty(orderId))
             {
                 TempData["error"] = "Invalid order ID.";

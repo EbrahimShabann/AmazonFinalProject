@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;

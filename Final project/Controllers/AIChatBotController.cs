@@ -398,24 +398,3 @@ public class AIChatbotController : Controller
         }
     }
 }
-
-// Additional helper model for enhanced chat functionality
-public class ChatHistoryItem
-{
-    public string Role { get; set; }
-    public string Content { get; set; }
-    public DateTime Timestamp { get; set; }
-    public List<ProductRecommendation> Products { get; set; }
-}
-
-public class ProductRecommendation
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string Brand { get; set; }
-    public decimal Price { get; set; }
-    public decimal? DiscountPrice { get; set; }
-    public string ImageUrl { get; set; }
-    public int Rating { get; set; }
-    public int ReviewsCount { get; set; }
-}
