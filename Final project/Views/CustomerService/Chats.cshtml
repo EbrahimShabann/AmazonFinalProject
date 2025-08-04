@@ -7,11 +7,19 @@
 
 <div class="container-fluid">
     <div class="row">
-        <partial name="_SideBar" />
-
+        @if (!User.IsInRole("seller"))
+        {
+            <partial name="_SideBar" />
+        }
         <div class="col-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Chat Sessions</h2>
+                @if (User.IsInRole("customerService"))
+                {
+                    <a href="@Url.Action("CreateChatSession")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Chat Session
+                    </a>
+                }
             </div>
 
             @if (TempData["Success"] != null)
@@ -63,7 +71,7 @@
                                                 <a href="@Url.Action("ChatDetails", new { id = chat.Id })" class="btn btn-primary btn-sm">
                                                     Open Chat
                                                 </a>
-                                                @if (chat.Status == "Active")
+                                                @if (chat.Status == "Active" && (User.IsInRole("customerService") || chat.CustomerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value || chat.SellerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
                                                 {
                                                     <form asp-action="CloseChatSession" method="post" class="d-inline">
                                                         <input type="hidden" name="sessionId" value="@chat.Id" />

@@ -38,5 +38,9 @@ namespace Final_project.Services.CustomerService
         void MarkChatMessagesAsRead(string sessionId, string userId);
         int GetUnreadChatMessageCount(string sessionId, string userId);
         chat_message GetLatestChatMessage(string sessionId);
+
+        // User management for chat sessions
+        Task<List<ApplicationUser>> GetAllCustomers();
+        Task<List<ApplicationUser>> GetAllSellers();
     }
 }

@@ -115,7 +115,6 @@
         display: block;
     }
 
-    /* Phone number validation indicators */
     .valid-phone {
         position: absolute;
         right: 10px;
@@ -141,7 +140,6 @@
         }
     }
 
-    /* Responsive adjustments */
     @@media (max-width: 576px) {
         .phone-edit-container {
             padding: 20px 15px;
@@ -164,12 +162,12 @@
         <div class="form-group">
             <label asp-for="PhoneNumber">Mobile phone number</label>
             <div class="phone-input-container">
-                <span class="country-code">+1</span>
+                <span class="country-code">+20</span>
                 <input asp-for="PhoneNumber" class="form-control"
-                       placeholder="(XXX) XXX-XXXX"
-                       pattern="[0-9]{10}"
-                       title="Please enter a 10-digit phone number"
-                       maxlength="10" />
+                       placeholder="01XXXXXXXXX"
+                       pattern="01[0-9]{9}"
+                       title="Please enter a valid Egyptian phone number"
+                       maxlength="11" />
             </div>
             <i class="fas fa-check-circle valid-phone"></i>
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -182,30 +180,24 @@
 </div>
 
 <script>
-    // Phone number formatting
     const phoneInput = document.querySelector('input[name="PhoneNumber"]');
-    phoneInput.addEventListener('input', function(e) {
-        // Format phone number as (XXX) XXX-XXXX
-        const input = this.value.replace(/\D/g, '').substring(0,10);
-        const formatted = input.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-        this.value = formatted;
+    phoneInput.addEventListener('input', function () {
+        const input = this.value.replace(/\D/g, '');
+        this.value = input;
 
-        // Validate and show checkmark
         const container = this.closest('.phone-input-container');
-        if (input.length === 10) {
+        if (input.length === 11 && input.startsWith("01")) {
             container.classList.add('valid');
         } else {
             container.classList.remove('valid');
         }
     });
 
-    // Form submission handling
-    document.getElementById('phoneForm').addEventListener('submit', function(e) {
+    document.getElementById('phoneForm').addEventListener('submit', function (e) {
         const button = document.getElementById('saveButton');
         button.disabled = true;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
 
-        // Simulate verification delay (remove in production)
         setTimeout(() => {
             if (!this.hasAttribute('data-submitted')) {
                 button.disabled = false;
@@ -216,14 +208,12 @@
         this.setAttribute('data-submitted', 'true');
     });
 
-    // Initialize phone validation
     if (phoneInput.value) {
         const input = phoneInput.value.replace(/\D/g, '');
-        if (input.length === 10) {
+        if (input.length === 11 && input.startsWith("01")) {
             phoneInput.closest('.phone-input-container').classList.add('valid');
         }
     }
 </script>
 
-<!-- Font Awesome for icons -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

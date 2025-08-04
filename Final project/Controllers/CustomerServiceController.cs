@@ -301,10 +301,23 @@ namespace Final_project.Controllers.CustomerService
         }
 
         // Chat functionality
-        public IActionResult Chats()
+        public async Task<IActionResult> Chats()
         {
             var currentUserId = GetCurrentUserId();
-            var sessions = _customerService.GetUserChatSessions(currentUserId);
+            var isCustomerService = await IsSupportRoleAsync();
+
+            List<chat_session> sessions;
+
+            if (isCustomerService)
+            {
+                // Customer service can see all chat sessions
+                sessions = _customerService.GetActiveChatSessions();
+            }
+            else
+            {
+                // Regular users can only see their own chat sessions
+                sessions = _customerService.GetUserChatSessions(currentUserId);
+            }
 
             var chatViewModels = sessions.Select(s => new ChatSessionViewModel
             {
@@ -331,9 +344,11 @@ namespace Final_project.Controllers.CustomerService
 
             var currentUserId = GetCurrentUserId();
 
-            // Check if user is part of this chat session
-            //if (session.CustomerId != currentUserId && session.SellerId != currentUserId)
-            //    return Forbid();
+            var isParticipant = session.CustomerId == currentUserId || session.SellerId == currentUserId;
+            var isCustomerService = User.IsInRole("customerservice");
+
+            if (!isParticipant && !isCustomerService)
+                return Forbid();
 
             var messages = _customerService.GetChatMessages(id);
 
@@ -371,44 +386,176 @@ namespace Final_project.Controllers.CustomerService
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendChatMessage(SendChatMessageDTO dto)
+        public IActionResult SendChatMessage(string SessionId, string Message)
         {
-            if (ModelState.IsValid)
+            try
             {
-                dto.SenderId = GetCurrentUserId();
-                var chatMessage = _customerService.SendChatMessage(dto.SessionId, dto.SenderId, dto.Message);
+                // Log the incoming request for debugging
+                System.Diagnostics.Debug.WriteLine($"SendChatMessage called - SessionId: {SessionId}, Message: {Message}");
 
-                // Notify via SignalR
-                await _hubContext.Clients.Group($"chat_{dto.SessionId}").SendAsync("ReceiveChatMessage", new
+                if (string.IsNullOrWhiteSpace(Message))
                 {
-                    Id = chatMessage.id,
-                    Message = chatMessage.message,
-                    SentAt = chatMessage.sent_at,
-                    SenderId = chatMessage.sender_id,
-                    IsRead = chatMessage.is_read
-                });
+                    return Json(new { success = false, error = "Message cannot be empty." });
+                }
 
-                return Json(new { success = true });
+                if (SessionId.Length <= 0)
+                {
+                    return Json(new { success = false, error = "Invalid session ID." });
+                }
+
+                var currentUserId = GetCurrentUserId();
+
+                if (string.IsNullOrEmpty(currentUserId))
+                {
+                    return Json(new { success = false, error = "User not authenticated." });
+                }
+
+                // Send the message using your service
+                var chatMessage = _customerService.SendChatMessage(SessionId, currentUserId, Message);
+
+                if (chatMessage == null)
+                {
+                    return Json(new { success = false, error = "Failed to create message." });
+                }
+
+                // Get sender name - you might need to adjust this based on your model
+                var senderName = "You"; // Default fallback
+
+                if (chatMessage?.Sender != null)
+                {
+                    senderName = chatMessage.Sender.UserName ?? User?.Identity?.Name ?? "You";
+                }
+                else if (User?.Identity?.IsAuthenticated == true)
+                {
+                    senderName = User.Identity.Name ?? "You";
+                }
+
+                var response = new
+                {
+                    success = true,
+                    message = new
+                    {
+                        id = chatMessage?.id ?? "0", // Use string fallback
+                        message = chatMessage?.message ?? Message,
+                        senderName = senderName,
+                        sentAt = chatMessage?.sent_at?.ToString("yyyy-MM-ddTHH:mm:ss") ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        isFromCurrentUser = true
+                    }
+                };
+                System.Diagnostics.Debug.WriteLine($"Returning JSON response: {System.Text.Json.JsonSerializer.Serialize(response)}");
+
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception for debugging
+                System.Diagnostics.Debug.WriteLine($"SendChatMessage error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    success = false,
+                    error = "Failed to send message. Please try again.",
+                    details = ex.Message // Remove this in production
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChatMessages(string sessionId)
+        {
+            try
+            {
+                var currentUserId = GetCurrentUserId();
+
+                // Get messages from your service
+                var messages = _customerService.GetChatMessages(sessionId);
+
+                var messageList = messages.Select(m => new {
+                    id = m.id,
+                    message = m.message,
+                    senderName = m.Sender.UserName,
+                    sentAt = m.sent_at,
+                    isFromCurrentUser = m.sender_id
+                    == currentUserId
+                }).OrderBy(m => m.sentAt).ToList();
+
+                return Json(new { success = true, messages = messageList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = "Failed to load messages." });
+            }
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "customerService")]
+        public async Task<IActionResult> CreateChatSession()
+        {
+            // Only customerService role can create chat sessions
+            var isCustomerService = await IsSupportRoleAsync();
+            if (!isCustomerService)
+            {
+                return Forbid();
             }
 
-            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
+            var customers = await _customerService.GetAllCustomers();
+            var sellers = await _customerService.GetAllSellers();
+
+            ViewBag.Customers = customers;
+            ViewBag.Sellers = sellers;
+
+            return View();
         }
 
         [HttpPost]
-        public IActionResult CreateChatSession(CreateChatSessionDTO dto)
+        [Authorize(Roles = "customerService")]
+        public async Task<IActionResult> CreateChatSession(CreateChatSessionDTO dto)
         {
+            // Only customerService role can create chat sessions
+            var isCustomerService = await IsSupportRoleAsync();
+            if (!isCustomerService)
+            {
+                return Forbid();
+            }
+
             if (ModelState.IsValid)
             {
                 var session = _customerService.CreateOrGetChatSession(dto.CustomerId, dto.SellerId);
-                return RedirectToAction(nameof(ChatDetails), new { id = session.Id });
+                return RedirectToAction(nameof(Chats));
             }
 
-            return RedirectToAction(nameof(Chats));
+            // If model is invalid, reload the form with data
+            var customers = await _customerService.GetAllCustomers();
+            var sellers = await _customerService.GetAllSellers();
+
+            ViewBag.Customers = customers;
+            ViewBag.Sellers = sellers;
+
+            return View(dto);
         }
 
         [HttpPost]
-        public IActionResult CloseChatSession(string sessionId)
+        public async Task<IActionResult> CloseChatSession(string sessionId)
         {
+            var currentUserId = GetCurrentUserId();
+            var isCustomerService = await IsSupportRoleAsync();
+
+            var session = _customerService.GetChatSessionById(sessionId);
+            if (session == null)
+            {
+                TempData["Error"] = "Chat session not found.";
+                return RedirectToAction(nameof(Chats));
+            }
+
+            // Only customer service or participants can close the session
+            if (!isCustomerService && session.CustomerId != currentUserId && session.SellerId != currentUserId)
+            {
+                TempData["Error"] = "You are not authorized to close this chat session.";
+                return RedirectToAction(nameof(Chats));
+            }
+
             _customerService.CloseChatSession(sessionId);
             TempData["Success"] = "Chat session closed successfully!";
             return RedirectToAction(nameof(Chats));

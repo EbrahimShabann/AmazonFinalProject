@@ -53,6 +53,9 @@
                         <li class="nav-item mx-3">
                             <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "CreateCategoryRequest" ? "active-link" : "")" href="@Url.Action("CreateCategoryRequest", "Seller")">Category Request</a>
                         </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link nav-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Chats" ? "active-link" : "")" href="@Url.Action("chats", "customerservice")">Chats</a>
+                        </li>
                     </ul>
                     @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Seller")
                     {

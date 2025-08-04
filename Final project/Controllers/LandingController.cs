@@ -39,10 +39,6 @@ namespace Final_project.Controllers
             return Json(cart);
         }
 
-        [HttpGet]
-        public IActionResult Error()
-        {
-            throw new NotImplementedException();
-        }
+ 
     }
 }

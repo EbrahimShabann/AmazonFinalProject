@@ -572,6 +572,53 @@ namespace Final_project.Migrations
                     b.ToTable("discounts");
                 });
 
+            modelBuilder.Entity("Final_project.Models.notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecipientId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RelatedEntityId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Final_project.Models.order", b =>
                 {
                     b.Property<string>("id")
@@ -1421,6 +1468,15 @@ namespace Final_project.Migrations
                         .HasForeignKey("seller_id");
 
                     b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("Final_project.Models.notification", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("Final_project.Models.order", b =>
