@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@* _landingAmazonPage layouyt *@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -7,16 +8,18 @@
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="~/css/LandingPageCSS.css" asp-append-version="true" />
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-
+    @RenderSection("Styles", required: false)
 
 </head>
 <body>
-    <partial name="_ChatBotButton" />
+    @if (!User.IsInRole("customerService"))
+    {
+        <partial name="_ChatBotButton" />
+
+    }
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" asp-action="Index" asp-controller="Landing"><i class="fab fa-amazon"></i> Amazon</a>
@@ -30,7 +33,7 @@
             <!-- Add this line -->
             <div id="searchResults" class="search-results-container"></div>
             <div class="navbar-actions">
-                @if (User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated&&User.IsInRole("customer"))
                 {
 
                     <!-- Cart with Counter -->
@@ -62,9 +65,17 @@
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Wishlist"><i class="fas fa-heart me-2"></i>Your Wish List</a>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="CustomerService"><i class="fas fa-headset me-2"></i>Support Tickets</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Chats" asp-controller="CustomerService"><i class="fas fa-comments me-2"></i>Live Chat</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+
 
                         }
-                        else if (User.IsInRole("seller") || User.IsInRole("customer service") || User.IsInRole("admin"))
+                        else if (User.IsInRole("seller") || User.IsInRole("customerService") || User.IsInRole("admin"))
                         {
                             <li>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Switch"><i class="fas fa-user me-2"></i>Dashboard</a>
@@ -152,6 +163,7 @@
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/LandingPageLayoutJS.js"></script>
+    @* <script src="~/js/ChatbotJS.js" asp-append-version="true"></script> *@
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
@@ -177,7 +189,7 @@
             var productId= $(this).data('product-id');
             console.log(productId);
             $.ajax({
-               url: "Cart/AddToCart",
+               url: "/Cart/AddToCart",
                type: "post",
                data: {
                   productId: productId,
@@ -201,7 +213,7 @@
         var isAuth=@(User.Identity.IsAuthenticated ? "true" : "false");
         if(isAuth){
              $.ajax({
-               url: "Landing/CartCount",
+               url: "/Landing/CartCount",
                type: "post",
                data: {
                   UserName: '@User.Identity.Name',
@@ -226,7 +238,7 @@
                 searchTimeout = setTimeout(function() {
                     if (searchTerm.length > 2) {
                         $.ajax({
-                            url: "Landing/Search",
+                            url: "/Landing/Search",
                             type: "GET",
                             data: {
                                query: searchTerm,
@@ -338,6 +350,47 @@
             // Add your product selection logic here
             console.log('Selected product:', productName);
         }
+    </script>
+
+    <script>
+        // Enhanced device fingerprinting
+        function getDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Device fingerprint', 2, 2);
+
+            const fingerprint = {
+                screen: screen.width + 'x' + screen.height,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform,
+                canvas: canvas.toDataURL(),
+                userAgent: navigator.userAgent
+            };
+
+            return fingerprint;
+        }
+
+        // Send fingerprint data with login requests
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form[action*="Login"]');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function() {
+                    const fingerprint = getDeviceFingerprint();
+
+                    // Add hidden fields for enhanced fingerprinting
+                    Object.keys(fingerprint).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'deviceInfo.' + key;
+                        input.value = fingerprint[key];
+                        loginForm.appendChild(input);
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

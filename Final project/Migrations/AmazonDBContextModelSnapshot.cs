@@ -34,13 +34,11 @@ namespace Final_project.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"));
 
                     b.Property<string>("ActionType")
-                        .IsRequired()
-                        .HasMaxLength(20)
+                        .HasMaxLength(200)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("TimeStamp")
@@ -49,7 +47,6 @@ namespace Final_project.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("UserID")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -98,8 +95,8 @@ namespace Final_project.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<string>("PhoneNumberConfirmed")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -148,6 +145,154 @@ namespace Final_project.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.Property<string>("requredId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryDiscription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SellerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("requredId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("CategoryRequest");
+                });
+
+            modelBuilder.Entity("Final_project.Models.TwoFactorCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeviceFingerprint")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TwoFactorCodes");
+                });
+
+            modelBuilder.Entity("Final_project.Models.UserDevice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Browser")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("DeviceFingerprint")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DeviceName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("DeviceType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FirstSeen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsTrusted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastSeen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("OperatingSystem")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("TrustedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserDevices");
                 });
 
             modelBuilder.Entity("Final_project.Models.audit_log", b =>
@@ -412,6 +557,53 @@ namespace Final_project.Migrations
                     b.ToTable("discounts");
                 });
 
+            modelBuilder.Entity("Final_project.Models.notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecipientId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RelatedEntityId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Final_project.Models.order", b =>
                 {
                     b.Property<string>("id")
@@ -544,7 +736,6 @@ namespace Final_project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reason")
@@ -555,11 +746,9 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("orderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("order_itemId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -584,6 +773,9 @@ namespace Final_project.Migrations
                     b.Property<string>("Colors")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsSellerActevated")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Sizes")
                         .HasMaxLength(255)
@@ -785,11 +977,9 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("user_id")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -808,14 +998,12 @@ namespace Final_project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("product_id")
-                        .IsRequired()
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("saved_cart_id")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id");
@@ -1133,6 +1321,37 @@ namespace Final_project.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Final_project.Models.CategoryRequest", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("SellerId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_project.Models.TwoFactorCode", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany("TwoFactorCodes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Final_project.Models.UserDevice", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "User")
+                        .WithMany("UserDevices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Final_project.Models.audit_log", b =>
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "User")
@@ -1227,6 +1446,15 @@ namespace Final_project.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("Final_project.Models.notification", b =>
+                {
+                    b.HasOne("Final_project.Models.ApplicationUser", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.Navigation("Recipient");
+                });
+
             modelBuilder.Entity("Final_project.Models.order", b =>
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "Buyer")
@@ -1271,15 +1499,11 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.order", "Order")
                         .WithMany()
-                        .HasForeignKey("orderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("orderId");
 
                     b.HasOne("Final_project.Models.order_item", "Order_Item")
                         .WithMany()
-                        .HasForeignKey("order_itemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("order_itemId");
 
                     b.Navigation("Order");
 
@@ -1360,9 +1584,7 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("user_id");
 
                     b.Navigation("User");
                 });
@@ -1371,15 +1593,11 @@ namespace Final_project.Migrations
                 {
                     b.HasOne("Final_project.Models.product", "Product")
                         .WithMany()
-                        .HasForeignKey("product_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("product_id");
 
                     b.HasOne("Final_project.Models.saved_cart", "SavedCart")
                         .WithMany("SavedCartItems")
-                        .HasForeignKey("saved_cart_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("saved_cart_id");
 
                     b.Navigation("Product");
 
@@ -1524,6 +1742,10 @@ namespace Final_project.Migrations
                     b.Navigation("SupportTickets");
 
                     b.Navigation("TicketMessages");
+
+                    b.Navigation("TwoFactorCodes");
+
+                    b.Navigation("UserDevices");
                 });
 
             modelBuilder.Entity("Final_project.Models.chat_session", b =>

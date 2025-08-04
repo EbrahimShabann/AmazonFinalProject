@@ -2,14 +2,17 @@
 using Final_project.Repository.AccountRepositoryFile;
 using Final_project.Repository.CartRepository;
 using Final_project.Repository.CategoryFile;
+using Final_project.Repository.CategoryRepositoryFile;
 using Final_project.Repository.CustomerServiceRepoFile.ChatMessage;
 using Final_project.Repository.CustomerServiceRepoFile.ChatSession;
 using Final_project.Repository.CustomerServiceRepoFile.SupportTicket;
 using Final_project.Repository.CustomerServiceRepoFile.TicketHistory;
 using Final_project.Repository.CustomerServiceRepoFile.TicketMessage;
+using Final_project.Repository.DeviceRepositoryFile;
 using Final_project.Repository.LandingPageFile;
 using Final_project.Repository.MessagesRepositoryFile;
 using Final_project.Repository.NewFolder;
+using Final_project.Repository.NotificationRepoFile;
 using Final_project.Repository.OrderRepositoryFile;
 using Final_project.Repository.Product;
 using Final_project.Repository.ProductRepositoryFile;
@@ -40,6 +43,7 @@ namespace Final_project.Repository
         private IWishlistRepository _wishlistRepository;
         private ISavedCartRepository _savedCartRepository;
         private ISavedCartItemRepository _savedCartItemRepository;
+        private INotificationRepo _notificationRepo;
 
         // Customer Service repositories
         private ISupportTicketRepo _supportTicketRepo;
@@ -47,10 +51,12 @@ namespace Final_project.Repository
         private ITicketHistoryRepo _ticketHistoryRepo;
         private IChatSessionRepo _chatSessionRepo;
         private IChatMessageRepo _chatMessageRepo;
+        private ICategoryRequestRepository _categoryRequestRepository;
+        private IDeviceRepository _deviceRepository;
+      
 
 
-    
-   
+
 
         public UnitOfWork(AmazonDBContext db)
         {
@@ -266,6 +272,35 @@ namespace Final_project.Repository
                 if (_savedCartItemRepository == null)
                     _savedCartItemRepository = new SavedCartItemRepository(db);
                 return _savedCartItemRepository;
+            }
+        }
+        public ICategoryRequestRepository CategoryRequestRepository
+        {
+            get
+            {
+                if (_categoryRequestRepository == null)
+                    _categoryRequestRepository = new CategoryRequestRepository(db);
+                return _categoryRequestRepository;
+            }
+        }
+        //private IDeviceRepository _deviceRepository;
+        public IDeviceRepository DeviceRepository
+        {
+            get
+            {
+                if (_deviceRepository == null)
+                    _deviceRepository = new DeviceRepository(db);
+                return _deviceRepository;
+            }
+        }
+
+        public INotificationRepo NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepo == null)
+                    _notificationRepo = new NotificationRepo(db);
+                return _notificationRepo;
             }
         }
 

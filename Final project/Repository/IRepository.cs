@@ -1,4 +1,6 @@
-﻿namespace Final_project.Repository
+﻿using System.Collections.Generic;
+
+namespace Final_project.Repository
 {
     public interface IRepository<T> where T : class
     {

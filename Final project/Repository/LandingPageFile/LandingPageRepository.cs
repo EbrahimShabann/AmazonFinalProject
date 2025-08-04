@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Final_project.Repository.LandingPageFile
 {
-    public class LandingPageRepository:ILandingPageRepository
+    public class LandingPageRepository : ILandingPageRepository
     {
         private readonly AmazonDBContext db;
 
@@ -102,29 +102,29 @@ namespace Final_project.Repository.LandingPageFile
 
             // Get newest discounted products with their discount information with pagination
             var discountedProducts = db.product_discounts
-                .Include(pd => pd.product)
-                .Include(pd => pd.Discount)
-                .Where(pd => pd.product.is_active == true &&
-                            pd.product.is_approved == true &&
-                            pd.product.is_deleted == false &&
-                            pd.Discount.is_active == true &&
-                            pd.Discount.start_date <= currentDate &&
-                            (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
-                .OrderByDescending(pd => pd.Discount.created_at) // Newest discounts first
-                .Skip(skip)
-                .Take(take)
-                .Select(pd => new
-                {
-                    Product = pd.product,
-                    Discount = pd.Discount,
-                    TotalSold = db.order_items
-                                 .Where(oi => oi.product_id == pd.product_id)
-                                 .Sum(oi => oi.quantity) ?? 0,
-                    TotalRevenue = db.order_items
-                                   .Where(oi => oi.product_id == pd.product_id)
-                                   .Sum(oi => oi.quantity * oi.unit_price) ?? 0
-                })
-                .ToList();
+     .Include(pd => pd.product)
+     .Include(pd => pd.Discount)
+     .Where(pd => pd.product.is_active == true &&
+                 pd.product.is_approved == true &&
+                 pd.product.is_deleted == false &&
+                 pd.Discount.is_active == true &&
+                 pd.Discount.start_date <= currentDate &&
+                 (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+     .OrderByDescending(pd => pd.Discount.created_at)
+     .Skip(skip)
+     .Take(take)
+     .GroupJoin(
+         db.order_items,
+         pd => pd.product_id,
+         oi => oi.product_id,
+         (pd, orderItems) => new
+         {
+             Product = pd.product,
+             Discount = pd.Discount,
+             TotalSold = orderItems.Sum(oi => oi.quantity ?? 0),
+             TotalRevenue = orderItems.Sum(oi => (oi.quantity ?? 0) * (oi.unit_price ?? 0))
+         })
+     .ToList();
 
             var result = new List<LandingPageProductDiscount>();
 
@@ -132,11 +132,11 @@ namespace Final_project.Repository.LandingPageFile
             {
                 // Calculate the discounted price based on discount type
                 decimal? discountedPrice = item.Product.price;
-                if (item.Discount.discount_type == "Percentage" && item.Discount.value.HasValue)
+                if (item.Discount.discount_type == "percentage" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
                 }
-                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
+                else if (item.Discount.discount_type == "fixed" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price - item.Discount.value.Value;
                 }
@@ -147,7 +147,7 @@ namespace Final_project.Repository.LandingPageFile
                     ProductName = item.Product.name,
                     ImageUrl = GetProductImageUrl(item.Product.id),
                     Price = Math.Round((decimal)item.Product.price, 2),
-                    DiscountPrice = Math.Round((decimal)discountedPrice,2),
+                    DiscountPrice = Math.Round((decimal)discountedPrice, 2),
                     TotalSold = (int)item.TotalSold,
                     ratting = GetProductRating(item.Product.id),
                     ratingCount = GetProductRatingCount(item.Product.id),
@@ -252,45 +252,97 @@ namespace Final_project.Repository.LandingPageFile
                     return new List<ProductSearchViewModel>();
                 }
 
-                // First, get the products from database without calling GetProductImageUrl
+                var currentDate = DateTime.UtcNow;
+
+                // Get products with complete information including price and discount data
                 var products = db.products
                     .Where(p => p.is_active == true &&
                                p.is_approved == true &&
                                p.is_deleted == false &&
-                               (p.name.Contains(searchTerm) || p.description.Contains(searchTerm)))
-                    .OrderBy(p => p.name)
+                               p.price.HasValue && // Ensure product has a price
+                               (p.name.Contains(searchTerm) ||
+                                (p.description != null && p.description.Contains(searchTerm)) ||
+                                (p.Brand != null && p.Brand.Contains(searchTerm))))
+                    .OrderByDescending(p => p.created_at) // Show newest first
+                    .ThenBy(p => p.name) // Then alphabetically
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
-                    .Select(p => new {
-                        Id = p.id,
-                        Name = p.name
-                    })
-                    .ToList(); // Execute the query here
+                    .ToList();
 
-                // Check if products is null before calling Select
+                // Check if products is null before processing
                 if (products == null)
                 {
                     return new List<ProductSearchViewModel>();
                 }
 
-                // Then, create the view model with the method call
-                return products.Select(p => new ProductSearchViewModel
+                var result = new List<ProductSearchViewModel>();
+
+                foreach (var product in products)
                 {
-                    ProductId = p.Id,
-                    ProductName = p.Name,
-                    ImageUrl = GetProductImageUrl(p.Id) // Now this runs in memory, not in SQL
-                }).ToList();
+                    // Check for active discounts
+                    decimal? discountedPrice = null;
+
+                    // First check if product has direct discount_price
+                    if (product.discount_price.HasValue)
+                    {
+                        discountedPrice = product.discount_price.Value;
+                    }
+                    else
+                    {
+                        // Check the discount system for active discounts
+                        var activeDiscount = db.product_discounts
+                            .Include(pd => pd.Discount)
+                            .Where(pd => pd.product_id == product.id &&
+                                        pd.Discount.is_active == true &&
+                                        pd.Discount.start_date <= currentDate &&
+                                        (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+                            .FirstOrDefault();
+
+                        if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
+                        {
+                            if (activeDiscount.Discount.discount_type == "percentage")
+                            {
+                                discountedPrice = product.price.Value * (1 - activeDiscount.Discount.value.Value / 100);
+                            }
+                            else if (activeDiscount.Discount.discount_type == "fixed")
+                            {
+                                discountedPrice = product.price.Value - activeDiscount.Discount.value.Value;
+                            }
+
+                            // Ensure discount price is not negative
+                            if (discountedPrice < 0)
+                                discountedPrice = 0;
+                        }
+                    }
+
+                    var viewModel = new ProductSearchViewModel
+                    {
+                        ProductId = product.id,
+                        ProductName = product.name ?? "Product",
+                        ImageUrl = GetProductImageUrl(product.id),
+                        Price = Math.Round((double)(product.price ?? 0), 2),
+                        DiscountPrice = discountedPrice.HasValue ? Math.Round((double)discountedPrice.Value, 2) : (double?)null,
+                        Brand = product.Brand ?? "Amazon",
+                        Rating = GetProductRating(product.id),
+                        ReviewCount = GetProductRatingCount(product.id),
+                        Description = product.description,
+                        Prime = _random.Next(2) == 1 // Random for now, implement actual Prime logic as needed
+                    };
+
+                    result.Add(viewModel);
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
                 // Log the exception (replace with your logging mechanism)
-                // Logger.LogError(ex, "Error in ProductSearch method");
+                Console.WriteLine($"Error in ProductSearch method: {ex.Message}");
 
                 // Return empty list instead of throwing
                 return new List<ProductSearchViewModel>();
             }
         }
-
 
 
         public List<LandingPageProducts> GetFilteredProducts(ProductFilterParameters filterParams)
@@ -387,18 +439,18 @@ namespace Final_project.Repository.LandingPageFile
                                     (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
                         .FirstOrDefault();
 
-                    // Calculate discounted price if discount exists
+                    //// Calculate discounted price if discount exists
                     decimal? discountedPrice = null;
                     decimal? discountPercentage = null;
 
                     if (activeDiscount != null && activeDiscount.Discount.value.HasValue)
                     {
-                        if (activeDiscount.Discount.discount_type == "Percentage")
+                        if (activeDiscount.Discount.discount_type == "percentage")
                         {
                             discountPercentage = activeDiscount.Discount.value.Value;
                             discountedPrice = product.price * (1 - activeDiscount.Discount.value.Value / 100);
                         }
-                        else if (activeDiscount.Discount.discount_type == "Fixed")
+                        else if (activeDiscount.Discount.discount_type == "fixed")
                         {
                             discountedPrice = product.price - activeDiscount.Discount.value.Value;
                             discountPercentage = (decimal?)((activeDiscount.Discount.value.Value / product.price) * 100);
@@ -413,8 +465,10 @@ namespace Final_project.Repository.LandingPageFile
                     {
                         ProductId = product.id,
                         ProductName = product.name,
-                        Price = Math.Round((decimal)product.price,2),
-                        DiscountPrice = Math.Round((decimal)discountedPrice,2),
+                        // Fix the Price - handle null values
+                        Price = product.price.HasValue ? Math.Round(product.price.Value, 2) : 0,
+                        // Fix the DiscountPrice - handle null values properly
+                        DiscountPrice = discountedPrice.HasValue ? Math.Round(discountedPrice.Value, 2) : (decimal?)null,
                         ImageUrl = GetProductImageUrl(product.id),
                         ratting = GetProductRating(product.id),
                         ratingCount = GetProductRatingCount(product.id),
@@ -426,8 +480,7 @@ namespace Final_project.Repository.LandingPageFile
                     data.rattingStarMinuse = 5 - data.ratting;
                     landingPageProducts.Add(data);
                 }
-
-                return landingPageProducts;
+                    return landingPageProducts;
             }
             catch (Exception ex)
             {
@@ -597,7 +650,7 @@ namespace Final_project.Repository.LandingPageFile
                             pd.Discount.start_date <= currentDate &&
                             (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate) &&
                             // Today's deals can be either created today or have high discount percentage
-                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 20)) // 20% or more discount
+                            (pd.Discount.created_at >= todayStart || pd.Discount.value >= 2)) // 20% or more discount
                 .OrderByDescending(pd => pd.Discount.value) // Order by highest discount first
                 .ThenByDescending(pd => pd.Discount.created_at) // Then by newest
                 .Skip(skip)
@@ -623,12 +676,12 @@ namespace Final_project.Repository.LandingPageFile
                 decimal? discountedPrice = item.Product.price;
                 decimal? discountPercentage = null;
 
-                if (item.Discount.discount_type == "Percentage" && item.Discount.value.HasValue)
+                if (item.Discount.discount_type == "percentage" && item.Discount.value.HasValue)
                 {
                     discountPercentage = item.Discount.value.Value;
                     discountedPrice = item.Product.price * (1 - item.Discount.value.Value / 100);
                 }
-                else if (item.Discount.discount_type == "Fixed" && item.Discount.value.HasValue)
+                else if (item.Discount.discount_type == "fixed" && item.Discount.value.HasValue)
                 {
                     discountedPrice = item.Product.price - item.Discount.value.Value;
                     // Calculate percentage for fixed discount - FIXED: Cast to decimal? instead of using Math.Round
@@ -688,6 +741,116 @@ namespace Final_project.Repository.LandingPageFile
                                    c.Product.is_approved == true && c.Product.is_deleted == false)
                          .Select(ci => ci.quantity)
                          .Sum() ?? 0;
+        }
+
+
+        public List<ChatbotProductViewModel> GetProductsForChatbot(string searchTerm, int pageNumber = 1, int pageSize = 8)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(searchTerm))
+                {
+                    return new List<ChatbotProductViewModel>();
+                }
+
+                if (db?.products == null)
+                {
+                    return new List<ChatbotProductViewModel>();
+                }
+
+                var currentDate = DateTime.UtcNow;
+
+                // Get products with complete information, leveraging the existing model structure
+                var products = db.products
+                    .Where(p => p.is_active == true &&
+                               p.is_approved == true &&
+                               p.is_deleted == false &&
+                               p.price.HasValue && // Ensure product has a price
+                               (p.name.Contains(searchTerm) ||
+                                (p.description != null && p.description.Contains(searchTerm)) ||
+                                (p.Brand != null && p.Brand.Contains(searchTerm))))
+                    .OrderByDescending(p => p.created_at) // Show newest first
+                    .ThenBy(p => p.name) // Then alphabetically
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                if (products == null || !products.Any())
+                {
+                    return new List<ChatbotProductViewModel>();
+                }
+
+                // Convert to view model with complete data
+                var result = new List<ChatbotProductViewModel>();
+
+                foreach (var product in products)
+                {
+                    // Use the existing discount_price from the model if available
+                    // Otherwise, check for active discounts in the discount system
+                    decimal? finalDiscountPrice = product.discount_price;
+
+                    // If no direct discount price, check the discount system
+                    if (!finalDiscountPrice.HasValue)
+                    {
+                        var activeDiscount = db.product_discounts
+                            .Include(pd => pd.Discount)
+                            .Where(pd => pd.product_id == product.id &&
+                                        pd.Discount.is_active == true &&
+                                        pd.Discount.start_date <= currentDate &&
+                                        (pd.Discount.end_date == null || pd.Discount.end_date >= currentDate))
+                            .FirstOrDefault();
+
+                        if (activeDiscount != null && activeDiscount.Discount.value.HasValue && product.price.HasValue)
+                        {
+                            if (activeDiscount.Discount.discount_type == "Percentage")
+                            {
+                                finalDiscountPrice = product.price.Value * (1 - activeDiscount.Discount.value.Value / 100);
+                            }
+                            else if (activeDiscount.Discount.discount_type == "fixed")
+                            {
+                                finalDiscountPrice = product.price.Value - activeDiscount.Discount.value.Value;
+                            }
+
+                            // Ensure discount price is not negative
+                            if (finalDiscountPrice < 0)
+                                finalDiscountPrice = 0;
+                        }
+                    }
+
+                    var viewModel = new ChatbotProductViewModel
+                    {
+                        ProductId = product.id,
+                        ProductName = product.name ?? "Product",
+                        Brand = product.Brand ?? "Amazon",
+                        Price = Math.Round(product.price ?? 0, 2),
+                        DiscountPrice = finalDiscountPrice.HasValue ? Math.Round(finalDiscountPrice.Value, 2) : (decimal?)null,
+                        ImageUrl = GetProductImageUrl(product.id),
+                        Rating = GetProductRating(product.id),
+                        ReviewCount = GetProductRatingCount(product.id),
+                        Description = product.description,
+                        TotalSold = GetProductSalesCount(product.id),
+                        Prime = _random.Next(2) == 1, // Random for now, you can implement actual Prime logic
+                        DeliveryTiming = DateTime.Now.AddDays(_random.Next(1, 4)),
+                        StockQuantity = product.stock_quantity ?? 0,
+                        Colors = product.Colors,
+                        Sizes = product.Sizes,
+                        Sku = product.sku,
+                        CreatedAt = product.created_at ?? DateTime.Now,
+                        IsActive = product.is_active ?? false,
+                        CategoryId = product.category_id
+                    };
+
+                    result.Add(viewModel);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error in GetProductsForChatbot: {ex.Message}");
+                return new List<ChatbotProductViewModel>();
+            }
         }
     }
 }

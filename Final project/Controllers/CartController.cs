@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;
@@ -86,11 +89,15 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult AddToCart(string productId, string color, string size)
         {
-            var IdClaim = User.Claims.FirstOrDefault(c=>c.Type== ClaimTypes.NameIdentifier);
-            string userId = IdClaim.Value;
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "NotLoggedIn" });
+            }
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
             if (cart == null)
             {

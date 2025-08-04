@@ -276,7 +276,7 @@
             background: #217dbb;
         }
 
-  
+
 
     .loading-spinner {
         width: 1rem;
@@ -294,30 +294,25 @@
     }
 
     @@keyframes fadeIn {
-        from
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @@keyframes spin {
-    0%
-    {
-        transform: rotate(0deg);
-    }
+        0% {
+            transform: rotate(0deg);
+        }
 
-    100% {
-        transform: rotate(360deg);
-    }
-
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>
 <main class="main-content">
@@ -496,7 +491,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-         
+
 
            document.getElementById('clearFilters').addEventListener('click', function() {
                document.getElementById('filterName').value = '';
@@ -536,7 +531,7 @@
         } else {
             $("#NameSuggestions").empty();
         }
-    });  
+    });
 
     $(document).on('click', '#NameSuggestions .list-group-item', function () {
         $("#filterName").val($(this).data('name'));

@@ -25,8 +25,11 @@ namespace Final_project.ViewModel.AccountPageViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Please select a role.")]
+        public string Role { get; set; } = "customer"; // Default to customer
+
         public bool TermsAndPrivacy { get; set; }
         public bool SubscribeForNewsletter { get; set; }
-
     }
 }

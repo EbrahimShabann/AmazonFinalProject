@@ -14,6 +14,8 @@ namespace Final_project.Repository
         public Task<int> GetCountAsync(Expression<Func<discount, bool>> filter = null);
         public Task AddAsync(discount entity) ;
         public void Delete(discount entity);
+        public void ApplyDiscountToProducts(discount entity, List<string> productIds);
+
 
     }
 } 

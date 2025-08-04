@@ -2,12 +2,15 @@
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Services.Customer;
+using Final_project.Services.SmsService;
 using Final_project.ViewModel.Cart;
 using Final_project.ViewModel.Customer;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
 using Stripe.Climate;
@@ -16,26 +19,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Twilio;
+
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace Final_project.Controllers
 {
-    //[Authorize(Roles = "Customer")]
+    
 
     public class ProductController : Controller
     {
         private readonly UnitOfWork uof;
         private readonly IHubContext<SellerOrdersHub> hub;
+        private readonly IConfiguration _configuration;
 
-        public ProductController(UnitOfWork uof,IHubContext<SellerOrdersHub> hub)
+        public ProductController(UnitOfWork uof, IHubContext<SellerOrdersHub> hub,IConfiguration configuration)
         {
             this.uof = uof;
             this.hub = hub;
+            this._configuration = configuration;
         }
 
 
         public IActionResult Details(string id)
         {
             ProductsVM product = uof.ProductRepository.getProductsWithImagesAndRating().SingleOrDefault(p => p.id == id);
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (product == null)
             {
                 return NotFound();
@@ -43,6 +53,8 @@ namespace Final_project.Controllers
             product.ExistingImages = uof.ProductRepository.GetProduct_Images(id);
             product.reviews = uof.ProductRepository.getProductReviews(id);
             product.RecommendedProducts = uof.ProductRepository.getProductsWithImagesAndRating().Where(p => p.category_id == product.category_id).ToList();
+            product.UserOrderItem = uof.OrderItemRepository.GetAll()
+                    .FirstOrDefault(oi => oi.product_id == id && oi.order.buyer_id == userId);
             return View(product);
         }
 
@@ -52,22 +64,7 @@ namespace Final_project.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (ModelState.IsValid)
             {
-                //check if the user has purchased the product if true then he can review it
-                var userOrderItem = uof.OrderItemRepository.GetAll()
-                    .FirstOrDefault(oi => oi.product_id == reviewVM.product_id && oi.order.buyer_id == userId);
-                if(userOrderItem == null)
-                {
-                    TempData["error"] = "You have to try this product first!";
-                    return RedirectToAction("Details", new { id = reviewVM.product_id });
-                }
-                //check if the user has already reviewed the product
-                var existingReview = uof.ProductRepository.getProductReviews(reviewVM.product_id)
-                    .FirstOrDefault(r => r.user_id == userId);
-                if (existingReview != null)
-                {
-                    TempData["error"] = "You can't review twice!";
-                    return RedirectToAction("Details", new { id = reviewVM.product_id });
-                }
+
                 if (reviewVM.rating < 1 || reviewVM.rating > 5)
                 {
                     TempData["error"] = "Rating must be between 1 and 5.";
@@ -106,7 +103,6 @@ namespace Final_project.Controllers
 
 
         [HttpGet]
-        [Authorize]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;        //customerId
@@ -294,15 +290,15 @@ namespace Final_project.Controllers
                     uof.ProductRepository.Update(product);
                 }
             }
-      
 
+            //send notification to the seller
 
             // 🔔 Get unique sellers from the ordered products
             //var sellerIds= model.Carts
             //    .Select(c => c.seller_id)
             //    .Distinct()
             //    .ToList();
-            
+
             //    foreach (var sellerId in sellerIds)
             //    {
             //        string message = $"New order #{order.id} contains one or more of your products.";
@@ -321,13 +317,23 @@ namespace Final_project.Controllers
             //            OrderId = order.id,
 
             //        };
-
+            //uof.NotificationRepository.add(notification);
             //        // Notify each seller about the new order
             //        await hub.Clients.User(sellerId).SendAsync("ReceiveNotification", message);
             //    }
 
             
             uof.save();
+            
+            //try
+            //{
+            //    SendOrderConfirmation(order);
+            //}
+            //catch (Exception ex)
+            //{
+            //    TempData["error"] = "SMS sending failed: " + ex.Message;
+
+            //}
             //handle stripe payment
             if (model.payment_method == "card")
             {
@@ -363,11 +369,24 @@ namespace Final_project.Controllers
             }
 
             TempData["success"] = $"Order placed successfully with ID: {order.id}!";
-            return RedirectToAction("Index","Landing");
+            return RedirectToAction("orderConfirmation", "Product", new { orderId=order.id });
         }
 
         public IActionResult orderConfirmation(string orderId)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = uof.ShoppingCartRepository.GetShoppingCartByUserId(userId);
+            var cartItems = uof.CartItemRepository.GetCartItemsByUserId(userId);
+            if (cart != null)
+            {
+                foreach (var item in cartItems)
+                {
+                    uof.CartItemRepository.Remove(item);
+                }
+                
+                uof.ShoppingCartRepository.Delete(cart);
+                uof.save();
+            }
             if (string.IsNullOrEmpty(orderId))
             {
                 TempData["error"] = "Invalid order ID.";
@@ -376,5 +395,159 @@ namespace Final_project.Controllers
             var order = uof.OrderRepo.getById(orderId);
             return View(order);
         }
+
+
+        #region sendingSms
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> TestSMSToEgyptianNumber(string Userid, string customMessage = null, bool developmentMode = false)
+        {
+            // Declare targetNumber outside try block so it's accessible in catch blocks
+            string targetNumber = null;
+
+            try
+            {
+                // Get the user's phone number
+                targetNumber = uof.AccountRepository.GetUserPhoneNumber(Userid);
+
+                // Format Egyptian phone number to international E.164 format
+                targetNumber = FormatEgyptianPhoneNumber(targetNumber);
+
+                // Validate the formatted number
+                if (string.IsNullOrEmpty(targetNumber))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Invalid phone number",
+                        message = "Could not format the phone number properly"
+                    });
+                }
+
+                // Get Twilio configuration
+                var accountSid = _configuration["TwilioSettings:AccountSid"];
+                var authToken = _configuration["TwilioSettings:AuthToken"];
+                var fromPhone = _configuration["TwilioSettings:PhoneNumber"];
+
+                // Validate configuration
+                if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) || string.IsNullOrEmpty(fromPhone))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Twilio configuration missing",
+                        message = "Check your appsettings.json for Twilio settings"
+                    });
+                }
+
+                // Use custom message or default test message
+                var messageBody = customMessage ?? "🔐 Hello from your Amazon Clone app! This is a test SMS. Time: " + DateTime.Now.ToString("HH:mm:ss");
+
+                // Initialize Twilio and send real SMS
+                TwilioClient.Init(accountSid, authToken);
+
+                var message = await MessageResource.CreateAsync(
+                    body: messageBody,
+                    from: new Twilio.Types.PhoneNumber(fromPhone),
+                    to: new Twilio.Types.PhoneNumber(targetNumber)
+                );
+
+                return Json(new
+                {
+                    success = true,
+                    messageSid = message.Sid,
+                    status = message.Status?.ToString(),
+                    message = "SMS sent successfully!",
+                    sentTo = targetNumber,
+                    messageBody = messageBody,
+                    timestamp = DateTime.Now,
+                    note = $"Message sent from {fromPhone} to {targetNumber}"
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex) when (ex.Message.Contains("unverified"))
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Number not verified",
+                    message = $"You need to verify {targetNumber} in Twilio Console first",
+                    instructions = new
+                    {
+                        step1 = "Go to https://console.twilio.com",
+                        step2 = "Navigate to Phone Numbers → Manage → Verified Caller IDs",
+                        step3 = "Click 'Add a new number'",
+                        step4 = $"Enter: {targetNumber}",
+                        step5 = "Complete verification by entering the code sent to your phone"
+                    },
+                    twilioError = ex.Message
+                });
+            }
+            catch (Twilio.Exceptions.ApiException ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "Twilio API Error",
+                    message = ex.Message,
+                    code = ex.Code,
+                    moreInfo = ex.MoreInfo,
+                    formattedNumber = targetNumber
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = ex.Message,
+                    type = ex.GetType().Name,
+                    message = "Unexpected error occurred"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Formats Egyptian phone numbers to international E.164 format for Twilio
+        /// </summary>
+        /// <param name="phoneNumber">The phone number to format</param>
+        /// <returns>Formatted phone number in E.164 format or null if invalid</returns>
+        private string FormatEgyptianPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return null;
+
+            // Remove any spaces, dashes, or other non-digit characters except +
+            var cleanNumber = System.Text.RegularExpressions.Regex.Replace(phoneNumber, @"[^\d+]", "");
+
+            // If it already starts with +20, return as-is
+            if (cleanNumber.StartsWith("+20"))
+                return cleanNumber;
+
+            // If it starts with 20, add the +
+            if (cleanNumber.StartsWith("20"))
+                return "+" + cleanNumber;
+
+            // If it starts with 01 (Egyptian mobile format), convert to +201
+            if (cleanNumber.StartsWith("01") && cleanNumber.Length == 11)
+                return "+2" + cleanNumber;
+
+            // If it starts with 1 and is 10 digits (01 without the 0), convert to +201
+            if (cleanNumber.StartsWith("1") && cleanNumber.Length == 10)
+                return "+20" + cleanNumber;
+
+            // If none of the above patterns match, return null (invalid)
+            return null;
+        }
+
+        public async Task<IActionResult> SendOrderConfirmation(order order)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return await TestSMSToEgyptianNumber(userId, $"✅ Order confirmed! Hi {User.Identity.Name}, Your order #{order.id} is confirmed to adress {order.shipping_address}. Thank you for shopping with us!");
+        }
+
+        #endregion
+
+
     }
 }

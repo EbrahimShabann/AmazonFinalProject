@@ -1,59 +1,68 @@
-﻿@model List<category>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@model List<category>
 @{
     int page = ViewBag.Page ?? 1;
     int pageSize = ViewBag.PageSize ?? 10;
     int totalCount = ViewBag.TotalCount ?? Model.Count;
     int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var roles = await UserManager.GetRolesAsync(currentUser);
+    string role = roles.FirstOrDefault();
 }
 @if (Model == null || !Model.Any())
 {
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            <i class="fas fa-folder-open fa-2x d-block mb-2"></i>
-                            <span style="font-size: 1.2rem;">No categories found matching the filters.</span>
-                        </td>
-                    </tr>
+    <tr>
+        <td colspan="6" class="text-center text-muted py-4">
+            <i class="fas fa-folder-open fa-2x d-block mb-2"></i>
+            <span style="font-size: 1.2rem;">No categories found matching the filters.</span>
+        </td>
+    </tr>
 }
 else
 {
-    @foreach (category c in Model)
-    {
+    
+        @foreach (category c in Model)
+        {
             <tr>
                 <td>@c.name</td>
-                <td>@c.CreatedByUser.UserName</td>
+                <td>@c.CreatedByUser?.UserName</td>
                 <td>@c.created_at</td>
-            @if ((bool)c.is_active & !c.is_deleted)
-            {
-                        <td><span class="status-badge status-active ">Active</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-secondary deactivate-btn" data-id="@c.id">
-                                    <i class="fas fa-ban"></i> Inactive
-                                </button>
-                                <a class="btn btn-info" data-id="@c.id" href="AdminCategory/CategoryDetails/@c.id">
-                                    <i class="fas fa-eye"></i> Details
-                                </a>
-                            </div>
-                        </td>
-            }
-            else if ((bool)!c.is_active & !c.is_deleted)
-            {
-                        <td><span class="status-badge status-inactive">Inactive</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-success activate-btn" data-id="@c.id">
-                                    <i class="fas fa-check-circle"></i> Activate
-                                </button>
-                                <button class="btn btn-danger delete-btn" data-id="@c.id">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </div>
-                        </td>
-            }
+                @if ((bool)c.is_active & !c.is_deleted)
+                {
+                    <td><span class="status-badge status-active ">Active</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary deactivate-btn" data-id="@c.id">
+                                <i class="fas fa-ban"></i> Inactive
+                            </button>
+                            <a class="btn btn-info" data-id="@c.id" href="AdminCategory/CategoryDetails/@c.id">
+                                <i class="fas fa-eye"></i> Details
+                            </a>
+                        </div>
+                    </td>
+                }
+                else if ((bool)!c.is_active & !c.is_deleted)
+                {
+                    <td><span class="status-badge status-inactive">Inactive</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-success activate-btn" data-id="@c.id">
+                                <i class="fas fa-check-circle"></i> Activate
+                            </button>
+                            <button class="btn btn-danger delete-btn" data-id="@c.id">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                }
 
             </tr>
+        }
+
     }
+  
 }
 <style>
     .pagination-btn {
@@ -76,18 +85,18 @@ else
             color: white;
             border-color: var(--amazon-orange);
         }
-</style>            
+</style>
 <!-- Pagination -->
 @if (totalPages > 1)
 {
-        <tr>
-            <td colspan="6">
-                <div class="pagination btn-group">
+    <tr>
+        <td colspan="6">
+            <div class="pagination btn-group">
                 @for (int i = 1; i <= totalPages; i++)
                 {
-                            <button class="pagination-btn @(i == page ? "active" : "") btn-outline-primary" data-page="@i">@i</button>
+                    <button class="pagination-btn @(i == page ? "active" : "") btn-outline-primary" data-page="@i">@i</button>
                 }
-                </div>
-            </td>
-        </tr>
+            </div>
+        </td>
+    </tr>
 }

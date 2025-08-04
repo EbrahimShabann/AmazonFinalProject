@@ -173,8 +173,8 @@ namespace Final_project.Controllers
                         productId = p.ProductId,
                         productName = p.ProductName,
                         imageUrl = p.ImageUrl,
-                        originalPrice = p.Price,
-                        discountPrice = p.DiscountPrice,
+                        originalPrice = p.Price.HasValue ? Math.Round(p.Price.Value, 2) : 0,
+                        discountPrice = p.DiscountPrice.HasValue ? Math.Round(p.DiscountPrice.Value, 2) : (decimal?)null,
                         discountPercentage = p.DiscountPercentage,
                         hasDiscount = p.DiscountPrice.HasValue,
                         finalPrice = p.DiscountPrice ?? p.Price,
@@ -187,7 +187,7 @@ namespace Final_project.Controllers
                         prime = p.prime,
                         description = p.Description
                     }),
-                    pagination = new
+                pagination = new
                     {
                         currentPage = page,
                         totalPages = totalPages,

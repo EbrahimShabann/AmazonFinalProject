@@ -29,79 +29,97 @@
         padding: 0;
     }
 
-    .container-fluid, .container {
-        background: transparent;
-        padding: 2rem;
-    }
-
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(52, 73, 94, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(41, 128, 185, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
     .container {
-        background: transparent;
-        backdrop-filter: none;
-        border: none;
-        border-radius: 0;
         padding: 2rem;
-        margin: 0;
-        box-shadow: none;
+        max-width: 1200px;
     }
 
-    .card {
-        background: rgba(255, 255, 255, 0.1);
+    /* Hero Section */
+    .dashboard-hero {
+        background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 15px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        margin: 2rem auto;
-        max-width: 800px;
-    }
-
-    .card-header {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        font-weight: 600;
-    }
-
-    .card-body {
-        color: white;
-    }
-
-    .btn {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 12px 24px;
         border-radius: 25px;
-        font-weight: 600;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+    @@keyframes shimmer {
+        0%
+
+    {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0 0 0;
+        font-weight: 400;
+    }
+
+    /* Form Panel */
+    .form-panel {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
 
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.25);
+        .form-panel:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            color: white;
         }
 
-    .btn-success {
-        background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
-        border: none;
-    }
-
-    .form-control, .form-select {
+    /* Glass Input Styling */
+    .glass-input {
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -110,13 +128,14 @@
         color: white;
         font-weight: 500;
         transition: all 0.3s ease;
+        width: 100%;
     }
 
-        .form-control::placeholder {
+        .glass-input::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
 
-        .form-control:focus, .form-select:focus {
+        .glass-input:focus {
             outline: none;
             border-color: var(--amazon-orange);
             box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
@@ -124,21 +143,72 @@
             color: white;
         }
 
-        .form-control option, .form-select option {
+        .glass-input option {
             background: var(--amazon-dark);
             color: white;
         }
 
-    .form-label {
-        color: white;
+    /* Glass Label */
+    .glass-label {
+        color: rgba(255, 255, 255, 0.9);
         font-weight: 600;
         margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
     }
 
-    .form-check-label {
+    /* Action Buttons */
+    .floating-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 12px 24px;
         color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.9rem;
     }
 
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .floating-btn:hover::before {
+            left: 100%;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .floating-btn.primary {
+            background: linear-gradient(135deg, var(--amazon-orange) 0%, #ff7700 100%);
+            border: none;
+        }
+
+        .floating-btn.success {
+            background: linear-gradient(135deg, var(--success-green) 0%, #00a854 100%);
+            border: none;
+        }
+
+    /* Form Check Styling */
     .form-check-input {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -149,6 +219,10 @@
             border-color: var(--amazon-orange);
         }
 
+    .form-check-label {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
     .text-danger {
         color: #ff6b6b !important;
     }
@@ -157,148 +231,81 @@
         color: rgba(255, 255, 255, 0.7) !important;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        color: white;
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-title
+
+    {
+        font-size: 2rem;
     }
 
-    strong {
-        color: white !important;
+    .form-panel {
+        padding: 1.5rem;
     }
 
-    span {
-        color: white;
+    .row {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    div {
-        color: white;
     }
 
-    p {
-        color: white;
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
     }
 
-    td {
-        color: white !important;
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    th {
-        color: white !important;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    tr {
-        color: white;
-    }
+    }</style>
 
-    a {
-        color: white;
-    }
-
-    label {
-        color: white;
-    }
-
-    small {
-        color: white;
-    }
-
-    i {
-        color: white;
-    }
-
-    img {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    hr {
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    input {
-        color: white;
-    }
-
-    select {
-        color: white;
-    }
-
-    textarea {
-        color: white;
-    }
-
-    button {
-        color: white;
-    }
-
-    option {
-        color: white;
-    }
-
-    li {
-        color: white;
-    }
-
-    ul {
-        color: white;
-    }
-
-    ol {
-        color: white;
-    }
-
-    b {
-        color: white;
-    }
-
-    em {
-        color: white;
-    }
-
-    mark {
-        color: white;
-    }
-
-    code {
-        color: white;
-    }
-
-    pre {
-        color: white;
-    }
-
-    kbd {
-        color: white;
-    }
-
-    samp {
-        color: white;
-    }
-
-    .table-dark {
-        background: rgba(255, 255, 255, 0.15) !important;
-        backdrop-filter: blur(10px);
-    }
-
-        .table-dark th {
-            color: white !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-</style>
-
-<div class="card shadow-sm" style="max-width:100%;margin:auto;">
-    <div class="card-header bg-primary text-white">
-        <h2 class="mb-0" style="font-weight:800;letter-spacing:0.5px;">Add Discount</h2>
+<!-- Hero Section -->
+<div class="container">
+    <div class="dashboard-hero">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title">
+                    <i class="fas fa-plus me-3"></i>
+                    Add Discount
+                </h1>
+                <p class="hero-subtitle">
+                    Create a new discount and assign it to products
+                </p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="floating-actions">
+                    <a href="@Url.Action("Discounts")" class="floating-btn">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Discounts
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
+</div>
+
+<div class="container">
+    <div class="form-panel fade-in">
         <form asp-action="AddDiscount" method="post">
             <div class="row g-3">
                 <div class="col-md-12">
-                    <label asp-for="description" class="form-label"></label>
-                    <input asp-for="description" class="form-control" required />
+                    <label asp-for="description" class="glass-label">Description</label>
+                    <input asp-for="description" class="glass-input" placeholder="Enter discount description" required />
                     <span asp-validation-for="description" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="discount_type" class="form-label"></label>
-                    <select asp-for="discount_type" class="form-select" id="discount_type" required>
+                    <label asp-for="discount_type" class="glass-label">Discount Type</label>
+                    <select asp-for="discount_type" class="glass-input" id="discount_type" required>
                         <option value="">-- Select Discount Type --</option>
                         <option value="percentage">Percentage</option>
                         <option value="fixed">Fixed Amount</option>
@@ -306,23 +313,23 @@
                     <span asp-validation-for="discount_type" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="value" id="valueLabel" class="form-label">Value</label>
-                    <input asp-for="value" class="form-control" type="number" step="0.01" id="valueInput" placeholder="Enter value" required />
-                    <small class="form-text text-muted" id="valueHelp">Select discount type first</small>
+                    <label asp-for="value" id="valueLabel" class="glass-label">Value</label>
+                    <input asp-for="value" class="glass-input" type="number" step="0.01" id="valueInput" placeholder="Enter value" required />
+                    <small class="form-text text-muted" id="valueHelp" style="color: rgba(255, 255, 255, 0.7);">Select discount type first</small>
                     <span asp-validation-for="value" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="start_date" class="form-label"></label>
-                    <input asp-for="start_date" class="form-control" type="date" required />
+                    <label asp-for="start_date" class="glass-label">Start Date</label>
+                    <input asp-for="start_date" class="glass-input" type="date" required />
                     <span asp-validation-for="start_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="end_date" class="form-label"></label>
-                    <input asp-for="end_date" class="form-control" type="date" required />
+                    <label asp-for="end_date" class="glass-label">End Date</label>
+                    <input asp-for="end_date" class="glass-input" type="date" required />
                     <span asp-validation-for="end_date" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="is_active" class="form-label"></label>
+                    <label asp-for="is_active" class="glass-label">Status</label>
                     <div class="form-check">
                         @Html.CheckBoxFor(m => m.is_active, new { @class = "form-check-input", id = "is_active" })
                         <label class="form-check-label" for="is_active">Active</label>
@@ -330,8 +337,8 @@
                     <span asp-validation-for="is_active" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Category</label>
-                    <select id="categorySelect" class="form-select">
+                    <label class="glass-label">Category</label>
+                    <select id="categorySelect" class="glass-input">
                         <option value="">-- Select Category --</option>
                         @foreach (var cat in categories)
                         {
@@ -344,8 +351,8 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label">Products</label>
-                    <select name="productIds" id="productsSelect" class="form-select" multiple size="6" required>
+                    <label class="glass-label">Products</label>
+                    <select name="productIds" id="productsSelect" class="glass-input" multiple size="6" required>
                         @foreach (var p in products)
                         {
                             <option value="@p.id" data-category="@p.category_id">@p.name</option>
@@ -355,41 +362,14 @@
                 </div>
             </div>
             <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-success px-4 py-2">Add Discount</button>
+                <button type="submit" class="floating-btn success">
+                    <i class="fas fa-plus me-2"></i>Add Discount
+                </button>
             </div>
         </form>
     </div>
 </div>
-@section Styles {
-    <style>
-        label.form-label {
-            color: #0d6efd;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-        }
 
-        /* Center the products select */
-        #productsSelect {
-            text-align: center;
-        }
-
-            #productsSelect option {
-                text-align: center;
-                padding: 8px;
-            }
-
-        /* Style for required fields */
-        .form-control:required,
-        .form-select:required {
-            border-left: 3px solid #dc3545;
-        }
-
-            .form-control:required:valid,
-            .form-select:required:valid {
-                border-left: 3px solid #198754;
-            }
-    </style>
-}
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -430,7 +410,6 @@
                 updateValueField();
             });
 
-
             $('#categorySelect').change(function() {
                 var selectedCat = $(this).val();
                 if (selectedCat) {
@@ -442,7 +421,6 @@
                 $('#productsSelect').val([]);
                 $('#applyToCategory').prop('checked', false);
             });
-
 
             $('#applyToCategory').change(function() {
                 var selectedCat = $('#categorySelect').val();
@@ -465,4 +443,4 @@
             });
         });
     </script>
-} 
+}

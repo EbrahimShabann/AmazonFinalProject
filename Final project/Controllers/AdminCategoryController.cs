@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,superadmin")]
 
     public class AdminCategoryController : Controller
     {
@@ -183,10 +183,10 @@ namespace Final_project.Controllers
             return Json(suggestions);
         }
 
-        public  IActionResult AddCategory()
+        public IActionResult AddCategory()
         {
 
-            var categories =unitOfWork.CategoryRepository.GetAll()
+            var categories = unitOfWork.CategoryRepository.GetAll()
                 .Select(c => new SelectListItem
                 {
                     Value = c.id,
@@ -212,7 +212,7 @@ namespace Final_project.Controllers
 
             if (model.imgFile != null && model.imgFile.Length > 0)
             {
-                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images","categories");
+                var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "categories");
                 Directory.CreateDirectory(uploads);
 
                 var fileName = Path.GetFileName(model.imgFile.FileName);
@@ -227,24 +227,24 @@ namespace Final_project.Controllers
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var newCategory = new category
-                {
-                    id = Guid.NewGuid().ToString(),
-                    name = model.name,
-                    description = model.description,
-                    parent_category_id = string.IsNullOrEmpty(model.parent_category_id) ? null : model.parent_category_id,
-                    image_url = Path.GetFileName(model.imgFile.FileName),
-                    created_by = currentUserId, // Replace with your logic
-                    created_at = DateTime.Now,
-                    ParentCategory = string.IsNullOrEmpty(model.parent_category_id) ? null : await unitOfWork.CategoryRepository.GetByIdAsync(model.parent_category_id),
-                    CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
-                    last_modified_by = currentUserId, // Replace with your logic
-                    last_modified_at = DateTime.Now,
-                    LastModifiedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
-                    deleted_by = null, // Set to null if not deleted
+            {
+                id = Guid.NewGuid().ToString(),
+                name = model.name,
+                description = model.description,
+                parent_category_id = string.IsNullOrEmpty(model.parent_category_id) ? null : model.parent_category_id,
+                image_url = Path.GetFileName(model.imgFile.FileName),
+                created_by = currentUserId, // Replace with your logic
+                created_at = DateTime.Now,
+                ParentCategory = string.IsNullOrEmpty(model.parent_category_id) ? null : await unitOfWork.CategoryRepository.GetByIdAsync(model.parent_category_id),
+                CreatedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
+                last_modified_by = currentUserId, // Replace with your logic
+                last_modified_at = DateTime.Now,
+                LastModifiedByUser = await unitOfWork.UserRepository.GetByIdAsync(currentUserId), // Replace with your logic
+                deleted_by = null, // Set to null if not deleted
 
-                };
-            
-          
+            };
+
+
             unitOfWork.CategoryRepository.add(newCategory);
             unitOfWork.save();
             return RedirectToAction("Index");
@@ -266,6 +266,9 @@ namespace Final_project.Controllers
 
             return View(category);
         }
-
+        public async Task<IActionResult> categoryRequest()
+        {
+            return View();
+        }
     }
 }

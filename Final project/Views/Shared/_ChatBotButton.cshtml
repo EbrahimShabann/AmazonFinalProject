@@ -1,10 +1,2160 @@
 ﻿<style>
-    #chatBotBtn:hover{
-        transform:scale(1.05);
-        transition:ease all 1s;
+    /* Product Recommendations Container */
+    .product-recommendations-container {
+        margin-top: 10px !important;
+        padding: 0 !important;
+        border-radius: 8px !important;
+        background: transparent !important;
     }
+
+    /* Reset any potential conflicts */
+    .chatbot-button, .chatbot-container {
+        all: initial !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+
+    /* Chatbot Sticky Button - ENHANCED */
+    .chatbot-button {
+        position: fixed !important;
+        bottom: 30px !important;
+        right: 30px !important;
+        width: 60px !important;
+        height: 60px !important;
+        background: linear-gradient(135deg, #ff9500, #ff6b35) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        color: white !important;
+        font-size: 24px !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 20px rgba(255, 149, 0, 0.4) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 10000 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+        .chatbot-button:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 6px 25px rgba(255, 149, 0, 0.6) !important;
+        }
+
+        .chatbot-button.active {
+            background: linear-gradient(135deg, #dc3545, #c82333) !important;
+            transform: rotate(180deg) !important;
+        }
+
+        .chatbot-button.pulse {
+            animation: pulse 2s infinite !important;
+        }
+    @@keyframes pulse {
+        0%
+
+    {
+        box-shadow: 0 4px 20px rgba(255, 149, 0, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 149, 0, 0.8), 0 0 0 10px rgba(255, 149, 0, 0.1);
+    }
+
+    100% {
+        box-shadow: 0 4px 20px rgba(255, 149, 0, 0.4);
+    }
+
+    }
+
+    /* Notification Badge */
+    .chatbot-notification {
+        position: absolute !important;
+        top: -5px !important;
+        right: -5px !important;
+        background: #dc3545 !important;
+        color: white !important;
+        border-radius: 50% !important;
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: bold !important;
+        animation: bounce 0.5s ease-in-out !important;
+    }
+    @@keyframes bounce {
+        0%, 20%, 60%, 100%
+
+    {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    80% {
+        transform: translateY(-5px);
+    }
+
+    }
+
+    /* Chatbot Container - ENHANCED */
+    .chatbot-container {
+        position: fixed !important;
+        bottom: 100px !important;
+        right: 30px !important;
+        width: 380px !important;
+        height: 600px !important;
+        background: white !important;
+        border-radius: 20px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        display: none !important;
+        flex-direction: column !important;
+        z-index: 9999 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: translateY(20px) scale(0.95) !important;
+        opacity: 0 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        top: auto !important;
+        left: auto !important;
+        border: 1px solid rgba(255, 149, 0, 0.1) !important;
+    }
+
+        .chatbot-container.show {
+            display: flex !important;
+            transform: translateY(0) scale(1) !important;
+            opacity: 1 !important;
+        }
+
+        .chatbot-container.minimized {
+            height: 60px !important;
+            overflow: hidden !important;
+        }
+
+    /* Chatbot Header - ENHANCED */
+    .chatbot-header {
+        background: linear-gradient(135deg, #ff9500, #ff6b35) !important;
+        color: white !important;
+        padding: 20px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-radius: 20px 20px 0 0 !important;
+        margin: 0 !important;
+        position: relative !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
+    }
+
+        .chatbot-header::before {
+            content: '' !important;
+            position: absolute !important;
+            top: -50% !important;
+            right: -50% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%) !important;
+            animation: headerShine 3s ease-in-out infinite !important;
+        }
+    @@keyframes headerShine {
+        0%, 100%
+
+    {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    .chatbot-header h5 {
+        margin: 0 !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: white !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    .chatbot-header small {
+        display: block !important;
+        font-size: 12px !important;
+        opacity: 0.9 !important;
+        margin-top: 4px !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    .chatbot-header-controls {
+        display: flex !important;
+        gap: 10px !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    .chatbot-minimize, .chatbot-close {
+        background: none !important;
+        border: none !important;
+        color: white !important;
+        font-size: 18px !important;
+        cursor: pointer !important;
+        opacity: 0.8 !important;
+        transition: all 0.2s !important;
+        padding: 5px !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+    }
+
+        .chatbot-minimize:hover, .chatbot-close:hover {
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            transform: scale(1.1) !important;
+        }
+
+    /* Connection Status Indicator */
+    .connection-status {
+        position: absolute !important;
+        top: 10px !important;
+        left: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        font-size: 10px !important;
+        opacity: 0.8 !important;
+    }
+
+    .status-dot {
+        width: 6px !important;
+        height: 6px !important;
+        border-radius: 50% !important;
+        background: #4CAF50 !important;
+        animation: statusPulse 2s ease-in-out infinite !important;
+    }
+
+        .status-dot.disconnected {
+            background: #f44336 !important;
+            animation: none !important;
+        }
+    @@keyframes statusPulse {
+        0%, 100%
+
+    {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    }
+
+    /* Chat Controls - ENHANCED */
+    .chat-controls {
+        padding: 15px !important;
+        border-bottom: 1px solid #eee !important;
+        display: flex !important;
+        gap: 10px !important;
+        align-items: center !important;
+        background: white !important;
+        flex-wrap: wrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .btn-new-chat, .btn-clear-chat {
+        background: #f8f9fa !important;
+        border: 1px solid #dee2e6 !important;
+        color: #495057 !important;
+        font-size: 12px !important;
+        padding: 5px 10px !important;
+        border-radius: 15px !important;
+        transition: all 0.2s !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+    }
+
+        .btn-new-chat:hover, .btn-clear-chat:hover {
+            background: #e9ecef !important;
+            border-color: #ced4da !important;
+            transform: translateY(-1px) !important;
+        }
+
+    .chat-history-select {
+        flex: 1 !important;
+        font-size: 12px !important;
+        border-radius: 15px !important;
+        border: 1px solid #dee2e6 !important;
+        padding: 5px 10px !important;
+        background: white !important;
+        min-width: 120px !important;
+    }
+
+    /* FIXED Chat Window */
+    .chat-window {
+        flex: 1 !important;
+        padding: 15px !important;
+        overflow-y: auto !important;
+        background: linear-gradient(to bottom, #f8f9fa, #ffffff) !important;
+        min-height: 300px !important;
+        scroll-behavior: smooth !important;
+        display: block !important;
+    }
+
+        .chat-window::-webkit-scrollbar {
+            width: 6px !important;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+            background: #f1f1f1 !important;
+            border-radius: 3px !important;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ff9500, #ff6b35) !important;
+            border-radius: 3px !important;
+        }
+
+            .chat-window::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(to bottom, #e68500, #e55a2b) !important;
+            }
+
+    /* FIXED Messages */
+    .message {
+        margin-bottom: 15px !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        animation: messageSlide 0.3s ease-out !important;
+        display: block !important;
+    }
+    @@keyframes messageSlide {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .message.user {
+        text-align: right !important;
+    }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #ff9500, #ff6b35) !important;
+            color: white !important;
+            display: inline-block !important;
+            padding: 12px 16px !important;
+            border-radius: 18px 18px 5px 18px !important;
+            max-width: 80% !important;
+            word-wrap: break-word !important;
+            position: relative !important;
+            box-shadow: 0 2px 10px rgba(255, 149, 0, 0.3) !important;
+        }
+
+    .message.assistant {
+        text-align: left !important;
+    }
+
+        .message.assistant .message-bubble {
+            background: white !important;
+            color: #333 !important;
+            display: inline-block !important;
+            padding: 12px 16px !important;
+            border-radius: 18px 18px 18px 5px !important;
+            max-width: 80% !important;
+            word-wrap: break-word !important;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            position: relative !important;
+        }
+
+    /* Message timestamps */
+    .message-timestamp {
+        font-size: 10px !important;
+        color: #999 !important;
+        margin-top: 5px !important;
+        opacity: 0 !important;
+        transition: opacity 0.2s !important;
+    }
+
+    .message:hover .message-timestamp {
+        opacity: 1 !important;
+    }
+
+    .message.user .message-timestamp {
+        text-align: right !important;
+    }
+
+    /* Chat Input - ENHANCED */
+    .chat-input {
+        padding: 15px !important;
+        border-top: 1px solid #eee !important;
+        background: white !important;
+        border-radius: 0 0 20px 20px !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+    }
+
+    .chatbot-input-group {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .message-input {
+        border: 2px solid #dee2e6 !important;
+        border-radius: 25px !important;
+        padding: 12px 50px 12px 16px !important;
+        font-size: 14px !important;
+        outline: none !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        width: 100% !important;
+        background: white !important;
+        box-sizing: border-box !important;
+        resize: none !important;
+        min-height: 44px !important;
+        max-height: 120px !important;
+    }
+
+        .message-input:focus {
+            border-color: #ff9500 !important;
+            box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.1) !important;
+        }
+
+    .input-suggestions {
+        position: absolute !important;
+        bottom: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: white !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1) !important;
+        display: none !important;
+        max-height: 150px !important;
+        overflow-y: auto !important;
+        z-index: 1000 !important;
+    }
+
+    .suggestion-item {
+        padding: 10px 15px !important;
+        cursor: pointer !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        font-size: 13px !important;
+        transition: background 0.2s !important;
+    }
+
+        .suggestion-item:hover {
+            background: #f8f9fa !important;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none !important;
+        }
+
+    .send-btn {
+        position: absolute !important;
+        right: 5px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        background: linear-gradient(135deg, #ff9500, #ff6b35) !important;
+        border: none !important;
+        color: white !important;
+        width: 35px !important;
+        height: 35px !important;
+        border-radius: 50% !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1) !important;
+            box-shadow: 0 3px 10px rgba(255, 149, 0, 0.4) !important;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            transform: translateY(-50%) !important;
+        }
+
+    /* Enhanced Loading Animation */
+    .typing-indicator {
+        display: flex !important;
+        gap: 4px !important;
+        padding: 12px 16px !important;
+        background: white !important;
+        border-radius: 18px 18px 18px 5px !important;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1) !important;
+        width: fit-content !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .typing-dot {
+        width: 8px !important;
+        height: 8px !important;
+        background: #ccc !important;
+        border-radius: 50% !important;
+        animation: typingDot 1.4s infinite ease-in-out !important;
+    }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s !important;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s !important;
+        }
+    @@keyframes typingDot {
+        0%, 60%, 100%
+
+    {
+        transform: translateY(0);
+        background: #ccc;
+    }
+
+    30% {
+        transform: translateY(-10px);
+        background: #ff9500;
+    }
+
+    }
+
+    /* Enhanced Product Recommendation Cards */
+    .product-recommendation {
+        background: white !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 12px !important;
+        margin: 8px 0 !important;
+        padding: 12px !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        animation: slideInProduct 0.5s ease-out forwards !important;
+    }
+    @@keyframes slideInProduct {
+        0%
+
+    {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    .product-recommendation:nth-child(1) {
+        animation-delay: 0.1s !important;
+    }
+
+    .product-recommendation:nth-child(2) {
+        animation-delay: 0.2s !important;
+    }
+
+    .product-recommendation:nth-child(3) {
+        animation-delay: 0.3s !important;
+    }
+
+    .product-recommendation:nth-child(4) {
+        animation-delay: 0.4s !important;
+    }
+
+    .product-recommendation::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: linear-gradient(90deg, transparent, rgba(255, 149, 0, 0.1), transparent) !important;
+        transition: left 0.5s !important;
+    }
+
+    .product-recommendation:hover::before {
+        left: 100% !important;
+    }
+
+    .product-recommendation:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+        border-color: #ff9500 !important;
+        background: #fefefe !important;
+    }
+
+    /* Product Info Layout */
+    .product-info {
+        display: flex !important;
+        gap: 12px !important;
+        align-items: center !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    /* Product Image */
+    .product-recommendation .product-image {
+        width: 60px !important;
+        height: 60px !important;
+        object-fit: cover !important;
+        border-radius: 8px !important;
+        background: #f5f5f5 !important;
+        transition: transform 0.2s !important;
+        flex-shrink: 0 !important;
+        border: 1px solid #eee !important;
+    }
+
+    .product-recommendation:hover .product-image {
+        transform: scale(1.05) !important;
+    }
+
+    /* Product Details */
+    .product-details {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .product-name {
+        font-weight: 600 !important;
+        font-size: 13px !important;
+        color: #333 !important;
+        margin-bottom: 4px !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .product-brand {
+        color: #666 !important;
+        font-size: 11px !important;
+        margin-bottom: 2px !important;
+        font-weight: 500 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .product-rating {
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        margin: 4px 0 !important;
+        font-size: 11px !important;
+    }
+
+    .stars {
+        color: #ffa500 !important;
+        font-size: 12px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .product-rating span:last-child {
+        color: #888 !important;
+        font-size: 10px !important;
+    }
+
+    .product-price {
+        color: #ff9500 !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        margin-top: 4px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    /* Chevron Icon */
+    .product-recommendation .fas.fa-chevron-right {
+        color: #ccc !important;
+        font-size: 12px !important;
+        transition: all 0.2s !important;
+        margin-left: 8px !important;
+    }
+
+    .product-recommendation:hover .fas.fa-chevron-right {
+        color: #ff9500 !important;
+        transform: translateX(3px) !important;
+    }
+
+    /* Loading Animation for Products */
+    .product-loading-message .message-bubble {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        color: #666 !important;
+        font-style: italic !important;
+    }
+
+    .product-loading-message .fa-spinner {
+        color: #ff9500 !important;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        display: flex !important;
+        gap: 8px !important;
+        margin: 10px 0 !important;
+        flex-wrap: wrap !important;
+        padding: 0 15px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .quick-action {
+        background: #f8f9fa !important;
+        border: 1px solid #dee2e6 !important;
+        color: #495057 !important;
+        padding: 6px 12px !important;
+        border-radius: 15px !important;
+        font-size: 12px !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+    }
+
+        .quick-action:hover {
+            background: #e9ecef !important;
+            border-color: #ff9500 !important;
+            transform: translateY(-1px) !important;
+        }
+
+    /* Accessibility improvements */
+    .chatbot-button:focus,
+    .chatbot-close:focus,
+    .chatbot-minimize:focus,
+    .send-btn:focus,
+    .message-input:focus {
+        outline: 2px solid #ff9500 !important;
+        outline-offset: 2px !important;
+    }
+
+    /* Focus States for Accessibility */
+    .product-recommendation:focus {
+        outline: 2px solid #ff9500 !important;
+        outline-offset: 2px !important;
+    }
+
+    .product-recommendation:focus-visible {
+        outline: 2px solid #ff9500 !important;
+        outline-offset: 2px !important;
+    }
+
+    /* Mobile Responsive */
+    @@media (max-width: 768px) {
+       
+        .chatbot-container
+    {
+        width: 95vw !important;
+        right: 2.5vw !important;
+        height: 80vh !important;
+        bottom: 10vh !important;
+    }
+
+        .chatbot-button {
+            display: none !important;
+        }
+
+    .product-recommendation {
+        margin: 6px 0 !important;
+        padding: 10px !important;
+    }
+
+    .product-info {
+        gap: 10px !important;
+    }
+
+    .product-recommendation .product-image {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    .product-name {
+        font-size: 12px !important;
+    }
+
+    .product-price {
+        font-size: 13px !important;
+    }
+
+    .product-brand {
+        font-size: 10px !important;
+    }
+
+    .product-rating {
+        font-size: 10px !important;
+    }
+
+    }
+
+    @@media (max-width: 480px) {
+        #chatbot-toggle {
+            visibility:hidden;
+        }
+        .chatbot-container
+
+    {
+        width: 100vw !important;
+        right: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+        .chatbot-button {
+            display: none !important;
+        }
+
+    .product-recommendation {
+        padding: 8px !important;
+    }
+
+    .product-info {
+        gap: 8px !important;
+    }
+
+    .product-recommendation .product-image {
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+    .product-name {
+        font-size: 11px !important;
+        -webkit-line-clamp: 1 !important;
+    }
+
+    .product-price {
+        font-size: 12px !important;
+    }
+
+    }
+
+    /* Dark Mode Support */
+    @@media (prefers-color-scheme: dark) {
+        .chatbot-container
+
+    {
+        background: #2a2a2a !important;
+        border-color: #555 !important;
+    }
+
+    .chat-window {
+        background: linear-gradient(to bottom, #3a3a3a, #2a2a2a) !important;
+    }
+
+    .message.assistant .message-bubble {
+        background: #3a3a3a !important;
+        color: #ffffff !important;
+        border-color: #555 !important;
+    }
+
+    .product-recommendation {
+        background: #3a3a3a !important;
+        border-color: #555 !important;
+        color: #ffffff !important;
+    }
+
+        .product-recommendation:hover {
+            background: #404040 !important;
+            border-color: #ff9500 !important;
+        }
+
+    .product-name {
+        color: #ffffff !important;
+    }
+
+    .product-brand {
+        color: #ccc !important;
+    }
+
+    .product-rating span:last-child {
+        color: #aaa !important;
+    }
+
+    .product-recommendation .product-image {
+        border-color: #555 !important;
+    }
+
+    .message-input {
+        background: #3a3a3a !important;
+        color: #ffffff !important;
+        border-color: #555 !important;
+    }
+
+    .chat-input, .chat-controls {
+        background: #2a2a2a !important;
+        border-color: #555 !important;
+    }
+
+    }
+
+    /* High Contrast Mode */
+    @@media (prefers-contrast: high) {
+        .product-recommendation
+
+    {
+        border: 2px solid #333 !important;
+    }
+
+    .product-name {
+        font-weight: 700 !important;
+    }
+
+    .product-price {
+        font-weight: 800 !important;
+    }
+
+    .message.assistant .message-bubble {
+        border: 2px solid #333 !important;
+    }
+
+    .message.user .message-bubble {
+        border: 2px solid #fff !important;
+    }
+
+    .chatbot-button {
+        border: 2px solid #fff !important;
+    }
+
+    }
+
+    /* Reduced Motion Support */
+    @@media (prefers-reduced-motion: reduce) {
+        .product-recommendation, .product-recommendation .product-image, .product-recommendation .fas.fa-chevron-right, .product-recommendation::before, .message, .chatbot-button, .chatbot-container
+
+    {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .product-recommendation:hover {
+        transform: none !important;
+    }
+
+    .chatbot-button:hover {
+        transform: none !important;
+    }
+
+    .send-btn:hover:not(:disabled) {
+        transform: translateY(-50%) !important;
+    }
+
+    .chatbot-button.pulse {
+        animation: none !important;
+    }
+
+    .typing-dot {
+        animation: none !important;
+    }
+
+    .status-dot {
+        animation: none !important;
+    }
+
+    }
+
+    /* Print Styles */
+    @@media print {
+        .chatbot-button, .chatbot-container
+
+    {
+        display: none !important;
+    }
+
+    .product-recommendation {
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+        .product-recommendation::before {
+            display: none !important;
+        }
+
+    .message {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    }
+
+    /* Additional fixes for visibility issues */
+    .chat-window * {
+        visibility: visible !important;
+    }
+
+    .message, .message * {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+        .message.user, .message.assistant {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+    .message-bubble {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Ensure product recommendations are always visible */
+    .product-recommendations-container,
+    .product-recommendation,
+    .product-info,
+    .product-details {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .product-recommendation {
+        display: block !important;
+    }
+
+    .product-info {
+        display: flex !important;
+    }
+
+    /* Force visibility overrides for common hiding classes */
+    .hidden, .d-none, .invisible {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Ensure scrolling works properly */
+    .chat-window {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Fix for potential z-index issues */
+    .chat-window,
+    .message,
+    .product-recommendation {
+        z-index: auto !important;
+        position: relative !important;
+    }
+
+    /* Additional debugging styles - Remove these in production */
+    .chat-window {
+        min-height: 200px !important;
+    }
+
+    .message {
+        min-height: 20px !important;
+    }
+
+    .product-recommendation {
+        min-height: 60px !important;
+    }
+
+        .product-recommendation img.product-image {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 60px !important;
+            height: 60px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            background: #f5f5f5 !important;
+            border: 1px solid #eee !important;
+            flex-shrink: 0 !important;
+        }
+
+            .product-recommendation img.product-image[src=""],
+            .product-recommendation img.product-image[src="null"],
+            .product-recommendation img.product-image[src="undefined"] {
+                content: url('https://via.placeholder.com/60x60/f5f5f5/999?text=No+Image') !important;
+            }
 </style>
 
-<a href="/AIChatbot" id="chatBotBtn" title="Chat Bot" class="btn btn-warning rounded-circle  end-0 m-3 d-flex align-items-center justify-content-center" style="position:fixed;bottom:65px;display:block;z-index:11;width: 55px; height: 55px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-    <i class="fas fa-comment-dots fs-5"></i>
-</a>
+<!-- Enhanced Chatbot Button -->
+<button class="chatbot-button pulse" id="chatbot-toggle" aria-label="Open chat assistant">
+    <i class="fas fa-comments"></i>
+</button>
+
+<!-- Enhanced Chatbot Container -->
+<div class="chatbot-container" id="chatbot-container" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+    <!-- Enhanced Header -->
+    <div class="chatbot-header">
+        <div class="connection-status" id="connection-status">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">Connected</span>
+        </div>
+        <div>
+            <h5 id="chatbot-title"><i class="fas fa-robot" style="margin-right: 8px;"></i>Amazon Assistant</h5>
+            <small>AI-powered shopping helper</small>
+        </div>
+        <div class="chatbot-header-controls">
+            <button class="chatbot-minimize" id="chatbot-minimize" aria-label="Minimize chat" title="Minimize">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="chatbot-close" id="chatbot-close" aria-label="Close chat" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Enhanced Chat Controls -->
+    <div class="chat-controls">
+        <button class="btn-new-chat" id="new-chat-btn" title="Start new conversation">
+            <i class="fas fa-plus"></i>New Chat
+        </button>
+        <button class="btn-clear-chat" id="clear-chat-btn" title="Clear current conversation">
+            <i class="fas fa-trash-alt"></i>Clear
+        </button>
+        <select class="chat-history-select" id="previous-chats" aria-label="Previous conversations">
+            <option disabled selected>Previous chats...</option>
+        </select>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" id="quick-actions">
+        <button class="quick-action" data-message="Show me today's deals">
+            <i class="fas fa-fire"></i>Today's Deals
+        </button>
+        <button class="quick-action" data-message="Track my orders">
+            <i class="fas fa-shipping-fast"></i>Track Orders
+        </button>
+        <button class="quick-action" data-message="Help me find a gift">
+            <i class="fas fa-gift"></i>Gift Ideas
+        </button>
+    </div>
+
+    <!-- Enhanced Chat Window -->
+    <div class="chat-window" id="chat-window" role="log" aria-live="polite" aria-label="Chat conversation">
+        <div class="message assistant">
+  
+            <div class="message-timestamp"></div>
+        </div>
+    </div>
+
+    <!-- Enhanced Chat Input -->
+    <div class="chat-input">
+        <div class="input-suggestions" id="input-suggestions">
+            <!-- Dynamic suggestions will be populated here -->
+        </div>
+        <div class="chatbot-input-group">
+            <textarea class="message-input" id="message-input" placeholder="Ask me anything..."
+                      rows="1" aria-label="Type your message" maxlength="1000"></textarea>
+            <button class="send-btn" id="send-btn" aria-label="Send message" title="Send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Chatbot JavaScript -->
+<script>
+    class EnhancedChatbot {
+        constructor() {
+            this.chatHistory = [];
+            this.previousChats = [];
+            this.selectedModel = "meta-llama/llama-4-scout-17b-16e-instruct";
+            this.isAuthenticated = false;
+            this.isMinimized = false;
+            this.isConnected = true;
+            this.messageQueue = [];
+            this.isProcessing = false;
+            this.currentSuggestionIndex = -1;
+            this.suggestions = [
+                "Show me today's deals",
+                "Track my orders",
+                "Find electronics under $100",
+                "Help me find a gift",
+                "What's new in fashion?",
+                "Show me bestsellers",
+                "Find books by genre",
+                "Search for home decor",
+                "Recommend Apple products under $500",
+                "Show me iPhone deals"
+            ];
+            this.elements = this.cacheElements();
+            this.init();
+        }
+
+        cacheElements() {
+            return {
+                chatbotToggle: document.getElementById('chatbot-toggle'),
+                chatbotContainer: document.getElementById('chatbot-container'),
+                chatbotClose: document.getElementById('chatbot-close'),
+                chatbotMinimize: document.getElementById('chatbot-minimize'),
+                sendBtn: document.getElementById('send-btn'),
+                messageInput: document.getElementById('message-input'),
+                newChatBtn: document.getElementById('new-chat-btn'),
+                clearChatBtn: document.getElementById('clear-chat-btn'),
+                chatWindow: document.getElementById('chat-window'),
+                previousChatsSelect: document.getElementById('previous-chats'),
+                inputSuggestions: document.getElementById('input-suggestions'),
+                quickActions: document.getElementById('quick-actions'),
+                connectionStatus: document.getElementById('connection-status'),
+                statusDot: document.getElementById('status-dot'),
+                statusText: document.getElementById('status-text'),
+                chatNotification: document.getElementById('chat-notification'),
+                chatInput: document.querySelector('.chat-input')
+            };
+        }
+    init() {
+        console.log('=== Initializing Enhanced Amazon Chatbot ===');
+        this.setupEventListeners();
+        this.setupInputBehavior();
+        this.setupQuickActions();
+        this.initializeConnection();
+        this.loadChatHistory();
+        // Remove this line: this.addWelcomeMessage();
+        this.setAuthenticationStatus();
+        this.showInitialPulse();
+        console.log('=== Chatbot initialization complete ===');
+    }
+
+
+        setupEventListeners() {
+            this.elements.chatbotToggle?.addEventListener('click', this.handleToggleClick.bind(this));
+            this.elements.chatbotClose?.addEventListener('click', this.handleCloseClick.bind(this));
+            this.elements.chatbotMinimize?.addEventListener('click', this.handleMinimizeClick.bind(this));
+            this.elements.sendBtn?.addEventListener('click', this.handleSendMessage.bind(this));
+            this.elements.messageInput?.addEventListener('keydown', this.handleKeyPress.bind(this));
+            this.elements.messageInput?.addEventListener('input', this.handleInputChange.bind(this));
+            this.elements.messageInput?.addEventListener('focus', this.showSuggestions.bind(this));
+            this.elements.messageInput?.addEventListener('blur', this.hideSuggestions.bind(this));
+            this.elements.newChatBtn?.addEventListener('click', this.startNewChat.bind(this));
+            this.elements.clearChatBtn?.addEventListener('click', this.clearCurrentChat.bind(this));
+            this.elements.previousChatsSelect?.addEventListener('change', this.loadPreviousChat.bind(this));
+            document.addEventListener('click', this.handleOutsideClick.bind(this));
+            document.addEventListener('keydown', this.handleGlobalKeyboard.bind(this));
+            window.addEventListener('beforeunload', this.saveChatHistory.bind(this));
+            window.addEventListener('online', () => this.updateConnectionStatus(true));
+            window.addEventListener('offline', () => this.updateConnectionStatus(false));
+        }
+
+        setupInputBehavior() {
+            if (!this.elements.messageInput) return;
+            this.elements.messageInput.addEventListener('input', () => {
+                this.elements.messageInput.style.height = 'auto';
+                this.elements.messageInput.style.height = `${Math.min(this.elements.messageInput.scrollHeight, 120)}px`;
+            });
+            this.elements.messageInput.addEventListener('input', () => {
+                const length = this.elements.messageInput.value.length;
+                this.elements.messageInput.style.borderColor = length > 950 ? '#dc3545' : '';
+            });
+        }
+
+        setupQuickActions() {
+            this.elements.quickActions?.addEventListener('click', (e) => {
+                if (e.target.classList.contains('quick-action')) {
+                    const message = e.target.dataset.message;
+                    if (message && this.elements.messageInput) {
+                        this.elements.messageInput.value = message;
+                        this.handleSendMessage();
+                    }
+                }
+            });
+        }
+
+        handleToggleClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.toggleChatbot();
+        }
+
+        handleCloseClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.closeChatbot();
+        }
+
+        handleMinimizeClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.minimizeChatbot();
+        }
+
+        handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.handleSendMessage();
+            } else if (e.key === 'Escape') {
+                this.hideSuggestions();
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                this.navigateSuggestions(e);
+            }
+        }
+
+        handleInputChange() {
+            const value = this.elements.messageInput?.value.toLowerCase() || '';
+            if (value.length > 2) {
+                this.updateSuggestions(value);
+            } else {
+                this.hideSuggestions();
+            }
+        }
+
+        handleGlobalKeyboard(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k' && !this.isChatbotVisible()) {
+                e.preventDefault();
+                this.openChatbot();
+            }
+            if (e.key === 'Escape' && this.isChatbotVisible()) {
+                this.closeChatbot();
+            }
+        }
+
+        handleOutsideClick(e) {
+            if (this.shouldCloseOnOutsideClick(e)) {
+                // this.closeChatbot();
+            }
+        }
+
+        toggleChatbot() {
+            if (this.isChatbotVisible()) {
+                this.closeChatbot();
+            } else {
+                this.openChatbot();
+            }
+        }
+
+        openChatbot() {
+        if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
+
+        // Add welcome message only if chat history is empty and chatbot is being opened
+        if (this.chatHistory.length === 0) {
+            this.addWelcomeMessage();
+        }
+
+        this.elements.chatbotContainer.classList.remove('minimized');
+        this.elements.chatbotContainer.classList.add('show');
+        this.elements.chatbotToggle.classList.add('active');
+        this.elements.chatbotToggle.innerHTML = '<i class="fas fa-times"></i>';
+        this.elements.chatbotContainer.setAttribute('aria-hidden', 'false');
+
+        // Reset minimize button state
+        if (this.elements.chatbotMinimize) {
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-minus"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Minimize chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Minimize');
+        }
+
+        this.elements.messageInput?.focus();
+        this.hideNotification();
+        this.isMinimized = false;
+        this.trackEvent('chatbot_opened');
+    }
+        closeChatbot() {
+            if (!this.elements.chatbotContainer || !this.elements.chatbotToggle) return;
+            this.elements.chatbotContainer.classList.remove('show', 'minimized');
+            this.elements.chatbotToggle.classList.remove('active');
+            this.elements.chatbotToggle.innerHTML = '<i class="fas fa-comments"></i>';
+            this.elements.chatbotContainer.setAttribute('aria-hidden', 'true');
+            this.hideSuggestions();
+            this.isMinimized = false;
+            this.trackEvent('chatbot_closed');
+        }
+
+    minimizeChatbot() {
+        if (!this.elements.chatbotContainer || !this.elements.chatbotMinimize) return;
+
+        if (this.isMinimized) {
+            // Expand the chatbot
+            this.elements.chatbotContainer.classList.remove('minimized');
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-minus"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Minimize chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Minimize');
+            this.isMinimized = false;
+            this.trackEvent('chatbot_expanded');
+        } else {
+            // Minimize the chatbot
+            this.elements.chatbotContainer.classList.add('minimized');
+            this.elements.chatbotMinimize.innerHTML = '<i class="fas fa-expand-alt"></i>';
+            this.elements.chatbotMinimize.setAttribute('aria-label', 'Expand chat');
+            this.elements.chatbotMinimize.setAttribute('title', 'Expand');
+            this.isMinimized = true;
+            this.trackEvent('chatbot_minimized');
+        }
+    }
+
+        isChatbotVisible() {
+            return this.elements.chatbotContainer?.classList.contains('show');
+        }
+
+        shouldCloseOnOutsideClick(e) {
+            return this.elements.chatbotContainer &&
+                   this.elements.chatbotToggle &&
+                   !this.elements.chatbotContainer.contains(e.target) &&
+                   !this.elements.chatbotToggle.contains(e.target) &&
+                   this.isChatbotVisible() &&
+                   !this.isMinimized;
+        }
+
+        async handleSendMessage() {
+            const message = this.elements.messageInput?.value.trim();
+            if (!message || !this.elements.sendBtn || this.isProcessing) return;
+            await this.sendMessage(message);
+            this.clearMessageInput();
+            this.hideSuggestions();
+        }
+
+        clearMessageInput() {
+            if (this.elements.messageInput) {
+                this.elements.messageInput.value = '';
+                this.elements.messageInput.style.height = 'auto';
+            }
+        }
+
+        async sendMessage(userMessage) {
+            if (!userMessage || !this.elements.chatWindow) return;
+            console.log('=== Sending message ===', userMessage);
+            this.isProcessing = true;
+            this.addMessageToChat('user', userMessage);
+            this.showTypingIndicator();
+            this.setProcessingState(true);
+            try {
+                let responseMessage = '';
+                let products = [];
+                if (userMessage.toLowerCase().includes("today's deals")) {
+                    responseMessage = "Here are some of today's best deals!";
+                    products = await this.fetchTodaysDeals();
+                } else if (userMessage.toLowerCase().includes("gift ideas")) {
+                    responseMessage = "Here are some great gift ideas for you!";
+                    products = await this.fetchGiftIdeas();
+                } else {
+                    const response = await this.sendMessageToServer(userMessage);
+                    responseMessage = response?.reply || 'Sorry, I encountered an error. Please try again.';
+                    if (this.shouldFetchProducts(responseMessage, userMessage)) {
+                        products = await this.fetchRecommendedProducts(userMessage);
+                    }
+                }
+                this.removeTypingIndicator();
+                this.addMessageToChat('assistant', responseMessage, products.length > 0 ? products : null);
+                this.updateConnectionStatus(true);
+            } catch (error) {
+                console.error('=== Error in sendMessage ===', error);
+                this.handleMessageError(error);
+            } finally {
+                this.setProcessingState(false);
+                this.isProcessing = false;
+            }
+        }
+
+        async sendMessageToServer(userMessage) {
+            const response = await fetch('/AIChatbot/Ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': this.getAntiForgeryToken()
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    model: this.selectedModel,
+                    temperature: 0.7,
+                    conversationHistory: this.chatHistory.slice(-10)
+                })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        async fetchTodaysDeals() {
+            return await this.fetchProductsFromCategoryController({
+                filter: 'todaysdeals',
+                pageSize: 8,
+                page: 1
+            });
+        }
+
+        async fetchGiftIdeas() {
+            return await this.fetchProductsFromCategoryController({
+                pageSize: 8,
+                page: 1,
+                sortBy: 'bestseller'
+            });
+        }
+
+        async fetchProductsFromCategoryController(params) {
+            try {
+                const queryParams = new URLSearchParams(params).toString();
+                const response = await fetch(`/Category/GetPaginatedProducts?${queryParams}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'RequestVerificationToken': this.getAntiForgeryToken()
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.products.map(this.transformProduct.bind(this)) || [];
+            } catch (error) {
+                console.error('=== Error fetching products ===', error);
+                return [];
+            }
+        }
+
+        async fetchRecommendedProducts(query) {
+            const searchQuery = this.extractSearchTerms(query);
+            return await this.fetchProductsFromCategoryController({
+                search: searchQuery,
+                pageSize: 8,
+                page: 1
+            });
+        }
+
+        transformProduct(product) {
+            return {
+                id: product.productId,
+                productId: product.productId,
+                name: product.productName,
+                productName: product.productName,
+                brand: product.brand || 'Amazon',
+                price: product.originalPrice,
+                discountPrice: product.discountPrice,
+                imageUrl: product.imageUrl || 'https://via.placeholder.com/60x60/f5f5f5/999?text=No+Image',
+                rating: product.rating || 4,
+                reviewCount: product.ratingCount || 100,
+                description: product.description,
+                prime: product.prime || false
+            };
+        }
+
+        shouldFetchProducts(reply, userMessage) {
+            const productKeywords = [
+                'product', 'recommend', 'suggest', 'show', 'find', 'search', 'buy', 'purchase',
+                'item', 'price', 'deal', 'sale', 'discount', 'electronics', 'fashion', 'books',
+                'home', 'garden', 'kitchen', 'tech', 'gadget', 'phone', 'laptop', 'tablet',
+                'gift', 'bestseller', 'apple', 'iphone', 'ipad', 'macbook', 'airpods'
+            ];
+            const replyLower = reply.toLowerCase();
+            const messageLower = userMessage.toLowerCase();
+            const hasProductRequest = productKeywords.some(keyword =>
+                replyLower.includes(keyword) || messageLower.includes(keyword)
+            );
+            const isNotOrderTracking = !messageLower.includes('track') && !messageLower.includes('order');
+            return hasProductRequest && isNotOrderTracking;
+        }
+
+        extractSearchTerms(query) {
+            const queryLower = query.toLowerCase();
+            const brandMap = {
+                'apple': 'apple',
+                'samsung': 'samsung',
+                'microsoft': 'microsoft',
+                'sony': 'sony'
+            };
+            for (const [brand, term] of Object.entries(brandMap)) {
+                if (queryLower.includes(brand)) return term;
+            }
+            const productMap = {
+                'iphone': 'iphone',
+                'phone': 'iphone',
+                'ipad': 'ipad',
+                'tablet': 'ipad',
+                'macbook': 'macbook',
+                'laptop': 'macbook',
+                'airpods': 'airpods',
+                'headphones': 'airpods',
+                'electronics': 'electronics',
+                'fashion': 'fashion',
+                'clothing': 'fashion',
+                'books': 'books',
+                'home': 'home'
+            };
+            for (const [product, term] of Object.entries(productMap)) {
+                if (queryLower.includes(product)) return term;
+            }
+            const words = query.split(' ').filter(word =>
+                word.length > 3 &&
+                !['recommend', 'suggest', 'show', 'find', 'under', 'over', 'product', 'products'].includes(word.toLowerCase())
+            );
+            return words[0] || 'electronics';
+        }
+
+        setProcessingState(isProcessing) {
+            if (this.elements.sendBtn) {
+                this.elements.sendBtn.disabled = isProcessing;
+            }
+        }
+
+        handleMessageError(error) {
+            this.removeTypingIndicator();
+            let errorMessage = 'Sorry, I\'m having trouble connecting. Please try again later.';
+            if (error.message.includes('404')) {
+                errorMessage = 'The chat service is temporarily unavailable. Please try again later.';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'There was a server error. Please try again in a moment.';
+            }
+            this.addMessageToChat('assistant', errorMessage);
+            this.updateConnectionStatus(false);
+        }
+
+        showTypingIndicator() {
+            if (!this.elements.chatWindow) return;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant typing-message';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            this.elements.chatWindow.appendChild(typingDiv);
+            this.scrollToBottom();
+        }
+
+        removeTypingIndicator() {
+            const typingMessage = this.elements.chatWindow?.querySelector('.typing-message');
+            typingMessage?.remove();
+        }
+
+        addMessageToChat(role, content, products = null) {
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const message = {
+                role,
+                content,
+                timestamp,
+                products,
+                id: Date.now() + Math.random()
+            };
+            console.log('=== Adding message to chat ===', message);
+            this.chatHistory.push(message);
+            this.displayChat();
+            this.saveChatHistory();
+            this.handleNewMessage(role);
+            this.trackEvent('message_sent', { role, hasProducts: !!products });
+        }
+
+        handleNewMessage(role) {
+            if (role === 'assistant' && !this.isChatbotVisible() && this.elements.chatNotification) {
+                this.showNotification();
+            }
+        }
+
+           displayChat() {
+        if (!this.elements.chatWindow) return;
+        this.elements.chatWindow.innerHTML = '';
+
+        // Only display messages if there are any
+        if (this.chatHistory.length > 0) {
+            this.chatHistory.forEach((msg, index) => {
+                const messageDiv = this.createMessageElement(msg, index);
+                this.elements.chatWindow.appendChild(messageDiv);
+            });
+            this.scrollToBottom();
+        }
+    }
+
+        createMessageElement(msg, index) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.role}`;
+            messageDiv.setAttribute('data-message-id', msg.id);
+            if (msg.role === 'user') {
+                messageDiv.innerHTML = this.createUserMessageHTML(msg);
+            } else {
+                messageDiv.innerHTML = this.createAssistantMessageHTML(msg);
+            }
+            setTimeout(() => {
+                messageDiv.style.animationDelay = `${index * 50}ms`;
+            }, 10);
+            return messageDiv;
+        }
+
+        createUserMessageHTML(msg) {
+            return `
+                <div class="message-bubble">
+                    ${this.escapeHtml(msg.content)}
+                </div>
+                <div class="message-timestamp">${msg.timestamp}</div>
+            `;
+        }
+
+        createAssistantMessageHTML(msg) {
+            let html = `
+                <div class="message-bubble">
+                    ${this.formatMessage(msg.content)}
+                </div>
+                <div class="message-timestamp">${msg.timestamp}</div>
+            `;
+            if (msg.products?.length > 0) {
+                html += '<div class="product-recommendations-container">';
+                msg.products.forEach(product => {
+                    html += this.createProductRecommendationHtml(product);
+                });
+                html += '</div>';
+            }
+            return html;
+        }
+
+        createProductRecommendationHtml(product) {
+            const displayPrice = product.discountPrice !== null && product.discountPrice !== undefined
+                ? product.discountPrice
+                : product.price;
+            const imageUrl = product.imageUrl;
+            const rating = product.rating;
+            const reviewCount = product.reviewCount;
+            const productName = product.productName;
+            const productBrand = product.brand;
+            const productId = product.productId;
+            return `
+                <div class="product-recommendation" onclick="window.redirectToProduct('${productId}')"
+                     role="button" tabindex="0" aria-label="View product: ${productName}">
+                    <div class="product-info">
+                        <img src="${imageUrl}"
+                             alt="${productName}"
+                             class="product-image"
+                             onerror="this.src='https://via.placeholder.com/60x60/f5f5f5/999?text=No+Image';"
+                             loading="lazy">
+                        <div class="product-details">
+                            <div class="product-brand">${productBrand}</div>
+                            <div class="product-name">${productName}</div>
+                            <div class="product-rating">
+                                <span class="stars">${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))}</span>
+                                <span>(${reviewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                $${displayPrice.toFixed(2)}
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #ccc;"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        formatMessage(content) {
+            content = content.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+            content = content.replace(/\n/g, '<br>');
+            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            return content;
+        }
+
+        startNewChat() {
+            if (this.chatHistory.length > 1) {
+                this.saveCurrentChatToPrevious();
+            }
+            this.chatHistory = [];
+            this.addWelcomeMessage();
+            this.trackEvent('new_chat_started');
+        }
+
+        saveCurrentChatToPrevious() {
+            const chatSummary = this.generateChatSummary();
+            this.previousChats.unshift({
+                messages: [...this.chatHistory],
+                summary: chatSummary,
+                timestamp: new Date().toLocaleString(),
+                id: Date.now()
+            });
+            if (this.previousChats.length > 10) {
+                this.previousChats = this.previousChats.slice(0, 10);
+            }
+            this.updatePreviousChatsDropdown();
+        }
+
+        generateChatSummary() {
+            const userMessages = this.chatHistory
+                .filter(msg => msg.role === 'user')
+                .map(msg => msg.content.substring(0, 30))
+                .join(' | ');
+            return userMessages || `Chat ${this.previousChats.length + 1}`;
+        }
+
+        clearCurrentChat() {
+            if (confirm('Are you sure you want to clear this conversation?')) {
+                this.chatHistory = [];
+                this.addWelcomeMessage();
+                this.trackEvent('chat_cleared');
+            }
+        }
+
+        loadPreviousChat(e) {
+            const selectedId = parseInt(e.target.value);
+            const selectedChat = this.previousChats.find(chat => chat.id === selectedId);
+            if (selectedChat) {
+                this.chatHistory = [...selectedChat.messages];
+                this.displayChat();
+                this.trackEvent('previous_chat_loaded');
+            }
+        }
+
+        updatePreviousChatsDropdown() {
+            if (!this.elements.previousChatsSelect) return;
+            this.elements.previousChatsSelect.innerHTML = '<option disabled selected>Previous chats...</option>';
+            this.previousChats.forEach(chat => {
+                const option = document.createElement('option');
+                option.value = chat.id;
+                option.textContent = `${chat.summary} (${chat.timestamp})`;
+                this.elements.previousChatsSelect.appendChild(option);
+            });
+        }
+
+        showSuggestions() {
+            if (this.suggestions.length > 0 && this.elements.inputSuggestions) {
+                this.elements.inputSuggestions.style.display = 'block';
+                this.updateSuggestions('');
+            }
+        }
+
+        hideSuggestions() {
+            if (this.elements.inputSuggestions) {
+                setTimeout(() => {
+                    this.elements.inputSuggestions.style.display = 'none';
+                }, 200);
+            }
+        }
+
+        updateSuggestions(query) {
+            if (!this.elements.inputSuggestions) return;
+            const filteredSuggestions = this.suggestions.filter(suggestion =>
+                suggestion.toLowerCase().includes(query.toLowerCase())
+            );
+            this.elements.inputSuggestions.innerHTML = '';
+            filteredSuggestions.slice(0, 5).forEach((suggestion, index) => {
+                const suggestionDiv = this.createSuggestionElement(suggestion, index);
+                this.elements.inputSuggestions.appendChild(suggestionDiv);
+            });
+            this.elements.inputSuggestions.style.display = filteredSuggestions.length > 0 ? 'block' : 'none';
+        }
+
+        createSuggestionElement(suggestion, index) {
+            const suggestionDiv = document.createElement('div');
+            suggestionDiv.className = 'suggestion-item';
+            suggestionDiv.textContent = suggestion;
+            suggestionDiv.setAttribute('data-index', index);
+            suggestionDiv.addEventListener('click', () => {
+                if (this.elements.messageInput) {
+                    this.elements.messageInput.value = suggestion;
+                }
+                this.hideSuggestions();
+                this.handleSendMessage();
+            });
+            return suggestionDiv;
+        }
+
+        navigateSuggestions(e) {
+            const suggestions = this.elements.inputSuggestions?.querySelectorAll('.suggestion-item');
+            if (!suggestions?.length) return;
+            suggestions.forEach(item => item.classList.remove('selected'));
+            if (e.key === 'ArrowDown') {
+                this.currentSuggestionIndex = (this.currentSuggestionIndex + 1) % suggestions.length;
+            } else if (e.key === 'ArrowUp') {
+                this.currentSuggestionIndex = this.currentSuggestionIndex <= 0
+                    ? suggestions.length - 1
+                    : this.currentSuggestionIndex - 1;
+            }
+            if (this.currentSuggestionIndex >= 0) {
+                suggestions[this.currentSuggestionIndex].classList.add('selected');
+                if (this.elements.messageInput) {
+                    this.elements.messageInput.value = suggestions[this.currentSuggestionIndex].textContent;
+                }
+            }
+            e.preventDefault();
+        }
+
+        addWelcomeMessage() {
+            const welcomeMessage = {
+                role: 'assistant',
+                content: '👋 Hi! I\'m your Amazon shopping assistant. I can help you find products, check orders, and answer questions about your account. What would you like to know?',
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                id: Date.now()
+            };
+            this.chatHistory.push(welcomeMessage);
+            this.displayChat();
+        }
+
+        showNotification() {
+            if (this.elements.chatNotification) {
+                this.elements.chatNotification.style.display = 'flex';
+                this.elements.chatbotToggle?.classList.add('pulse');
+            }
+        }
+
+        hideNotification() {
+            if (this.elements.chatNotification) {
+                this.elements.chatNotification.style.display = 'none';
+                this.elements.chatbotToggle?.classList.remove('pulse');
+            }
+        }
+
+        showInitialPulse() {
+            setTimeout(() => {
+                this.elements.chatbotToggle?.classList.add('pulse');
+            }, 2000);
+        }
+
+        initializeConnection() {
+            this.checkConnection();
+            this.updateConnectionStatus(navigator.onLine);
+        }
+
+        updateConnectionStatus(isConnected) {
+            this.isConnected = isConnected;
+            if (this.elements.statusDot && this.elements.statusText) {
+                if (isConnected) {
+                    this.elements.statusDot.classList.remove('disconnected');
+                    this.elements.statusText.textContent = 'Connected';
+                } else {
+                    this.elements.statusDot.classList.add('disconnected');
+                    this.elements.statusText.textContent = 'Offline';
+                }
+            }
+        }
+
+        checkConnection() {
+            setInterval(() => {
+                this.updateConnectionStatus(navigator.onLine);
+            }, 30000);
+        }
+
+        setAuthenticationStatus() {
+            if (typeof window.isUserAuthenticated !== 'undefined') {
+                this.isAuthenticated = window.isUserAuthenticated;
+            }
+        }
+
+        saveChatHistory() {
+            try {
+                const chatData = {
+                    chatHistory: this.chatHistory,
+                    previousChats: this.previousChats,
+                    timestamp: Date.now(),
+                    expiresAt: Date.now() + 60 * 60 * 1000 // 1 hour from now
+                };
+                localStorage.setItem('chatbotData', JSON.stringify(chatData));
+            } catch (error) {
+                console.warn('Could not save chat history to localStorage:', error);
+            }
+        }
+
+            loadChatHistory() {
+        try {
+            const savedData = localStorage.getItem('chatbotData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                if (this.isDataValid(parsedData)) {
+                    this.chatHistory = parsedData.chatHistory || [];
+                    this.previousChats = parsedData.previousChats || [];
+                    this.updatePreviousChatsDropdown();
+                    this.displayChat();
+                } else {
+                    // Clear expired data
+                    localStorage.removeItem('chatbotData');
+                    this.chatHistory = [];
+                    this.previousChats = [];
+                    // Remove this line: this.addWelcomeMessage();
+                }
+            } else {
+                // Initialize empty arrays but don't add welcome message
+                this.chatHistory = [];
+                this.previousChats = [];
+                // Remove this line: this.addWelcomeMessage();
+            }
+        } catch (error) {
+            console.warn('Could not load chat history from localStorage:', error);
+            this.chatHistory = [];
+            this.previousChats = [];
+            // Remove this line: this.addWelcomeMessage();
+        }
+    }
+
+        isDataValid(data) {
+            return data && data.expiresAt && Date.now() < data.expiresAt;
+        }
+
+        scrollToBottom() {
+            if (this.elements.chatWindow) {
+                setTimeout(() => {
+                    this.elements.chatWindow.scrollTop = this.elements.chatWindow.scrollHeight;
+                }, 100);
+            }
+        }
+
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        getAntiForgeryToken() {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]');
+            return token ? token.value : '';
+        }
+
+        trackEvent(eventName, data = {}) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, {
+                    custom_parameter_1: data,
+                    event_category: 'chatbot'
+                });
+            }
+            console.log('Event tracked:', eventName, data);
+        }
+    }
+
+    window.ChatbotUtils = {
+        redirectToProduct(productId) {
+            window.location.href = `/product/Details/${productId}`;
+        },
+        openChatbot() {
+            window.chatbotInstance?.openChatbot();
+        },
+        closeChatbot() {
+            window.chatbotInstance?.closeChatbot();
+        },
+        sendMessage(message) {
+            const chatbot = window.chatbotInstance;
+            if (chatbot?.elements.messageInput) {
+                chatbot.elements.messageInput.value = message;
+                chatbot.handleSendMessage();
+            }
+        },
+        getInstance() {
+            return window.chatbotInstance;
+        }
+    };
+
+    window.redirectToProduct = function(productId) {
+        console.log('=== Redirecting to product ===', productId);
+        window.location.href = `/product/Details/${productId}`;
+        if (window.chatbotInstance) {
+            window.chatbotInstance.trackEvent('product_clicked', { productId });
+        }
+    };
+
+    window.ChatbotDebug = {
+        testProductRendering() {
+            console.log('=== Testing product rendering ===');
+            const testProducts = [
+                {
+                    productId: 1,
+                    productName: "iPhone 14 Pro",
+                    brand: "Apple",
+                    price: 999,
+                    discountPrice: 899,
+                    rating: 4.8,
+                    reviewCount: 1523,
+                    imageUrl: "https://via.placeholder.com/60x60/007fff/fff?text=iPhone"
+                },
+                {
+                    productId: 2,
+                    productName: "iPad Air",
+                    brand: "Apple",
+                    price: 599,
+                    rating: 4.7,
+                    reviewCount: 892,
+                    imageUrl: "https://via.placeholder.com/60x60/007fff/fff?text=iPad"
+                }
+            ];
+            const chatbot = window.chatbotInstance;
+            if (chatbot) {
+                chatbot.addMessageToChat('assistant', 'Here are some Apple products under $500:', testProducts);
+            }
+        },
+        testSearchEndpoint() {
+            console.log('=== Testing product search endpoint ===');
+            fetch('/Category/GetPaginatedProducts?pageSize=5&page=1', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log("Product search success:", result);
+                if (result?.products?.length > 0) {
+                    console.log("First product:", result.products[0]);
+                    console.log("Available properties:", Object.keys(result.products[0]));
+                }
+            })
+            .catch(error => console.error("Product search failed:", error));
+        },
+        getInstance() {
+            return window.chatbotInstance;
+        },
+        getState() {
+            const instance = window.chatbotInstance;
+            return {
+                isProcessing: instance?.isProcessing,
+                isConnected: instance?.isConnected,
+                chatHistoryLength: instance?.chatHistory.length,
+                previousChatsLength: instance?.previousChats.length,
+                isAuthenticated: instance?.isAuthenticated
+            };
+        }
+    };
+
+    function initializeChatbot() {
+        try {
+            if (!document.getElementById('chatbot-toggle')) {
+                console.warn('Chatbot toggle element not found. Chatbot will not be initialized.');
+                return;
+            }
+            window.chatbotInstance = new EnhancedChatbot();
+            console.log('=== Enhanced Amazon Chatbot initialized successfully ===');
+            if (typeof User !== 'undefined' && User.Identity?.IsAuthenticated) {
+                window.chatbotInstance.isAuthenticated = true;
+            }
+            window.debugChatbot = {
+                testProducts: window.ChatbotDebug.testProductRendering,
+                testSearch: window.ChatbotDebug.testSearchEndpoint,
+                instance: window.chatbotInstance,
+                state: window.ChatbotDebug.getState
+            };
+            console.log('=== Debug commands available ===');
+            console.log('- window.debugChatbot.testProducts() - Test product rendering');
+            console.log('- window.debugChatbot.testSearch() - Test search endpoint');
+            console.log('- window.debugChatbot.state() - Get current state');
+        } catch (error) {
+            console.error('Failed to initialize chatbot:', error);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeChatbot);
+    } else {
+        initializeChatbot();
+    }
+</script>

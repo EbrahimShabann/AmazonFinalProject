@@ -19,7 +19,7 @@
         font-family: 'Amazon Ember', Arial, sans-serif;
     }
 
-    .cart-container {
+    .cart-container-islam {
         max-width: 1200px;
         margin: 20px auto;
         display: flex;
@@ -279,7 +279,7 @@
     }
 
     @@media (max-width: 768px) {
-        .cart-container {
+        .cart-container-islam {
             flex-direction: column;
         }
 
@@ -295,7 +295,7 @@
     }
 </style>
 
-<div class="cart-container">
+<div class="cart-container-islam">
     <div class="cart-items">
         <div class="cart-header">
             <h1 class="cart-title">Shopping Cart</h1>
@@ -327,7 +327,7 @@
                     </div> *@
 
                     <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">
-                        <img src="/Image/@item.ImageUrl" class="item-image" alt="@item.ProductName" />
+                        <img src="@item.ImageUrl" class="item-image" alt="@item.ProductName" />
                     </a>
 
                     <div class="item-details">
@@ -396,8 +396,8 @@
             <input type="hidden" name="cartVM[@i].imageUrl" value="@Model[i].ImageUrl" />
             <input type="hidden" name="cartVM[@i].price" value="@Model[i].Price.ToString("N2")" />
             <input type="hidden" name="cartVM[@i].Quantity" value="@Model[i].Quantity" />
-                <input type="hidden" name="cartVM[@i].ProductColor" value="@Model[i].Color" />
-                <input type="hidden" name="cartVM[@i].ProductSize" value="@Model[i].Size" />
+            <input type="hidden" name="cartVM[@i].ProductColor" value="@Model[i].Color" />
+            <input type="hidden" name="cartVM[@i].ProductSize" value="@Model[i].Size" />
 
         }
         @if (Model.Any())

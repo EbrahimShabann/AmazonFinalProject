@@ -1,0 +1,776 @@
+﻿@model VerifyPhoneNumberVM
+@{
+    ViewData["Title"] = "Verify Phone Number";
+    Layout = "_AccountPageLayout";
+}
+
+<!-- Animated Background -->
+<div class="animated-bg">
+    <div class="floating-shape">📱</div>
+    <div class="floating-shape">💬</div>
+    <div class="floating-shape">🔐</div>
+    <div class="floating-shape">✉️</div>
+</div>
+
+<!-- Particles System -->
+<div class="particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1.5s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 4.5s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 7.5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 10.5s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div class="login-container">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fa-brands fa-amazon"></i>
+                    </div>
+                </div>
+
+                <!-- Phone Verification Header -->
+                <div class="verification-header">
+                    <div class="phone-icon-container">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="signal-bars">
+                            <div class="bar bar-1"></div>
+                            <div class="bar bar-2"></div>
+                            <div class="bar bar-3"></div>
+                            <div class="bar bar-4"></div>
+                        </div>
+                    </div>
+                    <h2 class="verification-title">Verify Your Phone</h2>
+                    <p class="verification-description">
+                        We've sent a 6-digit code to <strong>@Model.MaskedPhoneNumber</strong>
+                    </p>
+                </div>
+
+                <!-- Verification Form -->
+                <form method="post" asp-action="VerifyPhoneNumber" asp-controller="Account">
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="PhoneNumber" />
+                    <input type="hidden" asp-for="Purpose" />
+                    <input type="hidden" asp-for="MaskedPhoneNumber" />
+
+                    <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+
+                    <div class="form-group">
+                        <span asp-validation-for="Code" class="validation-error"></span>
+                        <div class="code-input-container">
+                            <input type="text"
+                                   class="form-control code-input"
+                                   asp-for="Code"
+                                   placeholder="000000"
+                                   maxlength="6"
+                                   autocomplete="one-time-code"
+                                   pattern="[0-9]{6}"
+                                   required />
+                            <i class="fas fa-shield-alt input-icon"></i>
+                        </div>
+                        <div class="input-helper">
+                            <small>Enter the 6-digit code from your SMS</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary verify-btn">
+                        <span class="loading-spinner"></span>
+                        <i class="fas fa-check-circle button-icon"></i>
+                        Verify Phone Number
+                    </button>
+                </form>
+
+                <!-- Resend Section -->
+                <div class="resend-section">
+                    <div class="resend-container">
+                        <p class="resend-text">Didn't receive the code?</p>
+                        <button type="button" class="resend-btn" id="resendBtn" onclick="resendCode()">
+                            <i class="fas fa-redo-alt"></i>
+                            <span id="resendText">Resend Code</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code Timer -->
+                <div class="timer-section">
+                    <div class="timer-container">
+                        <i class="fas fa-clock"></i>
+                        <span>Code expires in <span id="timer">5:00</span></span>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="help-section">
+                    <div class="help-header">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Having trouble?</span>
+                    </div>
+                    <div class="help-options">
+                        <div class="help-option">
+                            <i class="fas fa-envelope"></i>
+                            <span>Check your messages app</span>
+                        </div>
+                        <div class="help-option">
+                            <i class="fas fa-signal"></i>
+                            <span>Ensure good signal strength</span>
+                        </div>
+                        <div class="help-option">
+                            <i class="fas fa-ban"></i>
+                            <span>Check spam/blocked messages</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Phone Verification Specific Styles */
+    .verification-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .phone-icon-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+
+        .phone-icon-container i {
+            font-size: 4rem;
+            color: var(--amazon-orange);
+            animation: phoneShake 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(255, 153, 0, 0.3));
+        }
+
+    .signal-bars {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        display: flex;
+        gap: 2px;
+        align-items: flex-end;
+    }
+
+    .bar {
+        width: 3px;
+        background: #28a745;
+        border-radius: 1px;
+        animation: signalPulse 1.5s ease-in-out infinite;
+    }
+
+    .bar-1 {
+        height: 6px;
+        animation-delay: 0s;
+    }
+
+    .bar-2 {
+        height: 10px;
+        animation-delay: 0.2s;
+    }
+
+    .bar-3 {
+        height: 14px;
+        animation-delay: 0.4s;
+    }
+
+    .bar-4 {
+        height: 18px;
+        animation-delay: 0.6s;
+    }
+
+    @@keyframes phoneShake {
+        0%, 100%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-2deg);
+    }
+
+    75% {
+        transform: rotate(2deg);
+    }
+
+    }
+
+    @@keyframes signalPulse {
+        0%, 100%
+
+    {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    }
+
+    .verification-title {
+        color: var(--amazon-blue);
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 1.8rem;
+        animation: textSlide 0.8s ease-out 0.2s both;
+    }
+
+    .verification-description {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        animation: fadeIn 0.8s ease-out 0.4s both;
+    }
+
+        .verification-description strong {
+            color: var(--amazon-orange);
+            font-weight: 600;
+        }
+
+    /* Code Input Styling */
+    .code-input-container {
+        position: relative;
+    }
+
+    .code-input {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: 0.5rem;
+        padding: 1rem 3rem 1rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    }
+
+        .code-input:focus {
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 0.2rem rgba(255, 153, 0, 0.25);
+            background: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .code-input::placeholder {
+            color: #ccc;
+            letter-spacing: 0.3rem;
+        }
+
+    .input-helper {
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+        .input-helper small {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+    /* Verify Button */
+    .verify-btn {
+        background: linear-gradient(135deg, var(--amazon-orange), var(--amazon-hover));
+        border: none;
+        border-radius: 12px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+        .verify-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .verify-btn:hover::before {
+            left: 100%;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 153, 0, 0.4);
+        }
+
+    /* Resend Section */
+    .resend-section {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        animation: fadeIn 0.8s ease-out 0.6s both;
+    }
+
+    .resend-container {
+        background: rgba(248, 249, 250, 0.8);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .resend-text {
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .resend-btn {
+        background: transparent;
+        border: 2px solid var(--amazon-orange);
+        color: var(--amazon-orange);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .resend-btn:hover:not(:disabled) {
+            background: var(--amazon-orange);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+        }
+
+        .resend-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-color: #ccc;
+            color: #ccc;
+        }
+
+        .resend-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .resend-btn:hover:not(:disabled) i {
+            transform: rotate(180deg);
+        }
+
+    /* Timer Section */
+    .timer-section {
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.8s ease-out 0.8s both;
+    }
+
+    .timer-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        color: #1976d2;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+        .timer-container i {
+            animation: tick 1s ease-in-out infinite;
+        }
+
+    #timer {
+        font-weight: 600;
+        color: #1565c0;
+    }
+
+    @@keyframes tick {
+        0%, 100%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    }
+
+    /* Help Section */
+    .help-section {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        animation: slideUp 0.8s ease-out 1s both;
+    }
+
+    .help-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: var(--amazon-blue);
+        font-weight: 600;
+    }
+
+        .help-header i {
+            color: var(--amazon-orange);
+            font-size: 1.1rem;
+        }
+
+    .help-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .help-option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #495057;
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.7);
+        transition: all 0.3s ease;
+    }
+
+        .help-option:hover {
+            background: rgba(255, 153, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        .help-option i {
+            color: var(--amazon-orange);
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 576px) {
+        .phone-icon-container i
+
+    {
+        font-size: 3rem;
+    }
+
+    .verification-title {
+        font-size: 1.5rem;
+    }
+
+    .code-input {
+        font-size: 1.2rem;
+        letter-spacing: 0.3rem;
+    }
+
+    .help-options {
+        gap: 0.5rem;
+    }
+
+    .help-option {
+        font-size: 0.8rem;
+    }
+
+    }
+
+    /* Validation styles */
+    .validation-summary {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        animation: shake 0.5s ease-in-out;
+    }
+
+    .validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-align: center;
+    }
+
+    @@keyframes shake {
+        0%, 100%
+
+    {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+
+    }
+
+    /* Animation keyframes */
+    @@keyframes slideUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes textSlide {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+</style>
+
+<script>
+    let resendTimer = 60;
+    let timerInterval;
+    let countdownInterval;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Start the code expiration timer (5 minutes)
+        startExpirationTimer();
+
+        // Start resend cooldown
+        startResendCooldown();
+
+        // Auto-focus code input
+        const codeInput = document.querySelector('.code-input');
+        if (codeInput) {
+            codeInput.focus();
+
+            // Auto-format and validate code input
+            codeInput.addEventListener('input', function(e) {
+                // Only allow numbers
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+                // Add pulse effect when typing
+                e.target.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    e.target.style.transform = 'scale(1)';
+                }, 100);
+
+                // Auto-submit when 6 digits entered
+                if (e.target.value.length === 6) {
+                    setTimeout(() => {
+                        document.querySelector('form').submit();
+                    }, 500);
+                }
+            });
+
+            // Add visual feedback for validation
+            codeInput.addEventListener('keyup', function(e) {
+                const value = e.target.value;
+                if (value.length === 6) {
+                    e.target.style.borderColor = '#28a745';
+                    e.target.style.boxShadow = '0 0 0 0.2rem rgba(40, 167, 69, 0.25)';
+                } else if (value.length > 0) {
+                    e.target.style.borderColor = '#ffc107';
+                    e.target.style.boxShadow = '0 0 0 0.2rem rgba(255, 193, 7, 0.25)';
+                } else {
+                    e.target.style.borderColor = '#e0e0e0';
+                    e.target.style.boxShadow = 'none';
+                }
+            });
+        }
+
+        // Add form submission animation
+        const form = document.querySelector('form');
+        const submitBtn = document.querySelector('.verify-btn');
+
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Verifying...';
+            submitBtn.disabled = true;
+        });
+    });
+
+    function startExpirationTimer() {
+        let minutes = 4;
+        let seconds = 59;
+
+        timerInterval = setInterval(function() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (minutes === 0 && seconds === 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = "Expired";
+                timerElement.style.color = '#dc3545';
+
+                // Disable form and show expired message
+                document.querySelector('.code-input').disabled = true;
+                document.querySelector('.verify-btn').disabled = true;
+
+                // Show expiration notice
+                const expiredNotice = document.createElement('div');
+                expiredNotice.className = 'alert alert-warning text-center';
+                expiredNotice.innerHTML = '<i class="fas fa-hourglass-end"></i> Code expired. Please request a new one.';
+                document.querySelector('.timer-section').appendChild(expiredNotice);
+            }
+
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+        }, 1000);
+    }
+
+    function startResendCooldown() {
+        const resendBtn = document.getElementById('resendBtn');
+        const resendText = document.getElementById('resendText');
+
+        resendBtn.disabled = true;
+
+        countdownInterval = setInterval(function() {
+            resendText.textContent = `Resend Code (${resendTimer}s)`;
+            resendTimer--;
+
+            if (resendTimer < 0) {
+                clearInterval(countdownInterval);
+                resendBtn.disabled = false;
+                resendText.textContent = 'Resend Code';
+                resendTimer = 60; // Reset for next use
+            }
+        }, 1000);
+    }
+
+    function resendCode() {
+        const resendBtn = document.getElementById('resendBtn');
+        const resendText = document.getElementById('resendText');
+
+        resendBtn.disabled = true;
+        resendText.textContent = 'Sending...';
+
+        fetch('@Url.Action("ResendPhoneVerification", "Account")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success text-center mt-2';
+                successMsg.innerHTML = '<i class="fas fa-check"></i> ' + data.message;
+                document.querySelector('.resend-container').appendChild(successMsg);
+
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    if (successMsg.parentNode) {
+                        successMsg.parentNode.removeChild(successMsg);
+                    }
+                }, 3000);
+
+                // Restart timers
+                clearInterval(timerInterval);
+                clearInterval(countdownInterval);
+                startExpirationTimer();
+                startResendCooldown();
+
+                // Clear and focus input
+                const codeInput = document.querySelector('.code-input');
+                codeInput.value = '';
+                codeInput.focus();
+
+            } else {
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'alert alert-danger text-center mt-2';
+                errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + data.message;
+                document.querySelector('.resend-container').appendChild(errorMsg);
+
+                // Remove error message after 5 seconds
+                setTimeout(() => {
+                    if (errorMsg.parentNode) {
+                        errorMsg.parentNode.removeChild(errorMsg);
+                    }
+                }, 5000);
+
+                resendBtn.disabled = false;
+                resendText.textContent = 'Resend Code';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resendBtn.disabled = false;
+            resendText.textContent = 'Resend Code';
+
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'alert alert-danger text-center mt-2';
+            errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to resend code. Please try again.';
+            document.querySelector('.resend-container').appendChild(errorMsg);
+
+            setTimeout(() => {
+                if (errorMsg.parentNode) {
+                    errorMsg.parentNode.removeChild(errorMsg);
+                }
+            }, 5000);
+        });
+    }
+
+    // Add page unload protection if user has entered partial code
+    window.addEventListener('beforeunload', function(e) {
+        const codeInput = document.querySelector('.code-input');
+        if (codeInput && codeInput.value.length > 0 && codeInput.value.length < 6) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+</script>

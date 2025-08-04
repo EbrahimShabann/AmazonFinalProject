@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Final_project.CustomAttribute
 {
-    public class EgyptianPhoneAttribute:ValidationAttribute
+    public class EgyptianPhoneAttribute : ValidationAttribute
     {
         private readonly string _pattern = @"^01[0125]\d{8}$";
 

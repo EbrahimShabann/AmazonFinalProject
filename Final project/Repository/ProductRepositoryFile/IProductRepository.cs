@@ -21,5 +21,11 @@ namespace Final_project.Repository.Product
         List<product_review> getAllReviews();
         void addReview(product_review review);
         void DeleteReviewReply(review_reply reply);
+
+
+
+        public Task<product_review> GetProductReviewByIdAsync(string productReviewId);
+        public void AddReviewReply (review_reply reply);
+
     }
 }

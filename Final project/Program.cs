@@ -3,7 +3,12 @@ using Final_project.Hubs;
 using Final_project.MapperConfig;
 using Final_project.Models;
 using Final_project.Repository;
+using Final_project.Services.Background;
 using Final_project.Services.CustomerService;
+using Final_project.Services.DeviceService;
+using Final_project.Services.EmailService;
+using Final_project.Services.SmsService;
+using Final_project.Services.TwoFactorService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -23,11 +28,11 @@ namespace Final_project
             builder.Services.AddSignalR();
             //==================Filter Handel Exiptions==================
             //===========Remove comment Whern Deploying==================
-            builder.Services.AddControllersWithViews();
-            //builder.Services.AddControllersWithViews(options =>
-            //{
-            //    options.Filters.Add(new HandelAnyErrorAttribute());
-            //});
+            //builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new HandelAnyErrorAttribute());
+            });
 
             //Stripe payment
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
@@ -67,7 +72,18 @@ namespace Final_project
                 option.Password.RequiredLength = 4;
                 option.Password.RequireUppercase = false;
 
-            }).AddEntityFrameworkStores<AmazonDBContext>();
+                // Email confirmation settings
+                option.SignIn.RequireConfirmedEmail = true;
+                option.User.RequireUniqueEmail = true;
+
+                // Token settings
+                option.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+                option.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultEmailProvider;
+                option.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultEmailProvider;
+
+            }).AddEntityFrameworkStores<AmazonDBContext>()
+              .AddDefaultTokenProviders(); // THIS IS THE KEY FIX!
+
             //======================EndInjection=========================
 
             //======================Automapper===========================
@@ -86,6 +102,29 @@ namespace Final_project
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
             //======================EndBuilder=========================
+            //=================Email Virification======================
+
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddTransient<IEmailService, EmailService>();
+
+            // Configure token lifespan (optional)
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(24); // Email confirmation tokens expire in 24 hours
+            });
+
+            //=================End Email Virification=================
+
+            //================= 2fv Two Factor Verification () ======================
+
+            builder.Services.AddScoped<ISmsService, EgyptSmsService>();
+            builder.Services.AddScoped<IDeviceService,EnhancedDeviceService>();
+            builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
+
+            // Add background service for cleaning expired codes
+            builder.Services.AddHostedService <ExpiredCodesCleanupService>();
+            //ExpiredCodesCleanupService
+            //=================End Email Virification=================
 
             var app = builder.Build();
 
@@ -95,12 +134,15 @@ namespace Final_project
                 app.UseHsts();
             }
 
-
             app.UseHttpsRedirection();
+            app.UseStaticFiles(); // Add this for serving static files
             app.UseRouting();
             app.UseSession();
 
+            // CRITICAL: Authentication must come before Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapStaticAssets();
             app.MapHub<CustomerServiceHub>("/customerServiceHub");
             app.MapHub<SellerOrdersHub>("/sellerOrdersHub");
@@ -108,7 +150,6 @@ namespace Final_project
                 name: "default",
                 pattern: "{controller=Landing}/{action=Index}/{id?}")
                 .WithStaticAssets();
-
 
             using (var scope = app.Services.CreateScope())
             {

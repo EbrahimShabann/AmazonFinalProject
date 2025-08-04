@@ -1,0 +1,917 @@
+﻿@{
+    ViewData["Title"] = "Enable Two-Factor Authentication?";
+    Layout = "_AccountPageLayout";
+}
+
+<!-- Animated Background -->
+<div class="animated-bg">
+    <div class="floating-shape">🔐</div>
+    <div class="floating-shape">📱</div>
+    <div class="floating-shape">🛡️</div>
+    <div class="floating-shape">✅</div>
+</div>
+
+<!-- Particles System -->
+<div class="particles">
+    <div class="particle" style="left: 15%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 25%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 35%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 45%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 55%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 65%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 75%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 85%; animation-delay: 7s;"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+            <div class="login-container security-prompt-container">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fa-brands fa-amazon"></i>
+                    </div>
+                </div>
+
+                <!-- Security Prompt Header -->
+                <div class="security-prompt-header">
+                    <div class="security-animation">
+                        <div class="shield-container">
+                            <i class="fas fa-shield-alt security-shield"></i>
+                            <div class="security-sparkles">
+                                <span class="sparkle sparkle-1">🔒</span>
+                                <span class="sparkle sparkle-2">🔐</span>
+                                <span class="sparkle sparkle-3">🛡️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="security-title">Secure Your Account</h2>
+                    <p class="security-subtitle">Would you like to enable two-factor authentication for extra security?</p>
+                </div>
+
+                <!-- Security Benefits -->
+                <div class="benefits-container">
+                    <div class="benefits-header">
+                        <i class="fas fa-star benefits-icon"></i>
+                        <h5>Why Enable 2FA?</h5>
+                    </div>
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon protection-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <strong>Enhanced Protection</strong>
+                                <small>Protects against unauthorized access even if your password is compromised</small>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon device-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <strong>Device Verification</strong>
+                                <small>Verify new devices with SMS codes for added security</small>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon trust-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <strong>Trusted Devices</strong>
+                                <small>Remember trusted devices to reduce verification frequency</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-section">
+                    <form method="post" asp-action="EnableTwoFactorPrompt" asp-controller="Account">
+                        <div class="button-group">
+                            <button type="submit" name="enableTwoFactor" value="true" class="btn-primary enable-btn">
+                                <span class="loading-spinner"></span>
+                                <i class="fas fa-shield-alt button-icon"></i>
+                                <span class="button-text">
+                                    <strong>Yes, Enable 2FA</strong>
+                                    <small>Recommended for security</small>
+                                </span>
+                            </button>
+
+                            <button type="submit" name="enableTwoFactor" value="false" class="btn-secondary skip-btn">
+                                <i class="fas fa-forward button-icon"></i>
+                                <span class="button-text">
+                                    <strong>Skip for Now</strong>
+                                    <small>You can enable it later</small>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="security-notice">
+                    <div class="notice-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="notice-content">
+                        <p>You can always enable or disable two-factor authentication later from your account settings.</p>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="stats-section">
+                    <div class="stats-header">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Security Statistics</span>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Attack Prevention</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50%</div>
+                            <div class="stat-label">Fewer Breaches</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2x</div>
+                            <div class="stat-label">More Secure</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Security Prompt Specific Styles */
+    .security-prompt-container {
+        max-width: 600px;
+        position: relative;
+    }
+
+    .security-prompt-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .security-animation {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .shield-container {
+        position: relative;
+        display: inline-block;
+        animation: shieldPulse 2s ease-in-out infinite;
+    }
+
+    .security-shield {
+        font-size: 4rem;
+        color: #28a745;
+        filter: drop-shadow(0 4px 12px rgba(40, 167, 69, 0.3));
+        animation: shieldGlow 2s ease-in-out infinite alternate;
+    }
+
+    .security-sparkles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .sparkle {
+        position: absolute;
+        font-size: 1.2rem;
+        animation: sparkleFloat 3s ease-in-out infinite;
+    }
+
+    .sparkle-1 {
+        top: 10%;
+        left: 15%;
+        animation-delay: 0s;
+    }
+
+    .sparkle-2 {
+        top: 20%;
+        right: 10%;
+        animation-delay: 1s;
+    }
+
+    .sparkle-3 {
+        bottom: 15%;
+        left: 20%;
+        animation-delay: 2s;
+    }
+
+    @@keyframes shieldPulse {
+        0%, 100%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    }
+
+    @@keyframes shieldGlow {
+        0%
+
+    {
+        filter: drop-shadow(0 4px 12px rgba(40, 167, 69, 0.3));
+    }
+
+    100% {
+        filter: drop-shadow(0 6px 20px rgba(40, 167, 69, 0.6));
+    }
+
+    }
+
+    @@keyframes sparkleFloat {
+        0%, 100%
+
+    {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.7;
+    }
+
+    25% {
+        transform: translateY(-15px) rotate(90deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-5px) rotate(180deg);
+        opacity: 0.8;
+    }
+
+    75% {
+        transform: translateY(-20px) rotate(270deg);
+        opacity: 1;
+    }
+
+    }
+
+    .security-title {
+        color: var(--amazon-blue);
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 2rem;
+        animation: textPulse 2s ease-in-out infinite;
+    }
+
+    .security-subtitle {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        animation: fadeIn 0.8s ease-out 0.3s both;
+    }
+
+    /* Benefits Container */
+    .benefits-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.8s ease-out 0.4s both;
+    }
+
+        .benefits-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #28a745, #20c997, #28a745);
+            background-size: 200% 100%;
+            animation: progressFlow 3s linear infinite;
+        }
+
+    .benefits-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+        color: var(--amazon-blue);
+    }
+
+    .benefits-icon {
+        color: var(--amazon-orange);
+        font-size: 1.2rem;
+        animation: pulse 2s infinite;
+    }
+
+    .benefits-header h5 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .benefits-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .benefit-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+        .benefit-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .benefit-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .benefit-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(40, 167, 69, 0.05);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    .benefit-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .protection-icon {
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .device-icon {
+        background: linear-gradient(135deg, var(--amazon-orange), var(--amazon-hover));
+    }
+
+    .trust-icon {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .benefit-content {
+        flex-grow: 1;
+    }
+
+        .benefit-content strong {
+            display: block;
+            color: #333;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .benefit-content small {
+            color: #6c757d;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+    /* Action Section */
+    .action-section {
+        margin-bottom: 2rem;
+        animation: slideUp 0.8s ease-out 0.6s both;
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .enable-btn, .skip-btn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        padding: 1.2rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-align: left;
+    }
+
+    .enable-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+        .enable-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .enable-btn:hover::before {
+            left: 100%;
+        }
+
+        .enable-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+    .skip-btn {
+        background: transparent;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+    }
+
+        .skip-btn:hover {
+            border-color: var(--amazon-orange);
+            color: var(--amazon-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.2);
+        }
+
+    .button-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .button-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+        .button-text strong {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .button-text small {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+    /* Security Notice */
+    .security-notice {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        border-left: 4px solid #2196f3;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        animation: slideUp 0.8s ease-out 0.8s both;
+    }
+
+    .notice-icon {
+        color: #2196f3;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .notice-content p {
+        margin: 0;
+        color: #1976d2;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    /* Statistics Section */
+    .stats-section {
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1.5rem;
+        animation: slideUp 0.8s ease-out 1s both;
+    }
+
+    .stats-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: var(--amazon-blue);
+        font-weight: 600;
+        justify-content: center;
+    }
+
+        .stats-header i {
+            color: var(--amazon-orange);
+            font-size: 1.1rem;
+        }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 1rem 0.5rem;
+        border-radius: 10px;
+        background: rgba(248, 249, 250, 0.8);
+        transition: all 0.3s ease;
+    }
+
+        .stat-item:hover {
+            background: rgba(40, 167, 69, 0.05);
+            transform: translateY(-3px);
+        }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #28a745;
+        margin-bottom: 0.25rem;
+        animation: countUp 2s ease-out 1.2s both;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #666;
+        font-weight: 500;
+    }
+
+    @@keyframes countUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .security-shield
+
+    {
+        font-size: 3rem;
+    }
+
+    .security-title {
+        font-size: 1.6rem;
+    }
+
+    .security-subtitle {
+        font-size: 1rem;
+    }
+
+    .benefit-item {
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .benefit-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .button-group {
+        gap: 0.75rem;
+    }
+
+    .enable-btn, .skip-btn {
+        padding: 1rem 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .stats-grid {
+        gap: 0.5rem;
+    }
+
+    .stat-item {
+        padding: 0.75rem 0.25rem;
+    }
+
+    .stat-number {
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .security-shield
+
+    {
+        font-size: 2.5rem;
+    }
+
+    .security-title {
+        font-size: 1.4rem;
+    }
+
+    .security-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .benefits-container,
+    .security-notice,
+    .stats-section {
+        padding: 1rem;
+    }
+
+    .benefit-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .benefit-content strong {
+        font-size: 0.9rem;
+    }
+
+    .benefit-content small {
+        font-size: 0.8rem;
+    }
+
+    .button-text strong {
+        font-size: 0.9rem;
+    }
+
+    .button-text small {
+        font-size: 0.75rem;
+    }
+
+    }
+
+    /* Animation keyframes */
+    @@keyframes slideUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+    @@keyframes textPulse {
+        0%, 100%
+
+    {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    }
+
+    @@keyframes progressFlow {
+        0%
+
+    {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+
+    }
+
+    @@keyframes pulse {
+        0%, 100%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    }
+</style>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const enableBtn = document.querySelector('.enable-btn');
+        const skipBtn = document.querySelector('.skip-btn');
+
+        console.log('Form found:', form);
+        console.log('Enable button found:', enableBtn);
+        console.log('Skip button found:', skipBtn);
+
+        // Debug: Check form action and method
+        if (form) {
+            console.log('Form action:', form.action);
+            console.log('Form method:', form.method);
+            console.log('Form elements:', form.elements);
+        }
+
+        // Handle form submission with detailed logging
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submit event triggered');
+                console.log('Event target:', e.target);
+                console.log('Active element (clicked button):', document.activeElement);
+
+                // Get form data
+                const formData = new FormData(form);
+                console.log('Form data:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
+
+                const submitter = document.activeElement;
+                console.log('Submitter classes:', submitter?.classList);
+
+                if (submitter && (submitter.classList.contains('enable-btn') || submitter.classList.contains('skip-btn'))) {
+                    console.log('Valid submitter found, showing loading state');
+
+                    // Add visual feedback
+                    const loadingSpinner = submitter.querySelector('.loading-spinner');
+                    const buttonIcon = submitter.querySelector('.button-icon');
+                    const buttonText = submitter.querySelector('.button-text strong');
+
+                    console.log('Loading spinner:', loadingSpinner);
+                    console.log('Button icon:', buttonIcon);
+                    console.log('Button text:', buttonText);
+
+                    if (submitter.classList.contains('enable-btn')) {
+                        console.log('Enable button clicked');
+                        if (loadingSpinner) {
+                            loadingSpinner.style.display = 'inline-block';
+                            console.log('Loading spinner shown');
+                        }
+                        if (buttonIcon) {
+                            buttonIcon.style.display = 'none';
+                            console.log('Button icon hidden');
+                        }
+                        if (buttonText) {
+                            buttonText.textContent = 'Enabling...';
+                            console.log('Button text changed to "Enabling..."');
+                        }
+                    } else {
+                        console.log('Skip button clicked');
+                        if (buttonText) {
+                            buttonText.textContent = 'Redirecting...';
+                            console.log('Button text changed to "Redirecting..."');
+                        }
+                    }
+
+                    // Disable the button to prevent double submission
+                    submitter.disabled = true;
+                    console.log('Button disabled');
+                }
+
+                console.log('Form will now submit normally');
+                // Don't prevent default - let the form submit
+            });
+        }
+
+        // Add click event listeners for debugging
+        const buttons = document.querySelectorAll('.enable-btn, .skip-btn');
+        buttons.forEach((button, index) => {
+            button.addEventListener('click', function(e) {
+                console.log(`Button ${index} clicked:`, this);
+                console.log('Button name:', this.name);
+                console.log('Button value:', this.value);
+                console.log('Button type:', this.type);
+
+                // Check if button has proper form attributes
+                console.log('Button form:', this.form);
+
+                // Add ripple effect for visual feedback
+                addRippleEffect(e, this);
+            });
+        });
+
+        function addRippleEffect(e, button) {
+            console.log('Adding ripple effect to button:', button);
+
+            const ripple = document.createElement('div');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                pointer-events: none;
+            `;
+
+            button.style.position = 'relative';
+            button.style.overflow = 'hidden';
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                if (button.contains(ripple)) {
+                    button.removeChild(ripple);
+                }
+            }, 600);
+        }
+
+        // Monitor for page unload (indicates successful redirect)
+        window.addEventListener('beforeunload', function(e) {
+            console.log('Page is about to unload - redirect is happening');
+        });
+
+        // Monitor for errors
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
+        });
+
+        // Check for any form validation issues
+        if (form) {
+            form.addEventListener('invalid', function(e) {
+                console.error('Form validation failed:', e.target.validationMessage);
+            }, true);
+        }
+    });
+
+    // Add CSS for ripple animation
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+    @@keyframes ripple {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+    `;
+    document.head.appendChild(styleSheet);
+</script>

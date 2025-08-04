@@ -1,4 +1,6 @@
 ﻿using Final_project.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Final_project.Repository.CartRepository
 {
@@ -34,11 +36,18 @@ namespace Final_project.Repository.CartRepository
             context.shopping_carts.Update(entity);
         }
 
-        public List<shopping_cart> getAll()
+        
+
+        public void Delete(shopping_cart entity)
         {
-            return context.shopping_carts.ToList();
+            context.shopping_carts.Remove(entity);
         }
 
-
+        public List<shopping_cart> getAll()
+        {
+         
+            return context.shopping_carts.ToList();
+        
+        }
     }
 }

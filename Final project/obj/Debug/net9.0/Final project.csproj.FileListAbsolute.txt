@@ -1,3 +1,13 @@
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.AssemblyReference.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rpswa.dswa.cache.json
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.GeneratedMSBuildEditorConfig.editorconfig
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfoInputs.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfo.cs
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.CoreCompileInputs.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.MvcApplicationPartsAssemblyInfo.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cache
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cs
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.sourcelink.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.Development.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\appsettings.json
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\efpt.config.json
@@ -12,8 +22,10 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Final project.pdb
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\AutoMapper.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Azure.Core.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Azure.Identity.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Castle.Core.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Humanizer.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\MailKit.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.Google.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -79,6 +91,7 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.VisualStudio.Web.
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\MimeKit.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Mono.TextTemplating.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Newtonsoft.Json.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\NuGet.Common.dll
@@ -104,6 +117,7 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Memory.Data.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Reflection.MetadataLoadContext.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Runtime.Caching.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+I:\AmazonFinalProject\Final project\bin\Debug\net9.0\Twilio.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\af\Humanizer.resources.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\ar\Humanizer.resources.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\az\Humanizer.resources.dll
@@ -263,35 +277,27 @@ I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-arm64\native\M
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 I:\AmazonFinalProject\Final project\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.AssemblyReference.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rpswa.dswa.cache.json
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.GeneratedMSBuildEditorConfig.editorconfig
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfoInputs.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.AssemblyInfo.cs
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.csproj.CoreCompileInputs.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.MvcApplicationPartsAssemblyInfo.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cache
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.RazorAssemblyInfo.cs
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\Final project.sourcelink.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjimswa.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\bundle\Final project.styles.css
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\scopedcss\projectbundle\Final project.bundle.scp.css
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-ka3duem7f0.gz
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-1s96emahob.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\ohaxl9z310-rr1sbl775x.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\54gdiegj4r-hwgv53zewi.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\btpj4hj0h7-m4gfkyivox.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\z5q4b6ps11-kqv6t48z1k.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vmgr6gudi0-ozuavp8us1.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\7xdwthpi4y-oeabntolks.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\yhcz64ebh2-bj3rinxlgk.gz
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-3j857clcfc.gz
-I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-lugek5hnai.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vgoqzhash4-vulkk4534x.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\mfqzyu4uwd-8vizuqfvvc.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\a0z7ez63h8-1vy8v7pjxj.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pfrun0jckm-61n19gt1b8.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\pd3hk5crku-j9doi8kwq6.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\th3pen5v8j-3r8b2a0bt1.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\uu1tfk8qyd-9aambh6nv0.gz
+I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\kzz4tt6z63-0hesna2cko.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\46qazm2v5g-b8uob5q0f0.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\jxq2ew2une-as5a8p067t.gz
 I:\AmazonFinalProject\Final project\obj\Debug\net9.0\compressed\vqt7zy1sdb-iwjryh8h66.gz

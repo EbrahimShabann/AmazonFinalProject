@@ -1,0 +1,91 @@
+﻿<!-- Views/Account/ManageDevices.cshtml -->
+@model IEnumerable<UserDevice>
+
+@{
+    ViewData["Title"] = "Manage Devices";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Your Trusted Devices</h4>
+                <p class="text-muted mb-0">Manage devices that have been verified for your account</p>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Device Name</th>
+                                    <th>IP Address</th>
+                                    <th>First Seen</th>
+                                    <th>Last Seen</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var device in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-@(device.DeviceName.Contains("Mobile") ? "mobile-alt" : "desktop")"></i>
+                                            @device.DeviceName
+                                        </td>
+                                        <td>@device.IpAddress</td>
+                                        <td>@device.FirstSeen.ToString("MMM dd, yyyy HH:mm")</td>
+                                        <td>@device.LastSeen.ToString("MMM dd, yyyy HH:mm")</td>
+                                        <td>
+                                            @if (device.IsTrusted)
+                                            {
+                                                <span class="badge bg-success">Trusted</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Pending</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <form asp-action="RemoveDevice" method="post" style="display: inline;">
+                                                <input type="hidden" name="deviceId" value="@device.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Remove this device? You will need to verify again when logging in from this device.')">
+                                                    <i class="fas fa-trash"></i> Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-devices fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No devices found</h5>
+                        <p class="text-muted">Devices will appear here after you log in and verify them.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Device Security Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Regularly review your trusted devices and remove any you don't recognize</li>
+                    <li>If you see unfamiliar devices, change your password immediately</li>
+                    <li>Only trust devices you personally own and control</li>
+                    <li>Consider removing devices you no longer use</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

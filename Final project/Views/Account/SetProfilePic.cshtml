@@ -4,72 +4,79 @@
     Layout = "_AccountPageLayout";
 
 }
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div class="register-container">
 
-<div class="logo-container">
-    <div class="logo">Amazon</div>
-</div>
-
-<form id="registrationForm" method="post" asp-action="SetProfilePic" asp-controller="Account" enctype="multipart/form-data">
-    <!-- Profile Image Upload -->
-    <input type="hidden" asp-for="@Model.UserID" value="@Model.UserID" />
-    <div class="image-upload-container">
-        <div class="image-upload-zone" id="imageUploadZone">
-            <input type="file"
-                   class="file-input"
-                   id="profileImage"
-                   asp-for="@Model.ImageFile"
-                   accept="image/*" />
-            <img id="imagePreview"
-                 class="image-preview"
-                 alt="Profile Preview" />
-            <button type="button" class="remove-image" id="removeImage">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="upload-content">
-                <i class="fas fa-camera upload-icon"></i>
-                <div class="upload-text">Upload Profile Picture</div>
-                <div class="upload-subtext">
-                    Drag & drop or click to select
+                <div class="logo-container">
+                    <div class="logo">Amazon</div>
                 </div>
+
+                <form id="registrationForm" method="post" asp-action="SetProfilePic" asp-controller="Account" enctype="multipart/form-data">
+                    <!-- Profile Image Upload -->
+                    <input type="hidden" asp-for="@Model.UserID" value="@Model.UserID" />
+                    <div class="image-upload-container">
+                        <div class="image-upload-zone" id="imageUploadZone">
+                            <input type="file"
+                                   class="file-input"
+                                   id="profileImage"
+                                   asp-for="@Model.ImageFile"
+                                   accept="image/*" />
+                            <img id="imagePreview"
+                                 class="image-preview"
+                                 alt="Profile Preview" />
+                            <button type="button" class="remove-image" id="removeImage">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="upload-content">
+                                <i class="fas fa-camera upload-icon"></i>
+                                <div class="upload-text">Upload Profile Picture</div>
+                                <div class="upload-subtext">
+                                    Drag & drop or click to select
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                    <div class="form-group">
+                        <input type="tel"
+                               class="form-control"
+                               id="phone"
+                               asp-for="@Model.PhoneNumber"
+                               placeholder="Phone Number"
+                               required />
+                        <i class="fas fa-phone input-icon"></i>
+                    </div>
+
+                    <!-- Birthday Input -->
+                    <div class="form-group birthday-container">
+                        <input type="date"
+                               class="form-control birthday-input"
+                               id="birthday"
+                               asp-for="@Model.Birthday"
+                               required />
+                        <div class="age-warning" id="ageWarning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            You must be at least 18 years old to register.
+                        </div>
+                        <div class="age-success" id="ageSuccess">
+                            <i class="fas fa-check-circle"></i>
+                            Age verification successful!
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="registerBtn">
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <span id="btnText">Continue to Account</span>
+                    </button>
+                </form>
+
             </div>
         </div>
     </div>
-    <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-    <div class="form-group">
-        <input type="tel"
-               class="form-control"
-               id="phone"
-               asp-for="@Model.PhoneNumber"
-               placeholder="Phone Number"
-               required />
-        <i class="fas fa-phone input-icon"></i>
-    </div>
-
-    <!-- Birthday Input -->
-    <div class="form-group birthday-container">
-        <input type="date"
-               class="form-control birthday-input"
-               id="birthday"
-               asp-for="@Model.Birthday"
-               required />
-        <div class="age-warning" id="ageWarning">
-            <i class="fas fa-exclamation-triangle"></i>
-            You must be at least 18 years old to register.
-        </div>
-        <div class="age-success" id="ageSuccess">
-            <i class="fas fa-check-circle"></i>
-            Age verification successful!
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary" id="registerBtn">
-        <div class="loading-spinner" id="loadingSpinner"></div>
-        <span id="btnText">Continue to Account</span>
-    </button>
-</form>
-
-
- @section Scripts{
+</div>
+@section Scripts {
     <script>
         // Create floating particles
         function createParticles() {
