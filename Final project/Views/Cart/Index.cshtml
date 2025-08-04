@@ -359,15 +359,15 @@
 
                         <div class="item-actions">
                             <div class="quantity-control">
-                                <form asp-action="Decrease" method="post">
+                              
                                     <input type="hidden" name="id" value="@item.CartItemId" />
-                                    <button type="submit" class="quantity-btn">-</button>
-                                </form>
+                                <button data-id="@item.CartItemId" id="decrease" type="button" class="quantity-btn">-</button>
+                              
                                 <input type="text" class="quantity-display" value="@item.Quantity" readonly />
-                                <form asp-action="Increase" method="post">
+                               
                                     <input type="hidden" name="id" value="@item.CartItemId" />
-                                    <button type="submit" class="quantity-btn">+</button>
-                                </form>
+                                    <button data-id="@item.CartItemId" id="increase" type="button" class="quantity-btn">+</button>
+                              
                             </div>
 
                             <form asp-action="Delete" method="post" style="display: inline;">
@@ -417,6 +417,7 @@
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     document.querySelectorAll('.quantity-display').forEach(input => {
@@ -426,6 +427,37 @@
         });
     });
 
+            $('#increase').on('input', function() {
+                const cartItemId = $(this).data('id');
+
+                 $.ajax({
+                            url: `/Cart/Increase?id=${cartItemId}`,
+                            type: "POST",
+                            success: function (response) {
+                                 
+
+                            },
+                            error: function () {
+                                toastr.error('An error occurred while increasing');
+                            }
+                        });
+            });
+
+              $('#decrease').on('input', function() {
+                const cartItemId = $(this).data('id');
+
+                 $.ajax({
+                            url: `/Cart/Decrease?id=${cartItemId}`,
+                            type: "POST",
+                            success: function (response) {
+                                
+
+                            },
+                            error: function () {
+                                toastr.error('An error occurred while decreasing');
+                            }
+                        });
+                        });
     document.querySelectorAll('.quantity-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const display = this.closest('.quantity-control').querySelector('.quantity-display');

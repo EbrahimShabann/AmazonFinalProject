@@ -57,7 +57,7 @@ namespace Final_project.Controllers.Cart
                 unitOfWork.CartItemRepository.Update(item);
                 unitOfWork.save();
             }
-            return RedirectToAction("Index");
+            return Ok();
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace Final_project.Controllers.Cart
                 unitOfWork.CartItemRepository.Update(item);
                 unitOfWork.save();
             }
-            return RedirectToAction("Index");
+            return Ok();
         }
 
         [HttpPost]
