@@ -29,6 +29,6 @@ namespace Final_project.ViewModel.CreateUserViewModel
 
         public IFormFile imgFile { get; set; }
 
-        public List<string> Roles { get; set; } = new List<string> { "seller", "customerService" };
+        public List<string> Roles { get; set; } = new List<string> { "seller", "customerService" , "admin" };
     }
 }

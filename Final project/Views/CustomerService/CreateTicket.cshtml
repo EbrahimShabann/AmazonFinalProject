@@ -1,7 +1,6 @@
-﻿@using Final_project.Models.DTOs.CustomerService
-@model CreateChatSessionDTO
+﻿@model CreateSupportTicketDto
 @{
-    ViewData["Title"] = "Create Chat Session";
+    ViewData["Title"] = "Create Support Ticket";
 }
 <link href="/css/CustomerProfile.css" rel="stylesheet" />
 
@@ -11,9 +10,9 @@
 
         <div class="col-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Create Chat Session</h2>
-                <a href="@Url.Action("Chats")" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Chats
+                <h2>Create Support Ticket</h2>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Tickets
                 </a>
             </div>
 
@@ -27,50 +26,47 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Create New Chat Session</h5>
+                    <h5 class="mb-0">Create New Support Ticket</h5>
                 </div>
                 <div class="card-body">
-                    <form asp-action="CreateChatSession" method="post">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label asp-for="CustomerId" class="form-label">Customer</label>
-                                    <select asp-for="CustomerId" class="form-select" required>
-                                        <option value="">Select a customer...</option>
-                                        @foreach (var customer in ViewBag.Customers)
-                                        {
-                                            <option value="@customer.Id">@customer.UserName (@customer.Email)</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="CustomerId" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label asp-for="SellerId" class="form-label">Seller</label>
-                                    <select asp-for="SellerId" class="form-select" required>
-                                        <option value="">Select a seller...</option>
-                                        @foreach (var seller in ViewBag.Sellers)
-                                        {
-                                            <option value="@seller.Id">@seller.UserName (@seller.Email)</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="SellerId" class="text-danger"></span>
-                                </div>
-                            </div>
+                    <form asp-action="CreateTicket" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                            <input asp-for="Subject" class="form-control" placeholder="Brief description of your issue" required />
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea asp-for="Description" class="form-control" rows="6"
+                                      placeholder="Please provide detailed information about your issue..." required></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <div class="form-text">Be as specific as possible to help us resolve your issue quickly.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Priority" class="form-label">Priority <span class="text-danger">*</span></label>
+                            <select asp-for="Priority" class="form-select" required>
+                                <option value="">Select priority level...</option>
+                                <option value="Low">Low - General inquiry or minor issue</option>
+                                <option value="Medium">Medium - Issue affecting normal operation</option>
+                                <option value="High">High - Urgent issue requiring quick attention</option>
+                                <option value="Critical">Critical - System down or major functionality broken</option>
+                            </select>
+                            <span asp-validation-for="Priority" class="text-danger"></span>
                         </div>
 
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
-                            <strong>Note:</strong> Only customer service representatives can create chat sessions between customers and sellers.
-                            Once created, both the customer and seller will be able to participate in the chat.
+                            <strong>Note:</strong> Your support ticket will be reviewed by our customer service team.
+                            You will receive updates via email and can track the progress in your tickets dashboard.
                         </div>
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-comments"></i> Create Chat Session
+                                <i class="fas fa-ticket-alt"></i> Create Support Ticket
                             </button>
-                            <a href="@Url.Action("Chats")" class="btn btn-outline-secondary">Cancel</a>
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -82,17 +78,44 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Add validation to ensure different customer and seller are selected
-            $('form').on('submit', function(e) {
-                var customerId = $('#CustomerId').val();
-                var sellerId = $('#SellerId').val();
+            // Character counter for description
+            $('#Description').on('input', function() {
+                var length = $(this).val().length;
+                var maxLength = 1000; // Adjust as needed
 
-                if (customerId === sellerId && customerId !== '') {
+                if (length > maxLength * 0.8) {
+                    $(this).addClass('border-warning');
+                } else {
+                    $(this).removeClass('border-warning');
+                }
+            });
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                var subject = $('#Subject').val().trim();
+                var description = $('#Description').val().trim();
+                var priority = $('#Priority').val();
+
+                if (!subject || !description || !priority) {
                     e.preventDefault();
-                    alert('Customer and Seller must be different users.');
+                    alert('Please fill in all required fields.');
+                    return false;
+                }
+
+                if (subject.length < 5) {
+                    e.preventDefault();
+                    alert('Subject must be at least 5 characters long.');
+                    $('#Subject').focus();
+                    return false;
+                }
+
+                if (description.length < 20) {
+                    e.preventDefault();
+                    alert('Please provide a more detailed description (at least 20 characters).');
+                    $('#Description').focus();
                     return false;
                 }
             });
         });
     </script>
-} 
+}

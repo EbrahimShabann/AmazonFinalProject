@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin,superadmin")]
+    [Authorize(Roles = "admin,superAdmin")]
 
     public class AdminSellersController : Controller
     {

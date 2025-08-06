@@ -109,17 +109,18 @@ namespace Final_project.Controllers.CustomerService
 
             return View(ticketViewModels);
         }
-
         [HttpGet]
         public IActionResult CreateTicket()
         {
-            return View();
+            var model = new CreateSupportTicketDto();
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTicket(CreateSupportTicketDto dto)
         {
+            ModelState.Remove("userId");
             if (ModelState.IsValid)
             {
                 var ticket = new support_ticket

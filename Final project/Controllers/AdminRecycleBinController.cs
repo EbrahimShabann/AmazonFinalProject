@@ -12,7 +12,7 @@ using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "superadmin")]
+    [Authorize(Roles = "superAdmin")]
 
     [Produces("application/json")]
 

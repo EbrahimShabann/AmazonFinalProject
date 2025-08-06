@@ -32,7 +32,9 @@ namespace Final_project.Models
                     {
                         UserName = "Admin@amazon.com",
                         Email = "Admin@amazon.com",
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = "true",
+
                     };
 
                     var result = await userManager.CreateAsync(adminUser, "Admin1234");
@@ -47,6 +49,7 @@ namespace Final_project.Models
                         Email = "superAdmin@amazon.com",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed="true",
+
                     };
 
                     var superresult = await userManager.CreateAsync(superadminUser, "superAdmin1234");

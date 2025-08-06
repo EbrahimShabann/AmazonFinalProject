@@ -27,6 +27,7 @@ using Twilio.Rest.Api.V2010.Account;
 namespace Final_project.Controllers
 {
 
+    [Authorize]
 
     public class ProductController : Controller
     {
@@ -101,7 +102,6 @@ namespace Final_project.Controllers
             }
         }
 
-
         [HttpGet]
         public IActionResult CheckOut(List<CartVM> cartVM)
         {
@@ -148,8 +148,23 @@ namespace Final_project.Controllers
                         TempData["error"] = "Quantity must be greater than zero.";
                         return RedirectToAction("Index", "Cart");
                     }
-                    if (string.IsNullOrEmpty(cart.ProductColor)) cart.ProductColor = product.SelectedColors[0];
-                    if (string.IsNullOrEmpty(cart.ProductSize)) cart.ProductSize = product.SelectedSizes[0];
+
+                    // Safe access to SelectedColors with null/empty check
+                    if (string.IsNullOrEmpty(cart.ProductColor))
+                    {
+                        cart.ProductColor = (product.SelectedColors != null && product.SelectedColors.Any())
+                            ? product.SelectedColors[0]
+                            : "Default Color";
+                    }
+
+                    // Safe access to SelectedSizes with null/empty check
+                    if (string.IsNullOrEmpty(cart.ProductSize))
+                    {
+                        cart.ProductSize = (product.SelectedSizes != null && product.SelectedSizes.Any())
+                            ? product.SelectedSizes[0]
+                            : "Default Size";
+                    }
+
                     newOrder.Carts.Add(new CartVM
                     {
                         ProductId = product.id,
@@ -172,10 +187,23 @@ namespace Final_project.Controllers
                 var quantity = int.Parse(Request.Query["quantity"]);
                 var product = uof.ProductRepository.getById(productId);
                 string productColor = Request.Query["color"].ToString();
-                if (string.IsNullOrEmpty(productColor)) productColor = product.SelectedColors[0];
                 string productSize = Request.Query["size"].ToString();
-                if (string.IsNullOrEmpty(productSize)) productSize = product.SelectedSizes[0];
 
+                // Safe access to SelectedColors with null/empty check
+                if (string.IsNullOrEmpty(productColor))
+                {
+                    productColor = (product.SelectedColors != null && product.SelectedColors.Any())
+                        ? product.SelectedColors[0]
+                        : "Default Color";
+                }
+
+                // Safe access to SelectedSizes with null/empty check
+                if (string.IsNullOrEmpty(productSize))
+                {
+                    productSize = (product.SelectedSizes != null && product.SelectedSizes.Any())
+                        ? product.SelectedSizes[0]
+                        : "Default Size";
+                }
 
                 if (product == null)
                 {
@@ -211,7 +239,6 @@ namespace Final_project.Controllers
 
             return View(newOrder);
         }
-
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -325,15 +352,15 @@ namespace Final_project.Controllers
 
             uof.save();
 
-            //try
-            //{
-            //    SendOrderConfirmation(order);
-            //}
-            //catch (Exception ex)
-            //{
-            //    TempData["error"] = "SMS sending failed: " + ex.Message;
+            try
+            {
+                SendOrderConfirmation(order);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "SMS sending failed: " + ex.Message;
 
-            //}
+            }
             //handle stripe payment
             if (model.payment_method == "card")
             {

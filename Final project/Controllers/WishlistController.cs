@@ -9,6 +9,8 @@ using System.Security.Claims;
 namespace Final_project.Controllers.Wishlist
 {
     [Authorize]
+    [Authorize(Roles = "customer")]
+
     public class WishlistController : Controller
     {
         private readonly UnitOfWork unitOfWork;

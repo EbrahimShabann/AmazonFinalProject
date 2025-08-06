@@ -554,12 +554,7 @@
         <button class="tab-btn" data-tab="categories">
             <i class="fas fa-tags"></i> Deleted Categories
         </button>
-        <button class="tab-btn" data-tab="sellers">
-            <i class="fas fa-store"></i> Deleted Sellers
-        </button>
-        <button class="tab-btn" data-tab="support">
-            <i class="fas fa-solid fa-user-tie"></i> Deleted Customer Service
-        </button>
+
     </div>
 
     <!-- Products Tab Content -->
@@ -683,7 +678,7 @@
         }
     </div>
 
-    <!-- Sellers Tab Content -->
+@*     <!-- Sellers Tab Content -->
     <div class="tab-content" id="sellers-tab">
         @if (Model.DeletedSellers.Any())
         {
@@ -785,7 +780,7 @@
                 <p>There are currently no deleted customer service accounts.</p>
             </div>
         }
-    </div>
+    </div> *@
 </main>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

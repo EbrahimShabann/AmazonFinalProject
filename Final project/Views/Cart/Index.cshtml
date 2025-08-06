@@ -314,7 +314,6 @@
         }
         else
         {
-            <button class="bg-danger" asp-action="ClearCart">Clear Cart</button>
 
             @foreach (var item in Model)
             {
@@ -371,7 +370,7 @@
                                 <input type="hidden" name="id" value="@item.CartItemId" />
                                 <button type="submit" class="action-link">Delete</button>
                             </form>
-                            <div class="action-link">Save for later</div>
+                          
                         </div>
 
                         <div class="item-price">EGP @item.Price.ToString("N2")</div>
@@ -380,8 +379,26 @@
             }
 
 
-            <div class="cart-header" style="justify-content: flex-end;">
-                <h5 class="mb-0">Subtotal (@Model.Sum(x => x.Quantity) items): <span style="color: #B12704; font-weight: 700;">EGP @subtotal.ToString("N2")</span></h5>
+            <div class="row card-header align-items-center py-3 bg-light rounded-3 mb-4">
+                <!-- Clear Cart Button -->
+                <div class="col-md-6">
+                    <a class="btn btn-outline-danger px-4 py-2" asp-action="ClearCart">
+                        <i class="fas fa-trash-alt me-2"></i>Clear Cart
+                    </a>
+                </div>
+
+                <!-- Subtotal Display -->
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <div class="d-inline-block bg-white p-3 rounded-3 shadow-sm">
+                        <h5 class="mb-0 fw-semibold">
+                            Subtotal
+                            <span class="badge bg-primary rounded-pill">@Model.Sum(x => x.Quantity)</span>
+                            items:
+                            <span class="text-danger fw-bold">EGP @subtotal.ToString("N2")</span>
+                        </h5>
+                        <small class="text-muted">Free shipping on orders over EGP 500</small>
+                    </div>
+                </div>
             </div>
         }
     </div>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Final_project.Models;
 using Final_project.Repository;
 using Final_project.Repository.CartRepository;
@@ -11,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Final_project.Controllers.Cart
 {
+    [Authorize(Roles = "customer")]
+
     public class CartController : Controller
     {
         private readonly UnitOfWork unitOfWork;
@@ -89,15 +88,11 @@ namespace Final_project.Controllers.Cart
         }
 
         [HttpPost]
-
+        [Authorize]
         public IActionResult AddToCart(string productId, string color, string size)
         {
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new { message = "NotLoggedIn" });
-            }
+            var IdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            string userId = IdClaim.Value;
             var cart = unitOfWork.ShoppingCartRepository.GetShoppingCartByUserId(userId);
             if (cart == null)
             {
@@ -180,7 +175,6 @@ namespace Final_project.Controllers.Cart
             unitOfWork.save();
             return RedirectToAction("Index");
         }
-
         public IActionResult ClearCart()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

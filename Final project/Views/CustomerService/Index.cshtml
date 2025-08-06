@@ -60,11 +60,14 @@
                                                     @ticket.Subject
                                                 </a>
                                             </td>
+
                                             <td>
                                                 <span class="badge bg-@(ticket.Status == "Open" ? "warning" : ticket.Status == "Resolved" ? "success" : "secondary")">
                                                     @ticket.Status
                                                 </span>
                                             </td>
+
+
                                             <td>
                                                 <span class="badge bg-@(ticket.Priority == "Critical" ? "danger" : ticket.Priority == "High" ? "warning" : ticket.Priority == "Medium" ? "info" : "secondary")">
                                                     @ticket.Priority
@@ -83,9 +86,12 @@
                                                 </a>
                                                 @if (ticket.CanManage && ticket.Status != "Resolved")
                                                 {
-                                                    <button type="button" class="btn btn-sm btn-outline-success" onclick="resolveTicket('@ticket.Id')">
-                                                        Resolve
-                                                    </button>
+                                                    @if (User.IsInRole("customerService"))
+                                                    {
+                                                        <button type="button" class="btn btn-sm btn-outline-success" onclick="resolveTicket('@ticket.Id')">
+                                                            Resolve
+                                                        </button>
+                                                    }
                                                 }
                                             </td>
                                         </tr>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-[Authorize(Roles = "admin,superadmin")]
+[Authorize(Roles = "admin,superAdmin")]
 public class AdminCategoryRequestController : Controller
 {
     private readonly UnitOfWork unitOfWork;

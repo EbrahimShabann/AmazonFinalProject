@@ -14,7 +14,7 @@ using static NuGet.Packaging.PackagingConstants;
 
 namespace Final_project.Controllers
 {
-    //[Authorize(Roles = "Seller")]
+    [Authorize(Roles = "seller")]
     public class SellerController : Controller
     {
         private readonly UnitOfWork _unitOfWork;

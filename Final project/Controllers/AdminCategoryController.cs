@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin,superadmin")]
+    [Authorize(Roles = "admin,superAdmin")]
 
     public class AdminCategoryController : Controller
     {

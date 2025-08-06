@@ -13,7 +13,8 @@ namespace Final_project.Controllers
         }
         public IActionResult Index()
         {
-            if (User.IsInRole("admin")) return RedirectToAction("Index", "AdminDashboard");
+            
+            if (User.IsInRole("admin")|| User.IsInRole("superAdmin")) return RedirectToAction("Index", "AdminDashboard");
             else if (User.IsInRole("seller"))
             {
                 if(unitOfWork.AccountRepository.IsApprovedSeller(User.Identity.Name))

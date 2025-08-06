@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Final_project.Controllers
 {
-    [Authorize(Roles = "admin,superadmin")]
+    [Authorize(Roles = "admin,superAdmin")]
 
     public class AdminProductsController : Controller
     {

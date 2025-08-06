@@ -18,6 +18,8 @@
     <title>Admin Dashboard | Amazon Style</title>
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/croc.ico">
+
 
     <link href="/css/Admin.css" rel="stylesheet" />
     <partial name="_ValidationScriptsPartial">
@@ -74,7 +76,7 @@
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            @if (role == "superadmin")
+            @if (role == "superAdmin")
             {
                 <a class="sidebar-item @(currentController == "AdminUsers" ? "active" : "")" asp-action="AddUser" asp-controller="AdminUsers">
                     <i class="fas fa-user"></i>
@@ -102,7 +104,7 @@
                 <i class="fas fa-solid fa-user-tie"></i>
                 <span>Customer Service</span>
             </a>
-            @if (role == "superadmin")
+            @if (role == "superAdmin")
             {
                 <a class="sidebar-item @(currentController == "AdminRecycleBin" ? "active" : "")" asp-controller="AdminRecycleBin" asp-action="Index">
                     <i class="fas fa-trash-alt"></i>
