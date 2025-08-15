@@ -57,6 +57,10 @@ A complete Amazon clone built with ASP.NET Core MVC, featuring all essential e-c
    git clone https://github.com/EbrahimShabann/AmazonFinalProject.git
    cd AmazonFinalProject
 
+   
+## 🌐 Live Demo
+
+🔗 (http://amazoclone.runasp.net/)  
 
 ## 🧪 Sample Credentials
  - Admin: Admin@amazon.com / Admin1234
